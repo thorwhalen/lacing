@@ -278,9 +278,7 @@ class SqliteOpLog:
 
     def latest_clock(self) -> int:
         with self._lock:
-            row = self._conn.execute(
-                "SELECT MAX(clock) AS c FROM oplog"
-            ).fetchone()
+            row = self._conn.execute("SELECT MAX(clock) AS c FROM oplog").fetchone()
         return int(row["c"]) if row and row["c"] is not None else 0
 
     def __len__(self) -> int:

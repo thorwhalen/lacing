@@ -51,7 +51,9 @@ def list_oplog(
 
 @router.get("/state-at")
 def state_at(
-    clock: int = Query(..., ge=0, description="Replay up to (and including) this clock."),
+    clock: int = Query(
+        ..., ge=0, description="Replay up to (and including) this clock."
+    ),
     oplog=Depends(get_oplog),
 ) -> dict[str, Any]:
     """Replay the op-log up to ``clock`` and return a JSON snapshot.
