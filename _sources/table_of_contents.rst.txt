@@ -18,6 +18,15 @@
    module_docs/lacing/model
    module_docs/lacing/quality
    module_docs/lacing/schema
+   module_docs/lacing/server
+   module_docs/lacing/server/app
+   module_docs/lacing/server/deps
+   module_docs/lacing/server/etag
+   module_docs/lacing/server/routers
+   module_docs/lacing/server/routers/adapters
+   module_docs/lacing/server/routers/annotations
+   module_docs/lacing/server/routers/meta
+   module_docs/lacing/server/routers/tiers
    module_docs/lacing/store
    module_docs/lacing/store/base
    module_docs/lacing/store/memory

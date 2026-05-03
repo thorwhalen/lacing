@@ -1,0 +1,4 @@
+lacing.server.routers.annotations
+=================================
+.. automodule:: lacing.server.routers.annotations
+   :members:

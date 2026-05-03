@@ -1,0 +1,4 @@
+lacing.server.routers.tiers
+===========================
+.. automodule:: lacing.server.routers.tiers
+   :members:

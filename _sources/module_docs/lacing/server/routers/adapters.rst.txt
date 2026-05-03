@@ -1,0 +1,4 @@
+lacing.server.routers.adapters
+==============================
+.. automodule:: lacing.server.routers.adapters
+   :members:
