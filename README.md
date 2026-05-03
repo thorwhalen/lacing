@@ -19,6 +19,7 @@ interval domain.
 pip install lacing                # core only
 pip install 'lacing[textgrid]'    # + Praat TextGrid support (praatio)
 pip install 'lacing[eaf]'         # + ELAN EAF support (pympi-ling)
+pip install 'lacing[postgres]'    # + PostgresStore (psycopg + GiST + EXCLUDE)
 ```
 
 ## 30-second tour
@@ -58,7 +59,8 @@ lacing/
 ├── store/
 │   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
 │   ├── memory.py    MemoryStore over `intervaltree`
-│   └── sqlite.py    SqliteStore — persistent backend + .annot file format
+│   ├── sqlite.py    SqliteStore — persistent backend + .annot file format
+│   └── postgres.py  PostgresStore — int8range + GiST + per-tier EXCLUDE
 ├── adapters/
 │   ├── textgrid.py        Praat .TextGrid (interval + point tiers)
 │   ├── webvtt.py          .vtt subtitles/captions
@@ -148,6 +150,24 @@ store.close()
 
 The `.annot` file is the recommended portable handoff format — single-file
 SQLite, Git-trackable, lossless round-trip with `MemoryStore`.
+
+For multi-user / production scale, the same facade is available over
+PostgreSQL:
+
+```python
+from lacing.store import PostgresStore
+from lacing.tier import Tier
+
+store = PostgresStore("postgresql://localhost/myproject", rate=1000)
+
+# Per-tier non-overlap is enforced declaratively by the database — try to
+# add an overlapping annotation in this tier and Postgres rejects the insert.
+store.add_tier(Tier("speakers"), enforce_no_overlap=True)
+```
+
+The Postgres backend uses `int8range` + GiST (sub-millisecond overlap
+queries at million-row scale) and exposes the same Allen-relation
+methods. Times are normalized to a project-wide rate stored in `meta`.
 
 ### CLI
 

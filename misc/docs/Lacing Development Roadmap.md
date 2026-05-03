@@ -143,11 +143,18 @@ packages so users can adopt the data model without infra.
 - `.annot` adapter (lossless round-trip + `persistent=True` for live mutation). ✓
 - CLI (`argh`): `lacing convert`, `lacing query`, `lacing validate`, `lacing list-formats`. ✓
 - **ELAN EAF adapter** — first adapter to exercise the tier hierarchy with stereotypes (TIME_SUBDIVISION, INCLUDED_IN, SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). ✓
+- **Postgres backend** with `int8range` + GiST + per-tier `EXCLUDE` (optional via `pip install 'lacing[postgres]'`). Tested via `pytest-postgresql` sandbox — no live server needed for CI. ✓
 
 **Remaining:**
-- Postgres + `tstzrange` + GiST + per-tier `EXCLUDE` constraints (optional install).
 - JAMS, Label Studio JSON, OTIO adapters.
 - JSON Schema export per body schema; semver in `body_schema_uri`.
+
+> **Note on the int8range vs tstzrange decision.** BACK-DOC §4.2 leaned
+> toward `tstzrange`, but lacing's time model is rational ticks at a
+> project-wide rate, not wall-clock time. `int8range` over integer ticks
+> avoids inventing a fake epoch and uses the same `&&` / `<@` / `@>` /
+> `-|-` operators. The project rate is stored in `meta` and enforced on
+> insert; opening with a different rate raises `PgSchemaMismatchError`.
 
 ### Phase 2 — Server (2–3 weeks)
 *Sources: BACK-DOC §3, §4.6, §4.7, §6.*

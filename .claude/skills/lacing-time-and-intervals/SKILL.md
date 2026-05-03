@@ -96,7 +96,7 @@ For "any kind of overlap" use the disjunction `overlaps | overlapped_by | during
 
 | Query shape | In-memory | Persistent |
 |-------------|-----------|------------|
-| Point query / overlap with a single interval | `intervaltree.IntervalTree` (Apache-2.0) | PostgreSQL `tstzrange` + GiST |
+| Point query / overlap with a single interval | `intervaltree.IntervalTree` (Apache-2.0) | `PostgresStore` (`int8range` + GiST) or `SqliteStore` (R*Tree, embedded) |
 | Aggregate over fixed range (count, sum) | segment tree with lazy propagation | PostgreSQL with materialized view |
 | Many concurrent reads, append-mostly writes | `intervaltree` is fine | GiST |
 | Bulk batch analytics | `pyranges` v1 (Rust/Polars) | Parquet/Arrow IPC export |
@@ -128,7 +128,7 @@ snap by rounding floats.
 - [ ] Overlap/containment predicates go through `lacing/allen.py`, not ad-hoc.
 - [ ] Any rate conversion has an explicit lossy-→-raise path.
 - [ ] No `portion` import (LGPL).
-- [ ] In-memory store uses `intervaltree`; persistent goes through `tstzrange`/GiST or SQLite R*Tree.
+- [ ] In-memory store uses `intervaltree`; persistent goes through `PostgresStore` (`int8range`/GiST) or `SqliteStore` (R*Tree).
 
 ## Source pointers
 
