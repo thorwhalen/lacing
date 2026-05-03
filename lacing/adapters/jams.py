@@ -216,9 +216,7 @@ def load(
 
 def _open_jams(source: str | bytes | os.PathLike, jams_lib) -> "_jams_lib.JAMS":
     if isinstance(source, (bytes, bytearray)):
-        with tempfile.NamedTemporaryFile(
-            "wb", suffix=".jams", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile("wb", suffix=".jams", delete=False) as f:
             f.write(source)
             tmp_path = f.name
         try:
