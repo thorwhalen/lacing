@@ -19,6 +19,17 @@ from lacing.quality import (
     interval_iou,
     krippendorff_alpha,
 )
+from lacing.schema import (
+    BodySchemaError,
+    MigrationError,
+    UnknownBodySchemaError,
+    export_json_schemas,
+    json_schema,
+    migrate,
+    register_body_schema,
+    register_migration,
+    validate as validate_body,
+)
 from lacing.model import (
     Annotation,
     AnnotationRef,
@@ -69,4 +80,14 @@ __all__ = [
     "krippendorff_alpha",
     "interval_iou",
     "boundary_iou",
+    # schema
+    "register_body_schema",
+    "register_migration",
+    "json_schema",
+    "export_json_schemas",
+    "migrate",
+    "validate_body",
+    "BodySchemaError",
+    "UnknownBodySchemaError",
+    "MigrationError",
 ]

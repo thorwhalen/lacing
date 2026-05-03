@@ -39,10 +39,10 @@ Why **commit the generated artifacts** in JSON Schema and Zod:
 | Annotation envelope (`Annotation`, `Reference`, `Provenance`) | `lacing/model.py` |
 | Tier types + 5 ELAN stereotypes | `lacing/tier.py` |
 | Body schemas (per-domain payloads — phoneme, viseme, named-entity, etc.) | `lacing/bodies/<name>.py` |
-| Body schema registry | `lacing/schema.py` |
-| JSON Schema artifacts (committed) | `lacing/schema/<name>/v<N>.json` |
-| Zod artifacts (committed) | `lacing-ui/packages/core/zod/<name>.ts` |
-| Migrations | `lacing/migrations/<name>/v<N>_to_v<N+1>.py` |
+| Body schema registry + migrations + JSON-Schema export | `lacing/schema.py` |
+| JSON Schema artifacts (generated, committed) | `lacing/schema/<name>/v<N>.json` (run `lacing.schema.export_json_schemas`) |
+| Zod artifacts (generated, committed) | `lacing-ui/packages/core/zod/<name>.ts` |
+| Migrations | colocated with the body module via `@register_migration` |
 
 ## body_schema_uri convention
 

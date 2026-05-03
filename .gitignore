@@ -115,3 +115,6 @@ venv.bak/
 
 # PyCharm
 .idea
+
+# Stray databases created by README examples or smoke tests
+/project.annot

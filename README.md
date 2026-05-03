@@ -68,7 +68,9 @@ lacing/
 │   ├── annot.py           .annot SQLite portable file format (lossless)
 │   └── eaf.py             ELAN EAF (4 stereotypes verbatim)
 ├── cli.py           `lacing` CLI: convert, query, validate, list-formats
-└── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
+├── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
+├── schema.py        Body schema registry + JSON Schema export + migrations
+└── bodies/          Built-in body schemas (word, named-entity, ...)
 ```
 
 ## Design rules in one breath
@@ -179,6 +181,48 @@ lacing convert speech.TextGrid speech.annot                  # convert between f
 lacing query speech.annot --start 1.0 --end 5.0 --rate 1000  # JSON-lines
 lacing validate speech.annot                                 # parse + summary
 ```
+
+### Body schemas, validation, migrations
+
+Every annotation has a `body: dict` validated against the schema named by
+its `body_schema_uri` (e.g., `annot://schema/named-entity/v2`). Register
+your own with a Pydantic v2 model:
+
+```python
+from pydantic import BaseModel, Field
+from lacing.schema import register_body_schema, register_migration, validate, migrate
+
+class WordBodyV1(BaseModel):
+    model_config = {"frozen": True, "extra": "forbid"}
+    text: str = Field(...)
+    speaker: str | None = None
+
+register_body_schema("annot://schema/word/v1", WordBodyV1)
+
+# Validate at runtime:
+validate({"text": "hello"}, "annot://schema/word/v1")
+
+# Register a forward migration v1 -> v2:
+@register_migration(schema_name="word", from_version=1, to_version=2)
+def _v1_to_v2(body: dict) -> dict:
+    return {**body, "lemma": None}
+
+# Migrate stored data:
+migrated = migrate({"text": "ran"},
+                   from_uri="annot://schema/word/v1",
+                   to_uri="annot://schema/word/v2")
+```
+
+Export every registered schema to JSON Schema (the upstream for downstream
+Zod codegen):
+
+```python
+from lacing.schema import export_json_schemas
+export_json_schemas("./schema/")  # writes <name>/v<N>.json + index.json
+```
+
+Built-in body schemas live under `lacing/bodies/` (`word`, `named-entity`).
+They register themselves on import.
 
 ### Inter-annotator agreement
 

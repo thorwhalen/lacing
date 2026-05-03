@@ -59,7 +59,8 @@ lacing/                    ← THIS REPO: core library
 │   │   └── eaf.py             ELAN EAF (Phase 1, done)
 │   ├── cli.py            argh-based CLI (Phase 1, done)
 │   ├── quality.py        IAA: kappa, Krippendorff α, IoU, DER (Phase 0, done)
-│   └── schema.py         body_schema registry; JSON Schema export (TODO)
+│   ├── schema.py         body_schema registry + JSON Schema export + migrations (Phase 1, done)
+│   └── bodies/           built-in body schemas (word, named-entity)
 └── misc/docs/            design docs + roadmap
 
 lacing-server/  ← sibling repo (FastAPI + Arq + MCP + Yjs bridge)
@@ -71,7 +72,7 @@ lacing-ui/      ← sibling repo (React + zustand + wavesurfer + dnd-timeline)
 When asked to implement something, identify which phase from the roadmap:
 
 - **Phase 0** — Core: time, model, store, Allen relations, three adapters (TextGrid, WebVTT, W3C), quality metrics. **Done.**
-- **Phase 1** — Persistence (SQLite/Postgres) + more adapters + CLI. **Mostly done:** `SqliteStore` + `.annot` file format adapter, ELAN EAF adapter, **`PostgresStore` with `int8range`/GiST/per-tier EXCLUDE**, and `lacing` CLI (`convert`, `query`, `validate`, `list-formats`) are in. **Remaining:** more adapters (JAMS, Label Studio JSON, OTIO, CoNLL, brat, SubRip, TTML, CSV) and `schema.py` (body-schema registry + JSON Schema export).
+- **Phase 1** — Persistence (SQLite/Postgres) + more adapters + CLI. **Mostly done:** `SqliteStore` + `.annot` file format adapter, ELAN EAF adapter, `PostgresStore` with `int8range`/GiST/per-tier EXCLUDE, **`schema.py` (body-schema registry + JSON Schema export + migrations) with seed bodies under `lacing/bodies/`**, and `lacing` CLI (`convert`, `query`, `validate`, `list-formats`) are in. **Remaining:** more adapters (JAMS, Label Studio JSON, OTIO, CoNLL, brat, SubRip, TTML, CSV).
 - **Phase 2** — FastAPI server + Arq workers + MCP + OpenTelemetry.
 - **Phase 3** — Frontend MVP (waveform + dialogue tier + viseme tier + monitor + inspector).
 - **Phase 4** — Yjs awareness, then full collab; WebCodecs; tier view.
