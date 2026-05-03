@@ -19,9 +19,7 @@ class WordBodyV1(BaseModel):
     model_config = {"frozen": True, "extra": "forbid"}
 
     text: str = Field(..., description="Surface form of the word.")
-    speaker: str | None = Field(
-        None, description="Optional speaker identifier."
-    )
+    speaker: str | None = Field(None, description="Optional speaker identifier.")
 
 
 register_body_schema("annot://schema/word/v1", WordBodyV1)

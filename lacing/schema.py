@@ -146,9 +146,7 @@ def validate(body: dict, uri: str) -> BaseModel:
     try:
         return model.model_validate(body)
     except ValidationError as exc:
-        raise BodySchemaError(
-            f"body failed validation against {uri}:\n{exc}"
-        ) from exc
+        raise BodySchemaError(f"body failed validation against {uri}:\n{exc}") from exc
 
 
 # ---------------------------------------------------------------------------
@@ -303,9 +301,7 @@ def migrate(body: dict, *, from_uri: str, to_uri: str) -> dict:
 def latest_version(schema_name: str) -> int | None:
     """Highest registered major version for ``schema_name``, or None."""
     versions = [
-        parse_uri(uri)[1]
-        for uri in _BODY_REGISTRY
-        if parse_uri(uri)[0] == schema_name
+        parse_uri(uri)[1] for uri in _BODY_REGISTRY if parse_uri(uri)[0] == schema_name
     ]
     return max(versions) if versions else None
 
@@ -318,8 +314,6 @@ def migrate_to_latest(body: dict, *, from_uri: str) -> tuple[dict, str]:
     from_name, _ = parse_uri(from_uri)
     latest = latest_version(from_name)
     if latest is None:
-        raise UnknownBodySchemaError(
-            f"no schema registered with name {from_name!r}"
-        )
+        raise UnknownBodySchemaError(f"no schema registered with name {from_name!r}")
     target_uri = make_uri(from_name, latest)
     return migrate(body, from_uri=from_uri, to_uri=target_uri), target_uri

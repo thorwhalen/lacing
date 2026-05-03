@@ -31,9 +31,7 @@ class NamedEntityBodyV2(BaseModel):
 
     model_config = {"frozen": True, "extra": "forbid"}
 
-    entity_type: str = Field(
-        ..., description="Entity type code (e.g., PER, ORG, LOC)."
-    )
+    entity_type: str = Field(..., description="Entity type code (e.g., PER, ORG, LOC).")
     text: str = Field(..., description="Surface form of the entity mention.")
     confidence: float | None = Field(
         None,
