@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(/.claude/skills/lacing-architecture/**)",
+      "Edit(/.claude/skills/lacing-time-and-intervals/**)",
+      "Edit(/.claude/skills/lacing-adapter-authoring/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/thorwhalen/Dropbox/py/proj/t/lacing/.claude/skills"
+    ]
+  }
+}
