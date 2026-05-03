@@ -19,6 +19,7 @@ interval domain.
 pip install lacing                # core only
 pip install 'lacing[textgrid]'    # + Praat TextGrid support (praatio)
 pip install 'lacing[eaf]'         # + ELAN EAF support (pympi-ling)
+pip install 'lacing[jams]'        # + JAMS (MIR annotation) support
 pip install 'lacing[postgres]'    # + PostgresStore (psycopg + GiST + EXCLUDE)
 ```
 
@@ -66,7 +67,8 @@ lacing/
 │   ├── webvtt.py          .vtt subtitles/captions
 │   ├── web_annotation.py  W3C Web Annotation Data Model (JSON-LD)
 │   ├── annot.py           .annot SQLite portable file format (lossless)
-│   └── eaf.py             ELAN EAF (4 stereotypes verbatim)
+│   ├── eaf.py             ELAN EAF (4 stereotypes verbatim)
+│   └── jams.py            JAMS (Music Information Retrieval) — namespaces → tiers
 ├── cli.py           `lacing` CLI: convert, query, validate, list-formats
 ├── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
 ├── schema.py        Body schema registry + JSON Schema export + migrations

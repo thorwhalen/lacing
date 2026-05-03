@@ -43,6 +43,7 @@ _ENABLED_ADAPTERS = (
     "lacing.adapters.web_annotation",
     "lacing.adapters.annot",
     "lacing.adapters.eaf",
+    "lacing.adapters.jams",
 )
 
 

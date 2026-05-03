@@ -145,9 +145,10 @@ packages so users can adopt the data model without infra.
 - **ELAN EAF adapter** — first adapter to exercise the tier hierarchy with stereotypes (TIME_SUBDIVISION, INCLUDED_IN, SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). ✓
 - **Postgres backend** with `int8range` + GiST + per-tier `EXCLUDE` (optional via `pip install 'lacing[postgres]'`). Tested via `pytest-postgresql` sandbox — no live server needed for CI. ✓
 - **`schema.py`** — body-schema registry, validation, JSON Schema export, and forward migrations. Seed bodies (`word`, `named-entity` with v1→v2 migration) under `lacing/bodies/`. ✓
+- **JAMS adapter** — JSON Annotated Music Specification. Each namespace maps to a tier; observation values preserved verbatim. ✓
 
 **Remaining:**
-- JAMS, Label Studio JSON, OTIO adapters.
+- Label Studio JSON, OTIO adapters.
 
 > **Note on the int8range vs tstzrange decision.** BACK-DOC §4.2 leaned
 > toward `tstzrange`, but lacing's time model is rational ticks at a

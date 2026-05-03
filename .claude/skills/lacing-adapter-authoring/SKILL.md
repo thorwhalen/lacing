@@ -201,6 +201,7 @@ The Phase 0/1 adapters are deliberately diverse and demonstrate the pattern:
 - [lacing/adapters/web_annotation.py](../../../lacing/adapters/web_annotation.py) — JSON-LD, uses the standard `json` module. Demonstrates discriminated-union round-tripping and creator/provenance preservation.
 - [lacing/adapters/annot.py](../../../lacing/adapters/annot.py) — *lossless* SQLite-based portable file format. Demonstrates the `persistent=True` mode (returns a live `SqliteStore` instead of a `MemoryStore`) and the fast-copy path when the source is already a `SqliteStore`.
 - [lacing/adapters/eaf.py](../../../lacing/adapters/eaf.py) — ELAN EAF via `pympi-ling` (MIT, optional install). The first adapter that exercises the **tier hierarchy** end-to-end: maps EAF's `CONSTRAINTS` strings to lacing's four ELAN stereotypes verbatim, topo-sorts tiers on dump so parents are emitted before children, and pulls the first `MEDIA_DESCRIPTOR/MEDIA_URL` as the default `MediaRef.asset_id`.
+- [lacing/adapters/jams.py](../../../lacing/adapters/jams.py) — JAMS (Music Information Retrieval) via `jams` (ISC, optional install). Maps each JAMS namespace to a lacing tier; observation values become `body['value']` preserving the namespace-typed value verbatim. Demonstrates handling of zero-duration point annotations (beats), `JObject`-vs-`dict` ambivalence in third-party libraries, and `Fraction(repr(float))` boundary conversion to recover exact rational time from float-seconds inputs.
 
 ## Source pointers
 
