@@ -1,10 +1,10 @@
 """Annotation endpoints.
 
-POST   /annotations                 create
-GET    /annotations                 list (filter by tier + time window + relation)
-GET    /annotations/{id}            get one (returns ETag header)
-PATCH  /annotations/{id}            partial update (requires If-Match)
-DELETE /annotations/{id}            remove
+    POST   /annotations                 create
+    GET    /annotations                 list (filter by tier + time window + relation)
+    GET    /annotations/{id}            get one (returns ETag header)
+    PATCH  /annotations/{id}            partial update (requires If-Match)
+    DELETE /annotations/{id}            remove
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from lacing.model import (
     Provenance,
     Reference,
 )
-from lacing.server.deps import get_store
+from lacing.server.deps import get_oplog, get_store
 from lacing.server.etag import annotation_etag, matches, parse_if_match
 from lacing.time import RationalTime, TimeInterval
 
@@ -104,15 +104,13 @@ def _build_annotation(payload: AnnotationIn) -> Annotation:
 def _find(store: Any, annotation_id: UUID) -> Annotation:
     iter_all = getattr(store, "all", None)
     if not callable(iter_all):
-        raise HTTPException(
-            status.HTTP_500_INTERNAL_SERVER_ERROR, detail="store does not expose .all()"
-        )
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="store does not expose .all()")
     for ann in iter_all():
         if ann.id == annotation_id:
             return ann
-    raise HTTPException(
-        status.HTTP_404_NOT_FOUND, detail=f"annotation {annotation_id} not found"
-    )
+    raise HTTPException(status.HTTP_404_NOT_FOUND,
+                        detail=f"annotation {annotation_id} not found")
 
 
 # ---------------------------------------------------------------------------
@@ -125,10 +123,18 @@ def create_annotation(
     payload: AnnotationIn,
     response: Response,
     store=Depends(get_store),
+    oplog=Depends(get_oplog),
 ) -> dict[str, Any]:
     annotation = _build_annotation(payload)
     store.add(annotation)
+    clock = oplog.append(
+        "add_annotation",
+        target_id=str(annotation.id),
+        payload={"annotation": annotation.model_dump(mode="json")},
+        actor=annotation.provenance.was_attributed_to,
+    )
     response.headers["ETag"] = annotation_etag(annotation)
+    response.headers["X-Lacing-Clock"] = str(clock)
     return annotation.model_dump(mode="json")
 
 
@@ -144,13 +150,24 @@ def get_annotation(
 
 
 @router.delete("/{annotation_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_annotation(annotation_id: UUID, store=Depends(get_store)) -> Response:
+def delete_annotation(
+    annotation_id: UUID,
+    store=Depends(get_store),
+    oplog=Depends(get_oplog),
+) -> Response:
     removed = store.remove(annotation_id)
     if removed is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, detail=f"annotation {annotation_id} not found"
-        )
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+        raise HTTPException(status.HTTP_404_NOT_FOUND,
+                            detail=f"annotation {annotation_id} not found")
+    clock = oplog.append(
+        "remove_annotation",
+        target_id=str(annotation_id),
+        payload={},
+        actor=removed.provenance.was_attributed_to,
+    )
+    response = Response(status_code=status.HTTP_204_NO_CONTENT)
+    response.headers["X-Lacing-Clock"] = str(clock)
+    return response
 
 
 @router.get("")
@@ -174,9 +191,8 @@ def list_annotations(
     """List annotations, optionally filtered by tier and time window."""
     iter_all = getattr(store, "all", None)
     if not callable(iter_all):
-        raise HTTPException(
-            status.HTTP_500_INTERNAL_SERVER_ERROR, detail="store does not expose .all()"
-        )
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="store does not expose .all()")
 
     iter_anns = iter_all()
     if start is not None or end is not None:
@@ -197,7 +213,7 @@ def list_annotations(
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
                 detail=f"unknown relation {relation!r}. Try one of: "
-                f"{', '.join(r.name.lower() for r in AllenRelation)}",
+                       f"{', '.join(r.name.lower() for r in AllenRelation)}",
             )
         iter_anns = method(window)
 
@@ -230,6 +246,7 @@ def update_annotation(
     response: Response,
     if_match: str | None = Header(None, alias="If-Match"),
     store=Depends(get_store),
+    oplog=Depends(get_oplog),
 ) -> dict[str, Any]:
     """Partial update with optimistic concurrency.
 
@@ -269,5 +286,12 @@ def update_annotation(
     store.remove(current.id)
     store.add(updated)
 
+    clock = oplog.append(
+        "update_annotation",
+        target_id=str(updated.id),
+        payload={"annotation": updated.model_dump(mode="json")},
+        actor=updated.provenance.was_attributed_to,
+    )
     response.headers["ETag"] = annotation_etag(updated)
+    response.headers["X-Lacing-Clock"] = str(clock)
     return updated.model_dump(mode="json")

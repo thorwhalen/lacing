@@ -13,6 +13,13 @@ full story. ``.claude/skills/`` contains the rules.
 """
 
 from lacing.allen import AllenRelation
+from lacing.oplog import (
+    InMemoryOpLog,
+    OpLog,
+    OpLogEntry,
+    SqliteOpLog,
+    replay as replay_oplog,
+)
 from lacing.quality import (
     boundary_iou,
     cohen_kappa,
@@ -75,6 +82,12 @@ __all__ = [
     "MemoryStore",
     "SqliteStore",
     "SchemaMismatchError",
+    # oplog
+    "OpLog",
+    "OpLogEntry",
+    "InMemoryOpLog",
+    "SqliteOpLog",
+    "replay_oplog",
     # quality
     "cohen_kappa",
     "krippendorff_alpha",

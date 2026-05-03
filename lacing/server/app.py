@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from lacing.server.routers import adapters, annotations, meta, tiers
+from lacing.server.routers import adapters, annotations, meta, oplog, tiers
 
 
 def create_app(*, title: str = "lacing", version: str = "0.1.0") -> FastAPI:
@@ -47,6 +47,7 @@ def create_app(*, title: str = "lacing", version: str = "0.1.0") -> FastAPI:
     app.include_router(tiers.router)
     app.include_router(annotations.router)
     app.include_router(adapters.router)
+    app.include_router(oplog.router)
     return app
 
 

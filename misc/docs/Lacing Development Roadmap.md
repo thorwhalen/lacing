@@ -168,12 +168,12 @@ packages so users can adopt the data model without infra.
 - Import/export endpoints proxying every registered adapter (`POST /import?format=...`, `GET /export?format=...`). ✓
 - Schema introspection (`/schemas`, `/schemas/{uri}` returns JSON Schema). ✓
 - Health + meta endpoints. ✓
+- **Op-log + time-travel** (`lacing/oplog.py`, `GET /oplog`, `GET /state-at?clock=N`). Every server mutation records a Lamport-clock-stamped entry; `state-at` replays the log into a fresh store. The "killer debug feature" from BACK-DOC §4.7. ✓
 
 **Remaining:**
 - Background workers via **Arq** (avoid Celery — BACK-DOC §6).
 - MCP server (`mcp[cli]`) — agents are first-class clients (BACK-DOC §3.3).
-- OpenTelemetry + **op-log replay endpoint** (`GET /projects/{id}/state-at?clock=…`)
-  — flagged as "killer debug feature" in BACK-DOC §4.7.
+- OpenTelemetry instrumentation hooks (the op-log replay is in; OTel traces are the cherry on top).
 - **Defer:** Yjs/Hocuspocus collab. ETags + LWW until two real users actually conflict.
 
 ### Phase 3 — Frontend MVP (3–4 weeks)

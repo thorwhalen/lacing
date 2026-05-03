@@ -17,8 +17,9 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from lacing.adapters import webvtt as _webvtt_adapter  # noqa: E402, F401  registers
 from lacing.model import Annotation, MediaRef, Provenance  # noqa: E402
+from lacing.oplog import InMemoryOpLog  # noqa: E402
 from lacing.server import create_app  # noqa: E402
-from lacing.server.deps import get_store  # noqa: E402
+from lacing.server.deps import get_oplog, get_store  # noqa: E402
 from lacing.store import MemoryStore  # noqa: E402
 from lacing.tier import Tier, TierStereotype  # noqa: E402
 from lacing.time import RationalTime, TimeInterval  # noqa: E402
@@ -38,10 +39,17 @@ def store() -> MemoryStore:
 
 
 @pytest.fixture
-def client(store) -> TestClient:
-    """TestClient with the active store overridden to the per-test fixture."""
+def oplog() -> InMemoryOpLog:
+    """Fresh per-test in-memory op-log."""
+    return InMemoryOpLog()
+
+
+@pytest.fixture
+def client(store, oplog) -> TestClient:
+    """TestClient with both store and op-log overridden to per-test fixtures."""
     app = create_app()
     app.dependency_overrides[get_store] = lambda: store
+    app.dependency_overrides[get_oplog] = lambda: oplog
     return TestClient(app)
 
 

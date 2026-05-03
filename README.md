@@ -273,7 +273,15 @@ GET    /formats                            list registered adapters
 GET    /schemas                            list registered body_schema_uris
 GET    /schemas/{uri}                      JSON Schema for a URI
 GET    /meta, PUT /meta/{key}              key/value metadata
+GET    /oplog                              list mutations (filterable by clock)
+GET    /oplog/latest-clock                 current Lamport clock value
+GET    /state-at?clock=N                   replay log to clock N → snapshot
 ```
+
+Every mutation gets a Lamport clock returned in the `X-Lacing-Clock`
+response header. The op-log + `/state-at` endpoint give you full
+time-travel debug — pick any past clock value and reconstruct exactly
+what the system saw.
 
 ### Inter-annotator agreement
 

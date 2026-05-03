@@ -10,10 +10,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel, Field
 
-from lacing.server.deps import get_store
+from lacing.server.deps import get_oplog, get_store
 from lacing.tier import Tier, TierStereotype
 
 
@@ -47,7 +47,12 @@ class TierOut(BaseModel):
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=TierOut)
-def create_tier(payload: TierIn, store=Depends(get_store)) -> TierOut:
+def create_tier(
+    payload: TierIn,
+    response: Response,
+    store=Depends(get_store),
+    oplog=Depends(get_oplog),
+) -> TierOut:
     tier = Tier(
         payload.name,
         stereotype=payload.stereotype,
@@ -55,6 +60,17 @@ def create_tier(payload: TierIn, store=Depends(get_store)) -> TierOut:
         metadata=payload.metadata,
     )
     store.add_tier(tier)
+    clock = oplog.append(
+        "add_tier",
+        target_id=tier.name,
+        payload={
+            "name": tier.name,
+            "stereotype": tier.stereotype.value,
+            "parent": tier.parent,
+            "metadata": tier.metadata,
+        },
+    )
+    response.headers["X-Lacing-Clock"] = str(clock)
     return TierOut.from_tier(tier)
 
 
