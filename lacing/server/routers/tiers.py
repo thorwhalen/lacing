@@ -1,9 +1,9 @@
 """Tier endpoints.
 
-    POST   /tiers          create or update a tier
-    GET    /tiers          list all
-    GET    /tiers/{name}   get one
-    DELETE /tiers/{name}   delete (idempotent)
+POST   /tiers          create or update a tier
+GET    /tiers          list all
+GET    /tiers/{name}   get one
+DELETE /tiers/{name}   delete (idempotent)
 """
 
 from __future__ import annotations
@@ -67,5 +67,7 @@ def list_tiers(store=Depends(get_store)) -> list[TierOut]:
 def get_tier(name: str, store=Depends(get_store)) -> TierOut:
     tier = store.get_tier(name)
     if tier is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=f"tier {name!r} not found")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, detail=f"tier {name!r} not found"
+        )
     return TierOut.from_tier(tier)

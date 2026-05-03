@@ -13,7 +13,15 @@ from __future__ import annotations
 import importlib
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, UploadFile, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    Response,
+    UploadFile,
+    status,
+)
 
 from lacing.server.deps import get_store
 

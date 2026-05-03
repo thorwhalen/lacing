@@ -1,10 +1,10 @@
 """Annotation endpoints.
 
-    POST   /annotations                 create
-    GET    /annotations                 list (filter by tier + time window + relation)
-    GET    /annotations/{id}            get one (returns ETag header)
-    PATCH  /annotations/{id}            partial update (requires If-Match)
-    DELETE /annotations/{id}            remove
+POST   /annotations                 create
+GET    /annotations                 list (filter by tier + time window + relation)
+GET    /annotations/{id}            get one (returns ETag header)
+PATCH  /annotations/{id}            partial update (requires If-Match)
+DELETE /annotations/{id}            remove
 """
 
 from __future__ import annotations
@@ -104,13 +104,15 @@ def _build_annotation(payload: AnnotationIn) -> Annotation:
 def _find(store: Any, annotation_id: UUID) -> Annotation:
     iter_all = getattr(store, "all", None)
     if not callable(iter_all):
-        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail="store does not expose .all()")
+        raise HTTPException(
+            status.HTTP_500_INTERNAL_SERVER_ERROR, detail="store does not expose .all()"
+        )
     for ann in iter_all():
         if ann.id == annotation_id:
             return ann
-    raise HTTPException(status.HTTP_404_NOT_FOUND,
-                        detail=f"annotation {annotation_id} not found")
+    raise HTTPException(
+        status.HTTP_404_NOT_FOUND, detail=f"annotation {annotation_id} not found"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -145,8 +147,9 @@ def get_annotation(
 def delete_annotation(annotation_id: UUID, store=Depends(get_store)) -> Response:
     removed = store.remove(annotation_id)
     if removed is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND,
-                            detail=f"annotation {annotation_id} not found")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, detail=f"annotation {annotation_id} not found"
+        )
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -171,8 +174,9 @@ def list_annotations(
     """List annotations, optionally filtered by tier and time window."""
     iter_all = getattr(store, "all", None)
     if not callable(iter_all):
-        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail="store does not expose .all()")
+        raise HTTPException(
+            status.HTTP_500_INTERNAL_SERVER_ERROR, detail="store does not expose .all()"
+        )
 
     iter_anns = iter_all()
     if start is not None or end is not None:
@@ -193,7 +197,7 @@ def list_annotations(
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
                 detail=f"unknown relation {relation!r}. Try one of: "
-                       f"{', '.join(r.name.lower() for r in AllenRelation)}",
+                f"{', '.join(r.name.lower() for r in AllenRelation)}",
             )
         iter_anns = method(window)
 
