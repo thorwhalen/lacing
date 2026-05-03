@@ -1,0 +1,4 @@
+lacing.store.sqlite
+===================
+.. automodule:: lacing.store.sqlite
+   :members:

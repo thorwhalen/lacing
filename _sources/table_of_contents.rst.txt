@@ -1,0 +1,22 @@
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   module_docs/lacing
+   module_docs/lacing/adapters
+   module_docs/lacing/adapters/annot
+   module_docs/lacing/adapters/eaf
+   module_docs/lacing/adapters/textgrid
+   module_docs/lacing/adapters/web_annotation
+   module_docs/lacing/adapters/webvtt
+   module_docs/lacing/allen
+   module_docs/lacing/cli
+   module_docs/lacing/model
+   module_docs/lacing/quality
+   module_docs/lacing/store
+   module_docs/lacing/store/base
+   module_docs/lacing/store/memory
+   module_docs/lacing/store/postgres
+   module_docs/lacing/store/sqlite
+   module_docs/lacing/tier
+   module_docs/lacing/time

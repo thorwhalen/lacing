@@ -1,0 +1,890 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.store.postgres &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.store.postgres</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.store.postgres</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;PostgreSQL-backed annotation store using ``int8range`` + GiST.</span>
+
+<span class="sd">Maps lacing&#39;s interval model to Postgres native range types (BACK-DOC §4.2):</span>
+
+<span class="sd">============== =====================================================</span>
+<span class="sd">Allen relation Postgres operator (int8range / tstzrange)</span>
+<span class="sd">============== =====================================================</span>
+<span class="sd">overlaps (any) ``a &amp;&amp; b``      — any kind of intersection</span>
+<span class="sd">during         ``a &lt;@ b``      — a contained in b (strict variant: see code)</span>
+<span class="sd">contains       ``a @&gt; b``      — a contains b (strict variant: see code)</span>
+<span class="sd">meets / met_by ``a -|- b``     — adjacent (touching but not overlapping)</span>
+<span class="sd">equals         ``a = b``</span>
+<span class="sd">before         ``a &lt;&lt; b``</span>
+<span class="sd">after          ``a &gt;&gt; b``</span>
+<span class="sd">strict overlap ``a &amp;&amp; b AND lower(a) &lt; lower(b) AND upper(a) &lt; upper(b)``</span>
+<span class="sd">============== =====================================================</span>
+
+<span class="sd">We store intervals as ``int8range(start_value, end_value, &#39;[)&#39;)`` — half-open,</span>
+<span class="sd">matching lacing&#39;s ``TimeInterval`` semantics — at a **project-wide rate**</span>
+<span class="sd">recorded in ``meta``. All inserts must be at that rate; re-quantizing happens</span>
+<span class="sd">on insert if necessary.</span>
+
+<span class="sd">GiST index on the range column gives sub-millisecond overlap queries at</span>
+<span class="sd">million-row scale. Optional ``EXCLUDE USING GIST`` constraints are added</span>
+<span class="sd">**per tier** for stereotypes like ``TIME_SUBDIVISION`` that forbid overlap.</span>
+
+<span class="sd">Schema versioning lives in ``meta``; mismatched versions raise on open.</span>
+
+<span class="sd">Status: Phase 1. Tested via ``pytest-postgresql`` sandbox (no live server</span>
+<span class="sd">needed for development).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.allen</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PREDICATE_BY_RELATION</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Annotation</span><span class="p">,</span>
+    <span class="n">AnnotationRef</span><span class="p">,</span>
+    <span class="n">MediaRef</span><span class="p">,</span>
+    <span class="n">NodeRef</span><span class="p">,</span>
+    <span class="n">Provenance</span><span class="p">,</span>
+    <span class="n">Reference</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span><span class="p">,</span> <span class="n">TierStereotype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">LossyTimeConversionError</span><span class="p">,</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+
+<span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="sd">&quot;&quot;&quot;Current schema version stored in the ``meta`` table.&quot;&quot;&quot;</span>
+
+
+<span class="n">_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS meta (</span>
+<span class="s2">    key   TEXT PRIMARY KEY,</span>
+<span class="s2">    value TEXT NOT NULL</span>
+<span class="s2">);</span>
+
+<span class="s2">CREATE TABLE IF NOT EXISTS tiers (</span>
+<span class="s2">    name        TEXT PRIMARY KEY,</span>
+<span class="s2">    stereotype  TEXT NOT NULL,</span>
+<span class="s2">    parent      TEXT REFERENCES tiers(name) ON DELETE RESTRICT,</span>
+<span class="s2">    metadata    JSONB NOT NULL DEFAULT &#39;</span><span class="si">{}</span><span class="s2">&#39;::jsonb,</span>
+<span class="s2">    enforce_no_overlap BOOLEAN NOT NULL DEFAULT FALSE</span>
+<span class="s2">);</span>
+
+<span class="s2">CREATE TABLE IF NOT EXISTS annotations (</span>
+<span class="s2">    id              UUID PRIMARY KEY,</span>
+<span class="s2">    tier            TEXT NOT NULL REFERENCES tiers(name) ON DELETE RESTRICT,</span>
+<span class="s2">    ref_kind        TEXT NOT NULL CHECK (ref_kind IN (&#39;media&#39;, &#39;node&#39;, &#39;annotation&#39;)),</span>
+<span class="s2">    asset_id        TEXT,</span>
+<span class="s2">    scene_path      TEXT,</span>
+<span class="s2">    target_id       UUID,</span>
+<span class="s2">    span            INT8RANGE,                 -- NULL only when ref has no interval</span>
+<span class="s2">    body            JSONB NOT NULL,</span>
+<span class="s2">    body_schema_uri TEXT NOT NULL,</span>
+<span class="s2">    prov_was_generated_by   TEXT NOT NULL,</span>
+<span class="s2">    prov_was_attributed_to  TEXT NOT NULL,</span>
+<span class="s2">    prov_was_derived_from   JSONB NOT NULL DEFAULT &#39;[]&#39;::jsonb,</span>
+<span class="s2">    prov_generated_at_value BIGINT NOT NULL,</span>
+<span class="s2">    prov_generated_at_rate  INTEGER NOT NULL,</span>
+<span class="s2">    prov_activity           TEXT NOT NULL,</span>
+<span class="s2">    confidence              REAL</span>
+<span class="s2">);</span>
+
+<span class="s2">-- GiST spatial index over the range column for sub-ms overlap queries.</span>
+<span class="s2">CREATE INDEX IF NOT EXISTS idx_ann_span_gist ON annotations USING GIST (span);</span>
+<span class="s2">CREATE INDEX IF NOT EXISTS idx_ann_tier      ON annotations (tier);</span>
+<span class="s2">CREATE INDEX IF NOT EXISTS idx_ann_asset     ON annotations (asset_id);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># Per-tier non-overlap constraint (added on demand when a tier is registered</span>
+<span class="c1"># with enforce_no_overlap=True). Constraint name is unique per tier.</span>
+<span class="n">_PER_TIER_EXCLUSION_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">ALTER TABLE annotations</span>
+<span class="s2">    ADD CONSTRAINT no_overlap_in_</span><span class="si">{tier_id}</span>
+<span class="s2">    EXCLUDE USING GIST (span WITH &amp;&amp;)</span>
+<span class="s2">    WHERE (tier = </span><span class="si">{tier_lit}</span><span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># errors</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="PgSchemaMismatchError">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PgSchemaMismatchError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PgSchemaMismatchError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised on opening a database whose schema_version differs.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="TierOverlapError">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.TierOverlapError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TierOverlapError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an insert would violate a per-tier no-overlap constraint.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RateMismatchError">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.RateMismatchError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RateMismatchError</span><span class="p">(</span><span class="n">LossyTimeConversionError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an annotation&#39;s interval cannot be represented at the project rate.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># helpers</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_psycopg</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">psycopg</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">psycopg</span><span class="w"> </span><span class="kn">import</span> <span class="n">sql</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">psycopg.types.range</span><span class="w"> </span><span class="kn">import</span> <span class="n">Range</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — covered by extra missing</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;PostgresStore requires psycopg. Install with: &quot;</span>
+            <span class="s2">&quot;pip install &#39;lacing[postgres]&#39;  (or directly: pip install &#39;psycopg[binary]&#39;)&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">psycopg</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="n">Range</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_safe_tier_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a constraint-name-safe identifier from a tier name.&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;tier&quot;</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># PostgresStore</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="PostgresStore">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PostgresStore">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PostgresStore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PostgreSQL-backed ``IntervalAnnotationStore``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection_string: A psycopg-compatible URL or kwargs dict.</span>
+<span class="sd">        rate: Project-wide rate. Set on first init; a re-open with a</span>
+<span class="sd">            different rate raises ``PgSchemaMismatchError``.</span>
+<span class="sd">        autocommit: If True (default), we run individual statements in</span>
+<span class="sd">            their own transaction. Set to False when batching via</span>
+<span class="sd">            :meth:`extend` (it manages its own BEGIN/COMMIT).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span><span class="p">,</span>
+        <span class="n">autocommit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">psycopg</span><span class="p">,</span> <span class="n">_sql</span><span class="p">,</span> <span class="n">_range</span> <span class="o">=</span> <span class="n">_require_psycopg</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span> <span class="o">=</span> <span class="n">psycopg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sql</span> <span class="o">=</span> <span class="n">_sql</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Range</span> <span class="o">=</span> <span class="n">_range</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">psycopg</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">autocommit</span><span class="o">=</span><span class="n">autocommit</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">psycopg</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">autocommit</span><span class="o">=</span><span class="n">autocommit</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_schema</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+
+    <span class="c1"># --- schema --------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">_DDL</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">&quot;schema_version&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SCHEMA_VERSION</span><span class="p">)),</span>
+                <span class="p">)</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">&quot;rate&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rate</span><span class="p">)),</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">rate</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">got_version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">got_version</span> <span class="o">!=</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">PgSchemaMismatchError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;database has schema_version=</span><span class="si">{</span><span class="n">got_version</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;rate&#39;&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+                <span class="n">stored_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="n">rate</span>
+                <span class="k">if</span> <span class="n">rate</span> <span class="o">!=</span> <span class="n">stored_rate</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">PgSchemaMismatchError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;database has rate=</span><span class="si">{</span><span class="n">stored_rate</span><span class="si">}</span><span class="s2">, opened with rate=</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">. &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Re-quantize the data or open with the original rate.&quot;</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">stored_rate</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schema_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SCHEMA_VERSION</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PostgresStore&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># --- meta ----------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT value FROM meta WHERE key = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) &quot;</span>
+                <span class="s2">&quot;ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="c1"># --- tier registry ------------------------------------------------</span>
+
+<div class="viewcode-block" id="PostgresStore.add_tier">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PostgresStore.add_tier">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier</span><span class="p">:</span> <span class="n">Tier</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">enforce_no_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add or update a tier.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tier: Tier definition.</span>
+<span class="sd">            enforce_no_overlap: If True, install a per-tier ``EXCLUDE USING</span>
+<span class="sd">                GIST`` constraint forbidding overlapping annotations within</span>
+<span class="sd">                this tier. Required for proper TIME_SUBDIVISION enforcement.</span>
+<span class="sd">                Cannot be toggled after the tier has annotations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">psycopg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;INSERT INTO tiers (name, stereotype, parent, metadata, enforce_no_overlap) &quot;</span>
+                <span class="s2">&quot;VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">::jsonb, </span><span class="si">%s</span><span class="s2">) &quot;</span>
+                <span class="s2">&quot;ON CONFLICT(name) DO UPDATE SET &quot;</span>
+                <span class="s2">&quot;  stereotype = EXCLUDED.stereotype, &quot;</span>
+                <span class="s2">&quot;  parent     = EXCLUDED.parent, &quot;</span>
+                <span class="s2">&quot;  metadata   = EXCLUDED.metadata, &quot;</span>
+                <span class="s2">&quot;  enforce_no_overlap = EXCLUDED.enforce_no_overlap&quot;</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="n">tier</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">tier</span><span class="o">.</span><span class="n">stereotype</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">tier</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tier</span><span class="o">.</span><span class="n">metadata</span><span class="p">),</span>
+                    <span class="n">enforce_no_overlap</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="n">constraint_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;no_overlap_in_</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="n">tier</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">existing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT 1 FROM pg_constraint WHERE conname = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">constraint_name</span><span class="p">,),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">enforce_no_overlap</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">existing</span><span class="p">:</span>
+                <span class="c1"># Install the partial EXCLUDE constraint.</span>
+                <span class="n">stmt</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">SQL</span><span class="p">(</span>
+                    <span class="s2">&quot;ALTER TABLE annotations &quot;</span>
+                    <span class="s2">&quot;ADD CONSTRAINT </span><span class="si">{name}</span><span class="s2"> EXCLUDE USING GIST (span WITH &amp;&amp;) &quot;</span>
+                    <span class="s2">&quot;WHERE (tier = </span><span class="si">{tier_lit}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Identifier</span><span class="p">(</span><span class="n">constraint_name</span><span class="p">),</span>
+                    <span class="n">tier_lit</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="n">tier</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">enforce_no_overlap</span> <span class="ow">and</span> <span class="n">existing</span><span class="p">:</span>
+                <span class="n">stmt</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">SQL</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE annotations DROP CONSTRAINT </span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Identifier</span><span class="p">(</span><span class="n">constraint_name</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tier</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT name, stereotype, parent, metadata FROM tiers WHERE name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">name</span><span class="p">,),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_row_to_tier</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tiers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tier</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT name, stereotype, parent, metadata FROM tiers ORDER BY name&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">([</span><span class="n">_row_to_tier</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_no_overlap_enforced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT enforce_no_overlap FROM tiers WHERE name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">tier_name</span><span class="p">,),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="kc">False</span>
+
+    <span class="c1"># --- annotation CRUD ---------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_add</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+        <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ExclusionViolation</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TierOverlapError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;annotation </span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> would overlap an existing one in tier &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">tier</span><span class="si">!r}</span><span class="s2"> (per-tier EXCLUDE constraint is active)&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cols</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_annotation_to_row</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO annotations (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">) &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;VALUES (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">values</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Annotation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM annotations WHERE id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">annotation_id</span><span class="p">,))</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
+            <span class="n">ann</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM annotations WHERE id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">annotation_id</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="n">ann</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM annotations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># Number of distinct interval keys; matches MutableMapping facade.</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT COUNT(DISTINCT span) FROM annotations &quot;</span>
+                <span class="s2">&quot;WHERE ref_kind = &#39;media&#39; AND span IS NOT NULL&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TimeInterval</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT span FROM (&quot;</span>
+                <span class="s2">&quot;  SELECT DISTINCT span FROM annotations &quot;</span>
+                <span class="s2">&quot;  WHERE ref_kind = &#39;media&#39; AND span IS NOT NULL&quot;</span>
+                <span class="s2">&quot;) AS d &quot;</span>
+                <span class="s2">&quot;ORDER BY lower(span), upper(span)&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">span</span><span class="p">,)</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_span_to_interval</span><span class="p">(</span><span class="n">span</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">TimeInterval</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT 1 FROM annotations WHERE span = </span><span class="si">%s</span><span class="s2"> LIMIT 1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">span</span><span class="p">,)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT * FROM annotations WHERE span = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">span</span><span class="p">,)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">r</span><span class="p">)))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM annotations WHERE span = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">span</span><span class="p">,))</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># --- Allen-relation queries ---------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">intersects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">during</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="c1"># Strict: a&#39;s span is strictly inside q (Allen &#39;d&#39; excludes shared</span>
+        <span class="c1"># endpoints). We pre-filter with `&lt;@` then re-check exact rationals.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&lt;@&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;@&gt;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="c1"># Strict Allen &#39;o&#39;: pre-filter with `&amp;&amp;`, re-check rationals.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">meets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="c1"># `-|-` matches both meets and met_by; rational predicate disambiguates.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;-|-&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">starts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">finishes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="c1"># Range equality matches Allen &#39;=&#39; exactly.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">relate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">rels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span>
+        <span class="c1"># Pick the broadest pre-filter that covers all requested relations.</span>
+        <span class="k">if</span> <span class="n">rels</span> <span class="o">&lt;=</span> <span class="p">{</span><span class="n">AllenRelation</span><span class="o">.</span><span class="n">BEFORE</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">AFTER</span><span class="p">}:</span>
+            <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scan_filtered</span><span class="p">(</span><span class="n">rels</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">ann</span>
+            <span class="k">return</span>
+        <span class="c1"># Fall back to a candidate scan over `&amp;&amp;` ∪ `-|-` (covers all overlap +</span>
+        <span class="c1"># touching cases), then exact rationals.</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_touching_candidates</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+            <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">PREDICATE_BY_RELATION</span><span class="p">[</span><span class="n">r</span><span class="p">](</span><span class="n">iv</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">ann</span>
+                    <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_query_with_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">sql_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE span </span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2"> %s&quot;</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_text</span><span class="p">,</span> <span class="p">(</span><span class="n">span</span><span class="p">,))</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_candidates_filtered</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="n">AllenRelation</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">predicate</span> <span class="o">=</span> <span class="n">PREDICATE_BY_RELATION</span><span class="p">[</span><span class="n">relation</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+            <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">predicate</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">ann</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_scan_filtered</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">],</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+            <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">PREDICATE_BY_RELATION</span><span class="p">[</span><span class="n">r</span><span class="p">](</span><span class="n">iv</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">ann</span>
+                    <span class="k">break</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_touching_candidates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT * FROM annotations WHERE (span &amp;&amp; </span><span class="si">%s</span><span class="s2">) OR (span -|- </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">span</span><span class="p">),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
+
+    <span class="c1"># --- tier filters ------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">by_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT * FROM annotations WHERE tier = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">tier_name</span><span class="p">,)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">at_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span> <span class="o">==</span> <span class="n">tier_name</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">ann</span>
+
+    <span class="c1"># --- bulk -------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Annotation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transaction</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_do_add</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span>
+        <span class="n">was_autocommit</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span>
+        <span class="k">if</span> <span class="n">was_autocommit</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+            <span class="k">raise</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">was_autocommit</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># --- repr -------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
+                <span class="n">n_anns</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT COUNT(*) FROM annotations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">n_tiers</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT COUNT(*) FROM tiers&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — closed connection</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;PostgresStore(&lt;closed&gt;)&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;PostgresStore(</span><span class="si">{</span><span class="n">n_anns</span><span class="si">}</span><span class="s2"> annotations, </span><span class="si">{</span><span class="n">n_tiers</span><span class="si">}</span><span class="s2"> tiers, rate=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="c1"># --- conversion helpers -----------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_interval_to_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="s2">&quot;[)&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">RationalTime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a RationalTime to integer ticks at the project rate.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">rate</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># Use to_rate which raises on lossy conversion</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">to_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">except</span> <span class="n">LossyTimeConversionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RateMismatchError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;RationalTime </span><span class="si">{</span><span class="n">t</span><span class="si">!r}</span><span class="s2"> cannot be expressed at project rate &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2"> without loss&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_span_to_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeInterval</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TimeInterval</span><span class="p">(</span>
+            <span class="n">RationalTime</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
+            <span class="n">RationalTime</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_annotation_to_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ann</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">reference</span>
+        <span class="n">ref_kind</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">scene_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">target_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;media&quot;</span>
+            <span class="n">asset_id</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">asset_id</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">NodeRef</span><span class="p">):</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;node&quot;</span>
+            <span class="n">scene_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">scene_path</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">AnnotationRef</span><span class="p">):</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;annotation&quot;</span>
+            <span class="n">target_id</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">target_id</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — discriminated union</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown reference kind: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tier&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ref_kind&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;scene_path&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;target_id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;span&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_was_generated_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_was_attributed_to&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_generated_at_value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_generated_at_rate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prov_activity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Re-quantize generated_at to project rate too if needed.</span>
+        <span class="n">gen_at</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">generated_at_time</span>
+        <span class="k">if</span> <span class="n">gen_at</span><span class="o">.</span><span class="n">rate</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">gen_at</span> <span class="o">=</span> <span class="n">gen_at</span><span class="o">.</span><span class="n">to_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">LossyTimeConversionError</span><span class="p">:</span>
+                <span class="c1"># Provenance time is informational; fall back to storing as-is.</span>
+                <span class="k">pass</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
+            <span class="n">ref_kind</span><span class="p">,</span>
+            <span class="n">asset_id</span><span class="p">,</span>
+            <span class="n">scene_path</span><span class="p">,</span>
+            <span class="n">target_id</span><span class="p">,</span>
+            <span class="n">span</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">Jsonb</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">),</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">body_schema_uri</span><span class="p">,</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_generated_by</span><span class="p">,</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_attributed_to</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">Jsonb</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_derived_from</span><span class="p">]),</span>
+            <span class="n">gen_at</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">gen_at</span><span class="o">.</span><span class="n">rate</span><span class="p">,</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">activity</span><span class="p">,</span>
+            <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">cols</span><span class="p">,</span> <span class="n">values</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_row_to_annotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Annotation</span><span class="p">:</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;span&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">span</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_span_to_interval</span><span class="p">(</span><span class="n">span</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">interval</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">ref</span><span class="p">:</span> <span class="n">Reference</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;ref_kind&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;media&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;asset_id&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">NodeRef</span><span class="p">(</span><span class="n">scene_path</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;scene_path&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;annotation&quot;</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">AnnotationRef</span><span class="p">(</span><span class="n">target_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;target_id&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown ref_kind: </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">provenance</span> <span class="o">=</span> <span class="n">Provenance</span><span class="p">(</span>
+            <span class="n">was_generated_by</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_generated_by&quot;</span><span class="p">],</span>
+            <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_attributed_to&quot;</span><span class="p">],</span>
+            <span class="n">was_derived_from</span><span class="o">=</span><span class="p">[</span><span class="n">UUID</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">]],</span>
+            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_value&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_rate&quot;</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">activity</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_activity&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+            <span class="n">tier</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;tier&quot;</span><span class="p">],</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">],</span>
+            <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;body_schema_uri&quot;</span><span class="p">],</span>
+            <span class="n">provenance</span><span class="o">=</span><span class="n">provenance</span><span class="p">,</span>
+            <span class="n">confidence</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_row_to_tier</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tier</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">stereotype</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Tier</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="p">(</span><span class="n">stereotype</span><span class="p">),</span>
+        <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">metadata</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># convenience</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="from_memory">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.from_memory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_memory</span><span class="p">(</span><span class="n">memory_store</span><span class="p">,</span> <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PostgresStore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replicate an in-memory store into a Postgres database.&quot;&quot;&quot;</span>
+    <span class="n">pg</span> <span class="o">=</span> <span class="n">PostgresStore</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tier</span> <span class="ow">in</span> <span class="n">memory_store</span><span class="o">.</span><span class="n">tiers</span><span class="p">():</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">memory_store</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">pg</span></div>
+
+
+
+<div class="viewcode-block" id="to_memory">
+<a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.to_memory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_memory</span><span class="p">(</span><span class="n">pg_store</span><span class="p">:</span> <span class="n">PostgresStore</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Snapshot a ``PostgresStore`` into a ``MemoryStore``.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryStore</span>
+
+    <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">tier</span> <span class="ow">in</span> <span class="n">pg_store</span><span class="o">.</span><span class="n">tiers</span><span class="p">():</span>
+        <span class="n">mem</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span>
+    <span class="n">mem</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pg_store</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">mem</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+lacing.adapters.web_annotation
+==============================
+.. automodule:: lacing.adapters.web_annotation
+   :members:

@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.adapters.eaf &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="lacing.adapters.textgrid" href="textgrid.html" />
+    <link rel="prev" title="lacing.adapters.annot" href="annot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.adapters.eaf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mapping">Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time">Time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lossy-on-dump">Lossy on dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.adapters.eaf.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.adapters.eaf.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.adapters.eaf</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/module_docs/lacing/adapters/eaf.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.adapters.eaf">
+<span id="lacing-adapters-eaf"></span><h1>lacing.adapters.eaf<a class="headerlink" href="#module-lacing.adapters.eaf" title="Link to this heading"></a></h1>
+<p>ELAN EAF adapter (Max Planck Institute’s annotation tool format).</p>
+<p>EAF is the canonical format for tier-hierarchy annotation. Every Phase 0
+adapter modeled flat tiers; this is the first that exercises lacing’s
+stereotype constraint model end-to-end (TIME_SUBDIVISION, INCLUDED_IN,
+SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). See ANN-DOC §B and OSS-DOC
+tier-2.4.</p>
+<section id="mapping">
+<h2>Mapping<a class="headerlink" href="#mapping" title="Link to this heading"></a></h2>
+<p>EAF                                    ↔ lacing
+<code class="docutils literal notranslate"><span class="pre">TIER_ID</span></code>                            ↔ <code class="docutils literal notranslate"><span class="pre">Tier.name</span></code>
+<code class="docutils literal notranslate"><span class="pre">PARENT_REF</span></code>                         ↔ <code class="docutils literal notranslate"><span class="pre">Tier.parent</span></code>
+<code class="docutils literal notranslate"><span class="pre">LINGUISTIC_TYPE_REF</span></code> + <code class="docutils literal notranslate"><span class="pre">CONSTRAINTS</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">Tier.stereotype</span></code>
+<code class="docutils literal notranslate"><span class="pre">ALIGNABLE_ANNOTATION</span></code>               ↔ <code class="docutils literal notranslate"><span class="pre">Annotation</span></code> with <code class="docutils literal notranslate"><span class="pre">MediaRef</span></code>
+<code class="docutils literal notranslate"><span class="pre">ANNOTATION_VALUE</span></code>                   ↔ <code class="docutils literal notranslate"><span class="pre">body['text']</span></code>
+<code class="docutils literal notranslate"><span class="pre">MEDIA_DESCRIPTOR</span> <span class="pre">/</span> <span class="pre">MEDIA_URL</span></code>       ↔ <code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code> (when present)</p>
+</section>
+<section id="time">
+<h2>Time<a class="headerlink" href="#time" title="Link to this heading"></a></h2>
+<p>EAF stores ALL times as integer milliseconds (the format requires it).
+We map directly to <code class="docutils literal notranslate"><span class="pre">RationalTime(ms,</span> <span class="pre">rate=1000)</span></code> — exact, no floats.
+Pass <code class="docutils literal notranslate"><span class="pre">rate=</span></code> to re-quantize to a different project rate (must be
+exact; raises <code class="docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code> otherwise).</p>
+</section>
+<section id="lossy-on-dump">
+<h2>Lossy on dump<a class="headerlink" href="#lossy-on-dump" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>ELAN provenance is at the document level (<code class="docutils literal notranslate"><span class="pre">AUTHOR</span></code>, <code class="docutils literal notranslate"><span class="pre">DATE</span></code>); per-
+annotation provenance and confidence are dropped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REF_ANNOTATION</span></code> (annotations referencing parent annotations rather
+than time slots) is <strong>not yet supported</strong>; the loader emits
+<code class="docutils literal notranslate"><span class="pre">ALIGNABLE_ANNOTATION</span></code> data only. Round-trip of REF annotations is
+Phase 2 work.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CV_REF</span></code> controlled vocabularies are not preserved.</p></li>
+<li><p>The ELAN <code class="docutils literal notranslate"><span class="pre">default</span></code> empty tier and <code class="docutils literal notranslate"><span class="pre">default-lt</span></code> linguistic type
+(auto-created by pympi) are filtered out on load if they have no
+annotations.</p></li>
+</ul>
+<p>Spec: <a class="reference external" href="https://www.mpi.nl/tools/elan/EAFv3.0.xsd">https://www.mpi.nl/tools/elan/EAFv3.0.xsd</a></p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.eaf.dump">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.eaf.</span></span><span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">media_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/eaf.html#dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.eaf.dump" title="Link to this definition"></a></dt>
+<dd><p>Write annotations as an ELAN EAF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> – Source store. Only annotations with <code class="docutils literal notranslate"><span class="pre">MediaRef</span></code> and a
+non-None interval are exported.</p></li>
+<li><p><strong>target</strong> – Output path. None = return bytes.</p></li>
+<li><p><strong>pretty</strong> – Pretty-print XML (default True).</p></li>
+<li><p><strong>media_url</strong> – Optional <code class="docutils literal notranslate"><span class="pre">MEDIA_URL</span></code> for <code class="docutils literal notranslate"><span class="pre">MEDIA_DESCRIPTOR</span></code>. If
+None and the store has annotations, use the first MediaRef’s
+<code class="docutils literal notranslate"><span class="pre">asset_id</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.eaf.load">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.eaf.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'anonymous'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_default_tier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/eaf.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.eaf.load" title="Link to this definition"></a></dt>
+<dd><p>Load an ELAN EAF file into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – Path or bytes containing EAF XML.</p></li>
+<li><p><strong>rate</strong> – Quantization rate (default <code class="docutils literal notranslate"><span class="pre">DEFAULT_RATE</span></code>). EAF times are
+milliseconds; conversions must be exact.</p></li>
+<li><p><strong>asset_id</strong> – Override media reference. None = use the first
+<code class="docutils literal notranslate"><span class="pre">MEDIA_DESCRIPTOR/MEDIA_URL</span></code> from the EAF, or the default.</p></li>
+<li><p><strong>attribution</strong> – <code class="docutils literal notranslate"><span class="pre">Provenance.was_attributed_to</span></code> value.</p></li>
+<li><p><strong>drop_default_tier</strong> – If True (default), filter out the empty
+<code class="docutils literal notranslate"><span class="pre">default</span></code> tier auto-created by pympi.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="annot.html" class="btn btn-neutral float-left" title="lacing.adapters.annot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="textgrid.html" class="btn btn-neutral float-right" title="lacing.adapters.textgrid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+lacing.tier
+===========
+.. automodule:: lacing.tier
+   :members:

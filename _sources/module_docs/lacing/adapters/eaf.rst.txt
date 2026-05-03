@@ -1,0 +1,4 @@
+lacing.adapters.eaf
+===================
+.. automodule:: lacing.adapters.eaf
+   :members:

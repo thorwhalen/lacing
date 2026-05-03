@@ -1,0 +1,4 @@
+lacing.quality
+==============
+.. automodule:: lacing.quality
+   :members:

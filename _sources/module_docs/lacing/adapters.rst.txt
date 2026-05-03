@@ -1,0 +1,4 @@
+lacing.adapters
+===============
+.. automodule:: lacing.adapters
+   :members:

@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.tier &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.tier</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.tier</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tiers and the five ELAN stereotypes.</span>
+
+<span class="sd">A tier is a named layer of annotations. Stereotypes constrain how a tier</span>
+<span class="sd">relates to its parent. We adopt ELAN&#39;s five stereotypes verbatim — see</span>
+<span class="sd">ANN-DOC §C and OSS-DOC tier-2.4.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeInterval</span>
+
+
+<div class="viewcode-block" id="TierStereotype">
+<a class="viewcode-back" href="../../module_docs/lacing/tier.html#lacing.TierStereotype">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TierStereotype</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constraints on how a child tier relates to its parent tier.</span>
+
+<span class="sd">    Names match ELAN exactly so EAF round-trips are trivial.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NONE</span> <span class="o">=</span> <span class="s2">&quot;NONE&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;No parent constraint. Top-level tier.&quot;&quot;&quot;</span>
+
+    <span class="n">TIME_SUBDIVISION</span> <span class="o">=</span> <span class="s2">&quot;TIME_SUBDIVISION&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Children fully partition the parent&#39;s interval (no gaps, no overlap).&quot;&quot;&quot;</span>
+
+    <span class="n">INCLUDED_IN</span> <span class="o">=</span> <span class="s2">&quot;INCLUDED_IN&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Children lie within the parent but gaps between siblings are allowed.&quot;&quot;&quot;</span>
+
+    <span class="n">SYMBOLIC_SUBDIVISION</span> <span class="o">=</span> <span class="s2">&quot;SYMBOLIC_SUBDIVISION&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ordered subdivision; children share parent&#39;s interval as a sequence (no times).&quot;&quot;&quot;</span>
+
+    <span class="n">SYMBOLIC_ASSOCIATION</span> <span class="o">=</span> <span class="s2">&quot;SYMBOLIC_ASSOCIATION&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One-to-one association with parent; child shares parent&#39;s interval exactly.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Tier">
+<a class="viewcode-back" href="../../module_docs/lacing/tier.html#lacing.Tier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tier</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A named annotation layer with optional parent and stereotype.</span>
+
+<span class="sd">    Tiers are pure metadata; they don&#39;t own annotations. The store is keyed</span>
+<span class="sd">    by interval, not by tier — annotations carry their tier name as a field.</span>
+<span class="sd">    This matches ELAN&#39;s TIME_ORDER indirection (see ANN-DOC §C).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_name&quot;</span><span class="p">,</span> <span class="s2">&quot;_stereotype&quot;</span><span class="p">,</span> <span class="s2">&quot;_parent&quot;</span><span class="p">,</span> <span class="s2">&quot;_metadata&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">stereotype</span><span class="p">:</span> <span class="n">TierStereotype</span> <span class="o">=</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
+        <span class="n">parent</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;name must be a non-empty string&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stereotype</span><span class="p">,</span> <span class="n">TierStereotype</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;stereotype must be a TierStereotype, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">stereotype</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;parent must be str or None, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stereotype</span> <span class="o">!=</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span> <span class="ow">and</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;stereotype </span><span class="si">{</span><span class="n">stereotype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> requires a parent tier&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span> <span class="ow">and</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stereotype NONE cannot have a parent tier&quot;</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_stereotype&quot;</span><span class="p">,</span> <span class="n">stereotype</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_parent&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_metadata&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">metadata</span> <span class="ow">or</span> <span class="p">{}))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stereotype</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TierStereotype</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stereotype</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Defensive copy — Tier is intended to be value-like.</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="s2">&quot;stereotype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stereotype</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_wire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Tier&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stereotype&quot;</span><span class="p">,</span> <span class="s2">&quot;NONE&quot;</span><span class="p">)),</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">),</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Tier</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_name</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stereotype</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_stereotype</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_parent</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_metadata</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stereotype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Tier(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">!r}</span><span class="s2">, stereotype=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_stereotype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;parent=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="si">!r}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="validate_tier_constraint">
+<a class="viewcode-back" href="../../module_docs/lacing/tier.html#lacing.validate_tier_constraint">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_tier_constraint</span><span class="p">(</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="n">Tier</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">child</span><span class="p">:</span> <span class="n">Tier</span><span class="p">,</span>
+    <span class="n">parent_intervals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TimeInterval</span><span class="p">],</span>
+    <span class="n">child_intervals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TimeInterval</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that ``child_intervals`` satisfy ``child.stereotype`` against ``parent_intervals``.</span>
+
+<span class="sd">    Returns a list of violation messages (empty list = valid). Pure function;</span>
+<span class="sd">    callers decide whether to raise, log, or surface in UI.</span>
+
+<span class="sd">    Lives here rather than on ``Tier`` so the constraint logic is testable</span>
+<span class="sd">    in isolation and reusable from server validators and UI plugins alike.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">violations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;tier </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> has stereotype NONE but parent=</span><span class="si">{</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">violations</span>
+
+    <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;tier </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> stereotype </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">stereotype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> requires a parent&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">violations</span>
+
+    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;tier </span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> declares parent=</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">parent</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;but was validated against parent=</span><span class="si">{</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">INCLUDED_IN</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">child_intervals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">pi</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">ci</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">pi</span><span class="o">.</span><span class="n">end</span> <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">parent_intervals</span>
+            <span class="p">):</span>
+                <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;child interval </span><span class="si">{</span><span class="n">ci</span><span class="si">!r}</span><span class="s2"> is not contained in any parent interval&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">SYMBOLIC_ASSOCIATION</span><span class="p">:</span>
+        <span class="c1"># 1-1 with parent; child shares parent&#39;s interval exactly.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">child_intervals</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent_intervals</span><span class="p">):</span>
+            <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SYMBOLIC_ASSOCIATION expects </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">parent_intervals</span><span class="p">)</span><span class="si">}</span><span class="s2"> child &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;intervals to match parent count, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">child_intervals</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pi</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">parent_intervals</span><span class="p">,</span> <span class="n">child_intervals</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">pi</span> <span class="o">!=</span> <span class="n">ci</span><span class="p">:</span>
+                    <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;SYMBOLIC_ASSOCIATION mismatch: child </span><span class="si">{</span><span class="n">ci</span><span class="si">!r}</span><span class="s2"> != parent </span><span class="si">{</span><span class="n">pi</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">TIME_SUBDIVISION</span><span class="p">:</span>
+        <span class="c1"># Children fully partition each parent: contiguous, no gaps, no overlap.</span>
+        <span class="c1"># Group children by parent they fall in, then check coverage.</span>
+        <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">parent_intervals</span><span class="p">:</span>
+            <span class="n">within</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">ci</span> <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">child_intervals</span> <span class="k">if</span> <span class="n">pi</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">ci</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">pi</span><span class="o">.</span><span class="n">end</span><span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">within</span><span class="p">:</span>
+                <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TIME_SUBDIVISION: parent </span><span class="si">{</span><span class="n">pi</span><span class="si">!r}</span><span class="s2"> has no children&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">within</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span> <span class="o">!=</span> <span class="n">pi</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+                <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;TIME_SUBDIVISION: first child </span><span class="si">{</span><span class="n">within</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> does not start at </span><span class="si">{</span><span class="n">pi</span><span class="o">.</span><span class="n">start</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">within</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="o">!=</span> <span class="n">pi</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+                <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;TIME_SUBDIVISION: last child </span><span class="si">{</span><span class="n">within</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> does not end at </span><span class="si">{</span><span class="n">pi</span><span class="o">.</span><span class="n">end</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">within</span><span class="p">,</span> <span class="n">within</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="k">if</span> <span class="n">left</span><span class="o">.</span><span class="n">end</span> <span class="o">!=</span> <span class="n">right</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+                    <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;TIME_SUBDIVISION: gap or overlap between </span><span class="si">{</span><span class="n">left</span><span class="si">!r}</span><span class="s2"> and </span><span class="si">{</span><span class="n">right</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">SYMBOLIC_SUBDIVISION</span><span class="p">:</span>
+        <span class="c1"># Symbolic — no time validation (children are an ordered sequence</span>
+        <span class="c1"># within the parent&#39;s interval). We check containment only.</span>
+        <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">child_intervals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">pi</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">ci</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">pi</span><span class="o">.</span><span class="n">end</span> <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">parent_intervals</span>
+            <span class="p">):</span>
+                <span class="n">violations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;SYMBOLIC_SUBDIVISION: child </span><span class="si">{</span><span class="n">ci</span><span class="si">!r}</span><span class="s2"> is not within any parent&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">violations</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

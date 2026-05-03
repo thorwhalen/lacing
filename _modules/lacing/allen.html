@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.allen &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.allen</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.allen</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Allen&#39;s 13 interval relations as pure predicates.</span>
+
+<span class="sd">Public predicate API — never write ad-hoc overlap checks elsewhere in lacing.</span>
+<span class="sd">See ANN-DOC §A and ``.claude/skills/lacing-time-and-intervals/SKILL.md``.</span>
+
+<span class="sd">Convention: intervals are half-open ``[start, end)``. Boundary cases for</span>
+<span class="sd">``meets``/``met_by`` use exact equality on rational time. Half-open</span>
+<span class="sd">intervals share zero measure at a boundary, so ``meets`` is NOT an</span>
+<span class="sd">intersection — see :func:`intersects`.</span>
+
+<span class="sd">Relation table (a R b means: a&#39;s relation to b is R):</span>
+
+<span class="sd">================  ====  =====================================</span>
+<span class="sd">Relation          Sym.  Predicate (with intervals a, b)</span>
+<span class="sd">================  ====  =====================================</span>
+<span class="sd">before            &lt;     a.end &lt; b.start</span>
+<span class="sd">after             &gt;     a.start &gt; b.end</span>
+<span class="sd">meets             m     a.end == b.start</span>
+<span class="sd">met_by            mi    a.start == b.end</span>
+<span class="sd">overlaps          o     a.start &lt; b.start &lt; a.end &lt; b.end</span>
+<span class="sd">overlapped_by     oi    b.start &lt; a.start &lt; b.end &lt; a.end</span>
+<span class="sd">starts            s     a.start == b.start and a.end &lt; b.end</span>
+<span class="sd">started_by        si    a.start == b.start and a.end &gt; b.end</span>
+<span class="sd">during            d     a.start &gt; b.start and a.end &lt; b.end</span>
+<span class="sd">contains          di    a.start &lt; b.start and a.end &gt; b.end</span>
+<span class="sd">finishes          f     a.start &gt; b.start and a.end == b.end</span>
+<span class="sd">finished_by       fi    a.start &lt; b.start and a.end == b.end</span>
+<span class="sd">equals            =     a.start == b.start and a.end == b.end</span>
+<span class="sd">================  ====  =====================================</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeInterval</span>
+
+
+<div class="viewcode-block" id="AllenRelation">
+<a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.AllenRelation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AllenRelation</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The thirteen Allen relations.</span>
+
+<span class="sd">    Symbols match Allen (1983); inverse pairs end in ``i``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">BEFORE</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
+    <span class="n">AFTER</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+    <span class="n">MEETS</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+    <span class="n">MET_BY</span> <span class="o">=</span> <span class="s2">&quot;mi&quot;</span>
+    <span class="n">OVERLAPS</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
+    <span class="n">OVERLAPPED_BY</span> <span class="o">=</span> <span class="s2">&quot;oi&quot;</span>
+    <span class="n">STARTS</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">STARTED_BY</span> <span class="o">=</span> <span class="s2">&quot;si&quot;</span>
+    <span class="n">DURING</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span>
+    <span class="n">CONTAINS</span> <span class="o">=</span> <span class="s2">&quot;di&quot;</span>
+    <span class="n">FINISHES</span> <span class="o">=</span> <span class="s2">&quot;f&quot;</span>
+    <span class="n">FINISHED_BY</span> <span class="o">=</span> <span class="s2">&quot;fi&quot;</span>
+    <span class="n">EQUALS</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span>
+
+<div class="viewcode-block" id="AllenRelation.inverse">
+<a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.AllenRelation.inverse">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllenRelation&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The inverse relation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_INVERSE</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
+</div>
+
+
+
+<span class="n">_INVERSE</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">BEFORE</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">AFTER</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">AFTER</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">BEFORE</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MET_BY</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MET_BY</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPPED_BY</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPPED_BY</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTED_BY</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTED_BY</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHED_BY</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHED_BY</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># --- The thirteen predicates --------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">after</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">meets</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">met_by</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">overlaps</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">overlapped_by</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">starts</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">started_by</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">during</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">finishes</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">finished_by</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">equals</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+
+
+<span class="c1"># --- Aggregate predicates ----------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="intersects">
+<a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.intersects">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">intersects</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;True iff ``a`` and ``b`` share any positive measure of time.</span>
+
+<span class="sd">    ``meets``/``met_by`` are NOT intersections (half-open boundaries share</span>
+<span class="sd">    zero measure). Two zero-length point intervals at the same instant DO</span>
+<span class="sd">    intersect (they&#39;re equal).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_point</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span>
+    <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="n">end</span></div>
+
+
+
+<span class="n">PREDICATE_BY_RELATION</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TimeInterval</span><span class="p">,</span> <span class="n">TimeInterval</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">BEFORE</span><span class="p">:</span> <span class="n">before</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">AFTER</span><span class="p">:</span> <span class="n">after</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">:</span> <span class="n">meets</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MET_BY</span><span class="p">:</span> <span class="n">met_by</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">:</span> <span class="n">overlaps</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPPED_BY</span><span class="p">:</span> <span class="n">overlapped_by</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">:</span> <span class="n">starts</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTED_BY</span><span class="p">:</span> <span class="n">started_by</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">:</span> <span class="n">during</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">:</span> <span class="n">contains</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">:</span> <span class="n">finishes</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHED_BY</span><span class="p">:</span> <span class="n">finished_by</span><span class="p">,</span>
+    <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span> <span class="n">equals</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Lookup table — used by ``IntervalAnnotationStore`` to dispatch by relation.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="relate">
+<a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.relate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">relate</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllenRelation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the unique Allen relation between two well-formed intervals.</span>
+
+<span class="sd">    Exactly one of the 13 relations holds for any pair of well-formed</span>
+<span class="sd">    (``start &lt;= end``) intervals.</span>
+
+<span class="sd">    Caveat: when both ``a`` and ``b`` are point intervals (zero-length),</span>
+<span class="sd">    ``meets`` and ``met_by`` would both technically apply alongside ``equals``.</span>
+<span class="sd">    We resolve that by preferring ``equals`` for identical intervals; the</span>
+<span class="sd">    ``meets``/``met_by`` predicates exclude ``a == b`` accordingly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">rel</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">PREDICATE_BY_RELATION</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">pred</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">rel</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>  <span class="c1"># pragma: no cover  — unreachable for well-formed intervals</span>
+        <span class="sa">f</span><span class="s2">&quot;no Allen relation matched for a=</span><span class="si">{</span><span class="n">a</span><span class="si">!r}</span><span class="s2">, b=</span><span class="si">{</span><span class="n">b</span><span class="si">!r}</span><span class="s2">&quot;</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># --- Composition table -------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Allen&#39;s composition: given (a R1 b) and (b R2 c), what set of relations is</span>
+<span class="c1"># possible between a and c?  We don&#39;t ship the full 13×13 table in Phase 0 —</span>
+<span class="c1"># the doc only requires Phase 5 to expose the algebra fully (ANN-DOC §A,</span>
+<span class="c1"># ORD-Horn tractable subalgebra). The function exists with a stub-but-correct</span>
+<span class="c1"># fallback (the universal set) so callers can be written today.</span>
+
+
+<span class="n">_ALL_RELATIONS</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">AllenRelation</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compose">
+<a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.compose">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="n">r1</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="p">,</span> <span class="n">r2</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allen&#39;s composition. See module docstring.</span>
+
+<span class="sd">    Phase 0 returns the universal set (all 13 relations) for any pair where</span>
+<span class="sd">    a unique answer is not encoded — correct but uninformative. The full</span>
+<span class="sd">    table lands in Phase 5; this function is a stable surface for callers</span>
+<span class="sd">    written against it now.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># A few obvious singletons cost nothing and demo the API:</span>
+    <span class="k">if</span> <span class="n">r1</span> <span class="o">==</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">r2</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">r2</span> <span class="o">==</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">r1</span><span class="p">}</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">_ALL_RELATIONS</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

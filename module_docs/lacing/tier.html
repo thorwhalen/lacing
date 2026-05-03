@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.tier &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.time" href="time.html" />
+    <link rel="prev" title="lacing.store.sqlite" href="store/sqlite.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.tier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.tier.Tier"><code class="docutils literal notranslate"><span class="pre">Tier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.tier.TierStereotype"><code class="docutils literal notranslate"><span class="pre">TierStereotype</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.tier.TierStereotype.INCLUDED_IN"><code class="docutils literal notranslate"><span class="pre">TierStereotype.INCLUDED_IN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.tier.TierStereotype.NONE"><code class="docutils literal notranslate"><span class="pre">TierStereotype.NONE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION"><code class="docutils literal notranslate"><span class="pre">TierStereotype.SYMBOLIC_ASSOCIATION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION"><code class="docutils literal notranslate"><span class="pre">TierStereotype.SYMBOLIC_SUBDIVISION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.tier.TierStereotype.TIME_SUBDIVISION"><code class="docutils literal notranslate"><span class="pre">TierStereotype.TIME_SUBDIVISION</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.tier.validate_tier_constraint"><code class="docutils literal notranslate"><span class="pre">validate_tier_constraint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.tier</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/tier.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.tier">
+<span id="lacing-tier"></span><h1>lacing.tier<a class="headerlink" href="#module-lacing.tier" title="Link to this heading"></a></h1>
+<p>Tiers and the five ELAN stereotypes.</p>
+<p>A tier is a named layer of annotations. Stereotypes constrain how a tier
+relates to its parent. We adopt ELAN’s five stereotypes verbatim — see
+ANN-DOC §C and OSS-DOC tier-2.4.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.tier.Tier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">Tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stereotype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.tier.TierStereotype" title="lacing.tier.TierStereotype"><span class="pre">TierStereotype</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TierStereotype.NONE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#Tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.Tier" title="Link to this definition"></a></dt>
+<dd><p>A named annotation layer with optional parent and stereotype.</p>
+<p>Tiers are pure metadata; they don’t own annotations. The store is keyed
+by interval, not by tier — annotations carry their tier name as a field.
+This matches ELAN’s TIME_ORDER indirection (see ANN-DOC §C).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">TierStereotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#TierStereotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.TierStereotype" title="Link to this definition"></a></dt>
+<dd><p>Constraints on how a child tier relates to its parent tier.</p>
+<p>Names match ELAN exactly so EAF round-trips are trivial.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype.INCLUDED_IN">
+<span class="sig-name descname"><span class="pre">INCLUDED_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INCLUDED_IN'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.INCLUDED_IN" title="Link to this definition"></a></dt>
+<dd><p>Children lie within the parent but gaps between siblings are allowed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype.NONE">
+<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NONE'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.NONE" title="Link to this definition"></a></dt>
+<dd><p>No parent constraint. Top-level tier.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION">
+<span class="sig-name descname"><span class="pre">SYMBOLIC_ASSOCIATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_ASSOCIATION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION" title="Link to this definition"></a></dt>
+<dd><p>One-to-one association with parent; child shares parent’s interval exactly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION">
+<span class="sig-name descname"><span class="pre">SYMBOLIC_SUBDIVISION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_SUBDIVISION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION" title="Link to this definition"></a></dt>
+<dd><p>Ordered subdivision; children share parent’s interval as a sequence (no times).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.tier.TierStereotype.TIME_SUBDIVISION">
+<span class="sig-name descname"><span class="pre">TIME_SUBDIVISION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TIME_SUBDIVISION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.TIME_SUBDIVISION" title="Link to this definition"></a></dt>
+<dd><p>Children fully partition the parent’s interval (no gaps, no overlap).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.tier.validate_tier_constraint">
+<span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">validate_tier_constraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.tier.Tier" title="lacing.tier.Tier"><span class="pre">Tier</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.tier.Tier" title="lacing.tier.Tier"><span class="pre">Tier</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_intervals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_intervals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/tier.html#validate_tier_constraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.validate_tier_constraint" title="Link to this definition"></a></dt>
+<dd><p>Check that <code class="docutils literal notranslate"><span class="pre">child_intervals</span></code> satisfy <code class="docutils literal notranslate"><span class="pre">child.stereotype</span></code> against <code class="docutils literal notranslate"><span class="pre">parent_intervals</span></code>.</p>
+<p>Returns a list of violation messages (empty list = valid). Pure function;
+callers decide whether to raise, log, or surface in UI.</p>
+<p>Lives here rather than on <code class="docutils literal notranslate"><span class="pre">Tier</span></code> so the constraint logic is testable
+in isolation and reusable from server validators and UI plugins alike.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="store/sqlite.html" class="btn btn-neutral float-left" title="lacing.store.sqlite" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="time.html" class="btn btn-neutral float-right" title="lacing.time" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

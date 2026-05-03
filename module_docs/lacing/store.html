@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.store &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.store.base" href="store/base.html" />
+    <link rel="prev" title="lacing.quality" href="quality.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.store</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.add"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.all"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.at_tier"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.at_tier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.by_tier"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.by_tier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.contains"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.contains()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.during"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.during()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.equals"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.equals()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.extend"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.extend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.finishes"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.finishes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.intersects"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.intersects()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.meets"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.meets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.overlaps"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.overlaps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.relate"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.relate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.remove"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.remove()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.starts"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.starts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.IntervalAnnotationStore.tiers"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.tiers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.store.PostgresStore.add_tier"><code class="docutils literal notranslate"><span class="pre">PostgresStore.add_tier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.store</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/store.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.store">
+<span id="lacing-store"></span><h1>lacing.store<a class="headerlink" href="#module-lacing.store" title="Link to this heading"></a></h1>
+<p>Interval-keyed annotation stores.</p>
+<p>Public surface: <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> (the facade) and the in-memory
+implementation <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>. SQLite and Postgres backends arrive in Phase 1.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">IntervalAnnotationStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore" title="Link to this definition"></a></dt>
+<dd><p>Protocol for any interval-keyed annotation store.</p>
+<p>Conceptually a <code class="docutils literal notranslate"><span class="pre">MutableMapping[TimeInterval,</span> <span class="pre">list[Annotation]]</span></code>: keys
+are <code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code>; values are lists because multiple annotations can
+share an interval (different tiers, multiple annotators, soft labels).</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> rather than inheriting from <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code> so
+backends (in-memory, SQLite, Postgres) can structurally conform without
+forcing a single class hierarchy. The mapping methods below match the
+<code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code> ABC; concrete backends like <a class="reference internal" href="#lacing.store.MemoryStore" title="lacing.store.MemoryStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryStore</span></code></a>
+implement the full interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.add" title="Link to this definition"></a></dt>
+<dd><p>Append <code class="docutils literal notranslate"><span class="pre">annotation</span></code> to the list at its reference interval.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.all">
+<span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.all" title="Link to this definition"></a></dt>
+<dd><p>Iterate every annotation in the store, order unspecified.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.at_tier">
+<span class="sig-name descname"><span class="pre">at_tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tier_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.at_tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.at_tier" title="Link to this definition"></a></dt>
+<dd><p>Annotations on <code class="docutils literal notranslate"><span class="pre">tier_name</span></code> that intersect <code class="docutils literal notranslate"><span class="pre">query</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.by_tier">
+<span class="sig-name descname"><span class="pre">by_tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tier_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.by_tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.by_tier" title="Link to this definition"></a></dt>
+<dd><p>All annotations on <code class="docutils literal notranslate"><span class="pre">tier_name</span></code>, regardless of interval.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.contains" title="Link to this definition"></a></dt>
+<dd><p>Annotations whose interval strictly contains <code class="docutils literal notranslate"><span class="pre">query</span></code> (Allen <code class="docutils literal notranslate"><span class="pre">di</span></code>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.during">
+<span class="sig-name descname"><span class="pre">during</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.during"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.during" title="Link to this definition"></a></dt>
+<dd><p>Annotations whose interval is strictly inside <code class="docutils literal notranslate"><span class="pre">query</span></code> (Allen <code class="docutils literal notranslate"><span class="pre">d</span></code>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.equals">
+<span class="sig-name descname"><span class="pre">equals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.equals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.equals" title="Link to this definition"></a></dt>
+<dd><p>Allen <code class="docutils literal notranslate"><span class="pre">=</span></code>: identical interval.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.extend" title="Link to this definition"></a></dt>
+<dd><p>Add many; equivalent to repeated <code class="docutils literal notranslate"><span class="pre">.add</span></code> but adapters can optimize.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.finishes">
+<span class="sig-name descname"><span class="pre">finishes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.finishes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.finishes" title="Link to this definition"></a></dt>
+<dd><p>Allen <code class="docutils literal notranslate"><span class="pre">f</span></code>: later start, same end.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.intersects">
+<span class="sig-name descname"><span class="pre">intersects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.intersects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.intersects" title="Link to this definition"></a></dt>
+<dd><p>Annotations whose interval shares any time with <code class="docutils literal notranslate"><span class="pre">query</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.meets">
+<span class="sig-name descname"><span class="pre">meets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.meets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.meets" title="Link to this definition"></a></dt>
+<dd><p>Allen <code class="docutils literal notranslate"><span class="pre">m</span></code>: <code class="docutils literal notranslate"><span class="pre">a.end</span> <span class="pre">==</span> <span class="pre">q.start</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.overlaps">
+<span class="sig-name descname"><span class="pre">overlaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.overlaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.overlaps" title="Link to this definition"></a></dt>
+<dd><p>Strict Allen <code class="docutils literal notranslate"><span class="pre">o</span></code>: <code class="docutils literal notranslate"><span class="pre">a.start</span> <span class="pre">&lt;</span> <span class="pre">q.start</span> <span class="pre">&lt;</span> <span class="pre">a.end</span> <span class="pre">&lt;</span> <span class="pre">q.end</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.relate">
+<span class="sig-name descname"><span class="pre">relate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">relations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="allen.html#lacing.allen.AllenRelation" title="lacing.allen.AllenRelation"><span class="pre">AllenRelation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.relate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.relate" title="Link to this definition"></a></dt>
+<dd><p>Annotations whose interval has any of the named <code class="docutils literal notranslate"><span class="pre">relations</span></code> to <code class="docutils literal notranslate"><span class="pre">query</span></code>.</p>
+<p>Generic dispatch — useful when relations are computed at runtime.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove and return the annotation with this id, or None if absent.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.starts">
+<span class="sig-name descname"><span class="pre">starts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><span class="pre">Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.starts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.starts" title="Link to this definition"></a></dt>
+<dd><p>Allen <code class="docutils literal notranslate"><span class="pre">s</span></code>: same start, earlier end.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore.tiers">
+<span class="sig-name descname"><span class="pre">tiers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="tier.html#lacing.tier.Tier" title="lacing.tier.Tier"><span class="pre">Tier</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore.tiers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore.tiers" title="Link to this definition"></a></dt>
+<dd><p>Registered tiers. Annotations may reference tiers not yet registered;
+callers decide whether that’s an error.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.MemoryStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">MemoryStore</span></span><a class="reference internal" href="../../_modules/lacing/store/memory.html#MemoryStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.MemoryStore" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> implementation over <code class="docutils literal notranslate"><span class="pre">intervaltree</span></code>.</p>
+<p>Conforms to the protocol in <code class="docutils literal notranslate"><span class="pre">lacing.store.base</span></code>. We don’t formally
+inherit from <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> because it’s a <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>
+with method bodies — structural typing is enough.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.PgSchemaMismatchError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">PgSchemaMismatchError</span></span><a class="reference internal" href="../../_modules/lacing/store/postgres.html#PgSchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.PgSchemaMismatchError" title="Link to this definition"></a></dt>
+<dd><p>Raised on opening a database whose schema_version differs.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.PostgresStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">PostgresStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autocommit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/postgres.html#PostgresStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.PostgresStore" title="Link to this definition"></a></dt>
+<dd><p>PostgreSQL-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_string</strong> – A psycopg-compatible URL or kwargs dict.</p></li>
+<li><p><strong>rate</strong> – Project-wide rate. Set on first init; a re-open with a
+different rate raises <code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code>.</p></li>
+<li><p><strong>autocommit</strong> – If True (default), we run individual statements in
+their own transaction. Set to False when batching via
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">extend()</span></code> (it manages its own BEGIN/COMMIT).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.PostgresStore.add_tier">
+<span class="sig-name descname"><span class="pre">add_tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tier.html#lacing.tier.Tier" title="lacing.tier.Tier"><span class="pre">Tier</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_no_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/store/postgres.html#PostgresStore.add_tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.PostgresStore.add_tier" title="Link to this definition"></a></dt>
+<dd><p>Add or update a tier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tier</strong> – Tier definition.</p></li>
+<li><p><strong>enforce_no_overlap</strong> – If True, install a per-tier <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span>
+<span class="pre">GIST</span></code> constraint forbidding overlapping annotations within
+this tier. Required for proper TIME_SUBDIVISION enforcement.
+Cannot be toggled after the tier has annotations.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.RateMismatchError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">RateMismatchError</span></span><a class="reference internal" href="../../_modules/lacing/store/postgres.html#RateMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.RateMismatchError" title="Link to this definition"></a></dt>
+<dd><p>Raised when an annotation’s interval cannot be represented at the project rate.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.SchemaMismatchError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">SchemaMismatchError</span></span><a class="reference internal" href="../../_modules/lacing/store/sqlite.html#SchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.SchemaMismatchError" title="Link to this definition"></a></dt>
+<dd><p>Raised when opening a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file with an incompatible schema.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.SqliteStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.SqliteStore" title="Link to this definition"></a></dt>
+<dd><p>SQLite-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – Path to the <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file. Use <code class="docutils literal notranslate"><span class="pre">&quot;:memory:&quot;</span></code> for an
+ephemeral in-memory database.</p></li>
+<li><p><strong>check_same_thread</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">sqlite3.connect</span></code>. We hold a
+single connection guarded by a lock; pass <code class="docutils literal notranslate"><span class="pre">False</span></code> when
+sharing across threads.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.TierOverlapError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">TierOverlapError</span></span><a class="reference internal" href="../../_modules/lacing/store/postgres.html#TierOverlapError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.TierOverlapError" title="Link to this definition"></a></dt>
+<dd><p>Raised when an insert would violate a per-tier no-overlap constraint.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quality.html" class="btn btn-neutral float-left" title="lacing.quality" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="store/base.html" class="btn btn-neutral float-right" title="lacing.store.base" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

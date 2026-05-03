@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.adapters.eaf &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../adapters.html">lacing.adapters</a></li>
+      <li class="breadcrumb-item active">lacing.adapters.eaf</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.adapters.eaf</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;ELAN EAF adapter (Max Planck Institute&#39;s annotation tool format).</span>
+
+<span class="sd">EAF is the canonical format for tier-hierarchy annotation. Every Phase 0</span>
+<span class="sd">adapter modeled flat tiers; this is the first that exercises lacing&#39;s</span>
+<span class="sd">stereotype constraint model end-to-end (TIME_SUBDIVISION, INCLUDED_IN,</span>
+<span class="sd">SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). See ANN-DOC §B and OSS-DOC</span>
+<span class="sd">tier-2.4.</span>
+
+<span class="sd">Mapping</span>
+<span class="sd">-------</span>
+<span class="sd">EAF                                    ↔ lacing</span>
+<span class="sd">``TIER_ID``                            ↔ ``Tier.name``</span>
+<span class="sd">``PARENT_REF``                         ↔ ``Tier.parent``</span>
+<span class="sd">``LINGUISTIC_TYPE_REF`` + ``CONSTRAINTS`` ↔ ``Tier.stereotype``</span>
+<span class="sd">``ALIGNABLE_ANNOTATION``               ↔ ``Annotation`` with ``MediaRef``</span>
+<span class="sd">``ANNOTATION_VALUE``                   ↔ ``body[&#39;text&#39;]``</span>
+<span class="sd">``MEDIA_DESCRIPTOR / MEDIA_URL``       ↔ ``MediaRef.asset_id`` (when present)</span>
+
+<span class="sd">Time</span>
+<span class="sd">----</span>
+<span class="sd">EAF stores ALL times as integer milliseconds (the format requires it).</span>
+<span class="sd">We map directly to ``RationalTime(ms, rate=1000)`` — exact, no floats.</span>
+<span class="sd">Pass ``rate=`` to re-quantize to a different project rate (must be</span>
+<span class="sd">exact; raises ``LossyTimeConversionError`` otherwise).</span>
+
+<span class="sd">Lossy on dump</span>
+<span class="sd">-------------</span>
+<span class="sd">- ELAN provenance is at the document level (``AUTHOR``, ``DATE``); per-</span>
+<span class="sd">  annotation provenance and confidence are dropped.</span>
+<span class="sd">- ``REF_ANNOTATION`` (annotations referencing parent annotations rather</span>
+<span class="sd">  than time slots) is **not yet supported**; the loader emits</span>
+<span class="sd">  ``ALIGNABLE_ANNOTATION`` data only. Round-trip of REF annotations is</span>
+<span class="sd">  Phase 2 work.</span>
+<span class="sd">- ``CV_REF`` controlled vocabularies are not preserved.</span>
+<span class="sd">- The ELAN ``default`` empty tier and ``default-lt`` linguistic type</span>
+<span class="sd">  (auto-created by pympi) are filtered out on load if they have no</span>
+<span class="sd">  annotations.</span>
+
+<span class="sd">Spec: https://www.mpi.nl/tools/elan/EAFv3.0.xsd</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_adapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span> <span class="n">MemoryStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span><span class="p">,</span> <span class="n">TierStereotype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pympi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eaf</span> <span class="k">as</span> <span class="n">_PympiEaf</span>
+
+
+<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">&quot;eaf&quot;</span>
+<span class="n">BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/eaf-label/v1&quot;</span>
+<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">&quot;eaf:unspecified&quot;</span>
+
+
+<span class="c1"># Constraint string in EAF ↔ TierStereotype enum value</span>
+<span class="n">_CONSTRAINT_TO_STEREOTYPE</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TierStereotype</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Time_Subdivision&quot;</span><span class="p">:</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">TIME_SUBDIVISION</span><span class="p">,</span>
+    <span class="s2">&quot;Included_In&quot;</span><span class="p">:</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">INCLUDED_IN</span><span class="p">,</span>
+    <span class="s2">&quot;Symbolic_Subdivision&quot;</span><span class="p">:</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">SYMBOLIC_SUBDIVISION</span><span class="p">,</span>
+    <span class="s2">&quot;Symbolic_Association&quot;</span><span class="p">:</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">SYMBOLIC_ASSOCIATION</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">_STEREOTYPE_TO_CONSTRAINT</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">TierStereotype</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_CONSTRAINT_TO_STEREOTYPE</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_MissingPympi</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when pympi-ling is not installed.&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_pympi</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pympi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eaf</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_MissingPympi</span><span class="p">(</span>
+            <span class="s2">&quot;The &#39;eaf&#39; adapter requires pympi-ling. Install with: &quot;</span>
+            <span class="s2">&quot;pip install &#39;lacing[eaf]&#39;  (or directly: pip install pympi-ling)&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">Eaf</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># load</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../../module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.load">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
+    <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+    <span class="n">drop_default_tier</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load an ELAN EAF file into a ``MemoryStore``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: Path or bytes containing EAF XML.</span>
+<span class="sd">        rate: Quantization rate (default ``DEFAULT_RATE``). EAF times are</span>
+<span class="sd">            milliseconds; conversions must be exact.</span>
+<span class="sd">        asset_id: Override media reference. None = use the first</span>
+<span class="sd">            ``MEDIA_DESCRIPTOR/MEDIA_URL`` from the EAF, or the default.</span>
+<span class="sd">        attribution: ``Provenance.was_attributed_to`` value.</span>
+<span class="sd">        drop_default_tier: If True (default), filter out the empty</span>
+<span class="sd">            ``default`` tier auto-created by pympi.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Eaf</span> <span class="o">=</span> <span class="n">_require_pympi</span><span class="p">()</span>
+    <span class="n">eaf</span> <span class="o">=</span> <span class="n">_open_eaf</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Eaf</span><span class="p">)</span>
+
+    <span class="n">resolved_asset</span> <span class="o">=</span> <span class="n">asset_id</span> <span class="ow">or</span> <span class="n">_first_media_url</span><span class="p">(</span><span class="n">eaf</span><span class="p">)</span> <span class="ow">or</span> <span class="n">DEFAULT_ASSET_ID</span>
+
+    <span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+
+    <span class="c1"># Build tiers: figure out stereotype from each tier&#39;s linguistic type.</span>
+    <span class="n">tier_to_stereotype</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TierStereotype</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">tier_name</span> <span class="ow">in</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_tier_names</span><span class="p">():</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_parameters_for_tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
+        <span class="n">ling_id</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LINGUISTIC_TYPE_REF&quot;</span><span class="p">)</span>
+        <span class="n">stereotype</span> <span class="o">=</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span>
+        <span class="k">if</span> <span class="n">ling_id</span><span class="p">:</span>
+            <span class="n">ling_params</span> <span class="o">=</span> <span class="n">_safe_get_ling_params</span><span class="p">(</span><span class="n">eaf</span><span class="p">,</span> <span class="n">ling_id</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">(</span><span class="n">ling_params</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CONSTRAINTS&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">_CONSTRAINT_TO_STEREOTYPE</span><span class="p">:</span>
+                <span class="n">stereotype</span> <span class="o">=</span> <span class="n">_CONSTRAINT_TO_STEREOTYPE</span><span class="p">[</span><span class="n">constraint</span><span class="p">]</span>
+        <span class="n">tier_to_stereotype</span><span class="p">[</span><span class="n">tier_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">stereotype</span>
+
+    <span class="k">for</span> <span class="n">tier_name</span> <span class="ow">in</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_tier_names</span><span class="p">():</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_parameters_for_tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PARENT_REF&quot;</span><span class="p">)</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_annotation_data_for_tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">drop_default_tier</span> <span class="ow">and</span> <span class="n">tier_name</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">annotations</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">stereotype</span> <span class="o">=</span> <span class="n">tier_to_stereotype</span><span class="p">[</span><span class="n">tier_name</span><span class="p">]</span>
+        <span class="c1"># ELAN allows a parent-less tier to declare a non-time constraint</span>
+        <span class="c1"># at the linguistic type. Our model rejects that, so coerce to NONE.</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">stereotype</span> <span class="o">!=</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span><span class="p">:</span>
+            <span class="n">stereotype</span> <span class="o">=</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span>
+
+        <span class="n">tier_metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">:=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PARTICIPANT&quot;</span><span class="p">)):</span>
+            <span class="n">tier_metadata</span><span class="p">[</span><span class="s2">&quot;participant&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">loc</span> <span class="o">:=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_LOCALE&quot;</span><span class="p">)):</span>
+            <span class="n">tier_metadata</span><span class="p">[</span><span class="s2">&quot;locale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ann</span> <span class="o">:=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ANNOTATOR&quot;</span><span class="p">)):</span>
+            <span class="n">tier_metadata</span><span class="p">[</span><span class="s2">&quot;annotator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ann</span>
+
+        <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span>
+            <span class="n">Tier</span><span class="p">(</span>
+                <span class="n">tier_name</span><span class="p">,</span>
+                <span class="n">stereotype</span><span class="o">=</span><span class="n">stereotype</span><span class="p">,</span>
+                <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+                <span class="n">metadata</span><span class="o">=</span><span class="n">tier_metadata</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+            <span class="c1"># Each entry is (start_ms, end_ms, value) for ALIGNABLE,</span>
+            <span class="c1"># or (start_ms, end_ms, value, ref_id) for REF on some pympi versions.</span>
+            <span class="n">start_ms</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">end_ms</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span>
+                <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="n">_ms_to_seconds_str</span><span class="p">(</span><span class="n">start_ms</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">),</span>
+                <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="n">_ms_to_seconds_str</span><span class="p">(</span><span class="n">end_ms</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">Annotation</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+                    <span class="n">tier</span><span class="o">=</span><span class="n">tier_name</span><span class="p">,</span>
+                    <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">resolved_asset</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
+                    <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span>
+                    <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,</span>
+                    <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+                        <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
+                        <span class="n">generated_at_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                        <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;import&quot;</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_open_eaf</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="n">Eaf_cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;_PympiEaf&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+            <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.eaf&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Eaf_cls</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">suppress_version_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Eaf_cls</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="n">suppress_version_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_first_media_url</span><span class="p">(</span><span class="n">eaf</span><span class="p">:</span> <span class="s2">&quot;_PympiEaf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull the first linked media URL out of the EAF, if any.&quot;&quot;&quot;</span>
+    <span class="n">descriptors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">eaf</span><span class="p">,</span> <span class="s2">&quot;media_descriptors&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MEDIA_URL&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RELATIVE_MEDIA_URL&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">url</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_safe_get_ling_params</span><span class="p">(</span><span class="n">eaf</span><span class="p">:</span> <span class="s2">&quot;_PympiEaf&quot;</span><span class="p">,</span> <span class="n">ling_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a linguistic type&#39;s params; tolerant to missing types.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_parameters_for_linguistic_type</span><span class="p">(</span><span class="n">ling_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ms_to_seconds_str</span><span class="p">(</span><span class="n">ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert integer milliseconds to an exact seconds string.</span>
+
+<span class="sd">    pympi annotations are nominally ``int`` but some files have stored</span>
+<span class="sd">    floats; round (after asserting exactness) to recover the integer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ms</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;EAF time </span><span class="si">{</span><span class="n">ms</span><span class="si">!r}</span><span class="s2"> is not an integer millisecond&quot;</span><span class="p">)</span>
+        <span class="n">ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+    <span class="c1"># Format as &quot;{int}/1000&quot; via decimal — Fraction(str) is exact.</span>
+    <span class="k">if</span> <span class="n">ms</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">whole</span><span class="p">,</span> <span class="n">frac</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">whole</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">frac</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">whole</span><span class="p">,</span> <span class="n">frac</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="o">-</span><span class="n">ms</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;-</span><span class="si">{</span><span class="n">whole</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">frac</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># dump</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="dump">
+<a class="viewcode-back" href="../../../module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.dump">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">pretty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">media_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write annotations as an ELAN EAF file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store: Source store. Only annotations with ``MediaRef`` and a</span>
+<span class="sd">            non-None interval are exported.</span>
+<span class="sd">        target: Output path. None = return bytes.</span>
+<span class="sd">        pretty: Pretty-print XML (default True).</span>
+<span class="sd">        media_url: Optional ``MEDIA_URL`` for ``MEDIA_DESCRIPTOR``. If</span>
+<span class="sd">            None and the store has annotations, use the first MediaRef&#39;s</span>
+<span class="sd">            ``asset_id``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Eaf</span> <span class="o">=</span> <span class="n">_require_pympi</span><span class="p">()</span>
+
+    <span class="n">eaf</span> <span class="o">=</span> <span class="n">Eaf</span><span class="p">(</span><span class="n">suppress_version_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># pympi auto-creates a &quot;default&quot; tier; remove it so we don&#39;t pollute the file.</span>
+    <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_tier_names</span><span class="p">():</span>
+        <span class="n">eaf</span><span class="o">.</span><span class="n">remove_tier</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
+
+    <span class="n">annotations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">))</span>
+
+    <span class="c1"># Resolve media URL.</span>
+    <span class="n">chosen_media</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">media_url</span>
+    <span class="k">if</span> <span class="n">chosen_media</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">reference</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">asset_id</span><span class="p">:</span>
+                <span class="n">chosen_media</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">asset_id</span>
+                <span class="k">break</span>
+    <span class="k">if</span> <span class="n">chosen_media</span><span class="p">:</span>
+        <span class="n">eaf</span><span class="o">.</span><span class="n">add_linked_file</span><span class="p">(</span><span class="n">chosen_media</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s2">&quot;audio/x-wav&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Group annotations by tier, building tiers in dependency order so</span>
+    <span class="c1"># parents are created before children (ELAN requires this).</span>
+    <span class="n">annotations_by_tier</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">annotations_by_tier</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="n">declared_tiers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tier</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_collect_tiers</span><span class="p">(</span><span class="n">store</span><span class="p">))</span>
+    <span class="n">referenced_tier_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">tier</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">}</span>
+    <span class="n">declared_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">declared_tiers</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">referenced_tier_names</span> <span class="o">-</span> <span class="n">declared_names</span><span class="p">:</span>
+        <span class="n">declared_tiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>  <span class="c1"># NONE stereotype, no parent</span>
+
+    <span class="k">for</span> <span class="n">tier</span> <span class="ow">in</span> <span class="n">_topo_sort_tiers</span><span class="p">(</span><span class="n">declared_tiers</span><span class="p">):</span>
+        <span class="n">ling_id</span> <span class="o">=</span> <span class="n">_linguistic_type_for_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ling_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">eaf</span><span class="o">.</span><span class="n">get_linguistic_type_names</span><span class="p">():</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="n">_STEREOTYPE_TO_CONSTRAINT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tier</span><span class="o">.</span><span class="n">stereotype</span><span class="p">)</span>
+            <span class="n">eaf</span><span class="o">.</span><span class="n">add_linguistic_type</span><span class="p">(</span>
+                <span class="n">ling_id</span><span class="p">,</span>
+                <span class="n">constraints</span><span class="o">=</span><span class="n">constraint</span><span class="p">,</span>
+                <span class="n">timealignable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">eaf</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span>
+            <span class="n">tier</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">ling</span><span class="o">=</span><span class="n">ling_id</span><span class="p">,</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">tier</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+            <span class="n">part</span><span class="o">=</span><span class="n">tier</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;participant&quot;</span><span class="p">),</span>
+            <span class="n">locale</span><span class="o">=</span><span class="n">tier</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;locale&quot;</span><span class="p">),</span>
+            <span class="n">ann</span><span class="o">=</span><span class="n">tier</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;annotator&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Add annotations now that all tiers exist.</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">iv</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">assert</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># filtered upstream</span>
+        <span class="n">start_ms</span> <span class="o">=</span> <span class="n">_seconds_to_ms_int</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">end_ms</span> <span class="o">=</span> <span class="n">_seconds_to_ms_int</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start_ms</span> <span class="o">==</span> <span class="n">end_ms</span><span class="p">:</span>
+            <span class="c1"># ELAN doesn&#39;t support zero-length alignable annotations; widen</span>
+            <span class="c1"># by 1 ms to make a valid interval. Document as a known lossy edge.</span>
+            <span class="n">end_ms</span> <span class="o">=</span> <span class="n">start_ms</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">eaf</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="n">start_ms</span><span class="p">,</span> <span class="n">end_ms</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.eaf&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">eaf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="n">pretty</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+
+    <span class="n">eaf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="n">pretty</span><span class="o">=</span><span class="n">pretty</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_seconds_to_ms_int</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">RationalTime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a RationalTime to an integer ms; raises if not exact.&quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+    <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">denominator</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;RationalTime </span><span class="si">{</span><span class="n">t</span><span class="si">!r}</span><span class="s2"> cannot be expressed as integer milliseconds&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_collect_tiers</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tier</span><span class="p">]:</span>
+    <span class="n">tiers_iter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;tiers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">tiers_iter</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">tiers_iter</span><span class="p">())</span>
+    <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_topo_sort_tiers</span><span class="p">(</span><span class="n">tiers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tier</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tier</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return tiers in dependency order (parents before children).</span>
+
+<span class="sd">    Cycles or missing parents fall back to the input order — pympi will</span>
+<span class="sd">    raise its own error if the parent is missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">by_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tiers</span><span class="p">}</span>
+    <span class="n">visited</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tier</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">visit</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">Tier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">parent</span> <span class="ow">in</span> <span class="n">by_name</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">parent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="n">visit</span><span class="p">(</span><span class="n">by_name</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">parent</span><span class="p">])</span>
+        <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tiers</span><span class="p">:</span>
+        <span class="n">visit</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_linguistic_type_for_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">:</span> <span class="n">Tier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pick a linguistic type id for a tier when emitting EAF.</span>
+
+<span class="sd">    We use one linguistic type per (stereotype) so multiple tiers with</span>
+<span class="sd">    the same shape share a type — keeps the EAF file compact and readable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tier</span><span class="o">.</span><span class="n">stereotype</span> <span class="o">==</span> <span class="n">TierStereotype</span><span class="o">.</span><span class="n">NONE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;default-lt&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;lt_</span><span class="si">{</span><span class="n">tier</span><span class="o">.</span><span class="n">stereotype</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">):</span>
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">a</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>  <span class="c1"># type: ignore[index]</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">a</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># registration</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="n">register_adapter</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">ADAPTER_NAME</span><span class="p">,</span>
+    <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
+    <span class="n">dump</span><span class="o">=</span><span class="n">dump</span><span class="p">,</span>
+    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.eaf&quot;</span><span class="p">,),</span>
+    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;application/x-eaf+xml&quot;</span><span class="p">,),</span>
+    <span class="n">body_schema_uris</span><span class="o">=</span><span class="p">(</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,),</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;ELAN EAF (Max Planck Institute). Maps the four ELAN tier &quot;</span>
+        <span class="s2">&quot;stereotypes verbatim. Lossy: drops per-annotation provenance, &quot;</span>
+        <span class="s2">&quot;confidence, REF_ANNOTATION (Phase 2), and controlled vocabularies.&quot;</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

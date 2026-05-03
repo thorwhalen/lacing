@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.quality &mdash; lacing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.store" href="store.html" />
+    <link rel="prev" title="lacing.model" href="model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.quality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.quality.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.quality.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.quality.interval_iou"><code class="docutils literal notranslate"><span class="pre">interval_iou()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.quality.krippendorff_alpha"><code class="docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.quality</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/quality.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.quality">
+<span id="lacing-quality"></span><h1>lacing.quality<a class="headerlink" href="#module-lacing.quality" title="Link to this heading"></a></h1>
+<p>Inter-annotator agreement and boundary metrics.</p>
+<p>Phase 0 ships four metrics from ANN-DOC §D, all as pure functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#lacing.quality.cohen_kappa" title="lacing.quality.cohen_kappa"><code class="xref py py-func docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a> — agreement between two annotators on a categorical label.</p></li>
+<li><p><a class="reference internal" href="#lacing.quality.krippendorff_alpha" title="lacing.quality.krippendorff_alpha"><code class="xref py py-func docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a> — agreement across any number of annotators
+(handles missing data, multiple distance metrics).</p></li>
+<li><p><a class="reference internal" href="#lacing.quality.interval_iou" title="lacing.quality.interval_iou"><code class="xref py py-func docutils literal notranslate"><span class="pre">interval_iou()</span></code></a> — Intersection-over-Union for two time intervals.</p></li>
+<li><p><a class="reference internal" href="#lacing.quality.boundary_iou" title="lacing.quality.boundary_iou"><code class="xref py py-func docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a> — Average IoU between two sets of intervals (greedy match).</p></li>
+</ul>
+<p>The doc cites Krippendorff thresholds: α &gt; 0.8 reliable, 0.67–0.8 tentative,
+&lt; 0.67 discard. Kappa traditionally: &gt;0.8 almost perfect, 0.6–0.8 substantial,
+0.4–0.6 moderate.</p>
+<p>Pure functions — no numpy dependency in Phase 0.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.quality.boundary_iou">
+<span class="sig-prename descclassname"><span class="pre">lacing.quality.</span></span><span class="sig-name descname"><span class="pre">boundary_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/lacing/quality.html#boundary_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.quality.boundary_iou" title="Link to this definition"></a></dt>
+<dd><p>Mean IoU between two sets of intervals via greedy best-match.</p>
+<p>For each interval in <code class="docutils literal notranslate"><span class="pre">a</span></code>, finds its highest-IoU match in <code class="docutils literal notranslate"><span class="pre">b</span></code> (without
+replacement — once a <code class="docutils literal notranslate"><span class="pre">b</span></code> interval is matched it’s removed from the pool).
+Unmatched intervals in either set contribute 0.0 to the mean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mean IoU ∈ [0, 1]. Returns 0.0 if both sets are empty (defensible
+as a “no agreement to measure” baseline).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.quality.cohen_kappa">
+<span class="sig-prename descclassname"><span class="pre">lacing.quality.</span></span><span class="sig-name descname"><span class="pre">cohen_kappa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/lacing/quality.html#cohen_kappa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.quality.cohen_kappa" title="Link to this definition"></a></dt>
+<dd><p>Cohen’s kappa for two annotators on a categorical label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – Annotator A’s labels.</p></li>
+<li><p><strong>b</strong> – Annotator B’s labels (must be the same length).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>κ ∈ [-1, 1]. 1 = perfect agreement, 0 = chance, negative = worse than chance.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If sequences differ in length or are empty.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Edge cases:</dt><dd><p>If only one category appears across both annotators, both observed
+and expected agreement are 1.0; we return 1.0 by convention.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.quality.interval_iou">
+<span class="sig-prename descclassname"><span class="pre">lacing.quality.</span></span><span class="sig-name descname"><span class="pre">interval_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/lacing/quality.html#interval_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.quality.interval_iou" title="Link to this definition"></a></dt>
+<dd><p>Intersection-over-Union for two time intervals.</p>
+<p>Returns 1.0 if both are equal point intervals at the same instant; 0.0
+if they don’t intersect (including when only one is a point).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.quality.krippendorff_alpha">
+<span class="sig-prename descclassname"><span class="pre">lacing.quality.</span></span><span class="sig-name descname"><span class="pre">krippendorff_alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">annotations:</span> <span class="pre">~collections.abc.Sequence[~collections.abc.Sequence[~lacing.quality.T</span> <span class="pre">|</span> <span class="pre">None]],</span> <span class="pre">*,</span> <span class="pre">distance:</span> <span class="pre">~typing.Callable[[~lacing.quality.T,</span> <span class="pre">~lacing.quality.T],</span> <span class="pre">float]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">_nominal_distance&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/lacing/quality.html#krippendorff_alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.quality.krippendorff_alpha" title="Link to this definition"></a></dt>
+<dd><p>Krippendorff’s α across any number of annotators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotations</strong> – A list of annotators, each a sequence of labels (one per
+unit). Use <code class="docutils literal notranslate"><span class="pre">None</span></code> for a missing annotation by that annotator on
+that unit.</p></li>
+<li><p><strong>distance</strong> – Function <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code> measuring disagreement between
+two label values. Default is the nominal (0/1) distance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>α. 1.0 = perfect agreement, 0.0 = chance.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If sequences differ in length, fewer than 2 annotators
+    given, or fewer than 2 paired observations exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model.html" class="btn btn-neutral float-left" title="lacing.model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="store.html" class="btn btn-neutral float-right" title="lacing.store" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
