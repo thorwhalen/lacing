@@ -11,7 +11,7 @@ and third-party libs that demand a float.
 from __future__ import annotations
 
 from fractions import Fraction
-from typing import Any, Self
+from typing import Any
 
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import CoreSchema, core_schema
@@ -61,7 +61,7 @@ class RationalTime:
     @classmethod
     def from_seconds(
         cls, seconds: float | Fraction | str, rate: int = DEFAULT_RATE
-    ) -> Self:
+    ) -> "RationalTime":
         """Build from seconds. Quantizes to ``rate``; raises if lossy.
 
         ``seconds`` may be a ``str`` like ``"1.001"`` to avoid float ingestion.
@@ -86,11 +86,11 @@ class RationalTime:
         return cls(int(scaled), rate)
 
     @classmethod
-    def from_fraction(cls, f: Fraction, rate: int = DEFAULT_RATE) -> Self:
+    def from_fraction(cls, f: Fraction, rate: int = DEFAULT_RATE) -> "RationalTime":
         return cls.from_seconds(f, rate=rate)
 
     @classmethod
-    def zero(cls, rate: int = DEFAULT_RATE) -> Self:
+    def zero(cls, rate: int = DEFAULT_RATE) -> "RationalTime":
         return cls(0, rate)
 
     def to_fraction(self) -> Fraction:
@@ -100,7 +100,7 @@ class RationalTime:
         """Float seconds — for display only. Never round-trip through this."""
         return self._value / self._rate
 
-    def to_rate(self, new_rate: int) -> Self:
+    def to_rate(self, new_rate: int) -> "RationalTime":
         """Re-express at ``new_rate``. Raises ``LossyTimeConversionError`` on loss."""
         if not isinstance(new_rate, int) or isinstance(new_rate, bool):
             raise TypeError(f"new_rate must be int, got {type(new_rate).__name__}")
@@ -114,7 +114,7 @@ class RationalTime:
             )
         return type(self)(int(f), new_rate)
 
-    def __add__(self, other: object) -> Self:
+    def __add__(self, other: object) -> "RationalTime":
         if isinstance(other, RationalTime):
             f = self.to_fraction() + other.to_fraction()
         elif isinstance(other, Fraction):
@@ -128,7 +128,7 @@ class RationalTime:
             )
         return type(self)(int(scaled), self._rate)
 
-    def __sub__(self, other: object) -> Self:
+    def __sub__(self, other: object) -> "RationalTime":
         if isinstance(other, RationalTime):
             f = self.to_fraction() - other.to_fraction()
         elif isinstance(other, Fraction):
@@ -177,7 +177,7 @@ class RationalTime:
         return {"v": self._value, "r": self._rate}
 
     @classmethod
-    def from_wire(cls, d: dict[str, int]) -> Self:
+    def from_wire(cls, d: dict[str, int]) -> "RationalTime":
         return cls(d["v"], d["r"])
 
     @classmethod
@@ -236,7 +236,7 @@ class TimeInterval:
         return self._start == self._end
 
     @classmethod
-    def point(cls, t: RationalTime) -> Self:
+    def point(cls, t: RationalTime) -> "TimeInterval":
         return cls(t, t)
 
     @classmethod
@@ -245,20 +245,20 @@ class TimeInterval:
         start: float | Fraction | str,
         end: float | Fraction | str,
         rate: int = DEFAULT_RATE,
-    ) -> Self:
+    ) -> "TimeInterval":
         return cls(
             RationalTime.from_seconds(start, rate=rate),
             RationalTime.from_seconds(end, rate=rate),
         )
 
-    def shift(self, by: RationalTime) -> Self:
+    def shift(self, by: RationalTime) -> "TimeInterval":
         return type(self)(self._start + by, self._end + by)
 
     def to_wire(self) -> dict[str, dict[str, int]]:
         return {"start": self._start.to_wire(), "end": self._end.to_wire()}
 
     @classmethod
-    def from_wire(cls, d: dict) -> Self:
+    def from_wire(cls, d: dict) -> "TimeInterval":
         return cls(
             RationalTime.from_wire(d["start"]),
             RationalTime.from_wire(d["end"]),
