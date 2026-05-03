@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.textgrid &mdash; lacing 0.0.1 documentation</title>
+  <title>lacing.adapters.textgrid &mdash; lacing 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/documentation_options.js?v=e3a6060d"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -54,9 +54,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
@@ -228,14 +232,18 @@
                     <span class="n">_to_rational</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">rate</span><span class="p">),</span>
                     <span class="n">_to_rational</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">rate</span><span class="p">),</span>
                 <span class="p">)</span>
-                <span class="n">_add_annotation</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">attribution</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
+                <span class="n">_add_annotation</span><span class="p">(</span>
+                    <span class="n">store</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">attribution</span><span class="p">,</span> <span class="n">now</span>
+                <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tier</span><span class="p">,</span> <span class="n">PointTier</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">tier</span><span class="o">.</span><span class="n">entries</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">include_empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
                 <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-                <span class="n">_add_annotation</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">attribution</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
+                <span class="n">_add_annotation</span><span class="p">(</span>
+                    <span class="n">store</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">attribution</span><span class="p">,</span> <span class="n">now</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — praatio has only the two tier types today</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown tier type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -256,9 +264,7 @@
         <span class="c1"># for now. Phase 1 can replace with a string-based parser.</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
-            <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
@@ -346,7 +352,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
             <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
-            <span class="n">by_tier_intervals</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Interval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+            <span class="n">by_tier_intervals</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Interval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">min_t</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_t</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
             <span class="n">max_t</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_t</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
@@ -381,9 +389,7 @@
     <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
-            <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">grid</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">includeBlankSpaces</span><span class="o">=</span><span class="n">include_empty</span><span class="p">)</span>

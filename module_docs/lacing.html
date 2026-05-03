@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.1 documentation</title>
+  <title>lacing &mdash; lacing 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/documentation_options.js?v=e3a6060d"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.AnnotationRef.model_config"><code class="docutils literal notranslate"><span class="pre">AnnotationRef.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.IntervalAnnotationStore.add"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.add()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.IntervalAnnotationStore.all"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.all()</span></code></a></li>
@@ -88,6 +89,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.MigrationError"><code class="docutils literal notranslate"><span class="pre">MigrationError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.NodeRef"><code class="docutils literal notranslate"><span class="pre">NodeRef</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.NodeRef.model_config"><code class="docutils literal notranslate"><span class="pre">NodeRef.model_config</span></code></a></li>
 </ul>
@@ -117,10 +119,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.TimeInterval.duration"><code class="docutils literal notranslate"><span class="pre">TimeInterval.duration</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.export_json_schemas"><code class="docutils literal notranslate"><span class="pre">export_json_schemas()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.interval_iou"><code class="docutils literal notranslate"><span class="pre">interval_iou()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.json_schema"><code class="docutils literal notranslate"><span class="pre">json_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.krippendorff_alpha"><code class="docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/adapters.html">lacing.adapters</a></li>
@@ -130,9 +139,13 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/store/memory.html">lacing.store.memory</a></li>
@@ -224,6 +237,12 @@ full story. <code class="docutils literal notranslate"><span class="pre">.claude
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.BodySchemaError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">BodySchemaError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#BodySchemaError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.BodySchemaError" title="Link to this definition"></a></dt>
+<dd><p>Raised when a body fails validation against its registered schema.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -363,6 +382,12 @@ callers decide whether that’s an error.</p>
 <p>Conforms to the protocol in <code class="docutils literal notranslate"><span class="pre">lacing.store.base</span></code>. We don’t formally
 inherit from <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> because it’s a <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>
 with method bodies — structural typing is enough.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.MigrationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">MigrationError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#MigrationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.MigrationError" title="Link to this definition"></a></dt>
+<dd><p>Raised when a migration step is missing or fails.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -506,6 +531,12 @@ Always <code class="docutils literal notranslate"><span class="pre">start</span>
 
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.UnknownBodySchemaError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">UnknownBodySchemaError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#UnknownBodySchemaError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.UnknownBodySchemaError" title="Link to this definition"></a></dt>
+<dd><p>Raised when an annotation’s body_schema_uri has no registered model.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="lacing.boundary_iou">
 <span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">boundary_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lacing/time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lacing/time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/lacing/quality.html#boundary_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.boundary_iou" title="Link to this definition"></a></dt>
@@ -547,11 +578,37 @@ and expected agreement are 1.0; we return 1.0 by convention.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lacing.export_json_schemas">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">export_json_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#export_json_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.export_json_schemas" title="Link to this definition"></a></dt>
+<dd><p>Write every registered schema as JSON files under <code class="docutils literal notranslate"><span class="pre">target_dir</span></code>.</p>
+<p>Layout: <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/&lt;name&gt;/v&lt;N&gt;.json</span></code>. Returns the list of paths
+written, in registration order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_dir</strong> – Output directory. Created if missing.</p></li>
+<li><p><strong>overwrite</strong> – If False, refuse to write a file that already exists.</p></li>
+<li><p><strong>include_meta</strong> – If True, also write a <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/index.json</span></code>
+mapping every URI to its file path and the Pydantic model’s
+qualified name (helps the codegen pipeline).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lacing.interval_iou">
 <span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">interval_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lacing/time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lacing/time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/lacing/quality.html#interval_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.interval_iou" title="Link to this definition"></a></dt>
 <dd><p>Intersection-over-Union for two time intervals.</p>
 <p>Returns 1.0 if both are equal point intervals at the same instant; 0.0
 if they don’t intersect (including when only one is a point).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.json_schema">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">json_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#json_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.json_schema" title="Link to this definition"></a></dt>
+<dd><p>Return the JSON Schema for the body model registered at <code class="docutils literal notranslate"><span class="pre">uri</span></code>.</p>
+<p>Pydantic’s <code class="docutils literal notranslate"><span class="pre">model_json_schema()</span></code> output, unmodified.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -576,6 +633,40 @@ two label values. Default is the nominal (0/1) distance.</p></li>
     given, or fewer than 2 paired observations exist.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.migrate">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.migrate" title="Link to this definition"></a></dt>
+<dd><p>Migrate <code class="docutils literal notranslate"><span class="pre">body</span></code> from <code class="docutils literal notranslate"><span class="pre">from_uri</span></code> to <code class="docutils literal notranslate"><span class="pre">to_uri</span></code> via registered steps.</p>
+<p>Composes single-step migrations. Raises <a class="reference internal" href="#lacing.MigrationError" title="lacing.MigrationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MigrationError</span></code></a> if any
+step is missing.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.register_body_schema">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">register_body_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#register_body_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.register_body_schema" title="Link to this definition"></a></dt>
+<dd><p>Register <code class="docutils literal notranslate"><span class="pre">model</span></code> as the validator for <code class="docutils literal notranslate"><span class="pre">uri</span></code>. Returns <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.register_migration">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">register_migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/schema.html#register_migration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.register_migration" title="Link to this definition"></a></dt>
+<dd><p>Register a forward migration from <code class="docutils literal notranslate"><span class="pre">v&lt;from_version&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">v&lt;to_version&gt;</span></code>.</p>
+<p>Decorated function takes a body <code class="docutils literal notranslate"><span class="pre">dict</span></code> and returns a new body <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
+Migrations must be one major-version step at a time
+(<code class="docutils literal notranslate"><span class="pre">to_version</span> <span class="pre">==</span> <span class="pre">from_version</span> <span class="pre">+</span> <span class="pre">1</span></code>).</p>
+<p>Re-registering the same <code class="docutils literal notranslate"><span class="pre">(schema_name,</span> <span class="pre">from_version)</span></code> pair replaces
+the previous entry — convenient in tests, intentional for hot-reload.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.validate_body">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">validate_body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseModel</span></span></span><a class="headerlink" href="#lacing.validate_body" title="Link to this definition"></a></dt>
+<dd><p>Validate <code class="docutils literal notranslate"><span class="pre">body</span></code> against the schema registered for <code class="docutils literal notranslate"><span class="pre">uri</span></code>.</p>
+<p>Returns the parsed Pydantic instance. Raises <a class="reference internal" href="#lacing.BodySchemaError" title="lacing.BodySchemaError"><code class="xref py py-class docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a>
+on validation failure (wrapping the underlying <code class="docutils literal notranslate"><span class="pre">pydantic.ValidationError</span></code>)
+or <a class="reference internal" href="#lacing.UnknownBodySchemaError" title="lacing.UnknownBodySchemaError"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a> if the URI isn’t registered.</p>
 </dd></dl>
 
 </section>

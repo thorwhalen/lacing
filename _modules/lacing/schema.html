@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.schema &mdash; lacing 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.schema</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.schema</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Body schema registry, JSON Schema export, and migrations.</span>
+
+<span class="sd">Every annotation&#39;s ``body`` is validated against the schema named by its</span>
+<span class="sd">``body_schema_uri`` (semver: ``annot://schema/&lt;name&gt;/v&lt;major&gt;``). This</span>
+<span class="sd">module implements:</span>
+
+<span class="sd">- :func:`register_body_schema` — register a Pydantic v2 model for a schema URI.</span>
+<span class="sd">- :func:`validate` — validate an annotation&#39;s body dict against its schema.</span>
+<span class="sd">- :func:`json_schema` — get the JSON Schema for a registered URI.</span>
+<span class="sd">- :func:`export_json_schemas` — write all JSON Schema artifacts to disk</span>
+<span class="sd">  (under ``lacing/schema/&lt;name&gt;/v&lt;N&gt;.json`` by default), the upstream</span>
+<span class="sd">  for ``json-schema-to-zod`` codegen.</span>
+<span class="sd">- :func:`register_migration` — register a forward migration from version</span>
+<span class="sd">  N to N+1 of a body schema.</span>
+<span class="sd">- :func:`migrate` — upgrade a body dict (or whole annotation) through</span>
+<span class="sd">  registered migrations.</span>
+
+<span class="sd">See the ``lacing-schema-codegen`` skill and BACK-DOC §4.5.</span>
+
+<span class="sd">Usage example::</span>
+
+<span class="sd">    from pydantic import BaseModel, Field</span>
+<span class="sd">    from lacing.schema import register_body_schema, register_migration</span>
+
+<span class="sd">    class WordBodyV1(BaseModel):</span>
+<span class="sd">        model_config = {&quot;frozen&quot;: True, &quot;extra&quot;: &quot;forbid&quot;}</span>
+<span class="sd">        text: str = Field(..., description=&quot;The word&#39;s surface form.&quot;)</span>
+
+<span class="sd">    register_body_schema(&quot;annot://schema/word/v1&quot;, WordBodyV1)</span>
+
+<span class="sd">    class WordBodyV2(BaseModel):</span>
+<span class="sd">        model_config = {&quot;frozen&quot;: True, &quot;extra&quot;: &quot;forbid&quot;}</span>
+<span class="sd">        text: str = Field(..., description=&quot;The word&#39;s surface form.&quot;)</span>
+<span class="sd">        normalized: str | None = Field(None, description=&quot;Normalized form.&quot;)</span>
+
+<span class="sd">    register_body_schema(&quot;annot://schema/word/v2&quot;, WordBodyV2)</span>
+
+<span class="sd">    @register_migration(schema_name=&quot;word&quot;, from_version=1, to_version=2)</span>
+<span class="sd">    def v1_to_v2(body: dict) -&gt; dict:</span>
+<span class="sd">        return {**body, &quot;normalized&quot;: None}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># URI parsing</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="n">_URI_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^annot://schema/([a-z0-9-]+)/v(\d+)$&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_uri">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.parse_uri">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split ``annot://schema/&lt;name&gt;/v&lt;major&gt;`` into ``(name, major)``.</span>
+
+<span class="sd">    Raises ``ValueError`` on malformed input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">_URI_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;invalid body_schema_uri </span><span class="si">{</span><span class="n">uri</span><span class="si">!r}</span><span class="s2">; &quot;</span>
+            <span class="s2">&quot;expected ``annot://schema/&lt;name&gt;/v&lt;major&gt;``&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="make_uri">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.make_uri">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_uri</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a ``body_schema_uri`` from a name and major version.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9-]+$&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;schema name </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> must be kebab-case (lowercase + digits + hyphens)&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;version must be &gt;= 1, got </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;annot://schema/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/v</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># body schema registry</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="c1"># uri -&gt; Pydantic model class</span>
+<span class="n">_BODY_REGISTRY</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="BodySchemaError">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.BodySchemaError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BodySchemaError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a body fails validation against its registered schema.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="UnknownBodySchemaError">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.UnknownBodySchemaError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnknownBodySchemaError</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an annotation&#39;s body_schema_uri has no registered model.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="register_body_schema">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.register_body_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_body_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register ``model`` as the validator for ``uri``. Returns ``model``.&quot;&quot;&quot;</span>
+    <span class="n">parse_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>  <span class="c1"># validate URI shape; raises on malformed</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;register_body_schema expects a Pydantic v2 BaseModel subclass; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">model</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="n">_BODY_REGISTRY</span><span class="p">[</span><span class="n">uri</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="get_body_schema">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.get_body_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_body_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up the registered Pydantic model for ``uri``.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">uri</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_BODY_REGISTRY</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnknownBodySchemaError</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_BODY_REGISTRY</span><span class="p">[</span><span class="n">uri</span><span class="p">]</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_registered</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">_BODY_REGISTRY</span>
+
+
+<div class="viewcode-block" id="registered_uris">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.registered_uris">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">registered_uris</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All currently registered ``body_schema_uri`` values, sorted.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_BODY_REGISTRY</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="clear_registry">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.clear_registry">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clear_registry</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop every registered body schema and migration. For tests / repls.&quot;&quot;&quot;</span>
+    <span class="n">_BODY_REGISTRY</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">_MIGRATION_REGISTRY</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="validate">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.validate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate ``body`` against the schema registered for ``uri``.</span>
+
+<span class="sd">    Returns the parsed Pydantic instance. Raises :class:`BodySchemaError`</span>
+<span class="sd">    on validation failure (wrapping the underlying ``pydantic.ValidationError``)</span>
+<span class="sd">    or :class:`UnknownBodySchemaError` if the URI isn&#39;t registered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">get_body_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BodySchemaError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;body failed validation against </span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># JSON Schema export</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="json_schema">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.json_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">json_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the JSON Schema for the body model registered at ``uri``.</span>
+
+<span class="sd">    Pydantic&#39;s ``model_json_schema()`` output, unmodified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_body_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="export_json_schemas">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.export_json_schemas">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_json_schemas</span><span class="p">(</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_meta</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write every registered schema as JSON files under ``target_dir``.</span>
+
+<span class="sd">    Layout: ``&lt;target_dir&gt;/&lt;name&gt;/v&lt;N&gt;.json``. Returns the list of paths</span>
+<span class="sd">    written, in registration order.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_dir: Output directory. Created if missing.</span>
+<span class="sd">        overwrite: If False, refuse to write a file that already exists.</span>
+<span class="sd">        include_meta: If True, also write a ``&lt;target_dir&gt;/index.json``</span>
+<span class="sd">            mapping every URI to its file path and the Pydantic model&#39;s</span>
+<span class="sd">            qualified name (helps the codegen pipeline).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+    <span class="n">target</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">written</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">registered_uris</span><span class="p">():</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">parse_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">target</span> <span class="o">/</span> <span class="n">name</span>
+        <span class="n">out_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        <span class="k">if</span> <span class="n">out_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">out_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">get_body_schema</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">index</span><span class="p">[</span><span class="n">uri</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">),</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">out_path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">target</span><span class="p">)),</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">include_meta</span><span class="p">:</span>
+        <span class="n">index_path</span> <span class="o">=</span> <span class="n">target</span> <span class="o">/</span> <span class="s2">&quot;index.json&quot;</span>
+        <span class="n">index_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">written</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># migrations</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Maps (schema_name, from_version) -&gt; (to_version, callable(body) -&gt; body).</span>
+<span class="c1"># We restrict to from→from+1 hops; chains of migrations compose by repeated lookup.</span>
+<span class="n">_MIGRATION_REGISTRY</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="MigrationError">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.MigrationError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MigrationError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a migration step is missing or fails.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="register_migration">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.register_migration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_migration</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">schema_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">from_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a forward migration from ``v&lt;from_version&gt;`` to ``v&lt;to_version&gt;``.</span>
+
+<span class="sd">    Decorated function takes a body ``dict`` and returns a new body ``dict``.</span>
+<span class="sd">    Migrations must be one major-version step at a time</span>
+<span class="sd">    (``to_version == from_version + 1``).</span>
+
+<span class="sd">    Re-registering the same ``(schema_name, from_version)`` pair replaces</span>
+<span class="sd">    the previous entry — convenient in tests, intentional for hot-reload.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">to_version</span> <span class="o">!=</span> <span class="n">from_version</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;migrations must be single-step: from_version=</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;to_version=</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">; chain via repeated migrate() calls.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">from_version</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;from_version must be &gt;= 1, got </span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="n">_MIGRATION_REGISTRY</span><span class="p">[(</span><span class="n">schema_name</span><span class="p">,</span> <span class="n">from_version</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">to_version</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
+<div class="viewcode-block" id="migrate">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.migrate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">migrate</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">from_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">to_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Migrate ``body`` from ``from_uri`` to ``to_uri`` via registered steps.</span>
+
+<span class="sd">    Composes single-step migrations. Raises :class:`MigrationError` if any</span>
+<span class="sd">    step is missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">from_name</span><span class="p">,</span> <span class="n">from_v</span> <span class="o">=</span> <span class="n">parse_uri</span><span class="p">(</span><span class="n">from_uri</span><span class="p">)</span>
+    <span class="n">to_name</span><span class="p">,</span> <span class="n">to_v</span> <span class="o">=</span> <span class="n">parse_uri</span><span class="p">(</span><span class="n">to_uri</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">from_name</span> <span class="o">!=</span> <span class="n">to_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MigrationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;cannot migrate across schemas: </span><span class="si">{</span><span class="n">from_name</span><span class="si">!r}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">to_name</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">from_v</span> <span class="o">==</span> <span class="n">to_v</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">from_v</span> <span class="o">&gt;</span> <span class="n">to_v</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MigrationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;only forward migrations are supported &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(from v</span><span class="si">{</span><span class="n">from_v</span><span class="si">}</span><span class="s2"> to v</span><span class="si">{</span><span class="n">to_v</span><span class="si">}</span><span class="s2"> is backwards)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">current</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="n">current_v</span> <span class="o">=</span> <span class="n">from_v</span>
+    <span class="k">while</span> <span class="n">current_v</span> <span class="o">&lt;</span> <span class="n">to_v</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">_MIGRATION_REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">from_name</span><span class="p">,</span> <span class="n">current_v</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MigrationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;no migration registered for </span><span class="si">{</span><span class="n">from_name</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current_v</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">current_v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">next_v</span><span class="p">,</span> <span class="n">func</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MigrationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;migration </span><span class="si">{</span><span class="n">from_name</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current_v</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">next_v</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">current_v</span> <span class="o">=</span> <span class="n">next_v</span>
+    <span class="k">return</span> <span class="n">current</span></div>
+
+
+
+<div class="viewcode-block" id="latest_version">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.latest_version">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">latest_version</span><span class="p">(</span><span class="n">schema_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Highest registered major version for ``schema_name``, or None.&quot;&quot;&quot;</span>
+    <span class="n">versions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parse_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">_BODY_REGISTRY</span>
+        <span class="k">if</span> <span class="n">parse_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">schema_name</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span> <span class="k">if</span> <span class="n">versions</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="migrate_to_latest">
+<a class="viewcode-back" href="../../module_docs/lacing/schema.html#lacing.migrate_to_latest">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">migrate_to_latest</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">from_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience: migrate to the highest registered version of the schema.</span>
+
+<span class="sd">    Returns ``(migrated_body, target_uri)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">from_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_uri</span><span class="p">(</span><span class="n">from_uri</span><span class="p">)</span>
+    <span class="n">latest</span> <span class="o">=</span> <span class="n">latest_version</span><span class="p">(</span><span class="n">from_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">latest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnknownBodySchemaError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;no schema registered with name </span><span class="si">{</span><span class="n">from_name</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="n">target_uri</span> <span class="o">=</span> <span class="n">make_uri</span><span class="p">(</span><span class="n">from_name</span><span class="p">,</span> <span class="n">latest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">migrate</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">from_uri</span><span class="o">=</span><span class="n">from_uri</span><span class="p">,</span> <span class="n">to_uri</span><span class="o">=</span><span class="n">target_uri</span><span class="p">),</span> <span class="n">target_uri</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

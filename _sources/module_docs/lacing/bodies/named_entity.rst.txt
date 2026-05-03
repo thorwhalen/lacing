@@ -1,0 +1,4 @@
+lacing.bodies.named_entity
+==========================
+.. automodule:: lacing.bodies.named_entity
+   :members:
