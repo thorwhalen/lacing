@@ -37,6 +37,7 @@ dev = [
     "pytest-cov>=4.0",
     "ruff>=0.1.0",
     "praatio>=6.0",
+    "pympi-ling>=1.7",
 ]
 docs = [
     "sphinx>=6.0",
@@ -44,6 +45,9 @@ docs = [
 ]
 textgrid = [
     "praatio>=6.0",
+]
+eaf = [
+    "pympi-ling>=1.7",
 ]
 
 [tool.ruff]

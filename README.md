@@ -7,10 +7,10 @@ time-based media (audio, video, speech, music) but generalizes to any 1-D
 interval domain.
 
 > **Status:** Phase 0–1. Core data model, in-memory + SQLite stores,
-> four round-trip adapters (Praat TextGrid, WebVTT, W3C Web Annotation,
-> `.annot` SQLite), inter-annotator agreement metrics, and a `lacing`
-> CLI (`convert`, `query`, `validate`, `list-formats`). Server and
-> frontend are on the roadmap
+> five round-trip adapters (Praat TextGrid, WebVTT, W3C Web Annotation,
+> `.annot` SQLite, ELAN EAF), inter-annotator agreement metrics, and a
+> `lacing` CLI (`convert`, `query`, `validate`, `list-formats`). Server
+> and frontend are on the roadmap
 > (see `misc/docs/Lacing Development Roadmap.md`).
 
 ## Install
@@ -18,6 +18,7 @@ interval domain.
 ```bash
 pip install lacing                # core only
 pip install 'lacing[textgrid]'    # + Praat TextGrid support (praatio)
+pip install 'lacing[eaf]'         # + ELAN EAF support (pympi-ling)
 ```
 
 ## 30-second tour
@@ -62,7 +63,8 @@ lacing/
 │   ├── textgrid.py        Praat .TextGrid (interval + point tiers)
 │   ├── webvtt.py          .vtt subtitles/captions
 │   ├── web_annotation.py  W3C Web Annotation Data Model (JSON-LD)
-│   └── annot.py           .annot SQLite portable file format (lossless)
+│   ├── annot.py           .annot SQLite portable file format (lossless)
+│   └── eaf.py             ELAN EAF (4 stereotypes verbatim)
 ├── cli.py           `lacing` CLI: convert, query, validate, list-formats
 └── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
 ```

@@ -142,10 +142,11 @@ packages so users can adopt the data model without infra.
 - SQLite + R*Tree → defines the `.annot` portable file format (BACK-DOC §3.1). ✓
 - `.annot` adapter (lossless round-trip + `persistent=True` for live mutation). ✓
 - CLI (`argh`): `lacing convert`, `lacing query`, `lacing validate`, `lacing list-formats`. ✓
+- **ELAN EAF adapter** — first adapter to exercise the tier hierarchy with stereotypes (TIME_SUBDIVISION, INCLUDED_IN, SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). ✓
 
 **Remaining:**
 - Postgres + `tstzrange` + GiST + per-tier `EXCLUDE` constraints (optional install).
-- ELAN EAF, JAMS, Label Studio JSON, OTIO adapters.
+- JAMS, Label Studio JSON, OTIO adapters.
 - JSON Schema export per body schema; semver in `body_schema_uri`.
 
 ### Phase 2 — Server (2–3 weeks)
