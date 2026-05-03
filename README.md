@@ -6,10 +6,12 @@ ELAN-style tier stereotypes, and Allen's interval algebra. Designed for
 time-based media (audio, video, speech, music) but generalizes to any 1-D
 interval domain.
 
-> **Status:** Phase 0 — core data model, in-memory store, three
-> round-trip adapters (Praat TextGrid, WebVTT, W3C Web Annotation), and
-> inter-annotator agreement metrics. Server, persistence, and frontend
-> are on the roadmap (see `misc/docs/Lacing Development Roadmap.md`).
+> **Status:** Phase 0–1. Core data model, in-memory + SQLite stores,
+> four round-trip adapters (Praat TextGrid, WebVTT, W3C Web Annotation,
+> `.annot` SQLite), inter-annotator agreement metrics, and a `lacing`
+> CLI (`convert`, `query`, `validate`, `list-formats`). Server and
+> frontend are on the roadmap
+> (see `misc/docs/Lacing Development Roadmap.md`).
 
 ## Install
 
@@ -54,11 +56,14 @@ lacing/
 ├── allen.py         13 Allen relations + intersects + relate + composition
 ├── store/
 │   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
-│   └── memory.py    MemoryStore over `intervaltree`
+│   ├── memory.py    MemoryStore over `intervaltree`
+│   └── sqlite.py    SqliteStore — persistent backend + .annot file format
 ├── adapters/
 │   ├── textgrid.py        Praat .TextGrid (interval + point tiers)
 │   ├── webvtt.py          .vtt subtitles/captions
-│   └── web_annotation.py  W3C Web Annotation Data Model (JSON-LD)
+│   ├── web_annotation.py  W3C Web Annotation Data Model (JSON-LD)
+│   └── annot.py           .annot SQLite portable file format (lossless)
+├── cli.py           `lacing` CLI: convert, query, validate, list-formats
 └── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
 ```
 
@@ -120,6 +125,37 @@ list(store.intersects(w))                       # any overlap
 list(store.during(w))                           # strictly inside w
 list(store.contains(w))                         # strictly contains w
 list(store.relate(w, [AllenRelation.MEETS]))   # ends at w.start
+```
+
+### Persist annotations
+
+```python
+from lacing.store import SqliteStore
+
+# Open or create a .annot file (SQLite under the hood)
+store = SqliteStore("project.annot")
+store.add_tier(...)
+store.add(...)            # writes go straight to disk
+store.set_meta("project", "demo")
+
+# Same MutableMapping + Allen-relation interface as MemoryStore
+for ann in store.intersects(window):
+    ...
+store.close()
+```
+
+The `.annot` file is the recommended portable handoff format — single-file
+SQLite, Git-trackable, lossless round-trip with `MemoryStore`.
+
+### CLI
+
+After `pip install -e .` the `lacing` command is on your PATH:
+
+```bash
+lacing list-formats                                          # show registered adapters
+lacing convert speech.TextGrid speech.annot                  # convert between formats
+lacing query speech.annot --start 1.0 --end 5.0 --rate 1000  # JSON-lines
+lacing validate speech.annot                                 # parse + summary
 ```
 
 ### Inter-annotator agreement

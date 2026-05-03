@@ -138,11 +138,15 @@ packages so users can adopt the data model without infra.
 ### Phase 1 — Persistence & adapters (1–2 weeks)
 *Sources: BACK-DOC §3.1, §4.3; ANN-DOC §C, §E.*
 
-- SQLite + R*Tree → defines the `.annot` portable file format (BACK-DOC §3.1).
+**Done:**
+- SQLite + R*Tree → defines the `.annot` portable file format (BACK-DOC §3.1). ✓
+- `.annot` adapter (lossless round-trip + `persistent=True` for live mutation). ✓
+- CLI (`argh`): `lacing convert`, `lacing query`, `lacing validate`, `lacing list-formats`. ✓
+
+**Remaining:**
 - Postgres + `tstzrange` + GiST + per-tier `EXCLUDE` constraints (optional install).
 - ELAN EAF, JAMS, Label Studio JSON, OTIO adapters.
 - JSON Schema export per body schema; semver in `body_schema_uri`.
-- CLI (`argh`/`typer`): `lacing convert`, `lacing query`, `lacing validate`.
 
 ### Phase 2 — Server (2–3 weeks)
 *Sources: BACK-DOC §3, §4.6, §4.7, §6.*

@@ -194,12 +194,12 @@ adapter exposes a model gap, fix the model before adding more adapters.
 
 ## Examples to study
 
-The three Phase 0 adapters are deliberately diverse and demonstrate the
-pattern:
+The Phase 0/1 adapters are deliberately diverse and demonstrate the pattern:
 
 - [lacing/adapters/textgrid.py](../../../lacing/adapters/textgrid.py) — uses an external parser (`praatio`, MIT, optional install), maps both interval and point tiers, raises `ImportError` with the install hint when the extra is missing.
 - [lacing/adapters/webvtt.py](../../../lacing/adapters/webvtt.py) — pure-Python parser, no dependency. Flat cues, no tier hierarchy. Demonstrates the `from_string-or-from-path` source heuristic.
 - [lacing/adapters/web_annotation.py](../../../lacing/adapters/web_annotation.py) — JSON-LD, uses the standard `json` module. Demonstrates discriminated-union round-tripping and creator/provenance preservation.
+- [lacing/adapters/annot.py](../../../lacing/adapters/annot.py) — *lossless* SQLite-based portable file format. Demonstrates the `persistent=True` mode (returns a live `SqliteStore` instead of a `MemoryStore`) and the fast-copy path when the source is already a `SqliteStore`.
 
 ## Source pointers
 

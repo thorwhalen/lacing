@@ -27,7 +27,12 @@ from lacing.model import (
     Provenance,
     Reference,
 )
-from lacing.store import IntervalAnnotationStore, MemoryStore
+from lacing.store import (
+    IntervalAnnotationStore,
+    MemoryStore,
+    SchemaMismatchError,
+    SqliteStore,
+)
 from lacing.tier import Tier, TierStereotype
 from lacing.time import (
     DEFAULT_RATE,
@@ -57,6 +62,8 @@ __all__ = [
     # store
     "IntervalAnnotationStore",
     "MemoryStore",
+    "SqliteStore",
+    "SchemaMismatchError",
     # quality
     "cohen_kappa",
     "krippendorff_alpha",

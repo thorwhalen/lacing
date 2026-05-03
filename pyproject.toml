@@ -17,7 +17,11 @@ authors = [
 dependencies = [
     "pydantic>=2.6",
     "intervaltree>=3.1",
+    "argh>=0.30",
 ]
+
+[project.scripts]
+lacing = "lacing.cli:main"
 
 [project.license]
 text = "mit"

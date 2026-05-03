@@ -45,16 +45,20 @@ lacing/                    ← THIS REPO: core library
 │   ├── time.py           RationalTime, TimeInterval
 │   ├── model.py          Annotation, Reference, Provenance
 │   ├── tier.py           Tier + 5 ELAN stereotypes
-│   ├── schema.py         body_schema registry; JSON Schema export
 │   ├── allen.py          13 Allen relations + composition
 │   ├── store/
 │   │   ├── base.py       IntervalAnnotationStore facade
-│   │   ├── memory.py     intervaltree-backed
-│   │   ├── sqlite.py     .annot file format
-│   │   └── postgres.py   tstzrange + GiST + EXCLUDE
+│   │   ├── memory.py     intervaltree-backed (Phase 0, done)
+│   │   ├── sqlite.py     .annot file format + persistent backend (Phase 1, done)
+│   │   └── postgres.py   tstzrange + GiST + EXCLUDE (Phase 1, TODO)
 │   ├── adapters/         plugin-registered I/O
-│   ├── quality.py        IAA: kappa, Krippendorff α, IoU, DER
-│   └── _utils.py
+│   │   ├── textgrid.py        Praat (Phase 0, done)
+│   │   ├── webvtt.py          captions (Phase 0, done)
+│   │   ├── web_annotation.py  W3C JSON-LD (Phase 0, done)
+│   │   └── annot.py           .annot SQLite (Phase 1, done)
+│   ├── cli.py            argh-based CLI (Phase 1, done)
+│   ├── quality.py        IAA: kappa, Krippendorff α, IoU, DER (Phase 0, done)
+│   └── schema.py         body_schema registry; JSON Schema export (TODO)
 └── misc/docs/            design docs + roadmap
 
 lacing-server/  ← sibling repo (FastAPI + Arq + MCP + Yjs bridge)
@@ -66,7 +70,7 @@ lacing-ui/      ← sibling repo (React + zustand + wavesurfer + dnd-timeline)
 When asked to implement something, identify which phase from the roadmap:
 
 - **Phase 0** — Core: time, model, store, Allen relations, three adapters (TextGrid, WebVTT, W3C), quality metrics. **Done.**
-- **Phase 1** — Persistence (SQLite/Postgres) + more adapters + CLI. **Currently here.**
+- **Phase 1** — Persistence (SQLite/Postgres) + more adapters + CLI. **Partially done:** `SqliteStore`, `.annot` file format adapter, and `lacing` CLI (`convert`, `query`, `validate`, `list-formats`) are in. **Remaining:** Postgres backend (`store/postgres.py`), more adapters (ELAN EAF, JAMS, Label Studio JSON, OTIO, CoNLL, brat, SubRip, TTML, CSV).
 - **Phase 2** — FastAPI server + Arq workers + MCP + OpenTelemetry.
 - **Phase 3** — Frontend MVP (waveform + dialogue tier + viseme tier + monitor + inspector).
 - **Phase 4** — Yjs awareness, then full collab; WebCodecs; tier view.
