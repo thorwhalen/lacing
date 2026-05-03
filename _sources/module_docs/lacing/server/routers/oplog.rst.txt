@@ -1,0 +1,4 @@
+lacing.server.routers.oplog
+===========================
+.. automodule:: lacing.server.routers.oplog
+   :members:

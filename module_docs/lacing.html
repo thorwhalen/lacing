@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.4 documentation</title>
+  <title>lacing &mdash; lacing 0.0.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8c5712d9"></script>
+      <script src="../_static/documentation_options.js?v=282f96c0"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -64,6 +64,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.InMemoryOpLog"><code class="docutils literal notranslate"><span class="pre">InMemoryOpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.IntervalAnnotationStore.add"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.add()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.IntervalAnnotationStore.all"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.all()</span></code></a></li>
@@ -94,6 +95,21 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.NodeRef.model_config"><code class="docutils literal notranslate"><span class="pre">NodeRef.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.OpLog"><code class="docutils literal notranslate"><span class="pre">OpLog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLog.append"><code class="docutils literal notranslate"><span class="pre">OpLog.append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLog.entries"><code class="docutils literal notranslate"><span class="pre">OpLog.entries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLog.latest_clock"><code class="docutils literal notranslate"><span class="pre">OpLog.latest_clock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.OpLogEntry"><code class="docutils literal notranslate"><span class="pre">OpLogEntry</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.actor"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.actor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.clock"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.clock</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.operation"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.operation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.payload"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.payload</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.received_at"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.received_at</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.target_id"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.target_id</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.Provenance.model_config"><code class="docutils literal notranslate"><span class="pre">Provenance.model_config</span></code></a></li>
 </ul>
@@ -105,6 +121,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.SqliteOpLog"><code class="docutils literal notranslate"><span class="pre">SqliteOpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.Tier"><code class="docutils literal notranslate"><span class="pre">Tier</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.TierStereotype"><code class="docutils literal notranslate"><span class="pre">TierStereotype</span></code></a><ul>
@@ -129,6 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
 </ul>
 </li>
@@ -145,6 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/oplog.html">lacing.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/server.html">lacing.server</a></li>
@@ -155,6 +174,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/store/base.html">lacing.store.base</a></li>
@@ -253,6 +273,12 @@ full story. <code class="docutils literal notranslate"><span class="pre">.claude
 <dt class="sig sig-object py" id="lacing.BodySchemaError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">BodySchemaError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#BodySchemaError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.BodySchemaError" title="Link to this definition"></a></dt>
 <dd><p>Raised when a body fails validation against its registered schema.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.InMemoryOpLog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">InMemoryOpLog</span></span><a class="reference internal" href="../_modules/lacing/oplog.html#InMemoryOpLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.InMemoryOpLog" title="Link to this definition"></a></dt>
+<dd><p>Simple list-backed op-log. Thread-safe via an RLock.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -413,6 +439,81 @@ with method bodies — structural typing is enough.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="lacing.OpLog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">OpLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/oplog.html#OpLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.OpLog" title="Link to this definition"></a></dt>
+<dd><p>Append-only log of mutations.</p>
+<p>Implementations must guarantee that the clock returned by
+<a class="reference internal" href="#lacing.OpLog.append" title="lacing.OpLog.append"><code class="xref py py-meth docutils literal notranslate"><span class="pre">append()</span></code></a> is strictly greater than every previously-returned
+clock value across the lifetime of the log.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.OpLog.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'anonymous'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/lacing/oplog.html#OpLog.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.OpLog.append" title="Link to this definition"></a></dt>
+<dd><p>Append an entry; return its assigned clock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.OpLog.entries">
+<span class="sig-name descname"><span class="pre">entries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">until_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lacing/oplog.html#lacing.oplog.OpLogEntry" title="lacing.oplog.OpLogEntry"><span class="pre">OpLogEntry</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/oplog.html#OpLog.entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.OpLog.entries" title="Link to this definition"></a></dt>
+<dd><p>Iterate entries, optionally bounded by clock range (inclusive).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.OpLog.latest_clock">
+<span class="sig-name descname"><span class="pre">latest_clock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/lacing/oplog.html#OpLog.latest_clock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.OpLog.latest_clock" title="Link to this definition"></a></dt>
+<dd><p>Highest clock currently in the log; 0 if empty.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.OpLogEntry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">OpLogEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">clock:</span> <span class="pre">int,</span> <span class="pre">operation:</span> <span class="pre">str,</span> <span class="pre">target_id:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">payload:</span> <span class="pre">dict[str,</span> <span class="pre">~typing.Any],</span> <span class="pre">actor:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'anonymous',</span> <span class="pre">received_at:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/oplog.html#OpLogEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.OpLogEntry" title="Link to this definition"></a></dt>
+<dd><p>One row of the op-log.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.actor">
+<span class="sig-name descname"><span class="pre">actor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#lacing.OpLogEntry.actor" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">user:&lt;handle&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">agent:&lt;model&gt;&#64;&lt;hash&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">adapter:&lt;format&gt;</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.clock">
+<span class="sig-name descname"><span class="pre">clock</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#lacing.OpLogEntry.clock" title="Link to this definition"></a></dt>
+<dd><p>Monotonic Lamport clock starting at 1. Strictly increasing per log.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.operation">
+<span class="sig-name descname"><span class="pre">operation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#lacing.OpLogEntry.operation" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">add_annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">remove_annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">update_annotation</span></code>,
+<code class="docutils literal notranslate"><span class="pre">add_tier</span></code>, <code class="docutils literal notranslate"><span class="pre">set_meta</span></code>, <code class="docutils literal notranslate"><span class="pre">import_batch</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One of</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.payload">
+<span class="sig-name descname"><span class="pre">payload</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#lacing.OpLogEntry.payload" title="Link to this definition"></a></dt>
+<dd><p>JSON-serializable payload sufficient to replay the operation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.received_at">
+<span class="sig-name descname"><span class="pre">received_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#lacing.OpLogEntry.received_at" title="Link to this definition"></a></dt>
+<dd><p>Wall-clock time the operation was received (seconds since epoch).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.OpLogEntry.target_id">
+<span class="sig-name descname"><span class="pre">target_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lacing.OpLogEntry.target_id" title="Link to this definition"></a></dt>
+<dd><p>Annotation id, tier name, meta key, or None for batch ops.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="lacing.Provenance">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from:</span> <span class="pre">list[~uuid.UUID]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time:</span> <span class="pre">~lacing.time.RationalTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.Provenance" title="Link to this definition"></a></dt>
 <dd><p>W3C PROV-O subset, embedded inline on every annotation.</p>
@@ -462,6 +563,15 @@ their rational value, so <code class="docutils literal notranslate"><span class=
 <dt class="sig sig-object py" id="lacing.SchemaMismatchError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">SchemaMismatchError</span></span><a class="reference internal" href="../_modules/lacing/store/sqlite.html#SchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.SchemaMismatchError" title="Link to this definition"></a></dt>
 <dd><p>Raised when opening a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file with an incompatible schema.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.SqliteOpLog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">SqliteOpLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/oplog.html#SqliteOpLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.SqliteOpLog" title="Link to this definition"></a></dt>
+<dd><p>Op-log backed by a SQLite table.</p>
+<p>Designed to share a database file with <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> so the store
+snapshot + the op-log live together and survive a single
+<code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">project.annot</span> <span class="pre">project.backup</span></code> step.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -668,6 +778,28 @@ Migrations must be one major-version step at a time
 (<code class="docutils literal notranslate"><span class="pre">to_version</span> <span class="pre">==</span> <span class="pre">from_version</span> <span class="pre">+</span> <span class="pre">1</span></code>).</p>
 <p>Re-registering the same <code class="docutils literal notranslate"><span class="pre">(schema_name,</span> <span class="pre">from_version)</span></code> pair replaces
 the previous entry — convenient in tests, intentional for hot-reload.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.replay_oplog">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">replay_oplog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lacing/oplog.html#lacing.oplog.OpLog" title="lacing.oplog.OpLog"><span class="pre">OpLog</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">until_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_factory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lacing.replay_oplog" title="Link to this definition"></a></dt>
+<dd><p>Rebuild a store by replaying <code class="docutils literal notranslate"><span class="pre">log</span></code> up to (and including) <code class="docutils literal notranslate"><span class="pre">until_clock</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – Source op-log.</p></li>
+<li><p><strong>until_clock</strong> – Stop at this clock (inclusive). None = replay all.</p></li>
+<li><p><strong>target_factory</strong> – Zero-arg callable returning a fresh empty store.
+Defaults to <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>. Pass a <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> factory to
+replay into a persistent file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rebuilt store. Operations whose payload references unknown
+body schemas or tier parents are still applied; the caller is
+responsible for any post-replay validation.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

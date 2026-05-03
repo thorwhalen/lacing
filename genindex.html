@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.4 documentation</title>
+  <title>Index &mdash; lacing 0.0.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8c5712d9"></script>
+      <script src="_static/documentation_options.js?v=282f96c0"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -60,6 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
@@ -70,6 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/base.html">lacing.store.base</a></li>
@@ -134,6 +136,12 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.actor">actor (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.actor">(lacing.OpLogEntry attribute)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.AdapterSpec">AdapterSpec (class in lacing.adapters)</a>
 </li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.add">add() (lacing.IntervalAnnotationStore method)</a>
@@ -178,6 +186,12 @@
         <li><a href="module_docs/lacing/model.html#lacing.model.AnnotationRef">(class in lacing.model)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.OpLog.append">append() (lacing.OpLog method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.append">(lacing.oplog.OpLog method)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.at_tier">at_tier() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -218,16 +232,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.clear_registry">clear_registry() (in module lacing.schema)</a>
 </li>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.clock">clock (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.clock">(lacing.OpLogEntry attribute)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.cohen_kappa">cohen_kappa() (in module lacing)</a>
 
       <ul>
         <li><a href="module_docs/lacing/quality.html#lacing.quality.cohen_kappa">(in module lacing.quality)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.compose">compose() (in module lacing.allen)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/allen.html#lacing.allen.compose">compose() (in module lacing.allen)</a>
+</li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.contains">contains() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -284,6 +304,12 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing.html#lacing.OpLog.entries">entries() (lacing.OpLog method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.entries">(lacing.oplog.OpLog method)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.equals">equals() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -292,14 +318,14 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.equals">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.export_json_schemas">export_json_schemas() (in module lacing)</a>
 
       <ul>
         <li><a href="module_docs/lacing/schema.html#lacing.schema.export_json_schemas">(in module lacing.schema)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.extend">extend() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -362,6 +388,12 @@
         <li><a href="module_docs/lacing.html#lacing.TierStereotype.INCLUDED_IN">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.InMemoryOpLog">InMemoryOpLog (class in lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.InMemoryOpLog">(class in lacing.oplog)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.intersects">intersects() (in module lacing.allen)</a>
 
       <ul>
@@ -372,14 +404,14 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.intersects">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.Annotation.interval">interval (lacing.Annotation property)</a>
 
       <ul>
         <li><a href="module_docs/lacing/model.html#lacing.model.Annotation.interval">(lacing.model.Annotation property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.interval_iou">interval_iou() (in module lacing)</a>
 
       <ul>
@@ -528,6 +560,13 @@
         <li><a href="module_docs/lacing/model.html#module-lacing.model">module</a>
 </li>
       </ul></li>
+      <li>
+    lacing.oplog
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
@@ -591,6 +630,12 @@
 
       <ul>
         <li><a href="module_docs/lacing/time.html#module-lacing.time">module</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.OpLog.latest_clock">latest_clock() (lacing.OpLog method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.latest_clock">(lacing.oplog.OpLog method)</a>
 </li>
       </ul></li>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.latest_version">latest_version() (in module lacing.schema)</a>
@@ -717,6 +762,8 @@
 </li>
         <li><a href="module_docs/lacing/model.html#module-lacing.model">lacing.model</a>
 </li>
+        <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">lacing.oplog</a>
+</li>
         <li><a href="module_docs/lacing/quality.html#module-lacing.quality">lacing.quality</a>
 </li>
         <li><a href="module_docs/lacing/schema.html#module-lacing.schema">lacing.schema</a>
@@ -766,6 +813,26 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.operation">operation (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.operation">(lacing.OpLogEntry attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.OpLog">OpLog (class in lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog">(class in lacing.oplog)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing.html#lacing.OpLogEntry">OpLogEntry (class in lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry">(class in lacing.oplog)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.overlaps">overlaps() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -782,16 +849,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.parse_uri">parse_uri() (in module lacing.schema)</a>
 </li>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.payload">payload (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.payload">(lacing.OpLogEntry attribute)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/store.html#lacing.store.PgSchemaMismatchError">PgSchemaMismatchError</a>, <a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PgSchemaMismatchError">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/store.html#lacing.store.PostgresStore">PostgresStore (class in lacing.store)</a>
 
       <ul>
         <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore">(class in lacing.store.postgres)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.PREDICATE_BY_RELATION">PREDICATE_BY_RELATION (in module lacing.allen)</a>
 </li>
       <li><a href="module_docs/lacing.html#lacing.Provenance">Provenance (class in lacing)</a>
@@ -820,6 +893,12 @@
 
       <ul>
         <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime">(class in lacing.time)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.received_at">received_at (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.received_at">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
       <li><a href="module_docs/lacing/model.html#lacing.model.Reference">Reference (in module lacing.model)</a>
@@ -862,6 +941,10 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.remove">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.replay">replay() (in module lacing.oplog)</a>
+</li>
+      <li><a href="module_docs/lacing.html#lacing.replay_oplog">replay_oplog() (in module lacing)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -876,6 +959,12 @@
       </ul></li>
       <li><a href="module_docs/lacing.html#lacing.SchemaMismatchError">SchemaMismatchError</a>, <a href="module_docs/lacing/store.html#lacing.store.SchemaMismatchError">[1]</a>, <a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SchemaMismatchError">[2]</a>
 </li>
+      <li><a href="module_docs/lacing.html#lacing.SqliteOpLog">SqliteOpLog (class in lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.SqliteOpLog">(class in lacing.oplog)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.SqliteStore">SqliteStore (class in lacing)</a>
 
       <ul>
@@ -912,6 +1001,12 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.target_id">target_id (lacing.oplog.OpLogEntry attribute)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.target_id">(lacing.OpLogEntry attribute)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.Tier">Tier (class in lacing)</a>
 
       <ul>
@@ -934,14 +1029,14 @@
         <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype">(class in lacing.tier)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.TIME_SUBDIVISION">TIME_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
         <li><a href="module_docs/lacing.html#lacing.TierStereotype.TIME_SUBDIVISION">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.TimeInterval">TimeInterval (class in lacing)</a>
 
       <ul>
