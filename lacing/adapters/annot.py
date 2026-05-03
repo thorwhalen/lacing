@@ -57,9 +57,7 @@ def load(
         ``MemoryStore`` (default) or ``SqliteStore`` (if ``persistent=True``).
     """
     if isinstance(source, (bytes, bytearray)):
-        with tempfile.NamedTemporaryFile(
-            suffix=".annot", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(suffix=".annot", delete=False) as f:
             f.write(source)
             tmp_path = f.name
         try:

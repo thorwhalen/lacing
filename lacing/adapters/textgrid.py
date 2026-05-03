@@ -132,14 +132,18 @@ def load(
                     _to_rational(entry.start, rate),
                     _to_rational(entry.end, rate),
                 )
-                _add_annotation(store, interval, tier_name, entry.label, asset_id, attribution, now)
+                _add_annotation(
+                    store, interval, tier_name, entry.label, asset_id, attribution, now
+                )
         elif isinstance(tier, PointTier):
             for entry in tier.entries:
                 if not include_empty and not entry.label:
                     continue
                 t = _to_rational(entry.time, rate)
                 interval = TimeInterval.point(t)
-                _add_annotation(store, interval, tier_name, entry.label, asset_id, attribution, now)
+                _add_annotation(
+                    store, interval, tier_name, entry.label, asset_id, attribution, now
+                )
         else:  # pragma: no cover  — praatio has only the two tier types today
             raise NotImplementedError(f"Unknown tier type: {type(tier).__name__}")
 
@@ -159,9 +163,7 @@ def _open_textgrid(
         # for now. Phase 1 can replace with a string-based parser.
         import tempfile
 
-        with tempfile.NamedTemporaryFile(
-            "wb", suffix=".TextGrid", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile("wb", suffix=".TextGrid", delete=False) as f:
             f.write(source)
             tmp_path = f.name
         try:
@@ -247,7 +249,9 @@ def dump(
         else:
             start = float(iv.start.to_fraction())
             end = float(iv.end.to_fraction())
-            by_tier_intervals.setdefault(ann.tier, []).append(Interval(start, end, label))
+            by_tier_intervals.setdefault(ann.tier, []).append(
+                Interval(start, end, label)
+            )
             min_t = min(min_t, start)
             max_t = max(max_t, end)
 
@@ -282,9 +286,7 @@ def dump(
     if target is None:
         import tempfile
 
-        with tempfile.NamedTemporaryFile(
-            "w", suffix=".TextGrid", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile("w", suffix=".TextGrid", delete=False) as f:
             tmp_path = f.name
         try:
             grid.save(tmp_path, format=format, includeBlankSpaces=include_empty)

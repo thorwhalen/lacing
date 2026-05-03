@@ -45,12 +45,8 @@ DEFAULT_RATE = 1000
 DEFAULT_ASSET_ID = "webvtt:unspecified"
 
 
-_TIMESTAMP_RE = re.compile(
-    r"^\s*(?:(\d+):)?([0-5]?\d):([0-5]?\d)\.(\d{3})\s*$"
-)
-_CUE_TIMING_RE = re.compile(
-    r"^\s*([\d:.]+)\s+-->\s+([\d:.]+)\s*(.*)$"
-)
+_TIMESTAMP_RE = re.compile(r"^\s*(?:(\d+):)?([0-5]?\d):([0-5]?\d)\.(\d{3})\s*$")
+_CUE_TIMING_RE = re.compile(r"^\s*([\d:.]+)\s+-->\s+([\d:.]+)\s*(.*)$")
 
 
 # ---------------------------------------------------------------------------
@@ -256,7 +252,9 @@ def dump(
     candidates = list(_all_with_intervals(store))
     if tier is not None:
         candidates = [a for a in candidates if a.tier == tier]
-    candidates.sort(key=lambda a: (a.interval.start.to_fraction(), a.interval.end.to_fraction()))  # type: ignore[union-attr]
+    candidates.sort(
+        key=lambda a: (a.interval.start.to_fraction(), a.interval.end.to_fraction())
+    )  # type: ignore[union-attr]
 
     for ann in candidates:
         body = ann.body if isinstance(ann.body, dict) else {}

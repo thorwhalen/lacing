@@ -27,7 +27,9 @@ class MediaRef(BaseModel):
     model_config = {"frozen": True, "extra": "forbid"}
 
     kind: Literal["media"] = "media"
-    asset_id: str = Field(..., description="Content hash (BLAKE3 / SHA-256) of the source asset.")
+    asset_id: str = Field(
+        ..., description="Content hash (BLAKE3 / SHA-256) of the source asset."
+    )
     interval: TimeInterval = Field(..., description="Region within the asset.")
 
 
@@ -37,8 +39,12 @@ class NodeRef(BaseModel):
     model_config = {"frozen": True, "extra": "forbid"}
 
     kind: Literal["node"] = "node"
-    scene_path: str = Field(..., description="Slash-separated path identifying the node.")
-    interval: TimeInterval = Field(..., description="Region within the node's local time.")
+    scene_path: str = Field(
+        ..., description="Slash-separated path identifying the node."
+    )
+    interval: TimeInterval = Field(
+        ..., description="Region within the node's local time."
+    )
 
 
 class AnnotationRef(BaseModel):
@@ -74,12 +80,16 @@ class Provenance(BaseModel):
             "``agent:<model>@<hash>``, ``adapter:<format>``, ``processor:<name>``."
         ),
     )
-    was_attributed_to: str = Field(..., description="Responsible party (user, org, or agent).")
+    was_attributed_to: str = Field(
+        ..., description="Responsible party (user, org, or agent)."
+    )
     was_derived_from: list[UUID] = Field(
         default_factory=list,
         description="Upstream annotation IDs this one is derived from.",
     )
-    generated_at_time: RationalTime = Field(..., description="When the annotation was generated.")
+    generated_at_time: RationalTime = Field(
+        ..., description="When the annotation was generated."
+    )
     activity: str = Field(
         "create",
         description="One of: ``create``, ``import``, ``derive``, ``migrate``, ``infer``.",
@@ -97,13 +107,17 @@ class Annotation(BaseModel):
     id: UUID = Field(..., description="Stable identifier.")
     tier: str = Field(..., description="Name of the tier this annotation belongs to.")
     reference: Reference = Field(..., description="What this annotation annotates.")
-    body: dict = Field(..., description="Domain-specific payload, validated by body_schema_uri.")
+    body: dict = Field(
+        ..., description="Domain-specific payload, validated by body_schema_uri."
+    )
     body_schema_uri: str = Field(
         ...,
         pattern=r"^annot://schema/[a-z0-9-]+/v\d+$",
         description="e.g., ``annot://schema/named-entity/v1``",
     )
-    provenance: Provenance = Field(..., description="Who/when/why this annotation was created.")
+    provenance: Provenance = Field(
+        ..., description="Who/when/why this annotation was created."
+    )
     confidence: float | None = Field(
         None,
         ge=0.0,

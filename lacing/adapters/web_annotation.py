@@ -63,9 +63,7 @@ _TIME_FRAGMENT_RE = re.compile(r"#t=([\d.]+)(?:,([\d.]+))?")
 # ---------------------------------------------------------------------------
 
 
-def _parse_time_fragment(
-    selector_value: str, rate: int
-) -> TimeInterval | None:
+def _parse_time_fragment(selector_value: str, rate: int) -> TimeInterval | None:
     """Parse a Media Fragment time selector value like ``t=1.5,3.0`` or ``t=2``.
 
     Tolerates leading ``#`` (URL fragment) and ``npt:`` prefix on the value.
@@ -107,7 +105,9 @@ def _fmt_seconds(f: Fraction) -> str:
     return s
 
 
-def _extract_target_info(target: Any, rate: int) -> tuple[str, TimeInterval | None, dict | None]:
+def _extract_target_info(
+    target: Any, rate: int
+) -> tuple[str, TimeInterval | None, dict | None]:
     """Pull ``(source, interval, raw_selector)`` out of a W3C target.
 
     ``target`` may be a string (URL — interval is None) or a dict.
@@ -117,7 +117,7 @@ def _extract_target_info(target: Any, rate: int) -> tuple[str, TimeInterval | No
         m = _TIME_FRAGMENT_RE.search(target)
         if m:
             base = target[: m.start()]
-            iv = _parse_time_fragment(target[m.start():], rate)
+            iv = _parse_time_fragment(target[m.start() :], rate)
             return base, iv, None
         return target, None, None
 
@@ -143,10 +143,15 @@ def _extract_target_info(target: Any, rate: int) -> tuple[str, TimeInterval | No
         # Pick the first FragmentSelector; preserve the rest.
         remaining: list = []
         for s in selector:
-            if isinstance(s, dict) and s.get("type") in (
-                "FragmentSelector",
-                "MediaFragmentSelector",
-            ) and iv is None:
+            if (
+                isinstance(s, dict)
+                and s.get("type")
+                in (
+                    "FragmentSelector",
+                    "MediaFragmentSelector",
+                )
+                and iv is None
+            ):
                 iv = _parse_time_fragment(s.get("value", ""), rate)
             else:
                 remaining.append(s)
@@ -378,7 +383,9 @@ def _annotation_to_jsonld(ann: Annotation) -> dict:
         # Merge preserved-but-uninterpreted selectors back in
         existing = out["target"]["selector"]
         out["target"]["selector"] = [existing] + (
-            body["selector"] if isinstance(body["selector"], list) else [body["selector"]]
+            body["selector"]
+            if isinstance(body["selector"], list)
+            else [body["selector"]]
         )
 
     out["creator"] = ann.provenance.was_attributed_to

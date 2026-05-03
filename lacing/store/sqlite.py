@@ -259,7 +259,11 @@ class SqliteStore:
                 cur.execute(
                     "INSERT INTO annotations_rtree (rowid, start_seconds, end_seconds) "
                     "VALUES (?, ?, ?)",
-                    (rowid, math.nextafter(start_s, -math.inf), math.nextafter(end_s, math.inf)),
+                    (
+                        rowid,
+                        math.nextafter(start_s, -math.inf),
+                        math.nextafter(end_s, math.inf),
+                    ),
                 )
 
     def remove(self, annotation_id: UUID) -> Annotation | None:
@@ -272,7 +276,9 @@ class SqliteStore:
                 "SELECT rowid FROM annotations WHERE id = ?", (str(annotation_id),)
             ).fetchone()
             if row is not None:
-                cur.execute("DELETE FROM annotations_rtree WHERE rowid = ?", (row["rowid"],))
+                cur.execute(
+                    "DELETE FROM annotations_rtree WHERE rowid = ?", (row["rowid"],)
+                )
             cur.execute("DELETE FROM annotations WHERE id = ?", (str(annotation_id),))
         return ann
 
@@ -341,7 +347,9 @@ class SqliteStore:
                 (key.start.value, key.start.rate, key.end.value, key.end.rate),
             ).fetchall()
             for row in existing:
-                cur.execute("DELETE FROM annotations_rtree WHERE rowid = ?", (row["rowid"],))
+                cur.execute(
+                    "DELETE FROM annotations_rtree WHERE rowid = ?", (row["rowid"],)
+                )
             cur.execute(
                 "DELETE FROM annotations WHERE "
                 "  start_value = ? AND start_rate = ? AND end_value = ? AND end_rate = ?",
@@ -362,26 +370,38 @@ class SqliteStore:
         return self._candidates_filtered(query, _intersects)
 
     def during(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.DURING])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.DURING]
+        )
 
     def contains(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.CONTAINS])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.CONTAINS]
+        )
 
     def overlaps(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.OVERLAPS])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.OVERLAPS]
+        )
 
     def meets(self, query: TimeInterval) -> Iterator[Annotation]:
         # meets(a, q): a.end == q.start. R*Tree won't help — scan all.
         return self._scan_filtered(PREDICATE_BY_RELATION[AllenRelation.MEETS], query)
 
     def starts(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.STARTS])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.STARTS]
+        )
 
     def finishes(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.FINISHES])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.FINISHES]
+        )
 
     def equals(self, query: TimeInterval) -> Iterator[Annotation]:
-        return self._candidates_filtered(query, PREDICATE_BY_RELATION[AllenRelation.EQUALS])
+        return self._candidates_filtered(
+            query, PREDICATE_BY_RELATION[AllenRelation.EQUALS]
+        )
 
     def relate(
         self, query: TimeInterval, relations: Iterable[AllenRelation]
@@ -474,7 +494,9 @@ class SqliteStore:
         for row in self._conn.execute(sql, (widened_end, widened_start)):
             yield _row_to_annotation(row)
 
-    def _candidates_filtered(self, query: TimeInterval, predicate) -> Iterator[Annotation]:
+    def _candidates_filtered(
+        self, query: TimeInterval, predicate
+    ) -> Iterator[Annotation]:
         for ann in self._candidates(query):
             iv = ann.interval
             if iv is not None and predicate(iv, query):
@@ -490,7 +512,9 @@ class SqliteStore:
 
     def __repr__(self) -> str:
         try:
-            n_anns = self._conn.execute("SELECT COUNT(*) FROM annotations").fetchone()[0]
+            n_anns = self._conn.execute("SELECT COUNT(*) FROM annotations").fetchone()[
+                0
+            ]
             n_tiers = self._conn.execute("SELECT COUNT(*) FROM tiers").fetchone()[0]
         except sqlite3.Error:
             return f"SqliteStore({self._path!r}, <closed>)"

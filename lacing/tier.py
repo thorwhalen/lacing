@@ -189,7 +189,11 @@ def validate_tier_constraint(
         # Group children by parent they fall in, then check coverage.
         for pi in parent_intervals:
             within = sorted(
-                (ci for ci in child_intervals if pi.start <= ci.start and ci.end <= pi.end),
+                (
+                    ci
+                    for ci in child_intervals
+                    if pi.start <= ci.start and ci.end <= pi.end
+                ),
                 key=lambda x: (x.start.to_fraction(), x.end.to_fraction()),
             )
             if not within:

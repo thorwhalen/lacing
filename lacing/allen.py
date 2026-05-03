@@ -153,7 +153,9 @@ def intersects(a: TimeInterval, b: TimeInterval) -> bool:
     return a.start < b.end and b.start < a.end
 
 
-PREDICATE_BY_RELATION: dict[AllenRelation, Callable[[TimeInterval, TimeInterval], bool]] = {
+PREDICATE_BY_RELATION: dict[
+    AllenRelation, Callable[[TimeInterval, TimeInterval], bool]
+] = {
     AllenRelation.BEFORE: before,
     AllenRelation.AFTER: after,
     AllenRelation.MEETS: meets,

@@ -82,9 +82,7 @@ def convert(
     if dst_format is None:
         dst_format = _infer_format_from_extension(dst)
     if dst_format is None:
-        raise SystemExit(
-            f"Cannot infer output format from {dst!r}. Pass --dst-format."
-        )
+        raise SystemExit(f"Cannot infer output format from {dst!r}. Pass --dst-format.")
     adapter_dump(store, dst, format=dst_format)
     print(f"Wrote {dst!r} ({dst_format})")
 

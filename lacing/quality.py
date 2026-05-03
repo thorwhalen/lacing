@@ -127,7 +127,10 @@ def krippendorff_alpha(
     # Expected disagreement: across all unordered pairs of values regardless
     # of which annotator/unit.
     all_values: list[T] = [
-        v for row in annotations for v in row if v is not None  # type: ignore[misc]
+        v
+        for row in annotations
+        for v in row
+        if v is not None  # type: ignore[misc]
     ]
     counts = Counter(all_values)
     n_total = sum(counts.values())
@@ -194,9 +197,7 @@ def interval_iou(a: TimeInterval, b: TimeInterval) -> float:
     return float(intersection / union)
 
 
-def boundary_iou(
-    a: Iterable[TimeInterval], b: Iterable[TimeInterval]
-) -> float:
+def boundary_iou(a: Iterable[TimeInterval], b: Iterable[TimeInterval]) -> float:
     """Mean IoU between two sets of intervals via greedy best-match.
 
     For each interval in ``a``, finds its highest-IoU match in ``b`` (without

@@ -151,11 +151,11 @@ def load(
             stereotype = TierStereotype.NONE
 
         tier_metadata: dict[str, Any] = {}
-        if (p := params.get("PARTICIPANT")):
+        if p := params.get("PARTICIPANT"):
             tier_metadata["participant"] = p
-        if (loc := params.get("DEFAULT_LOCALE")):
+        if loc := params.get("DEFAULT_LOCALE"):
             tier_metadata["locale"] = loc
-        if (ann := params.get("ANNOTATOR")):
+        if ann := params.get("ANNOTATOR"):
             tier_metadata["annotator"] = ann
 
         store.add_tier(
@@ -198,9 +198,7 @@ def load(
 
 def _open_eaf(source: str | bytes | os.PathLike, Eaf_cls) -> "_PympiEaf":
     if isinstance(source, (bytes, bytearray)):
-        with tempfile.NamedTemporaryFile(
-            "wb", suffix=".eaf", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile("wb", suffix=".eaf", delete=False) as f:
             f.write(source)
             tmp_path = f.name
         try:
@@ -334,9 +332,7 @@ def dump(
         eaf.add_annotation(a.tier, start_ms, end_ms, str(text))
 
     if target is None:
-        with tempfile.NamedTemporaryFile(
-            suffix=".eaf", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(suffix=".eaf", delete=False) as f:
             tmp_path = f.name
         try:
             eaf.to_file(tmp_path, pretty=pretty)

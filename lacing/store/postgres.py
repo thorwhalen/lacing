@@ -571,7 +571,9 @@ class PostgresStore:
                 n_tiers = cur.execute("SELECT COUNT(*) FROM tiers").fetchone()[0]
         except Exception:  # pragma: no cover  — closed connection
             return f"PostgresStore(<closed>)"
-        return f"PostgresStore({n_anns} annotations, {n_tiers} tiers, rate={self._rate})"
+        return (
+            f"PostgresStore({n_anns} annotations, {n_tiers} tiers, rate={self._rate})"
+        )
 
     # --- conversion helpers -----------------------------------------
 
@@ -599,7 +601,9 @@ class PostgresStore:
             RationalTime(span.upper, self._rate),
         )
 
-    def _annotation_to_row(self, ann: Annotation) -> tuple[tuple[str, ...], tuple[Any, ...]]:
+    def _annotation_to_row(
+        self, ann: Annotation
+    ) -> tuple[tuple[str, ...], tuple[Any, ...]]:
         ref = ann.reference
         ref_kind: str
         asset_id: str | None = None
@@ -662,7 +666,9 @@ class PostgresStore:
             ann.body_schema_uri,
             ann.provenance.was_generated_by,
             ann.provenance.was_attributed_to,
-            self._psycopg.types.json.Jsonb([str(u) for u in ann.provenance.was_derived_from]),
+            self._psycopg.types.json.Jsonb(
+                [str(u) for u in ann.provenance.was_derived_from]
+            ),
             gen_at.value,
             gen_at.rate,
             ann.provenance.activity,
@@ -726,7 +732,9 @@ def _row_to_tier(row) -> Tier:
 # ---------------------------------------------------------------------------
 
 
-def from_memory(memory_store, connection_string: str | dict, *, rate: int = 24000) -> PostgresStore:
+def from_memory(
+    memory_store, connection_string: str | dict, *, rate: int = 24000
+) -> PostgresStore:
     """Replicate an in-memory store into a Postgres database."""
     pg = PostgresStore(connection_string, rate=rate)
     for tier in memory_store.tiers():
