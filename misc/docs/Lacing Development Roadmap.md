@@ -160,7 +160,16 @@ packages so users can adopt the data model without infra.
 ### Phase 2 — Server (2–3 weeks)
 *Sources: BACK-DOC §3, §4.6, §4.7, §6.*
 
-- FastAPI: REST CRUD, batch import/export, ETag-based optimistic concurrency.
+**Done:**
+- FastAPI app factory + store-agnostic dependency injection. ✓
+- REST CRUD for annotations + tiers (with discriminated reference union). ✓
+- ETag-based optimistic concurrency on PATCH (BLAKE2b content hash; `If-Match` required; wildcard `*` accepted). ✓
+- Allen-relation list filters: `?start&end&rate&relation=intersects|during|...`. ✓
+- Import/export endpoints proxying every registered adapter (`POST /import?format=...`, `GET /export?format=...`). ✓
+- Schema introspection (`/schemas`, `/schemas/{uri}` returns JSON Schema). ✓
+- Health + meta endpoints. ✓
+
+**Remaining:**
 - Background workers via **Arq** (avoid Celery — BACK-DOC §6).
 - MCP server (`mcp[cli]`) — agents are first-class clients (BACK-DOC §3.3).
 - OpenTelemetry + **op-log replay endpoint** (`GET /projects/{id}/state-at?clock=…`)

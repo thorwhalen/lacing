@@ -6,12 +6,14 @@ ELAN-style tier stereotypes, and Allen's interval algebra. Designed for
 time-based media (audio, video, speech, music) but generalizes to any 1-D
 interval domain.
 
-> **Status:** Phase 0–1. Core data model, in-memory + SQLite stores,
-> five round-trip adapters (Praat TextGrid, WebVTT, W3C Web Annotation,
-> `.annot` SQLite, ELAN EAF), inter-annotator agreement metrics, and a
-> `lacing` CLI (`convert`, `query`, `validate`, `list-formats`). Server
-> and frontend are on the roadmap
-> (see `misc/docs/Lacing Development Roadmap.md`).
+> **Status:** Phase 0–2. Core data model, in-memory + SQLite + Postgres
+> stores, six round-trip adapters (Praat TextGrid, WebVTT, W3C Web
+> Annotation, `.annot` SQLite, ELAN EAF, JAMS), body-schema registry
+> + JSON Schema export + migrations, inter-annotator agreement metrics,
+> a `lacing` CLI (`convert`, `query`, `validate`, `list-formats`),
+> **and a FastAPI HTTP server** (REST CRUD + ETag-based optimistic
+> concurrency + import/export + schema introspection). Frontend is on
+> the roadmap (see `misc/docs/Lacing Development Roadmap.md`).
 
 ## Install
 
@@ -21,6 +23,7 @@ pip install 'lacing[textgrid]'    # + Praat TextGrid support (praatio)
 pip install 'lacing[eaf]'         # + ELAN EAF support (pympi-ling)
 pip install 'lacing[jams]'        # + JAMS (MIR annotation) support
 pip install 'lacing[postgres]'    # + PostgresStore (psycopg + GiST + EXCLUDE)
+pip install 'lacing[server]'      # + FastAPI HTTP server
 ```
 
 ## 30-second tour
@@ -72,7 +75,12 @@ lacing/
 ├── cli.py           `lacing` CLI: convert, query, validate, list-formats
 ├── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
 ├── schema.py        Body schema registry + JSON Schema export + migrations
-└── bodies/          Built-in body schemas (word, named-entity, ...)
+├── bodies/          Built-in body schemas (word, named-entity, ...)
+└── server/          FastAPI HTTP server (Phase 2)
+    ├── app.py           create_app(); ready-to-run `app` for uvicorn
+    ├── deps.py          dependency-injection (store factory)
+    ├── etag.py          ETag computation + If-Match parsing
+    └── routers/         REST endpoints: annotations, tiers, adapters, meta
 ```
 
 ## Design rules in one breath
@@ -225,6 +233,47 @@ export_json_schemas("./schema/")  # writes <name>/v<N>.json + index.json
 
 Built-in body schemas live under `lacing/bodies/` (`word`, `named-entity`).
 They register themselves on import.
+
+### Run the HTTP server
+
+```bash
+pip install 'lacing[server]'
+uvicorn lacing.server:app --reload
+```
+
+By default the server starts with an in-memory `SqliteStore`. Wire your
+own backend (e.g., a `PostgresStore` or an `.annot` file) via FastAPI's
+dependency-override:
+
+```python
+from lacing.server import create_app
+from lacing.server.deps import get_store
+from lacing.store import SqliteStore
+
+store = SqliteStore("project.annot", check_same_thread=False)
+app = create_app()
+app.dependency_overrides[get_store] = lambda: store
+```
+
+The REST surface (Phase 2.0):
+
+```
+GET    /health
+GET    /tiers                              list
+POST   /tiers                              create or update
+GET    /tiers/{name}                       get one
+POST   /annotations                        create (returns ETag)
+GET    /annotations                        list with optional ?tier&start&end&relation&rate
+GET    /annotations/{id}                   get one (returns ETag)
+PATCH  /annotations/{id}                   partial update; If-Match required
+DELETE /annotations/{id}
+POST   /import?format=webvtt               upload a file in any registered format
+GET    /export?format=eaf                  dump store as a file
+GET    /formats                            list registered adapters
+GET    /schemas                            list registered body_schema_uris
+GET    /schemas/{uri}                      JSON Schema for a URI
+GET    /meta, PUT /meta/{key}              key/value metadata
+```
 
 ### Inter-annotator agreement
 

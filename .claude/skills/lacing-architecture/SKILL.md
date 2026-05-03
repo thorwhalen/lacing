@@ -61,7 +61,8 @@ lacing/                    ← THIS REPO: core library
 │   ├── cli.py            argh-based CLI (Phase 1, done)
 │   ├── quality.py        IAA: kappa, Krippendorff α, IoU, DER (Phase 0, done)
 │   ├── schema.py         body_schema registry + JSON Schema export + migrations (Phase 1, done)
-│   └── bodies/           built-in body schemas (word, named-entity)
+│   ├── bodies/           built-in body schemas (word, named-entity)
+│   └── server/           FastAPI HTTP server (Phase 2, partial — REST CRUD + ETag + import/export)
 └── misc/docs/            design docs + roadmap
 
 lacing-server/  ← sibling repo (FastAPI + Arq + MCP + Yjs bridge)
@@ -74,7 +75,7 @@ When asked to implement something, identify which phase from the roadmap:
 
 - **Phase 0** — Core: time, model, store, Allen relations, three adapters (TextGrid, WebVTT, W3C), quality metrics. **Done.**
 - **Phase 1** — Persistence (SQLite/Postgres) + more adapters + CLI. **Mostly done:** `SqliteStore` + `.annot` file format adapter, ELAN EAF adapter, JAMS adapter (MIR), `PostgresStore` with `int8range`/GiST/per-tier EXCLUDE, `schema.py` (body-schema registry + JSON Schema export + migrations) with seed bodies under `lacing/bodies/`, and `lacing` CLI (`convert`, `query`, `validate`, `list-formats`) are in. **Remaining:** more adapters (Label Studio JSON, OTIO, CoNLL, brat, SubRip, TTML, CSV).
-- **Phase 2** — FastAPI server + Arq workers + MCP + OpenTelemetry.
+- **Phase 2** — FastAPI server + Arq workers + MCP + OpenTelemetry. **Partially done:** REST CRUD + ETag-based optimistic concurrency + import/export + schema introspection are in (`lacing/server/`). **Remaining:** Arq background workers, MCP server, OpenTelemetry + op-log replay endpoint.
 - **Phase 3** — Frontend MVP (waveform + dialogue tier + viseme tier + monitor + inspector).
 - **Phase 4** — Yjs awareness, then full collab; WebCodecs; tier view.
 - **Phase 5** — Differentiators (full Allen API, soft labels, generator timing, MCP-native).
