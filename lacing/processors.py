@@ -70,6 +70,7 @@ def register_processor(
         if inspect.iscoroutinefunction(func):
             wrapped = func
         else:
+
             async def wrapped(*args, **kwargs):  # type: ignore[no-redef]
                 return func(*args, **kwargs)
 
@@ -84,8 +85,7 @@ def register_processor(
 def get_processor(name: str) -> Callable[..., Awaitable[Any]]:
     if name not in _PROCESSORS:
         raise KeyError(
-            f"no processor registered as {name!r}; "
-            f"known: {sorted(_PROCESSORS)}"
+            f"no processor registered as {name!r}; known: {sorted(_PROCESSORS)}"
         )
     return _PROCESSORS[name]
 

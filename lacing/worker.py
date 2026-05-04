@@ -80,9 +80,7 @@ def build_worker_settings(
         store = store_factory()
         oplog = oplog_factory()
         try:
-            return await run_async(
-                processor_name, store=store, oplog=oplog, **kwargs
-            )
+            return await run_async(processor_name, store=store, oplog=oplog, **kwargs)
         finally:
             for resource in (store, oplog):
                 close = getattr(resource, "close", None)
