@@ -1,0 +1,543 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.processors &mdash; lacing 0.0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=bbaf98b3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.processors</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.processors</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Background processors — pluggable jobs that run against a store + op-log.</span>
+
+<span class="sd">A *processor* is a registered async function that:</span>
+
+<span class="sd">1. Takes an ``IntervalAnnotationStore``, an ``OpLog``, and processor-specific</span>
+<span class="sd">   keyword arguments.</span>
+<span class="sd">2. Either mutates the store (recording op-log entries) or returns a result</span>
+<span class="sd">   (or both).</span>
+
+<span class="sd">Two execution modes ship:</span>
+
+<span class="sd">- **Synchronous** via :func:`run_sync` — runs in the current event loop.</span>
+<span class="sd">  Always available; no Redis or other infra. Use this from tests, CLIs,</span>
+<span class="sd">  and scripts.</span>
+<span class="sd">- **Async via Arq** — see ``lacing.worker`` (optional). The same</span>
+<span class="sd">  processor can be queued through Redis when scale demands it.</span>
+
+<span class="sd">Per BACK-DOC §6: Arq is preferred over Celery (lighter, async-native).</span>
+<span class="sd">But the *processor pattern itself* is independent of Arq — most users</span>
+<span class="sd">will never need Redis.</span>
+
+<span class="sd">Example built-ins:</span>
+
+<span class="sd">- :func:`low_confidence_review` — flag annotations whose confidence is</span>
+<span class="sd">  below a threshold by adding a parallel ``for-review`` tier annotation.</span>
+<span class="sd">- :func:`detect_density_change_points` — emit point markers wherever the</span>
+<span class="sd">  annotation density changes more than ``min_delta`` over a sliding</span>
+<span class="sd">  window.</span>
+
+<span class="sd">Register your own with :func:`register_processor`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Awaitable</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># registry</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="n">_PROCESSORS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="ProcessorError">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.ProcessorError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessorError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a registered processor&#39;s invocation fails.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="register_processor">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.register_processor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_processor</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a processor under ``name`` (defaults to the function name).</span>
+
+<span class="sd">    The function may be sync or async; we wrap sync funcs to a coroutine.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">registered_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="n">wrapped</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># type: ignore[no-redef]</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">_PROCESSORS</span><span class="p">[</span><span class="n">registered_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrapped</span>
+        <span class="k">return</span> <span class="n">func</span>  <span class="c1"># return the original so type info is preserved</span>
+
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_processor</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_PROCESSORS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;no processor registered as </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;known: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_PROCESSORS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_PROCESSORS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="registered_processors">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.registered_processors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">registered_processors</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Names of every registered processor, sorted.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_PROCESSORS</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="clear_processors">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.clear_processors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clear_processors</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop every registered processor. For tests.&quot;&quot;&quot;</span>
+    <span class="n">_PROCESSORS</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># runners</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="run_sync">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.run_sync">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_sync</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">oplog</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a processor synchronously and return its result.</span>
+
+<span class="sd">    If the processor is async, we call it via ``asyncio.run`` (when no</span>
+<span class="sd">    loop is running) or schedule and wait on it (when a loop is already</span>
+<span class="sd">    active). Most callers from sync code want the former.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">processor</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">coroutine</span> <span class="o">=</span> <span class="n">processor</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span> <span class="n">oplog</span><span class="o">=</span><span class="n">oplog</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">coroutine</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ProcessorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;processor </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="c1"># A loop is already running — caller is in async context. Schedule</span>
+    <span class="c1"># and use a future. This branch is mostly a courtesy; sync callers</span>
+    <span class="c1"># don&#39;t typically hit it.</span>
+    <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">coroutine</span><span class="p">,</span> <span class="n">loop</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="run_async">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.run_async">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">oplog</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a processor in the current event loop. For async callers.&quot;&quot;&quot;</span>
+    <span class="n">processor</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">processor</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span> <span class="n">oplog</span><span class="o">=</span><span class="n">oplog</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># built-in processors</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="low_confidence_review">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.low_confidence_review">[docs]</a>
+<span class="nd">@register_processor</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;low_confidence_review&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">low_confidence_review</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">oplog</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">review_tier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;for-review&quot;</span><span class="p">,</span>
+    <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;processor:low_confidence_review&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Flag low-confidence annotations by mirroring them onto a review tier.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store: The annotation store to scan + mutate.</span>
+<span class="sd">        oplog: Where to record the new annotations.</span>
+<span class="sd">        threshold: Confidence below this triggers a review entry. ``None``</span>
+<span class="sd">            confidences are skipped (treated as full-confidence, since the</span>
+<span class="sd">            user didn&#39;t supply one).</span>
+<span class="sd">        review_tier: Name of the tier to write review entries onto. Created</span>
+<span class="sd">            if missing.</span>
+<span class="sd">        actor: Provenance ``was_attributed_to`` for review entries.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``{&quot;flagged&quot;: &lt;count&gt;, &quot;review_tier&quot;: &lt;name&gt;}``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">store</span><span class="o">.</span><span class="n">get_tier</span><span class="p">(</span><span class="n">review_tier</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">review_tier_obj</span> <span class="o">=</span> <span class="n">Tier</span><span class="p">(</span><span class="n">review_tier</span><span class="p">)</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">review_tier_obj</span><span class="p">)</span>
+        <span class="n">oplog</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;add_tier&quot;</span><span class="p">,</span>
+            <span class="n">target_id</span><span class="o">=</span><span class="n">review_tier</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">review_tier</span><span class="p">,</span>
+                <span class="s2">&quot;stereotype&quot;</span><span class="p">:</span> <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="p">},</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ProcessorError</span><span class="p">(</span><span class="s2">&quot;store does not expose .all()&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Idempotence: collect source ids that already have review entries</span>
+    <span class="c1"># so a re-run doesn&#39;t duplicate them.</span>
+    <span class="n">already_reviewed</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span> <span class="o">==</span> <span class="n">review_tier</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_id&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">source</span><span class="p">:</span>
+                <span class="n">already_reviewed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+
+    <span class="n">flagged</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_all</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span> <span class="o">==</span> <span class="n">review_tier</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># don&#39;t recurse on our own output</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">in</span> <span class="n">already_reviewed</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># already flagged on a previous run</span>
+        <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">reference</span>
+        <span class="n">asset_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">asset_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Only ``MediaRef`` annotations carry a stable asset_id.</span>
+            <span class="k">continue</span>
+
+        <span class="n">review_ann</span> <span class="o">=</span> <span class="n">Annotation</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+            <span class="n">tier</span><span class="o">=</span><span class="n">review_tier</span><span class="p">,</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">iv</span><span class="p">),</span>
+            <span class="n">body</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;low_confidence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                <span class="s2">&quot;source_confidence&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span>
+                <span class="s2">&quot;source_tier&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/review/v1&quot;</span><span class="p">,</span>
+            <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+                <span class="n">was_generated_by</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+                <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+                <span class="n">was_derived_from</span><span class="o">=</span><span class="p">[</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">(),</span>
+                <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;derive&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">review_ann</span><span class="p">)</span>
+        <span class="n">oplog</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;add_annotation&quot;</span><span class="p">,</span>
+            <span class="n">target_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">review_ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+            <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;annotation&quot;</span><span class="p">:</span> <span class="n">review_ann</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)},</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">flagged</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;flagged&quot;</span><span class="p">:</span> <span class="n">flagged</span><span class="p">,</span> <span class="s2">&quot;review_tier&quot;</span><span class="p">:</span> <span class="n">review_tier</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="detect_density_change_points">
+<a class="viewcode-back" href="../../module_docs/lacing/processors.html#lacing.detect_density_change_points">[docs]</a>
+<span class="nd">@register_processor</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;detect_density_change_points&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">detect_density_change_points</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">oplog</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bucket_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">min_delta</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">target_tier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;density-change-points&quot;</span><span class="p">,</span>
+    <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;processor:detect_density_change_points&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit point markers wherever annotation density changes sharply.</span>
+
+<span class="sd">    Buckets all annotations by ``floor(start_seconds / bucket_seconds)``</span>
+<span class="sd">    and emits a point marker on ``target_tier`` for each bucket boundary</span>
+<span class="sd">    where the count differs from the previous bucket by at least</span>
+<span class="sd">    ``min_delta``. Lightweight stand-in for a real CPD algorithm — the</span>
+<span class="sd">    architecture is what matters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store: Source store.</span>
+<span class="sd">        oplog: Where to record emitted markers.</span>
+<span class="sd">        asset_id: If set, only consider annotations on this asset.</span>
+<span class="sd">            ``None`` = consider all media-referenced annotations.</span>
+<span class="sd">        bucket_seconds: Bucket width.</span>
+<span class="sd">        min_delta: Minimum |Δ count| to emit a marker.</span>
+<span class="sd">        rate: Quantization rate for the new point intervals.</span>
+<span class="sd">        target_tier: Output tier; created if missing.</span>
+<span class="sd">        actor: Provenance attribution.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``{&quot;markers&quot;: &lt;count&gt;, &quot;target_tier&quot;: &lt;name&gt;}``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bucket_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ProcessorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bucket_seconds must be positive, got </span><span class="si">{</span><span class="n">bucket_seconds</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">store</span><span class="o">.</span><span class="n">get_tier</span><span class="p">(</span><span class="n">target_tier</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">target_tier</span><span class="p">))</span>
+        <span class="n">oplog</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;add_tier&quot;</span><span class="p">,</span>
+            <span class="n">target_id</span><span class="o">=</span><span class="n">target_tier</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">target_tier</span><span class="p">,</span>
+                <span class="s2">&quot;stereotype&quot;</span><span class="p">:</span> <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="p">},</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ProcessorError</span><span class="p">(</span><span class="s2">&quot;store does not expose .all()&quot;</span><span class="p">)</span>
+
+    <span class="n">counts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span> <span class="o">==</span> <span class="n">target_tier</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">reference</span>
+        <span class="n">asset</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">asset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">asset_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">asset</span> <span class="o">!=</span> <span class="n">asset_id</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+        <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">start_s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start_s</span> <span class="o">//</span> <span class="n">bucket_seconds</span><span class="p">)</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">bucket</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">counts</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;target_tier&quot;</span><span class="p">:</span> <span class="n">target_tier</span><span class="p">}</span>
+
+    <span class="n">sorted_buckets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+    <span class="n">emitted</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">asset_for_marker</span> <span class="o">=</span> <span class="n">asset_id</span> <span class="ow">or</span> <span class="s2">&quot;density-change-points:any&quot;</span>
+
+    <span class="n">prev_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">bucket</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_buckets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sorted_buckets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">cur_count</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cur_count</span> <span class="o">-</span> <span class="n">prev_count</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_delta</span> <span class="ow">and</span> <span class="n">bucket</span> <span class="o">!=</span> <span class="n">sorted_buckets</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">t_seconds</span> <span class="o">=</span> <span class="n">bucket</span> <span class="o">*</span> <span class="n">bucket_seconds</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t_seconds</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="n">Annotation</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+                <span class="n">tier</span><span class="o">=</span><span class="n">target_tier</span><span class="p">,</span>
+                <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+                    <span class="n">asset_id</span><span class="o">=</span><span class="n">asset_for_marker</span><span class="p">,</span>
+                    <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="n">t</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="n">body</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">cur_count</span> <span class="o">-</span> <span class="n">prev_count</span><span class="p">,</span>
+                    <span class="s2">&quot;bucket_seconds&quot;</span><span class="p">:</span> <span class="n">bucket_seconds</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/density-change-point/v1&quot;</span><span class="p">,</span>
+                <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+                    <span class="n">was_generated_by</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+                    <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+                    <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">(),</span>
+                    <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;derive&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
+            <span class="n">oplog</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;add_annotation&quot;</span><span class="p">,</span>
+                <span class="n">target_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;annotation&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)},</span>
+                <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">emitted</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">prev_count</span> <span class="o">=</span> <span class="n">cur_count</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="n">emitted</span><span class="p">,</span> <span class="s2">&quot;target_tier&quot;</span><span class="p">:</span> <span class="n">target_tier</span><span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

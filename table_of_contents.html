@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; lacing 0.0.6 documentation</title>
+  <title>&lt;no title&gt; &mdash; lacing 0.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1fd71caa"></script>
+      <script src="_static/documentation_options.js?v=bbaf98b3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -62,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
@@ -83,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tier.html">lacing.tier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a></li>
 </ul>
 
         </div>
@@ -126,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.NodeRef"><code class="docutils literal notranslate"><span class="pre">NodeRef</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.OpLog"><code class="docutils literal notranslate"><span class="pre">OpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.OpLogEntry"><code class="docutils literal notranslate"><span class="pre">OpLogEntry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
@@ -144,7 +147,11 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_async"><code class="docutils literal notranslate"><span class="pre">run_processor_async()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_sync"><code class="docutils literal notranslate"><span class="pre">run_processor_sync()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
 </ul>
 </li>
@@ -237,6 +244,17 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.replay"><code class="docutils literal notranslate"><span class="pre">replay()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.clear_processors"><code class="docutils literal notranslate"><span class="pre">clear_processors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.detect_density_change_points"><code class="docutils literal notranslate"><span class="pre">detect_density_change_points()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.low_confidence_review"><code class="docutils literal notranslate"><span class="pre">low_confidence_review()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.run_async"><code class="docutils literal notranslate"><span class="pre">run_async()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.run_sync"><code class="docutils literal notranslate"><span class="pre">run_sync()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
@@ -323,6 +341,10 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.LossyTimeConversionError"><code class="docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.TimeInterval"><code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/worker.html#lacing.worker.build_worker_settings"><code class="docutils literal notranslate"><span class="pre">build_worker_settings()</span></code></a></li>
 </ul>
 </li>
 </ul>

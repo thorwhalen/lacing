@@ -1,0 +1,4 @@
+lacing.worker
+=============
+.. automodule:: lacing.worker
+   :members:

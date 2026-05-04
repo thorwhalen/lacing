@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.6 documentation</title>
+  <title>Index &mdash; lacing 0.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1fd71caa"></script>
+      <script src="_static/documentation_options.js?v=bbaf98b3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -61,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
@@ -82,6 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tier.html">lacing.tier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a></li>
 </ul>
 
         </div>
@@ -218,6 +220,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/worker.html#lacing.worker.build_worker_settings">build_worker_settings() (in module lacing.worker)</a>
+</li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.by_tier">by_tier() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -232,6 +236,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/processors.html#lacing.processors.clear_processors">clear_processors() (in module lacing.processors)</a>
+</li>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.clear_registry">clear_registry() (in module lacing.schema)</a>
 </li>
       <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.clock">clock (lacing.oplog.OpLogEntry attribute)</a>
@@ -267,6 +273,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/time.html#lacing.time.DEFAULT_RATE">DEFAULT_RATE (in module lacing.time)</a>
+</li>
+      <li><a href="module_docs/lacing/processors.html#lacing.processors.detect_density_change_points">detect_density_change_points() (in module lacing.processors)</a>
 </li>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.dump">dump() (in module lacing.adapters)</a>
 
@@ -569,6 +577,13 @@
         <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">module</a>
 </li>
       </ul></li>
+      <li>
+    lacing.processors
+
+      <ul>
+        <li><a href="module_docs/lacing/processors.html#module-lacing.processors">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
@@ -634,6 +649,13 @@
         <li><a href="module_docs/lacing/time.html#module-lacing.time">module</a>
 </li>
       </ul></li>
+      <li>
+    lacing.worker
+
+      <ul>
+        <li><a href="module_docs/lacing/worker.html#module-lacing.worker">module</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.OpLog.latest_clock">latest_clock() (lacing.OpLog method)</a>
 
       <ul>
@@ -661,6 +683,8 @@
 </li>
       </ul></li>
       <li><a href="module_docs/lacing.html#lacing.LossyTimeConversionError">LossyTimeConversionError</a>, <a href="module_docs/lacing/time.html#lacing.time.LossyTimeConversionError">[1]</a>
+</li>
+      <li><a href="module_docs/lacing/processors.html#lacing.processors.low_confidence_review">low_confidence_review() (in module lacing.processors)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -766,6 +790,8 @@
 </li>
         <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">lacing.oplog</a>
 </li>
+        <li><a href="module_docs/lacing/processors.html#module-lacing.processors">lacing.processors</a>
+</li>
         <li><a href="module_docs/lacing/quality.html#module-lacing.quality">lacing.quality</a>
 </li>
         <li><a href="module_docs/lacing/schema.html#module-lacing.schema">lacing.schema</a>
@@ -783,6 +809,8 @@
         <li><a href="module_docs/lacing/tier.html#module-lacing.tier">lacing.tier</a>
 </li>
         <li><a href="module_docs/lacing/time.html#module-lacing.time">lacing.time</a>
+</li>
+        <li><a href="module_docs/lacing/worker.html#module-lacing.worker">lacing.worker</a>
 </li>
       </ul></li>
   </ul></td>
@@ -859,15 +887,17 @@
       </ul></li>
       <li><a href="module_docs/lacing/store.html#lacing.store.PgSchemaMismatchError">PgSchemaMismatchError</a>, <a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PgSchemaMismatchError">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/store.html#lacing.store.PostgresStore">PostgresStore (class in lacing.store)</a>
 
       <ul>
         <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore">(class in lacing.store.postgres)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.PREDICATE_BY_RELATION">PREDICATE_BY_RELATION (in module lacing.allen)</a>
+</li>
+      <li><a href="module_docs/lacing.html#lacing.ProcessorError">ProcessorError</a>, <a href="module_docs/lacing/processors.html#lacing.processors.ProcessorError">[1]</a>
 </li>
       <li><a href="module_docs/lacing.html#lacing.Provenance">Provenance (class in lacing)</a>
 
@@ -919,10 +949,22 @@
         <li><a href="module_docs/lacing/schema.html#lacing.schema.register_migration">(in module lacing.schema)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing.html#lacing.register_processor">register_processor() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/processors.html#lacing.processors.register_processor">(in module lacing.processors)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.registered">registered() (in module lacing.adapters)</a>
 </li>
+      <li><a href="module_docs/lacing.html#lacing.registered_processors">registered_processors() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/processors.html#lacing.processors.registered_processors">(in module lacing.processors)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.registered_uris">registered_uris() (in module lacing.schema)</a>
 </li>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.relate">relate() (in module lacing.allen)</a>
@@ -946,6 +988,14 @@
       <li><a href="module_docs/lacing/oplog.html#lacing.oplog.replay">replay() (in module lacing.oplog)</a>
 </li>
       <li><a href="module_docs/lacing.html#lacing.replay_oplog">replay_oplog() (in module lacing)</a>
+</li>
+      <li><a href="module_docs/lacing/processors.html#lacing.processors.run_async">run_async() (in module lacing.processors)</a>
+</li>
+      <li><a href="module_docs/lacing.html#lacing.run_processor_async">run_processor_async() (in module lacing)</a>
+</li>
+      <li><a href="module_docs/lacing.html#lacing.run_processor_sync">run_processor_sync() (in module lacing)</a>
+</li>
+      <li><a href="module_docs/lacing/processors.html#lacing.processors.run_sync">run_sync() (in module lacing.processors)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.6 documentation</title>
+  <title>lacing &mdash; lacing 0.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=1fd71caa"></script>
+      <script src="../_static/documentation_options.js?v=bbaf98b3"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -110,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.OpLogEntry.target_id"><code class="docutils literal notranslate"><span class="pre">OpLogEntry.target_id</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.Provenance.model_config"><code class="docutils literal notranslate"><span class="pre">Provenance.model_config</span></code></a></li>
 </ul>
@@ -146,7 +147,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.run_processor_async"><code class="docutils literal notranslate"><span class="pre">run_processor_async()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.run_processor_sync"><code class="docutils literal notranslate"><span class="pre">run_processor_sync()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
 </ul>
 </li>
@@ -164,6 +169,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/server.html">lacing.server</a></li>
@@ -185,6 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/tier.html">lacing.tier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/worker.html">lacing.worker</a></li>
 </ul>
 
         </div>
@@ -515,6 +522,12 @@ clock value across the lifetime of the log.</p>
 
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.ProcessorError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">ProcessorError</span></span><a class="reference internal" href="../_modules/lacing/processors.html#ProcessorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.ProcessorError" title="Link to this definition"></a></dt>
+<dd><p>Raised when a registered processor’s invocation fails.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.Provenance">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from:</span> <span class="pre">list[~uuid.UUID]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time:</span> <span class="pre">~lacing.time.RationalTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.Provenance" title="Link to this definition"></a></dt>
@@ -783,6 +796,19 @@ the previous entry — convenient in tests, intentional for hot-reload.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lacing.register_processor">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">register_processor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/processors.html#register_processor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.register_processor" title="Link to this definition"></a></dt>
+<dd><p>Register a processor under <code class="docutils literal notranslate"><span class="pre">name</span></code> (defaults to the function name).</p>
+<p>The function may be sync or async; we wrap sync funcs to a coroutine.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.registered_processors">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">registered_processors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/processors.html#registered_processors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.registered_processors" title="Link to this definition"></a></dt>
+<dd><p>Names of every registered processor, sorted.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lacing.replay_oplog">
 <span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">replay_oplog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lacing/oplog.html#lacing.oplog.OpLog" title="lacing.oplog.OpLog"><span class="pre">OpLog</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">until_clock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_factory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lacing.replay_oplog" title="Link to this definition"></a></dt>
 <dd><p>Rebuild a store by replaying <code class="docutils literal notranslate"><span class="pre">log</span></code> up to (and including) <code class="docutils literal notranslate"><span class="pre">until_clock</span></code>.</p>
@@ -802,6 +828,21 @@ body schemas or tier parents are still applied; the caller is
 responsible for any post-replay validation.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.run_processor_async">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">run_processor_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oplog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lacing.run_processor_async" title="Link to this definition"></a></dt>
+<dd><p>Run a processor in the current event loop. For async callers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.run_processor_sync">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">run_processor_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oplog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lacing.run_processor_sync" title="Link to this definition"></a></dt>
+<dd><p>Run a processor synchronously and return its result.</p>
+<p>If the processor is async, we call it via <code class="docutils literal notranslate"><span class="pre">asyncio.run</span></code> (when no
+loop is running) or schedule and wait on it (when a loop is already
+active). Most callers from sync code want the former.</p>
 </dd></dl>
 
 <dl class="py function">
