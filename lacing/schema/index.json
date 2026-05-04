@@ -1,0 +1,20 @@
+{
+  "annot://schema/named-entity/v1": {
+    "model": "lacing.bodies.named_entity.NamedEntityBodyV1",
+    "name": "named-entity",
+    "path": "named-entity/v1.json",
+    "version": "1"
+  },
+  "annot://schema/named-entity/v2": {
+    "model": "lacing.bodies.named_entity.NamedEntityBodyV2",
+    "name": "named-entity",
+    "path": "named-entity/v2.json",
+    "version": "2"
+  },
+  "annot://schema/word/v1": {
+    "model": "lacing.bodies.word.WordBodyV1",
+    "name": "word",
+    "path": "word/v1.json",
+    "version": "1"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "description": "A single word annotation.\n\nThe ``text`` is the surface form as it appears in the source media.",
+  "properties": {
+    "text": {
+      "description": "Surface form of the word.",
+      "title": "Text",
+      "type": "string"
+    },
+    "speaker": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional speaker identifier.",
+      "title": "Speaker"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "WordBodyV1",
+  "type": "object"
+}

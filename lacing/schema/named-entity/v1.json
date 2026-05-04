@@ -1,0 +1,22 @@
+{
+  "additionalProperties": false,
+  "description": "Original NER body. ``type`` is the entity tag (PER, ORG, LOC, ...).",
+  "properties": {
+    "type": {
+      "description": "Entity type code (e.g., PER, ORG, LOC).",
+      "title": "Type",
+      "type": "string"
+    },
+    "text": {
+      "description": "Surface form of the entity mention.",
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "text"
+  ],
+  "title": "NamedEntityBodyV1",
+  "type": "object"
+}
