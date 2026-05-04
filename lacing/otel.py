@@ -243,10 +243,14 @@ def instrument_app(app: Any, *, tracer_name: str = "lacing.server") -> Any:
         path = request.url.path
         method = request.method
         span_name = f"{method} {path}"
-        with maybe_span(tracer, span_name, **{
-            "http.method": method,
-            "http.target": path,
-        }) as span:
+        with maybe_span(
+            tracer,
+            span_name,
+            **{
+                "http.method": method,
+                "http.target": path,
+            },
+        ) as span:
             response = await call_next(request)
             if hasattr(span, "set_attribute"):
                 clock_header = response.headers.get("X-Lacing-Clock")
