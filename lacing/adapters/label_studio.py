@@ -157,9 +157,7 @@ def load(
                     continue
 
                 tier_name = (
-                    result.get("from_name")
-                    or result.get("type")
-                    or "label-studio"
+                    result.get("from_name") or result.get("type") or "label-studio"
                 )
                 if tier_name not in seen_tiers:
                     store.add_tier(Tier(tier_name))
@@ -205,9 +203,7 @@ def load(
                     Annotation(
                         id=uuid4(),
                         tier=tier_name,
-                        reference=MediaRef(
-                            asset_id=resolved_asset, interval=interval
-                        ),
+                        reference=MediaRef(asset_id=resolved_asset, interval=interval),
                         body=body,
                         body_schema_uri=BODY_SCHEMA_URI,
                         provenance=Provenance(
@@ -224,7 +220,9 @@ def load(
         for prediction in task.get("predictions", []) or []:
             if not isinstance(prediction, dict):
                 continue
-            ann_attribution = attribution or _attribution(prediction, default="agent:label-studio")
+            ann_attribution = attribution or _attribution(
+                prediction, default="agent:label-studio"
+            )
 
             for result in prediction.get("result", []) or []:
                 if not isinstance(result, dict):
@@ -256,11 +254,11 @@ def load(
                     Annotation(
                         id=uuid4(),
                         tier=tier_name,
-                        reference=MediaRef(
-                            asset_id=resolved_asset, interval=interval
-                        ),
+                        reference=MediaRef(asset_id=resolved_asset, interval=interval),
                         body={
-                            "labels": list(labels) if isinstance(labels, list) else labels,
+                            "labels": list(labels)
+                            if isinstance(labels, list)
+                            else labels,
                             "ls_id": result.get("id"),
                             "ls_type": result.get("type"),
                             "from_name": result.get("from_name"),

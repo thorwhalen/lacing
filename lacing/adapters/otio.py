@@ -164,14 +164,13 @@ def load(
         cursor = 0.0
         for child in track:
             if hasattr(child, "source_range") and child.source_range is not None:
-                duration_seconds = (
-                    float(child.source_range.duration.value)
-                    / float(child.source_range.duration.rate)
+                duration_seconds = float(child.source_range.duration.value) / float(
+                    child.source_range.duration.rate
                 )
             elif hasattr(child, "duration"):
                 try:
-                    duration_seconds = (
-                        float(child.duration().value) / float(child.duration().rate)
+                    duration_seconds = float(child.duration().value) / float(
+                        child.duration().rate
                     )
                 except Exception:  # pragma: no cover  — defensive
                     duration_seconds = 0.0
@@ -182,7 +181,9 @@ def load(
             if schema.startswith("Clip"):
                 clip_asset = asset_id or _media_url(child) or f"otio:clip:{child.name}"
                 start = RationalTime.from_seconds(repr(cursor), rate=rate)
-                end = RationalTime.from_seconds(repr(cursor + duration_seconds), rate=rate)
+                end = RationalTime.from_seconds(
+                    repr(cursor + duration_seconds), rate=rate
+                )
                 interval = TimeInterval(start, end)
 
                 clip_metadata = (
@@ -211,18 +212,18 @@ def load(
                 # Markers on this clip — placed at clip-relative source_range start
                 # offset onto the track timeline.
                 for marker in getattr(child, "markers", []) or []:
-                    marker_start_in_clip = (
-                        float(marker.marked_range.start_time.value)
-                        / float(marker.marked_range.start_time.rate)
-                    )
+                    marker_start_in_clip = float(
+                        marker.marked_range.start_time.value
+                    ) / float(marker.marked_range.start_time.rate)
                     if child.source_range is not None:
-                        clip_source_start = (
-                            float(child.source_range.start_time.value)
-                            / float(child.source_range.start_time.rate)
-                        )
+                        clip_source_start = float(
+                            child.source_range.start_time.value
+                        ) / float(child.source_range.start_time.rate)
                     else:
                         clip_source_start = 0.0
-                    marker_track_pos = cursor + (marker_start_in_clip - clip_source_start)
+                    marker_track_pos = cursor + (
+                        marker_start_in_clip - clip_source_start
+                    )
                     _add_marker_annotation(
                         store,
                         marker,
@@ -298,7 +299,9 @@ def _open_timeline(source: str | bytes | os.PathLike, otio_module):
     if isinstance(source, str):
         s = source.lstrip()
         if s.startswith("{"):
-            return otio_module.adapters.read_from_string(source, adapter_name="otio_json")
+            return otio_module.adapters.read_from_string(
+                source, adapter_name="otio_json"
+            )
     return otio_module.adapters.read_from_file(os.fspath(source))
 
 
@@ -348,9 +351,7 @@ def dump(
 
     for tier_name in ordered:
         anns = by_tier.get(tier_name, [])
-        anns_sorted = sorted(
-            anns, key=lambda a: float(a.interval.start.to_fraction())
-        )
+        anns_sorted = sorted(anns, key=lambda a: float(a.interval.start.to_fraction()))
 
         track = otio.schema.Track(name=tier_name)
         cursor = 0.0
