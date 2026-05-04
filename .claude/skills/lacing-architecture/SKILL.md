@@ -11,7 +11,9 @@ backend and a TypeScript/React frontend sharing one schema-versioned model.
 ## Always read first
 
 1. **[misc/docs/Lacing Development Roadmap.md](../../../misc/docs/Lacing%20Development%20Roadmap.md)** — phased plan, cross-referenced to design docs.
-2. The four design docs in [misc/docs/](../../../misc/docs/):
+2. **[misc/docs/Phase 2 Findings — What Stuck and What Drifted.md](../../../misc/docs/Phase%202%20Findings%20%E2%80%94%20What%20Stuck%20and%20What%20Drifted.md)** — calls made during the build that the original docs didn't anticipate. Read before assuming the four design docs are still complete.
+3. **[misc/docs/Phase 3 Frontend Plan.md](../../../misc/docs/Phase%203%20Frontend%20Plan.md)** — concrete plan for the React/TS frontend using zodal + wrapex. Read if working on or about to start Phase 3.
+4. The four design docs in [misc/docs/](../../../misc/docs/):
    - **ANN-DOC** — `Annotation systems - formats, algorithms, architectures, and tooling.md`
    - **BACK-DOC** — `Backend Architecture for Time-Interval Annotation Systems.md`
    - **FRONT-DOC** — `Frontend UI for Multitrack Time-Interval Annotation Editors.md`

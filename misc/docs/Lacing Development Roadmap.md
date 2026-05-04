@@ -6,8 +6,19 @@
 
 ## Companion design docs in this folder
 
-The following four docs are the authoritative source of *why* behind every
-decision below. Read the relevant one before making non-trivial design changes.
+Two of these were authored after-the-fact during the build:
+
+- **[Phase 2 Findings — What Stuck and What Drifted](./Phase%202%20Findings%20%E2%80%94%20What%20Stuck%20and%20What%20Drifted.md)** —
+  the calls I made that the original four design docs didn't anticipate
+  (`int8range` over `tstzrange`, `RationalTime` boundary tricks, processor
+  idempotence, FastMCP test ergonomics, wads-CI auto-bump rebase pattern,
+  ...). Read this before assuming the design docs are still complete.
+- **[Phase 3 Frontend Plan](./Phase%203%20Frontend%20Plan.md)** — the
+  WHAT for Phase 3, applying zodal (storage / API / UI abstractions)
+  and wrapex (command-dispatch architecture). Hand-off-ready.
+
+The four originals below are the authoritative source of *why* behind
+every decision. Read the relevant one before making non-trivial design changes.
 
 - **[Annotation systems — formats, algorithms, architectures, and tooling](./Annotation%20systems%20-%20formats%2C%20algorithms%2C%20architectures%2C%20and%20tooling.md)**
   ("ANN-DOC") — cross-domain survey: text, audio, video, image, animation;
