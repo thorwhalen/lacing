@@ -13,6 +13,13 @@ full story. ``.claude/skills/`` contains the rules.
 """
 
 from lacing.allen import AllenRelation
+from lacing.otel import (
+    get_tracer,
+    instrument_app as instrument_otel,
+    is_otel_active,
+    maybe_span,
+    traced,
+)
 from lacing.processors import (
     ProcessorError,
     register_processor,
@@ -101,6 +108,12 @@ __all__ = [
     "registered_processors",
     "run_processor_async",
     "run_processor_sync",
+    # otel (no-op fallback when otel is not installed)
+    "get_tracer",
+    "maybe_span",
+    "traced",
+    "instrument_otel",
+    "is_otel_active",
     # quality
     "cohen_kappa",
     "krippendorff_alpha",

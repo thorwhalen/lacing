@@ -173,9 +173,12 @@ packages so users can adopt the data model without infra.
 - **MCP server** (`lacing.server.mcp.build_mcp_server`) — 10 tools matching the REST surface in agent-friendly seconds-based API. ✓
 - **Processor registry** (`lacing/processors.py`) with `register_processor` decorator, `run_sync` / `run_async` runners, and two built-ins (`low_confidence_review`, `detect_density_change_points`). Optional **Arq integration** via `lacing/worker.py` under `[arq]` extra (Redis required only for Arq mode; sync execution works without it). ✓
 
-**Remaining:**
-- OpenTelemetry instrumentation hooks (the op-log replay is in; OTel traces are the cherry on top).
-- **Defer:** Yjs/Hocuspocus collab. ETags + LWW until two real users actually conflict.
+- **OpenTelemetry instrumentation** (`lacing/otel.py`) — `get_tracer`, `maybe_span`, `traced` decorator, and `instrument_app(app)` ASGI middleware that tags every request span with `lacing.clock` (the Lamport clock from the op-log). All helpers degrade to no-ops when OpenTelemetry isn't installed; opt-in via `pip install 'lacing[otel]'`. ✓
+
+**Phase 2 is complete.** All BACK-DOC §3-4.7 items are in.
+
+**Deferred** (not in scope):
+- Yjs/Hocuspocus collab. ETags + LWW until two real users actually conflict.
 
 ### Phase 3 — Frontend MVP (3–4 weeks)
 *Sources: FRONT-DOC §1.8, §4, §6, §10.*

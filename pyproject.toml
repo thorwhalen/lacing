@@ -46,6 +46,8 @@ dev = [
     "python-multipart>=0.0.6",
     "mcp>=1.0",
     "opentimelineio>=0.17",
+    "opentelemetry-api>=1.20",
+    "opentelemetry-sdk>=1.20",
 ]
 docs = [
     "sphinx>=6.0",
@@ -77,6 +79,10 @@ arq = [
 ]
 otio = [
     "opentimelineio>=0.17",
+]
+otel = [
+    "opentelemetry-api>=1.20",
+    "opentelemetry-sdk>=1.20",
 ]
 
 [tool.ruff]

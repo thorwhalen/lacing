@@ -6,14 +6,17 @@ ELAN-style tier stereotypes, and Allen's interval algebra. Designed for
 time-based media (audio, video, speech, music) but generalizes to any 1-D
 interval domain.
 
-> **Status:** Phase 0–2. Core data model, in-memory + SQLite + Postgres
-> stores, six round-trip adapters (Praat TextGrid, WebVTT, W3C Web
-> Annotation, `.annot` SQLite, ELAN EAF, JAMS), body-schema registry
-> + JSON Schema export + migrations, inter-annotator agreement metrics,
-> a `lacing` CLI (`convert`, `query`, `validate`, `list-formats`),
-> **and a FastAPI HTTP server** (REST CRUD + ETag-based optimistic
-> concurrency + import/export + schema introspection). Frontend is on
-> the roadmap (see `misc/docs/Lacing Development Roadmap.md`).
+> **Status:** Phase 0–2 complete. Core data model, in-memory + SQLite +
+> Postgres stores, **eight round-trip adapters** (Praat TextGrid, WebVTT,
+> W3C Web Annotation, `.annot` SQLite, ELAN EAF, JAMS, Label Studio JSON,
+> OpenTimelineIO), body-schema registry + JSON Schema export + migrations,
+> inter-annotator agreement metrics, a `lacing` CLI, a **FastAPI HTTP
+> server** (REST CRUD + ETag + import/export + schemas + op-log +
+> `/state-at` time-travel), an **MCP server** (10 tools, agents as
+> first-class clients), a **processor registry** (`low_confidence_review`,
+> `detect_density_change_points`) with optional **Arq** integration, and
+> opt-in **OpenTelemetry** instrumentation. Frontend is on the roadmap
+> (see `misc/docs/Lacing Development Roadmap.md`).
 
 ## Install
 
@@ -25,6 +28,9 @@ pip install 'lacing[jams]'        # + JAMS (MIR annotation) support
 pip install 'lacing[postgres]'    # + PostgresStore (psycopg + GiST + EXCLUDE)
 pip install 'lacing[server]'      # + FastAPI HTTP server
 pip install 'lacing[mcp]'         # + MCP server (agents as first-class clients)
+pip install 'lacing[arq]'         # + Arq background workers (Redis-backed)
+pip install 'lacing[otio]'        # + OpenTimelineIO adapter
+pip install 'lacing[otel]'        # + OpenTelemetry instrumentation
 ```
 
 ## 30-second tour
