@@ -24,6 +24,7 @@ pip install 'lacing[eaf]'         # + ELAN EAF support (pympi-ling)
 pip install 'lacing[jams]'        # + JAMS (MIR annotation) support
 pip install 'lacing[postgres]'    # + PostgresStore (psycopg + GiST + EXCLUDE)
 pip install 'lacing[server]'      # + FastAPI HTTP server
+pip install 'lacing[mcp]'         # + MCP server (agents as first-class clients)
 ```
 
 ## 30-second tour
@@ -282,6 +283,27 @@ Every mutation gets a Lamport clock returned in the `X-Lacing-Clock`
 response header. The op-log + `/state-at` endpoint give you full
 time-travel debug — pick any past clock value and reconstruct exactly
 what the system saw.
+
+### MCP server — agents as first-class clients
+
+```python
+from lacing.oplog import InMemoryOpLog
+from lacing.server.mcp import build_mcp_server
+from lacing.store import SqliteStore
+
+store = SqliteStore("project.annot", check_same_thread=False)
+oplog = InMemoryOpLog()
+server = build_mcp_server(store, oplog)
+server.run()  # stdio transport by default
+```
+
+Tools registered (all take seconds — no need to construct rational-time
+wire dicts): `add_annotation`, `query_annotations`, `get_annotation`,
+`delete_annotation`, `accept_ai_suggestion`, `add_tier`, `list_tiers`,
+`list_formats`, `latest_clock`, `state_at`. The MCP server shares the
+same `store` + `oplog` as the FastAPI app, so a human edit via REST and
+an agent edit via MCP land in the same op-log with the same Lamport
+clock.
 
 ### Inter-annotator agreement
 

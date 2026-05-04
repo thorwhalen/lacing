@@ -170,9 +170,10 @@ packages so users can adopt the data model without infra.
 - Health + meta endpoints. ✓
 - **Op-log + time-travel** (`lacing/oplog.py`, `GET /oplog`, `GET /state-at?clock=N`). Every server mutation records a Lamport-clock-stamped entry; `state-at` replays the log into a fresh store. The "killer debug feature" from BACK-DOC §4.7. ✓
 
+- **MCP server** (`lacing.server.mcp.build_mcp_server`) — 10 tools matching the REST surface in agent-friendly seconds-based API. ✓
+
 **Remaining:**
 - Background workers via **Arq** (avoid Celery — BACK-DOC §6).
-- MCP server (`mcp[cli]`) — agents are first-class clients (BACK-DOC §3.3).
 - OpenTelemetry instrumentation hooks (the op-log replay is in; OTel traces are the cherry on top).
 - **Defer:** Yjs/Hocuspocus collab. ETags + LWW until two real users actually conflict.
 

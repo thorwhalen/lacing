@@ -44,6 +44,7 @@ dev = [
     "fastapi>=0.100",
     "httpx>=0.24",
     "python-multipart>=0.0.6",
+    "mcp>=1.0",
 ]
 docs = [
     "sphinx>=6.0",
@@ -66,6 +67,9 @@ server = [
     "httpx>=0.24",
     "python-multipart>=0.0.6",
     "uvicorn>=0.20",
+]
+mcp = [
+    "mcp>=1.0",
 ]
 
 [tool.ruff]
