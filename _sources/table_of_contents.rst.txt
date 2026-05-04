@@ -23,6 +23,8 @@
    module_docs/lacing/server/app
    module_docs/lacing/server/deps
    module_docs/lacing/server/etag
+   module_docs/lacing/server/mcp
+   module_docs/lacing/server/operations
    module_docs/lacing/server/routers
    module_docs/lacing/server/routers/adapters
    module_docs/lacing/server/routers/annotations

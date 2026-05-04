@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.oplog &mdash; lacing 0.0.5 documentation</title>
+  <title>lacing.oplog &mdash; lacing 0.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=282f96c0"></script>
+      <script src="../../_static/documentation_options.js?v=1fd71caa"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -67,6 +67,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
@@ -407,9 +409,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">latest_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT MAX(clock) AS c FROM oplog&quot;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT MAX(clock) AS c FROM oplog&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
