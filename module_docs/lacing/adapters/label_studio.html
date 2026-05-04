@@ -1,0 +1,219 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.adapters.label_studio &mdash; lacing 0.0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=53b53b71"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="lacing.adapters.otio" href="otio.html" />
+    <link rel="prev" title="lacing.adapters.jams" href="jams.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.adapters.label_studio</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mapping">Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lossy-on-dump">Lossy on dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.adapters.label_studio.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.adapters.label_studio.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.adapters.label_studio</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/module_docs/lacing/adapters/label_studio.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.adapters.label_studio">
+<span id="lacing-adapters-label-studio"></span><h1>lacing.adapters.label_studio<a class="headerlink" href="#module-lacing.adapters.label_studio" title="Link to this heading"></a></h1>
+<p>Label Studio JSON adapter.</p>
+<p>Label Studio is a popular labeling tool whose canonical export shape is
+a JSON array of <em>tasks</em>, each with one or more <em>annotations</em> containing
+typed <em>results</em>. We focus on time-interval results (the <code class="docutils literal notranslate"><span class="pre">Audio</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Video</span></code>, and <code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code> labeling controls) since lacing is an
+interval-annotation system.</p>
+<section id="mapping">
+<h2>Mapping<a class="headerlink" href="#mapping" title="Link to this heading"></a></h2>
+<p>Label Studio                                ↔ lacing
+<code class="docutils literal notranslate"><span class="pre">data.audio</span></code> / <code class="docutils literal notranslate"><span class="pre">data.video</span></code> / <code class="docutils literal notranslate"><span class="pre">data.url</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code>
+<code class="docutils literal notranslate"><span class="pre">result.from_name</span></code>                        ↔ <code class="docutils literal notranslate"><span class="pre">Tier.name</span></code>
+<code class="docutils literal notranslate"><span class="pre">result.value.{start,</span> <span class="pre">end}</span></code> (seconds)     ↔ <code class="docutils literal notranslate"><span class="pre">MediaRef.interval</span></code>
+<code class="docutils literal notranslate"><span class="pre">result.value.labels</span></code> (list of strings)   ↔ <code class="docutils literal notranslate"><span class="pre">body['labels']</span></code>
+<code class="docutils literal notranslate"><span class="pre">annotation.completed_by</span></code> (or <code class="docutils literal notranslate"><span class="pre">user</span></code>)   ↔ <code class="docutils literal notranslate"><span class="pre">Provenance.was_attributed_to</span></code>
+<code class="docutils literal notranslate"><span class="pre">result.origin</span></code> (“prediction”/…)        → <code class="docutils literal notranslate"><span class="pre">confidence</span></code> heuristic
+<code class="docutils literal notranslate"><span class="pre">result.id</span></code>                               → preserved in body
+<code class="docutils literal notranslate"><span class="pre">result.type</span></code>                             → preserved in body</p>
+</section>
+<section id="lossy-on-dump">
+<h2>Lossy on dump<a class="headerlink" href="#lossy-on-dump" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Per-result Label Studio metadata (<code class="docutils literal notranslate"><span class="pre">image_rotation</span></code>,
+<code class="docutils literal notranslate"><span class="pre">original_width</span></code>, etc.) is dropped — they’re irrelevant for time
+intervals.</p></li>
+<li><p>Predictions vs annotations distinction is collapsed: lacing tracks
+AI vs human via <code class="docutils literal notranslate"><span class="pre">confidence</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance.was_generated_by</span></code>,
+and we set Label Studio’s <code class="docutils literal notranslate"><span class="pre">origin</span></code> to <code class="docutils literal notranslate"><span class="pre">manual</span></code> on dump.</p></li>
+<li><p>Multi-annotator support: only one annotation per task is emitted on
+dump (the first), since lacing’s per-annotation provenance fits
+Label Studio’s per-task <code class="docutils literal notranslate"><span class="pre">annotations</span></code> list awkwardly.</p></li>
+</ul>
+<p>Spec: <a class="reference external" href="https://labelstud.io/guide/export.html">https://labelstud.io/guide/export.html</a></p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.label_studio.dump">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.label_studio.</span></span><span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/label_studio.html#dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.label_studio.dump" title="Link to this definition"></a></dt>
+<dd><p>Serialize <code class="docutils literal notranslate"><span class="pre">store</span></code> as a Label Studio JSON export.</p>
+<p>Annotations are grouped by <code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code> — each asset becomes
+one task with a single <code class="docutils literal notranslate"><span class="pre">annotations[0]</span></code> entry collecting every
+region. <code class="docutils literal notranslate"><span class="pre">confidence</span> <span class="pre">&lt;</span> <span class="pre">0.5</span></code> flips the result into Label Studio’s
+<code class="docutils literal notranslate"><span class="pre">predictions</span></code> slot rather than <code class="docutils literal notranslate"><span class="pre">annotations</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.label_studio.load">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.label_studio.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/label_studio.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.label_studio.load" title="Link to this definition"></a></dt>
+<dd><p>Load a Label Studio JSON export into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – Path, bytes, or JSON string. Accepts both an array of
+tasks and a single task dict.</p></li>
+<li><p><strong>rate</strong> – Quantization rate.</p></li>
+<li><p><strong>asset_id</strong> – Override the resolved asset for every annotation.</p></li>
+<li><p><strong>attribution</strong> – Override per-annotation attribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jams.html" class="btn btn-neutral float-left" title="lacing.adapters.jams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="otio.html" class="btn btn-neutral float-right" title="lacing.adapters.otio" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

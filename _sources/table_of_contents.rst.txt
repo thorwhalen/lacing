@@ -7,6 +7,8 @@
    module_docs/lacing/adapters/annot
    module_docs/lacing/adapters/eaf
    module_docs/lacing/adapters/jams
+   module_docs/lacing/adapters/label_studio
+   module_docs/lacing/adapters/otio
    module_docs/lacing/adapters/textgrid
    module_docs/lacing/adapters/web_annotation
    module_docs/lacing/adapters/webvtt

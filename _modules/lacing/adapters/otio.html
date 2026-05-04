@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.adapters.otio &mdash; lacing 0.0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=53b53b71"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../adapters.html">lacing.adapters</a></li>
+      <li class="breadcrumb-item active">lacing.adapters.otio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.adapters.otio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;OpenTimelineIO (OTIO) adapter — NLE / video editing interchange.</span>
+
+<span class="sd">OTIO is the Academy Software Foundation&#39;s standard for video timeline</span>
+<span class="sd">interchange. Per OSS-DOC, lacing&#39;s ``RationalTime`` design is directly</span>
+<span class="sd">inspired by OTIO&#39;s — this adapter is the place where that parity pays</span>
+<span class="sd">off.</span>
+
+<span class="sd">Mapping</span>
+<span class="sd">-------</span>
+<span class="sd">OTIO                                     ↔ lacing</span>
+<span class="sd">``Timeline``                             ↔ a project (one OTIO file = one store)</span>
+<span class="sd">``Track``                                ↔ a tier (track ``name`` becomes tier name)</span>
+<span class="sd">``Clip``                                 ↔ ``Annotation`` (interval = source_range</span>
+<span class="sd">                                            offset onto the track timeline)</span>
+<span class="sd">``Clip.media_reference.target_url``      ↔ ``MediaRef.asset_id``</span>
+<span class="sd">``Marker`` (on Track or Clip)            ↔ point ``Annotation``</span>
+<span class="sd">``Clip.metadata`` / ``Marker.metadata``  ↔ ``body[&#39;otio_metadata&#39;]``</span>
+<span class="sd">``MarkerColor``                          ↔ ``body[&#39;color&#39;]``</span>
+
+<span class="sd">Time</span>
+<span class="sd">----</span>
+<span class="sd">OTIO ``RationalTime`` maps to lacing ``RationalTime`` directly — same</span>
+<span class="sd">``(value, rate)`` shape. We re-quantize to the requested project rate</span>
+<span class="sd">on load if needed; raises ``LossyTimeConversionError`` on inexact</span>
+<span class="sd">conversions.</span>
+
+<span class="sd">Lossy on dump</span>
+<span class="sd">-------------</span>
+<span class="sd">- Per-annotation provenance (``was_attributed_to``, ``was_derived_from``)</span>
+<span class="sd">  is dropped — OTIO carries no per-clip annotator field.</span>
+<span class="sd">- Confidence is dropped — OTIO has no equivalent.</span>
+<span class="sd">- Track effects + transitions are dropped — out of lacing&#39;s scope.</span>
+<span class="sd">- Clips are emitted with an ``ExternalReference`` whose ``target_url``</span>
+<span class="sd">  is the ``MediaRef.asset_id``.</span>
+
+<span class="sd">Spec: https://opentimelineio.readthedocs.io/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_adapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span> <span class="n">MemoryStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">opentimelineio</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_otio_lib</span>
+
+
+<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">&quot;otio&quot;</span>
+<span class="n">BODY_SCHEMA_URI_CLIP</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/otio-clip/v1&quot;</span>
+<span class="n">BODY_SCHEMA_URI_MARKER</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/otio-marker/v1&quot;</span>
+<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">&quot;otio:unspecified&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_otio</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">opentimelineio</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">&quot;OTIO adapter requires opentimelineio. Install with: &quot;</span>
+            <span class="s2">&quot;pip install &#39;lacing[otio]&#39;  (or directly: pip install opentimelineio)&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">opentimelineio</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_otio_rationaltime_to_lacing</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RationalTime</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an ``opentimelineio.opentime.RationalTime`` to lacing&#39;s.</span>
+
+<span class="sd">    OTIO uses floats for ``value`` and ``rate`` even though they&#39;re</span>
+<span class="sd">    semantically rational. We quantize to integer ticks at ``rate``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># OTIO float values are typically integers; round-trip through Fraction.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
+
+    <span class="n">val</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+    <span class="n">src_rate</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">rate</span><span class="p">)))</span>
+    <span class="n">seconds</span> <span class="o">=</span> <span class="n">val</span> <span class="o">/</span> <span class="n">src_rate</span>
+    <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_lacing_to_otio_rationaltime</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">otio_module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">rate</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_media_url</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">media_ref</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="s2">&quot;media_reference&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">media_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">target_url</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">media_ref</span><span class="p">,</span> <span class="s2">&quot;target_url&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target_url</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># load</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../../module_docs/lacing/adapters/otio.html#lacing.adapters.otio.load">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
+    <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load an OTIO file/JSON into a ``MemoryStore``.</span>
+
+<span class="sd">    Each track becomes a tier. Each clip becomes one ``Annotation`` with</span>
+<span class="sd">    ``MediaRef`` pointing at the clip&#39;s media reference (or the</span>
+<span class="sd">    ``asset_id`` override). Markers on the timeline, track, or clip</span>
+<span class="sd">    become point ``Annotation``s on a ``markers`` tier.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: Path or bytes containing OTIO JSON.</span>
+<span class="sd">        rate: Quantization rate.</span>
+<span class="sd">        asset_id: Override media reference for every clip. None = use</span>
+<span class="sd">            each clip&#39;s own ``media_reference.target_url``.</span>
+<span class="sd">        attribution: ``Provenance.was_attributed_to`` value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">otio</span> <span class="o">=</span> <span class="n">_require_otio</span><span class="p">()</span>
+    <span class="n">timeline</span> <span class="o">=</span> <span class="n">_open_timeline</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">otio</span><span class="p">)</span>
+
+    <span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
+    <span class="n">seen_tiers</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_tier</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_tiers</span><span class="p">:</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">seen_tiers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># --- timeline-level markers --------------------------------------</span>
+    <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">timeline</span><span class="o">.</span><span class="n">tracks</span><span class="p">,</span> <span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="n">_add_marker_annotation</span><span class="p">(</span>
+            <span class="n">store</span><span class="p">,</span>
+            <span class="n">marker</span><span class="p">,</span>
+            <span class="n">tier_name</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+            <span class="n">asset_id</span><span class="o">=</span><span class="n">asset_id</span> <span class="ow">or</span> <span class="n">DEFAULT_ASSET_ID</span><span class="p">,</span>
+            <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span>
+            <span class="n">attribution</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
+            <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+            <span class="n">ensure_tier</span><span class="o">=</span><span class="n">_ensure_tier</span><span class="p">,</span>
+            <span class="n">otio_module</span><span class="o">=</span><span class="n">otio</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># --- per-track clips + markers -----------------------------------</span>
+    <span class="n">track_offset_seconds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">timeline</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
+        <span class="n">tier_name</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;untitled&quot;</span>
+        <span class="n">_ensure_tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
+
+        <span class="c1"># Walk children, accumulating a track-position cursor.</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">track</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;source_range&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">source_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">duration_seconds</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                    <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">duration_seconds</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — defensive</span>
+                    <span class="n">duration_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">duration_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+            <span class="n">schema</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;schema_name&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">)()</span>
+            <span class="k">if</span> <span class="n">schema</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Clip&quot;</span><span class="p">):</span>
+                <span class="n">clip_asset</span> <span class="o">=</span> <span class="n">asset_id</span> <span class="ow">or</span> <span class="n">_media_url</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;otio:clip:</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">cursor</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">cursor</span> <span class="o">+</span> <span class="n">duration_seconds</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+                <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
+                <span class="n">clip_metadata</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+                <span class="p">)</span>
+                <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">Annotation</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+                        <span class="n">tier</span><span class="o">=</span><span class="n">tier_name</span><span class="p">,</span>
+                        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">clip_asset</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
+                        <span class="n">body</span><span class="o">=</span><span class="p">{</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;clip&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;otio_metadata&quot;</span><span class="p">:</span> <span class="n">clip_metadata</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI_CLIP</span><span class="p">,</span>
+                        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+                            <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
+                            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                            <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;import&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Markers on this clip — placed at clip-relative source_range start</span>
+                <span class="c1"># offset onto the track timeline.</span>
+                <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+                    <span class="n">marker_start_in_clip</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                        <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">source_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">clip_source_start</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                            <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">clip_source_start</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">marker_track_pos</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">+</span> <span class="p">(</span><span class="n">marker_start_in_clip</span> <span class="o">-</span> <span class="n">clip_source_start</span><span class="p">)</span>
+                    <span class="n">_add_marker_annotation</span><span class="p">(</span>
+                        <span class="n">store</span><span class="p">,</span>
+                        <span class="n">marker</span><span class="p">,</span>
+                        <span class="n">tier_name</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+                        <span class="n">asset_id</span><span class="o">=</span><span class="n">clip_asset</span><span class="p">,</span>
+                        <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span>
+                        <span class="n">attribution</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
+                        <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                        <span class="n">track_pos</span><span class="o">=</span><span class="n">marker_track_pos</span><span class="p">,</span>
+                        <span class="n">ensure_tier</span><span class="o">=</span><span class="n">_ensure_tier</span><span class="p">,</span>
+                        <span class="n">otio_module</span><span class="o">=</span><span class="n">otio</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="n">cursor</span> <span class="o">+=</span> <span class="n">duration_seconds</span>
+
+        <span class="n">track_offset_seconds</span><span class="p">[</span><span class="n">tier_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cursor</span>
+
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_add_marker_annotation</span><span class="p">(</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">MemoryStore</span><span class="p">,</span>
+    <span class="n">marker</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">now</span><span class="p">:</span> <span class="n">RationalTime</span><span class="p">,</span>
+    <span class="n">ensure_tier</span><span class="p">,</span>
+    <span class="n">otio_module</span><span class="p">,</span>
+    <span class="n">track_pos</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Insert a point Annotation for an OTIO Marker.&quot;&quot;&quot;</span>
+    <span class="n">ensure_tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">track_pos</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">track_pos</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">_otio_rationaltime_to_lacing</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">color_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="k">if</span> <span class="n">color</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+
+    <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">Annotation</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+            <span class="n">tier</span><span class="o">=</span><span class="n">tier_name</span><span class="p">,</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="n">t</span><span class="p">)),</span>
+            <span class="n">body</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;marker&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color_str</span><span class="p">,</span>
+                <span class="s2">&quot;otio_metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI_MARKER</span><span class="p">,</span>
+            <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+                <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
+                <span class="n">generated_at_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;import&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_open_timeline</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="n">otio_module</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">&quot;otio_json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">&quot;otio_json&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># dump</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="dump">
+<a class="viewcode-back" href="../../../module_docs/lacing/adapters/otio.html#lacing.adapters.otio.dump">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span>
+    <span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize ``store`` as an OTIO file.</span>
+
+<span class="sd">    Each tier becomes one Track. Annotations whose body has</span>
+<span class="sd">    ``kind==&#39;marker&#39;`` are emitted as ``Marker``s on the track at their</span>
+<span class="sd">    interval start. Annotations whose body has ``kind==&#39;clip&#39;`` (or no</span>
+<span class="sd">    explicit kind) become Clips with ``ExternalReference`` to the</span>
+<span class="sd">    ``asset_id`` and ``source_range`` matching the lacing interval.</span>
+
+<span class="sd">    Note: lacing intervals are absolute positions; OTIO clips are</span>
+<span class="sd">    sequential within a track. We sort + place clips back-to-back per</span>
+<span class="sd">    tier; gaps between intervals become explicit ``Gap`` items.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">otio</span> <span class="o">=</span> <span class="n">_require_otio</span><span class="p">()</span>
+
+    <span class="n">timeline</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Timeline</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">by_tier</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+            <span class="n">by_tier</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
+
+    <span class="n">declared_tiers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tiers_iter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;tiers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">tiers_iter</span><span class="p">):</span>
+        <span class="n">declared_tiers</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tiers_iter</span><span class="p">()]</span>
+    <span class="n">referenced</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">by_tier</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">ordered</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">declared_tiers</span> <span class="o">+</span> <span class="n">referenced</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">ordered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">tier_name</span> <span class="ow">in</span> <span class="n">ordered</span><span class="p">:</span>
+        <span class="n">anns</span> <span class="o">=</span> <span class="n">by_tier</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tier_name</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">anns_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">anns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="n">track</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Track</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tier_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">anns_sorted</span><span class="p">:</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
+            <span class="k">assert</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">start_s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
+            <span class="n">end_s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
+
+            <span class="n">kind</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;marker&quot;</span> <span class="ow">or</span> <span class="n">iv</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
+                <span class="c1"># Markers can&#39;t go on a Track directly without a host —</span>
+                <span class="c1"># attach to a Gap or the track itself.</span>
+                <span class="n">marker_t</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span>
+                    <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                    <span class="n">rate</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">marker</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">marked_range</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">(</span>
+                        <span class="n">start_time</span><span class="o">=</span><span class="n">marker_t</span><span class="p">,</span>
+                        <span class="n">duration</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">track</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">marker</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Insert a gap if needed.</span>
+            <span class="n">gap_seconds</span> <span class="o">=</span> <span class="n">start_s</span> <span class="o">-</span> <span class="n">cursor</span>
+            <span class="k">if</span> <span class="n">gap_seconds</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">track</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Gap</span><span class="p">(</span>
+                        <span class="n">source_range</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">(</span>
+                            <span class="n">start_time</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span>
+                            <span class="n">duration</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span>
+                                <span class="n">value</span><span class="o">=</span><span class="n">gap_seconds</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">1000.0</span>
+                            <span class="p">),</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">cursor</span> <span class="o">=</span> <span class="n">start_s</span>
+
+            <span class="n">duration_seconds</span> <span class="o">=</span> <span class="n">end_s</span> <span class="o">-</span> <span class="n">start_s</span>
+            <span class="n">asset_url</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">asset_id</span>  <span class="c1"># type: ignore[union-attr]</span>
+            <span class="n">clip</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Clip</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
+                <span class="n">media_reference</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">ExternalReference</span><span class="p">(</span><span class="n">target_url</span><span class="o">=</span><span class="n">asset_url</span><span class="p">),</span>
+                <span class="n">source_range</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">TimeRange</span><span class="p">(</span>
+                    <span class="n">start_time</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span>
+                    <span class="n">duration</span><span class="o">=</span><span class="n">otio</span><span class="o">.</span><span class="n">opentime</span><span class="o">.</span><span class="n">RationalTime</span><span class="p">(</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">duration_seconds</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">1000.0</span>
+                    <span class="p">),</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">track</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">end_s</span>
+
+        <span class="n">timeline</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">write_to_string</span><span class="p">(</span><span class="n">timeline</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">&quot;otio_json&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="n">otio</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">timeline</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">):</span>
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">a</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>  <span class="c1"># type: ignore[index]</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">a</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># registration</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="n">register_adapter</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">ADAPTER_NAME</span><span class="p">,</span>
+    <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
+    <span class="n">dump</span><span class="o">=</span><span class="n">dump</span><span class="p">,</span>
+    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.otio&quot;</span><span class="p">,),</span>
+    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;application/vnd.otio+json&quot;</span><span class="p">,),</span>
+    <span class="n">body_schema_uris</span><span class="o">=</span><span class="p">(</span><span class="n">BODY_SCHEMA_URI_CLIP</span><span class="p">,</span> <span class="n">BODY_SCHEMA_URI_MARKER</span><span class="p">),</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;OpenTimelineIO (Academy Software Foundation). Maps tracks to tiers, &quot;</span>
+        <span class="s2">&quot;clips to interval annotations, and markers to point annotations. &quot;</span>
+        <span class="s2">&quot;Native RationalTime parity — no float precision loss at the boundary.&quot;</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
