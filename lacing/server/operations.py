@@ -89,9 +89,7 @@ def _build_reference(payload: dict[str, Any]) -> Reference:
         return NodeRef.model_validate(payload)
     if kind == "annotation":
         return AnnotationRef.model_validate(payload)
-    raise ValueError(
-        f"reference.kind must be media|node|annotation, got {kind!r}"
-    )
+    raise ValueError(f"reference.kind must be media|node|annotation, got {kind!r}")
 
 
 def _default_provenance(creator: str = "anonymous") -> Provenance:
