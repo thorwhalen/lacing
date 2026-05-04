@@ -45,6 +45,7 @@ dev = [
     "httpx>=0.24",
     "python-multipart>=0.0.6",
     "mcp>=1.0",
+    "opentimelineio>=0.17",
 ]
 docs = [
     "sphinx>=6.0",
@@ -73,6 +74,9 @@ mcp = [
 ]
 arq = [
     "arq>=0.25",
+]
+otio = [
+    "opentimelineio>=0.17",
 ]
 
 [tool.ruff]

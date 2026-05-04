@@ -44,6 +44,8 @@ _ENABLED_ADAPTERS = (
     "lacing.adapters.annot",
     "lacing.adapters.eaf",
     "lacing.adapters.jams",
+    "lacing.adapters.label_studio",
+    "lacing.adapters.otio",
 )
 
 
