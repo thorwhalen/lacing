@@ -13,6 +13,13 @@ full story. ``.claude/skills/`` contains the rules.
 """
 
 from lacing.allen import AllenRelation
+from lacing.processors import (
+    ProcessorError,
+    register_processor,
+    registered_processors,
+    run_async as run_processor_async,
+    run_sync as run_processor_sync,
+)
 from lacing.oplog import (
     InMemoryOpLog,
     OpLog,
@@ -88,6 +95,12 @@ __all__ = [
     "InMemoryOpLog",
     "SqliteOpLog",
     "replay_oplog",
+    # processors
+    "ProcessorError",
+    "register_processor",
+    "registered_processors",
+    "run_processor_async",
+    "run_processor_sync",
     # quality
     "cohen_kappa",
     "krippendorff_alpha",

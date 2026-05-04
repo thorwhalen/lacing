@@ -71,6 +71,9 @@ server = [
 mcp = [
     "mcp>=1.0",
 ]
+arq = [
+    "arq>=0.25",
+]
 
 [tool.ruff]
 line-length = 88
