@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.8 documentation</title>
+  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53b53b71"></script>
+      <script src="_static/documentation_options.js?v=f7cdbf68"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -65,6 +65,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
@@ -146,9 +147,13 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.export_json_schemas"><code class="docutils literal notranslate"><span class="pre">export_json_schemas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.get_tracer"><code class="docutils literal notranslate"><span class="pre">get_tracer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.instrument_otel"><code class="docutils literal notranslate"><span class="pre">instrument_otel()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.interval_iou"><code class="docutils literal notranslate"><span class="pre">interval_iou()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.is_otel_active"><code class="docutils literal notranslate"><span class="pre">is_otel_active()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.json_schema"><code class="docutils literal notranslate"><span class="pre">json_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.krippendorff_alpha"><code class="docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.maybe_span"><code class="docutils literal notranslate"><span class="pre">maybe_span()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
@@ -157,6 +162,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_async"><code class="docutils literal notranslate"><span class="pre">run_processor_async()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_sync"><code class="docutils literal notranslate"><span class="pre">run_processor_sync()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.traced"><code class="docutils literal notranslate"><span class="pre">traced()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
 </ul>
 </li>
@@ -262,6 +268,14 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry"><code class="docutils literal notranslate"><span class="pre">OpLogEntry</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.SqliteOpLog"><code class="docutils literal notranslate"><span class="pre">SqliteOpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.replay"><code class="docutils literal notranslate"><span class="pre">replay()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.get_tracer"><code class="docutils literal notranslate"><span class="pre">get_tracer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.instrument_app"><code class="docutils literal notranslate"><span class="pre">instrument_app()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.is_otel_active"><code class="docutils literal notranslate"><span class="pre">is_otel_active()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.maybe_span"><code class="docutils literal notranslate"><span class="pre">maybe_span()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.traced"><code class="docutils literal notranslate"><span class="pre">traced()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a><ul>
@@ -377,7 +391,7 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<p>Release: 0.0.8</p>
+<p>Release: 0.0.9</p>
 <p>Last change: May 04, 2026</p>
 </section>
 

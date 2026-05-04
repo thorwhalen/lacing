@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.otel &mdash; lacing 0.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f7cdbf68"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.processors" href="processors.html" />
+    <link rel="prev" title="lacing.oplog" href="oplog.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.otel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.otel.get_tracer"><code class="docutils literal notranslate"><span class="pre">get_tracer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.otel.instrument_app"><code class="docutils literal notranslate"><span class="pre">instrument_app()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.otel.is_otel_active"><code class="docutils literal notranslate"><span class="pre">is_otel_active()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.otel.maybe_span"><code class="docutils literal notranslate"><span class="pre">maybe_span()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.otel.traced"><code class="docutils literal notranslate"><span class="pre">traced()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.otel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/otel.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.otel">
+<span id="lacing-otel"></span><h1>lacing.otel<a class="headerlink" href="#module-lacing.otel" title="Link to this heading"></a></h1>
+<p>Optional OpenTelemetry instrumentation for the lacing server.</p>
+<p>OTel is the “cherry on top” of the op-log architecture (BACK-DOC §4.7).
+The op-log captures <em>what</em> happened; OTel publishes spans so downstream
+distributed-tracing infra (Jaeger, Tempo, Honeycomb, …) can correlate
+those mutations with calls from upstream services.</p>
+<p>Design rules:</p>
+<ul class="simple">
+<li><p><strong>Optional.</strong> <code class="docutils literal notranslate"><span class="pre">opentelemetry-*</span></code> packages are heavy. This module
+imports cleanly without them — every helper falls back to a no-op
+when OTel isn’t installed.</p></li>
+<li><p><strong>Auto-detect.</strong> If <code class="docutils literal notranslate"><span class="pre">opentelemetry.api</span></code> is importable AND a
+<code class="docutils literal notranslate"><span class="pre">TracerProvider</span></code> has been configured (via the standard env vars
+<code class="docutils literal notranslate"><span class="pre">OTEL_EXPORTER_*</span></code> or programmatic setup), spans are emitted.
+Otherwise everything is a no-op and there’s no perf cost.</p></li>
+<li><p><strong>No globals.</strong> Callers pass tracers around explicitly.</p></li>
+</ul>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.otel</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tracer</span><span class="p">,</span> <span class="n">traced</span>
+
+<span class="n">tracer</span> <span class="o">=</span> <span class="n">get_tracer</span><span class="p">(</span><span class="s2">&quot;lacing.server&quot;</span><span class="p">)</span>
+
+<span class="nd">@traced</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="s2">&quot;my_operation&quot;</span><span class="p">,</span> <span class="n">record_args</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>In Phase 2.0+, the FastAPI middleware (<code class="docutils literal notranslate"><span class="pre">lacing.server.otel_middleware</span></code>,
+opt-in) wraps every request in a span and tags it with the Lamport clock
+returned by the op-log. The ASGI middleware is added to the app via
+<a class="reference internal" href="#lacing.otel.instrument_app" title="lacing.otel.instrument_app"><code class="xref py py-func docutils literal notranslate"><span class="pre">instrument_app()</span></code></a> only when explicitly called — we don’t auto-mount
+it because that would change behavior depending on whether opentelemetry
+happened to be installed.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.otel.get_tracer">
+<span class="sig-prename descclassname"><span class="pre">lacing.otel.</span></span><span class="sig-name descname"><span class="pre">get_tracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'lacing'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../../_modules/lacing/otel.html#get_tracer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.otel.get_tracer" title="Link to this definition"></a></dt>
+<dd><p>Return a tracer or a no-op fallback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Instrumentation name (typically <code class="docutils literal notranslate"><span class="pre">__name__</span></code> of the caller’s
+module or a logical name like <code class="docutils literal notranslate"><span class="pre">&quot;lacing.server&quot;</span></code>).</p></li>
+<li><p><strong>version</strong> – Optional package version string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">opentelemetry.trace.Tracer</span></code> if OTel is installed, else a no-op
+object whose <code class="docutils literal notranslate"><span class="pre">start_as_current_span()</span></code> is a context manager
+yielding a no-op span.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.otel.instrument_app">
+<span class="sig-prename descclassname"><span class="pre">lacing.otel.</span></span><span class="sig-name descname"><span class="pre">instrument_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'lacing.server'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../../_modules/lacing/otel.html#instrument_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.otel.instrument_app" title="Link to this definition"></a></dt>
+<dd><p>Add OpenTelemetry instrumentation to a FastAPI app.</p>
+<p>Wraps every request in a span; tags the span with the response’s
+<code class="docutils literal notranslate"><span class="pre">X-Lacing-Clock</span></code> header value (when present) as <code class="docutils literal notranslate"><span class="pre">lacing.clock</span></code>.</p>
+<p>No-op when OTel isn’t installed — the app is returned unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app</strong> – The FastAPI app (from <code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.server.create_app()</span></code>).</p></li>
+<li><p><strong>tracer_name</strong> – Name passed to <a class="reference internal" href="#lacing.otel.get_tracer" title="lacing.otel.get_tracer"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_tracer()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The same app, with middleware installed if OTel is available.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.otel.is_otel_active">
+<span class="sig-prename descclassname"><span class="pre">lacing.otel.</span></span><span class="sig-name descname"><span class="pre">is_otel_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/lacing/otel.html#is_otel_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.otel.is_otel_active" title="Link to this definition"></a></dt>
+<dd><p>Quick check: is OTel installed AND a TracerProvider configured?</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.otel.maybe_span">
+<span class="sig-prename descclassname"><span class="pre">lacing.otel.</span></span><span class="sig-name descname"><span class="pre">maybe_span</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/otel.html#maybe_span"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.otel.maybe_span" title="Link to this definition"></a></dt>
+<dd><p>Open a span on <code class="docutils literal notranslate"><span class="pre">tracer</span></code>, attaching <code class="docutils literal notranslate"><span class="pre">attributes</span></code> if supported.</p>
+<p>Works with both real OTel tracers and the no-op fallback.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.otel.traced">
+<span class="sig-prename descclassname"><span class="pre">lacing.otel.</span></span><span class="sig-name descname"><span class="pre">traced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">span_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/otel.html#traced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.otel.traced" title="Link to this definition"></a></dt>
+<dd><p>Decorator: wrap a function in a span on <code class="docutils literal notranslate"><span class="pre">tracer</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracer</strong> – From <a class="reference internal" href="#lacing.otel.get_tracer" title="lacing.otel.get_tracer"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_tracer()</span></code></a>.</p></li>
+<li><p><strong>span_name</strong> – Override the span name. Default: <code class="docutils literal notranslate"><span class="pre">func.__qualname__</span></code>.</p></li>
+<li><p><strong>record_args</strong> – If True, attach (str-coerced) positional + keyword
+args as span attributes <code class="docutils literal notranslate"><span class="pre">arg.&lt;n&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">kwarg.&lt;name&gt;</span></code>. Off
+by default — args may contain large or sensitive data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="oplog.html" class="btn btn-neutral float-left" title="lacing.oplog" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="processors.html" class="btn btn-neutral float-right" title="lacing.processors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

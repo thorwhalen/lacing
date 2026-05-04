@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.8 documentation</title>
+  <title>Index &mdash; lacing 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=53b53b71"></script>
+      <script src="_static/documentation_options.js?v=f7cdbf68"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
@@ -388,10 +389,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.get_adapter">get_adapter() (in module lacing.adapters)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.get_body_schema">get_body_schema() (in module lacing.schema)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing.html#lacing.get_tracer">get_tracer() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/otel.html#lacing.otel.get_tracer">(in module lacing.otel)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -410,6 +417,10 @@
         <li><a href="module_docs/lacing/oplog.html#lacing.oplog.InMemoryOpLog">(class in lacing.oplog)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/otel.html#lacing.otel.instrument_app">instrument_app() (in module lacing.otel)</a>
+</li>
+      <li><a href="module_docs/lacing.html#lacing.instrument_otel">instrument_otel() (in module lacing)</a>
+</li>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.intersects">intersects() (in module lacing.allen)</a>
 
       <ul>
@@ -446,6 +457,12 @@
 
       <ul>
         <li><a href="module_docs/lacing.html#lacing.AllenRelation.inverse">(lacing.AllenRelation method)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.is_otel_active">is_otel_active() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/otel.html#lacing.otel.is_otel_active">(in module lacing.otel)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -598,14 +615,21 @@
 </li>
       </ul></li>
       <li>
+    lacing.otel
+
+      <ul>
+        <li><a href="module_docs/lacing/otel.html#module-lacing.otel">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     lacing.processors
 
       <ul>
         <li><a href="module_docs/lacing/processors.html#module-lacing.processors">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     lacing.quality
 
@@ -718,6 +742,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.make_uri">make_uri() (in module lacing.schema)</a>
 </li>
+      <li><a href="module_docs/lacing.html#lacing.maybe_span">maybe_span() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/otel.html#lacing.otel.maybe_span">(in module lacing.otel)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.MediaRef">MediaRef (class in lacing)</a>
 
       <ul>
@@ -815,6 +845,8 @@
         <li><a href="module_docs/lacing/model.html#module-lacing.model">lacing.model</a>
 </li>
         <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">lacing.oplog</a>
+</li>
+        <li><a href="module_docs/lacing/otel.html#module-lacing.otel">lacing.otel</a>
 </li>
         <li><a href="module_docs/lacing/processors.html#module-lacing.processors">lacing.processors</a>
 </li>
@@ -1107,14 +1139,14 @@
         <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype">(class in lacing.tier)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.TIME_SUBDIVISION">TIME_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
         <li><a href="module_docs/lacing.html#lacing.TierStereotype.TIME_SUBDIVISION">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.TimeInterval">TimeInterval (class in lacing)</a>
 
       <ul>
@@ -1137,6 +1169,12 @@
 
       <ul>
         <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.to_seconds">(lacing.time.RationalTime method)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing.html#lacing.traced">traced() (in module lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/otel.html#lacing.otel.traced">(in module lacing.otel)</a>
 </li>
       </ul></li>
   </ul></td>

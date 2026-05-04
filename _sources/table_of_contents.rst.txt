@@ -19,6 +19,7 @@
    module_docs/lacing/cli
    module_docs/lacing/model
    module_docs/lacing/oplog
+   module_docs/lacing/otel
    module_docs/lacing/processors
    module_docs/lacing/quality
    module_docs/lacing/schema

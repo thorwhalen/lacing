@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.otio &mdash; lacing 0.0.8 documentation</title>
+  <title>lacing.adapters.otio &mdash; lacing 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=53b53b71"></script>
+      <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/otel.html">lacing.otel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/processors.html">lacing.processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/schema.html">lacing.schema</a></li>
@@ -282,14 +283,13 @@
         <span class="n">cursor</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">track</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;source_range&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">source_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">duration_seconds</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                    <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                <span class="n">duration_seconds</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">rate</span>
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">duration_seconds</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+                    <span class="n">duration_seconds</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span>
+                        <span class="n">child</span><span class="o">.</span><span class="n">duration</span><span class="p">()</span><span class="o">.</span><span class="n">rate</span>
                     <span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — defensive</span>
                     <span class="n">duration_seconds</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -300,7 +300,9 @@
             <span class="k">if</span> <span class="n">schema</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Clip&quot;</span><span class="p">):</span>
                 <span class="n">clip_asset</span> <span class="o">=</span> <span class="n">asset_id</span> <span class="ow">or</span> <span class="n">_media_url</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;otio:clip:</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">cursor</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">cursor</span> <span class="o">+</span> <span class="n">duration_seconds</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span>
+                    <span class="nb">repr</span><span class="p">(</span><span class="n">cursor</span> <span class="o">+</span> <span class="n">duration_seconds</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span>
+                <span class="p">)</span>
                 <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
                 <span class="n">clip_metadata</span> <span class="o">=</span> <span class="p">(</span>
@@ -329,18 +331,18 @@
                 <span class="c1"># Markers on this clip — placed at clip-relative source_range start</span>
                 <span class="c1"># offset onto the track timeline.</span>
                 <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
-                    <span class="n">marker_start_in_clip</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="nb">float</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                        <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
-                    <span class="p">)</span>
+                    <span class="n">marker_start_in_clip</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                        <span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span>
+                    <span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">marker</span><span class="o">.</span><span class="n">marked_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">source_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">clip_source_start</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                            <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
-                        <span class="p">)</span>
+                        <span class="n">clip_source_start</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                            <span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">value</span>
+                        <span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">source_range</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">clip_source_start</span> <span class="o">=</span> <span class="mf">0.0</span>
-                    <span class="n">marker_track_pos</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">+</span> <span class="p">(</span><span class="n">marker_start_in_clip</span> <span class="o">-</span> <span class="n">clip_source_start</span><span class="p">)</span>
+                    <span class="n">marker_track_pos</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">+</span> <span class="p">(</span>
+                        <span class="n">marker_start_in_clip</span> <span class="o">-</span> <span class="n">clip_source_start</span>
+                    <span class="p">)</span>
                     <span class="n">_add_marker_annotation</span><span class="p">(</span>
                         <span class="n">store</span><span class="p">,</span>
                         <span class="n">marker</span><span class="p">,</span>
@@ -417,7 +419,9 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">&quot;otio_json&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span>
+                <span class="n">source</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">&quot;otio_json&quot;</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="n">otio_module</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
 
 
@@ -469,9 +473,7 @@
 
     <span class="k">for</span> <span class="n">tier_name</span> <span class="ow">in</span> <span class="n">ordered</span><span class="p">:</span>
         <span class="n">anns</span> <span class="o">=</span> <span class="n">by_tier</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tier_name</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="n">anns_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-            <span class="n">anns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span>
-        <span class="p">)</span>
+        <span class="n">anns_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">anns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()))</span>
 
         <span class="n">track</span> <span class="o">=</span> <span class="n">otio</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">Track</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tier_name</span><span class="p">)</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="mf">0.0</span>
