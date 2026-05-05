@@ -1,0 +1,4 @@
+lacing.tracks.subtitle
+======================
+.. automodule:: lacing.tracks.subtitle
+   :members:

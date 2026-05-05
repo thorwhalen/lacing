@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.tracks.subtitle &mdash; lacing 0.0.11 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=0c446633"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.tracks.subtitle</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.tracks.subtitle</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Subtitle / lyric / caption tracks — the (sections, lines, words) trio.</span>
+
+<span class="sd">``SubtitleBuilder`` lets callers add sections, lines, and words to a</span>
+<span class="sd">store with float seconds and a single ``asset_id``, instead of</span>
+<span class="sd">hand-rolling ``Annotation`` / ``MediaRef`` / ``Provenance`` /</span>
+<span class="sd">``TimeInterval``. ``SubtitleTrack`` provides matching read-side</span>
+<span class="sd">convenience: ``lines_in(window)``, ``words_in(window)``,</span>
+<span class="sd">``sections_covering(t)``.</span>
+
+<span class="sd">Body schemas are conventional URIs:</span>
+
+<span class="sd">- ``annot://schema/song-section/v1`` — ``{label, title?, energy?, mood?}``</span>
+<span class="sd">- ``annot://schema/lyric-line/v1`` — ``{text, line_index?, section?}``</span>
+<span class="sd">- ``annot://schema/word/v1`` — ``{text, line_index?, confidence?}``</span>
+<span class="sd">   (matches the built-in :mod:`lacing.bodies.word` schema)</span>
+
+<span class="sd">These are not enforced unless the caller has registered Pydantic</span>
+<span class="sd">validators for them; ``register_subtitle_schemas`` will register simple</span>
+<span class="sd">permissive validators if you want body validation. Otherwise the body</span>
+<span class="sd">is just a dict.</span>
+
+<span class="sd">Quick start::</span>
+
+<span class="sd">    from lacing import MemoryStore</span>
+<span class="sd">    from lacing.tracks.subtitle import SubtitleBuilder, SubtitleTrack</span>
+
+<span class="sd">    store = MemoryStore()</span>
+<span class="sd">    with SubtitleBuilder(store, asset_id=&quot;song/audio.mp3&quot;) as b:</span>
+<span class="sd">        b.section(&quot;intro&quot;, 0.0, 12.5)</span>
+<span class="sd">        b.line(&quot;I came down to the river&quot;, 12.5, 16.2,</span>
+<span class="sd">               section=&quot;verse_1&quot;, words=[</span>
+<span class="sd">                   (&quot;I&quot;,     12.5, 12.7),</span>
+<span class="sd">                   (&quot;came&quot;,  12.7, 13.0),</span>
+<span class="sd">                   (&quot;down&quot;,  13.0, 13.3),</span>
+<span class="sd">               ])</span>
+
+<span class="sd">    track = SubtitleTrack(store, asset_id=&quot;song/audio.mp3&quot;)</span>
+<span class="sd">    chorus_lines = track.lines_in(35.0, 55.0)</span>
+<span class="sd">    section_at_42 = track.sections_covering(42.0)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.allen</span><span class="w"> </span><span class="kn">import</span> <span class="n">AllenRelation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntervalAnnotationStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span><span class="p">,</span> <span class="n">TierStereotype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+
+<span class="n">SECTIONS_TIER</span> <span class="o">=</span> <span class="s2">&quot;sections&quot;</span>
+<span class="n">LINES_TIER</span> <span class="o">=</span> <span class="s2">&quot;lines&quot;</span>
+<span class="n">WORDS_TIER</span> <span class="o">=</span> <span class="s2">&quot;words&quot;</span>
+
+<span class="n">SECTION_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/song-section/v1&quot;</span>
+<span class="n">LINE_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/lyric-line/v1&quot;</span>
+<span class="n">WORD_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/word/v1&quot;</span>
+
+<span class="n">DEFAULT_RATE</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># ms-precision is plenty for sung-text alignment</span>
+
+<span class="c1">#: Mapping of body URI → minimal example body. Used by</span>
+<span class="c1">#: :func:`register_subtitle_schemas` and as inline reference for</span>
+<span class="c1">#: callers building outside the builder.</span>
+<span class="n">BUILT_IN_BODY_SCHEMAS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">SECTION_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;verse_1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;verse 1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mood&quot;</span><span class="p">:</span> <span class="s2">&quot;wistful&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">LINE_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;I came down to the river&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;line_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="s2">&quot;verse_1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">WORD_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;river&quot;</span><span class="p">,</span> <span class="s2">&quot;line_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.94</span><span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_interval</span><span class="p">(</span><span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeInterval</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lossless float-seconds → ``TimeInterval`` at ``rate`` ticks/second.</span>
+
+<span class="sd">    Rounds to integer ticks so a value like ``14.2`` at rate=1000 doesn&#39;t</span>
+<span class="sd">    trip the strict &quot;lossy decimal&quot; guard. Empty ranges are widened by</span>
+<span class="sd">    one tick — the store rejects zero-length intervals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rate must be positive (got </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">start_t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">start_s</span> <span class="o">*</span> <span class="n">rate</span><span class="p">))</span>
+    <span class="n">end_t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">end_s</span> <span class="o">*</span> <span class="n">rate</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">end_t</span> <span class="o">&lt;=</span> <span class="n">start_t</span><span class="p">:</span>
+        <span class="n">end_t</span> <span class="o">=</span> <span class="n">start_t</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="n">start_t</span><span class="p">,</span> <span class="n">rate</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="n">end_t</span><span class="p">,</span> <span class="n">rate</span><span class="p">))</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_BuiltAnnotation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Receipt for an inserted annotation — useful in tests + telemetry.&quot;&quot;&quot;</span>
+
+    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
+    <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<div class="viewcode-block" id="register_subtitle_schemas">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.register_subtitle_schemas">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_subtitle_schemas</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register permissive body validators for the subtitle URIs.</span>
+
+<span class="sd">    Calling this is *optional*; the builder works fine without</span>
+<span class="sd">    registered schemas. Use it when you want body-shape errors to</span>
+<span class="sd">    surface at write time rather than later.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Section</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">energy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mood</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Line</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">line_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">section</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Word</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">line_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">confidence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">register_body_schema</span><span class="p">(</span><span class="n">SECTION_SCHEMA_URI</span><span class="p">,</span> <span class="n">_Section</span><span class="p">)</span>
+    <span class="n">register_body_schema</span><span class="p">(</span><span class="n">LINE_SCHEMA_URI</span><span class="p">,</span> <span class="n">_Line</span><span class="p">)</span>
+    <span class="n">register_body_schema</span><span class="p">(</span><span class="n">WORD_SCHEMA_URI</span><span class="p">,</span> <span class="n">_Word</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SubtitleBuilder">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubtitleBuilder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builder for ``(sections, lines, words)`` tiers over one asset.</span>
+
+<span class="sd">    The builder is a context manager *only as a convenience*; it has no</span>
+<span class="sd">    transactional semantics. Calling ``.section()`` / ``.line()`` /</span>
+<span class="sd">    ``.word()`` writes immediately, in the order given.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store: Any ``IntervalAnnotationStore`` (memory, sqlite, postgres).</span>
+<span class="sd">        asset_id: The ``MediaRef.asset_id`` to attach every annotation</span>
+<span class="sd">            to. Typically a path or content-hash of the audio file.</span>
+<span class="sd">        rate: Tick rate for time intervals. Defaults to 1000 (ms).</span>
+<span class="sd">        was_generated_by: ``Provenance.was_generated_by``. Defaults to</span>
+<span class="sd">            ``&quot;lacing.tracks.subtitle&quot;``.</span>
+<span class="sd">        was_attributed_to: ``Provenance.was_attributed_to``.</span>
+<span class="sd">        ensure_tiers: When True (default), creates the three tiers if</span>
+<span class="sd">            they don&#39;t exist. Pass False if your store uses different</span>
+<span class="sd">            tier names and you&#39;ve created them yourself.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
+        <span class="n">was_generated_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing.tracks.subtitle&quot;</span><span class="p">,</span>
+        <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing&quot;</span><span class="p">,</span>
+        <span class="n">ensure_tiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="n">store</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_asset_id</span> <span class="o">=</span> <span class="n">asset_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_provenance</span> <span class="o">=</span> <span class="n">Provenance</span><span class="p">(</span>
+            <span class="n">was_generated_by</span><span class="o">=</span><span class="n">was_generated_by</span><span class="p">,</span>
+            <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">was_attributed_to</span><span class="p">,</span>
+            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">(</span><span class="n">rate</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">ensure_tiers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_tiers</span><span class="p">()</span>
+
+    <span class="c1"># --- ergonomic write paths -------------------------------------------</span>
+
+<div class="viewcode-block" id="SubtitleBuilder.section">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder.section">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">section</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">energy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">mood</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a song section.&quot;&quot;&quot;</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="k">if</span> <span class="n">energy</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
+        <span class="k">if</span> <span class="n">mood</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;mood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mood</span>
+        <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">SECTIONS_TIER</span><span class="p">,</span> <span class="n">SECTION_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SubtitleBuilder.line">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder.line">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">line_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">section</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">words</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a lyric line. ``words`` is an optional list of</span>
+<span class="sd">        ``(text, start, end)`` or ``(text, start, end, confidence)``</span>
+<span class="sd">        tuples that will be inserted on the ``words`` tier.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">line_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;line_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
+        <span class="k">if</span> <span class="n">section</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;section&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
+        <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+        <span class="n">receipt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">LINES_TIER</span><span class="p">,</span> <span class="n">LINE_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">wtext</span><span class="p">,</span> <span class="n">wstart</span><span class="p">,</span> <span class="n">wend</span> <span class="o">=</span> <span class="n">w</span>
+                <span class="n">wconf</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">wtext</span><span class="p">,</span> <span class="n">wstart</span><span class="p">,</span> <span class="n">wend</span><span class="p">,</span> <span class="n">wconf</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;word tuples must be (text, start, end[, confidence]); got </span><span class="si">{</span><span class="n">w</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">word</span><span class="p">(</span>
+                <span class="n">wtext</span><span class="p">,</span> <span class="n">wstart</span><span class="p">,</span> <span class="n">wend</span><span class="p">,</span>
+                <span class="n">line_index</span><span class="o">=</span><span class="n">line_index</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">wconf</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">receipt</span></div>
+
+
+<div class="viewcode-block" id="SubtitleBuilder.word">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder.word">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">word</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">line_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add one word.&quot;&quot;&quot;</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">line_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;line_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
+        <span class="k">if</span> <span class="n">confidence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">confidence</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">WORDS_TIER</span><span class="p">,</span> <span class="n">WORD_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- low-level escape hatch ------------------------------------------</span>
+
+<div class="viewcode-block" id="SubtitleBuilder.add">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">body_schema_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an annotation to ``tier`` with explicit schema/body.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">tier</span><span class="p">,</span> <span class="n">body_schema_uri</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --- context manager (no transactional semantics) --------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SubtitleBuilder&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># --- internals -------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_tiers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">existing</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">tiers</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="n">SECTIONS_TIER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">SECTIONS_TIER</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">LINES_TIER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span>
+                <span class="n">Tier</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">LINES_TIER</span><span class="p">,</span>
+                    <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="o">.</span><span class="n">INCLUDED_IN</span><span class="p">,</span>
+                    <span class="n">parent</span><span class="o">=</span><span class="n">SECTIONS_TIER</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">WORDS_TIER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span>
+                <span class="n">Tier</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">WORDS_TIER</span><span class="p">,</span>
+                    <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="o">.</span><span class="n">INCLUDED_IN</span><span class="p">,</span>
+                    <span class="n">parent</span><span class="o">=</span><span class="n">LINES_TIER</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">schema_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
+        <span class="n">ann_id</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">Annotation</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">ann_id</span><span class="p">,</span>
+                <span class="n">tier</span><span class="o">=</span><span class="n">tier</span><span class="p">,</span>
+                <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+                    <span class="n">asset_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_asset_id</span><span class="p">,</span>
+                    <span class="n">interval</span><span class="o">=</span><span class="n">_interval</span><span class="p">(</span><span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+                <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">schema_uri</span><span class="p">,</span>
+                <span class="n">provenance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_provenance</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">_BuiltAnnotation</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">ann_id</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="n">tier</span><span class="p">,</span> <span class="n">start_s</span><span class="o">=</span><span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="o">=</span><span class="n">end_s</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SubtitleTrack">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubtitleTrack</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read-side facade for ``(sections, lines, words)`` over an asset.</span>
+
+<span class="sd">    Methods take ``float`` seconds; conversions to ``RationalTime`` are</span>
+<span class="sd">    handled internally. Returned annotations are sorted by start time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store: Any ``IntervalAnnotationStore``.</span>
+<span class="sd">        asset_id: When set, query results are filtered to annotations</span>
+<span class="sd">            whose ``MediaRef.asset_id`` equals this value. Pass</span>
+<span class="sd">            ``None`` to ignore asset filtering (rarely what you want).</span>
+<span class="sd">        rate: Tick rate used to build query intervals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="n">store</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_asset_id</span> <span class="o">=</span> <span class="n">asset_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">rate</span>
+
+    <span class="c1"># --- queries ---------------------------------------------------------</span>
+
+<div class="viewcode-block" id="SubtitleTrack.lines_in">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.lines_in">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lines_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lines that overlap ``[start_s, end_s]``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">LINES_TIER</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SubtitleTrack.words_in">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.words_in">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">words_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Words that overlap ``[start_s, end_s]``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">WORDS_TIER</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SubtitleTrack.sections_covering">
+<a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.sections_covering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sections_covering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sections whose interval contains ``t`` (typically one).&quot;&quot;&quot;</span>
+        <span class="c1"># Use a tiny interval at t; &quot;contains&quot; semantics emerge naturally</span>
+        <span class="c1"># via intersect over a degenerate window.</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># half a tick — doesn&#39;t snap to neighbour</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">SECTIONS_TIER</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">all_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_all</span><span class="p">(</span><span class="n">LINES_TIER</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">all_words</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_all</span><span class="p">(</span><span class="n">WORDS_TIER</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">all_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_all</span><span class="p">(</span><span class="n">SECTIONS_TIER</span><span class="p">)</span>
+
+    <span class="c1"># --- internals -------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tier_in</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">_interval</span><span class="p">(</span><span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ann</span>
+            <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">at_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asset_matches</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_seconds</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tier_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ann</span>
+            <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">by_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asset_matches</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_seconds</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_asset_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ann</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asset_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">ann</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">asset_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asset_id</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

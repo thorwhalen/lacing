@@ -42,4 +42,6 @@
    module_docs/lacing/store/sqlite
    module_docs/lacing/tier
    module_docs/lacing/time
+   module_docs/lacing/tracks
+   module_docs/lacing/tracks/subtitle
    module_docs/lacing/worker
