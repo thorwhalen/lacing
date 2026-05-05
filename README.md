@@ -59,6 +59,43 @@ dump(store, "speech.vtt", format="webvtt")
 dump(store, "speech.jsonld", format="web_annotation")
 ```
 
+## Track facades — opinionated bundles of tiers
+
+Some tier shapes recur often enough to deserve a friendly builder.
+`lacing.tracks.subtitle` is the first: a `(sections, lines, words)`
+trio over one audio asset, with float-second times and the
+`Annotation` / `MediaRef` / `Provenance` plumbing hidden:
+
+```python
+from lacing import MemoryStore
+from lacing.tracks.subtitle import SubtitleBuilder, SubtitleTrack
+
+store = MemoryStore()
+with SubtitleBuilder(store, asset_id="song/audio.mp3") as b:
+    b.section("intro",   0.0, 12.5)
+    b.section("verse_1", 12.5, 35.0)
+    b.line(
+        "I came down to the river", 12.5, 16.2,
+        section="verse_1", line_index=0,
+        words=[
+            ("I",     12.5, 12.7),
+            ("came",  12.7, 13.0, 0.95),  # optional confidence
+            ("down",  13.0, 13.3),
+        ],
+    )
+
+track = SubtitleTrack(store, asset_id="song/audio.mp3")
+track.lines_in(15.0, 17.0)        # lines overlapping the window
+track.words_in(12.5, 13.5)        # words overlapping the window
+track.sections_covering(20.0)     # sections containing this instant
+```
+
+The facade reuses `at_tier` / `by_tier` under the hood; anything you
+can build with it could also be hand-built with the raw API. Body
+schema URIs are conventional (`annot://schema/song-section/v1`,
+`lyric-line/v1`, `word/v1`) — pass `register_subtitle_schemas()` once
+if you want Pydantic body validation.
+
 ## What's in the core
 
 ```
