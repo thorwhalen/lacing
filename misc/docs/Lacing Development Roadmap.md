@@ -78,6 +78,28 @@ BACK-DOC §2.1, §4.1; FRONT-DOC §1.8 "Recommendation Matrix",
 | 9 | **Pydantic v2 → JSON Schema → Zod codegen.** One SoT, two languages. | BACK-DOC §6 (`datamodel-code-generator` + `json-schema-to-zod`); FRONT-DOC §6.3 |
 | 10 | **License hygiene: MIT/BSD/Apache only.** Avoid: `portion` (LGPL), `praat-parselmouth` (GPL), `aeneas` (AGPL), Peaks.js (LGPL), Etro (GPL), `@theatre/studio` (AGPL), Remotion (BSL). | ANN-DOC §E table; FRONT-DOC §1.8; OSS-DOC tier-3 |
 
+### Rejected alternative for #1: `decimal.Decimal`
+
+`Decimal` is sometimes proposed as an alternative to `RationalTime` because it
+also avoids float drift. It is rejected for three reasons:
+
+1. **Sample-rate ratios are not terminating decimals.** `1001/24000`
+   (one frame at 23.976 fps), `1/44100` (one audio sample at 44.1 kHz), and
+   `1/3` (a third of a beat) all have infinite decimal expansions and cannot
+   be represented exactly by `Decimal`. `Fraction(1001, 24000)` is exact.
+2. **OTIO compatibility.** Every video editor and DCC the user might import
+   from or export to (Avid, Resolve, Premiere, ffmpeg via OTIO) speaks
+   `RationalTime` natively. Adopting `Decimal` would force a translation
+   layer in every adapter and re-introduce the rounding-at-boundaries class
+   of bug that `RationalTime` exists to prevent.
+3. **No win on the Python side.** `fractions.Fraction` is in the standard
+   library, exact under all four arithmetic operations, and has the same
+   ergonomics as `Decimal` for the operations that matter here
+   (comparison, addition, subtraction, scaling).
+
+This entry exists so future contributors don't re-litigate the question.
+The answer is `RationalTime`.
+
 ---
 
 ## Package decomposition
