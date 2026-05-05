@@ -212,7 +212,9 @@ class SubtitleBuilder:
         *,
         line_index: int | None = None,
         section: str = "",
-        words: Sequence[tuple[str, float, float] | tuple[str, float, float, float]] = (),
+        words: Sequence[
+            tuple[str, float, float] | tuple[str, float, float, float]
+        ] = (),
         extra: dict[str, Any] | None = None,
     ) -> _BuiltAnnotation:
         """Add a lyric line. ``words`` is an optional list of
@@ -238,8 +240,11 @@ class SubtitleBuilder:
                     f"word tuples must be (text, start, end[, confidence]); got {w!r}"
                 )
             self.word(
-                wtext, wstart, wend,
-                line_index=line_index, confidence=wconf,
+                wtext,
+                wstart,
+                wend,
+                line_index=line_index,
+                confidence=wconf,
             )
         return receipt
 
@@ -330,9 +335,7 @@ class SubtitleBuilder:
                 provenance=self._provenance,
             )
         )
-        return _BuiltAnnotation(
-            id=ann_id, tier=tier, start_s=start_s, end_s=end_s
-        )
+        return _BuiltAnnotation(id=ann_id, tier=tier, start_s=start_s, end_s=end_s)
 
 
 class SubtitleTrack:
@@ -388,24 +391,16 @@ class SubtitleTrack:
 
     # --- internals -------------------------------------------------------
 
-    def _tier_in(
-        self, tier: str, start_s: float, end_s: float
-    ) -> list[Annotation]:
+    def _tier_in(self, tier: str, start_s: float, end_s: float) -> list[Annotation]:
         window = _interval(start_s, end_s, self._rate)
         results = [
-            ann
-            for ann in self._store.at_tier(tier, window)
-            if self._asset_matches(ann)
+            ann for ann in self._store.at_tier(tier, window) if self._asset_matches(ann)
         ]
         results.sort(key=lambda a: a.reference.interval.start.to_seconds())
         return results
 
     def _tier_all(self, tier: str) -> list[Annotation]:
-        results = [
-            ann
-            for ann in self._store.by_tier(tier)
-            if self._asset_matches(ann)
-        ]
+        results = [ann for ann in self._store.by_tier(tier) if self._asset_matches(ann)]
         results.sort(key=lambda a: a.reference.interval.start.to_seconds())
         return results
 
