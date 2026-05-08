@@ -59,6 +59,12 @@ from lacing.model import (
     Provenance,
     Reference,
 )
+from lacing.artifact import (
+    Artifact,
+    ArtifactKind,
+    hash_bytes,
+    hash_file,
+)
 from lacing.store import (
     IntervalAnnotationStore,
     MemoryStore,
@@ -89,6 +95,11 @@ __all__ = [
     "NodeRef",
     "AnnotationRef",
     "Provenance",
+    # artifact
+    "Artifact",
+    "ArtifactKind",
+    "hash_bytes",
+    "hash_file",
     # allen
     "AllenRelation",
     # store
