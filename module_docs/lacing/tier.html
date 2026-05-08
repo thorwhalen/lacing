@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.tier &mdash; lacing 0.0.12 documentation</title>
+  <title>lacing.tier &mdash; lacing 0.0.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,9 +15,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3bbcec59"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=9fc46840"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -60,6 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artifact.html">lacing.artifact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
@@ -138,7 +139,7 @@ relates to its parent. We adopt ELAN’s five stereotypes verbatim — see
 ANN-DOC §C and OSS-DOC tier-2.4.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.tier.Tier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">Tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stereotype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.tier.TierStereotype" title="lacing.tier.TierStereotype"><span class="pre">TierStereotype</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TierStereotype.NONE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#Tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.Tier" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">Tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">stereotype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.tier.TierStereotype" title="lacing.tier.TierStereotype"><span class="pre">TierStereotype</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TierStereotype.NONE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#Tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.Tier" title="Link to this definition"></a></dt>
 <dd><p>A named annotation layer with optional parent and stereotype.</p>
 <p>Tiers are pure metadata; they don’t own annotations. The store is keyed
 by interval, not by tier — annotations carry their tier name as a field.
@@ -147,36 +148,36 @@ This matches ELAN’s TIME_ORDER indirection (see ANN-DOC §C).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">TierStereotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#TierStereotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.TierStereotype" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.tier.</span></span><span class="sig-name descname"><span class="pre">TierStereotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/tier.html#TierStereotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.tier.TierStereotype" title="Link to this definition"></a></dt>
 <dd><p>Constraints on how a child tier relates to its parent tier.</p>
 <p>Names match ELAN exactly so EAF round-trips are trivial.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype.INCLUDED_IN">
-<span class="sig-name descname"><span class="pre">INCLUDED_IN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INCLUDED_IN'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.INCLUDED_IN" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">INCLUDED_IN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INCLUDED_IN'</span></span><a class="headerlink" href="#lacing.tier.TierStereotype.INCLUDED_IN" title="Link to this definition"></a></dt>
 <dd><p>Children lie within the parent but gaps between siblings are allowed.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype.NONE">
-<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NONE'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.NONE" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NONE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NONE'</span></span><a class="headerlink" href="#lacing.tier.TierStereotype.NONE" title="Link to this definition"></a></dt>
 <dd><p>No parent constraint. Top-level tier.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION">
-<span class="sig-name descname"><span class="pre">SYMBOLIC_ASSOCIATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_ASSOCIATION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SYMBOLIC_ASSOCIATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_ASSOCIATION'</span></span><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION" title="Link to this definition"></a></dt>
 <dd><p>One-to-one association with parent; child shares parent’s interval exactly.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION">
-<span class="sig-name descname"><span class="pre">SYMBOLIC_SUBDIVISION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_SUBDIVISION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SYMBOLIC_SUBDIVISION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SYMBOLIC_SUBDIVISION'</span></span><a class="headerlink" href="#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION" title="Link to this definition"></a></dt>
 <dd><p>Ordered subdivision; children share parent’s interval as a sequence (no times).</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.tier.TierStereotype.TIME_SUBDIVISION">
-<span class="sig-name descname"><span class="pre">TIME_SUBDIVISION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TIME_SUBDIVISION'</span></em><a class="headerlink" href="#lacing.tier.TierStereotype.TIME_SUBDIVISION" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIME_SUBDIVISION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TIME_SUBDIVISION'</span></span><a class="headerlink" href="#lacing.tier.TierStereotype.TIME_SUBDIVISION" title="Link to this definition"></a></dt>
 <dd><p>Children fully partition the parent’s interval (no gaps, no overlap).</p>
 </dd></dl>
 

@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.artifact &mdash; lacing 0.0.13 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9fc46840"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.bodies" href="bodies.html" />
+    <link rel="prev" title="lacing.allen" href="allen.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.artifact</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hashing">Hashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.artifact.Artifact"><code class="docutils literal notranslate"><span class="pre">Artifact</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact.Artifact.from_bytes"><code class="docutils literal notranslate"><span class="pre">Artifact.from_bytes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact.Artifact.from_path"><code class="docutils literal notranslate"><span class="pre">Artifact.from_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact.Artifact.model_config"><code class="docutils literal notranslate"><span class="pre">Artifact.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact.Artifact.to_media_ref"><code class="docutils literal notranslate"><span class="pre">Artifact.to_media_ref()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.artifact.ArtifactKind"><code class="docutils literal notranslate"><span class="pre">ArtifactKind</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.artifact.hash_bytes"><code class="docutils literal notranslate"><span class="pre">hash_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.artifact.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.artifact</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/artifact.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.artifact">
+<span id="lacing-artifact"></span><h1>lacing.artifact<a class="headerlink" href="#module-lacing.artifact" title="Link to this heading"></a></h1>
+<p>Content-addressed artifact references.</p>
+<p>An <a class="reference internal" href="#lacing.artifact.Artifact" title="lacing.artifact.Artifact"><code class="xref py py-class docutils literal notranslate"><span class="pre">Artifact</span></code></a> is a generated file (or remote URL) with provenance.
+Anything that <em>produces</em> media — a fal.ai call, a <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> compose, a
+storyboard PDF render, an audio synthesis — returns an <code class="docutils literal notranslate"><span class="pre">Artifact</span></code>.
+Anything that <em>references</em> an artifact temporally does so via
+<code class="docutils literal notranslate"><span class="pre">MediaRef(asset_id=artifact.asset_id,</span> <span class="pre">interval=…)</span></code>.</p>
+<p>This type lives in lacing (not in falaw or any single producer) because:</p>
+<ul class="simple">
+<li><p>It reuses <a class="reference internal" href="../lacing.html#lacing.Provenance" title="lacing.Provenance"><code class="xref py py-class docutils literal notranslate"><span class="pre">lacing.Provenance</span></code></a> and <a class="reference internal" href="../lacing.html#lacing.MediaRef" title="lacing.MediaRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">lacing.MediaRef</span></code></a>. The
+<code class="docutils literal notranslate"><span class="pre">asset_id</span></code> <em>is</em> the content hash that <code class="docutils literal notranslate"><span class="pre">MediaRef</span></code> already documents.</p></li>
+<li><p>Multiple producers (falaw, an, nw, artful, mixing) need to express
+“I produced a file.” Putting <code class="docutils literal notranslate"><span class="pre">Artifact</span></code> in any one of them forces a
+wrong-direction dependency from the others.</p></li>
+<li><p>The provenance chain (<code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code>, <code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code>) is the
+same shape for an annotation and an artifact. Reusing it unifies lineage.</p></li>
+</ul>
+<section id="hashing">
+<h2>Hashing<a class="headerlink" href="#hashing" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">asset_id</span></code> is the SHA-256 hex digest of the artifact’s bytes. SHA-256 is
+in the stdlib, deterministic, and compatible with the
+<code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code> documentation (“BLAKE3 / SHA-256”). Producers may use
+BLAKE3 if they prefer; the consumer treats <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> opaquely.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">hash_file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create one from a path:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">_</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;test:doctest&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;user:thor&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">kind</span>
+<span class="go">&#39;text&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">bytes_size</span>
+<span class="go">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">asset_id</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>  <span class="c1"># SHA-256 hex</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="n">p</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Round-trip through JSON:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">asset_id</span> <span class="o">==</span> <span class="n">a</span><span class="o">.</span><span class="n">asset_id</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.artifact.Artifact">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">Artifact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MinLen</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">64</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MaxLen</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">64</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">_PydanticGeneralMetadata</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'^[0-9a-f]{64}$'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'image'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'video'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'audio'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'json'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'binary'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bytes_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ge</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">ge</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ge</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">ge</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provenance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="model.html#lacing.model.Provenance" title="lacing.model.Provenance"><span class="pre">Provenance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ge</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">ge</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/artifact.html#Artifact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact" title="Link to this definition"></a></dt>
+<dd><p>A content-addressed generated file with provenance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">asset_id</span></code> is the SHA-256 hex digest of the artifact’s bytes. Two
+artifacts with the same <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> are byte-identical regardless of
+where they live — so caches keyed on <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> are safe across
+machines and re-runs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">provenance</span></code> reuses <a class="reference internal" href="../lacing.html#lacing.Provenance" title="lacing.Provenance"><code class="xref py py-class docutils literal notranslate"><span class="pre">lacing.Provenance</span></code></a> so the lineage chain
+(<code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code>, <code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code>) is the same for artifacts
+and annotations. An annotation referencing an artifact does so via
+<code class="docutils literal notranslate"><span class="pre">MediaRef(asset_id=artifact.asset_id,</span> <span class="pre">…)</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact.Artifact.from_bytes">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'image'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'video'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'audio'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'json'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'binary'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact.Artifact" title="lacing.artifact.Artifact"><span class="pre">Artifact</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#Artifact.from_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_bytes" title="Link to this definition"></a></dt>
+<dd><p>Create an Artifact from in-memory bytes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact.Artifact.from_path">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'image'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'video'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'audio'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'json'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'text'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'binary'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact.Artifact" title="lacing.artifact.Artifact"><span class="pre">Artifact</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#Artifact.from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_path" title="Link to this definition"></a></dt>
+<dd><p>Create an Artifact from a local file. Hashes the file’s bytes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.artifact.Artifact.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.artifact.Artifact.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact.Artifact.to_media_ref">
+<span class="sig-name descname"><span class="pre">to_media_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../lacing.html#lacing.MediaRef" title="lacing.MediaRef"><span class="pre">MediaRef</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#Artifact.to_media_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.to_media_ref" title="Link to this definition"></a></dt>
+<dd><p>Return a <a class="reference internal" href="../lacing.html#lacing.MediaRef" title="lacing.MediaRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">lacing.MediaRef</span></code></a> pointing at this artifact.</p>
+<p>Use this to attach an annotation to a region of the artifact:
+<code class="docutils literal notranslate"><span class="pre">MediaRef(asset_id=artifact.asset_id,</span> <span class="pre">interval=…)</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.artifact.ArtifactKind">
+<span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">ArtifactKind</span></span><a class="headerlink" href="#lacing.artifact.ArtifactKind" title="Link to this definition"></a></dt>
+<dd><p>Coarse mime-class. Producers should pick the closest match; consumers
+should switch on this <em>before</em> falling back to <code class="docutils literal notranslate"><span class="pre">mime</span></code>/<code class="docutils literal notranslate"><span class="pre">path.suffix</span></code>.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘image’, ‘video’, ‘audio’, ‘json’, ‘text’, ‘binary’]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.artifact.hash_bytes">
+<span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">hash_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#hash_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.hash_bytes" title="Link to this definition"></a></dt>
+<dd><p>Return the canonical <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (SHA-256 hex) for <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hash_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;hello world&quot;</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
+<span class="go">&#39;b94d27b9&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.artifact.hash_file">
+<span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">hash_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1048576</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#hash_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.hash_file" title="Link to this definition"></a></dt>
+<dd><p>Return the canonical <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (SHA-256 hex) for the file at <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="allen.html" class="btn btn-neutral float-left" title="lacing.allen" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="bodies.html" class="btn btn-neutral float-right" title="lacing.bodies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

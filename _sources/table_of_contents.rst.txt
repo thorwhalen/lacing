@@ -13,6 +13,7 @@
    module_docs/lacing/adapters/web_annotation
    module_docs/lacing/adapters/webvtt
    module_docs/lacing/allen
+   module_docs/lacing/artifact
    module_docs/lacing/bodies
    module_docs/lacing/bodies/named_entity
    module_docs/lacing/bodies/word
