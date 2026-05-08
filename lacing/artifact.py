@@ -80,11 +80,14 @@ def _now_rt() -> RationalTime:
     from fractions import Fraction
     import time as _time
     from lacing.time import DEFAULT_RATE
+
     ns = _time.time_ns()
     # ns / 1e9 seconds, exactly. Quantize to DEFAULT_RATE by rounding.
     # rate=24000 ⇒ each sample is 1/24000s = ~41666.6ns; round to nearest sample.
     samples = (ns * DEFAULT_RATE + 500_000_000) // 1_000_000_000
-    return RationalTime.from_fraction(Fraction(samples, DEFAULT_RATE), rate=DEFAULT_RATE)
+    return RationalTime.from_fraction(
+        Fraction(samples, DEFAULT_RATE), rate=DEFAULT_RATE
+    )
 
 
 def hash_bytes(data: bytes) -> str:
@@ -137,9 +140,7 @@ class Artifact(BaseModel):
         None,
         description="Remote URL (https / s3 / gs / signed) if the artifact lives remotely.",
     )
-    bytes_size: int = Field(
-        ..., ge=0, description="Size of the artifact in bytes."
-    )
+    bytes_size: int = Field(..., ge=0, description="Size of the artifact in bytes.")
     duration_s: float | None = Field(
         None, ge=0, description="Duration in seconds (for audio/video)."
     )
@@ -258,4 +259,5 @@ class Artifact(BaseModel):
         ``MediaRef(asset_id=artifact.asset_id, interval=…)``.
         """
         from lacing.model import MediaRef
+
         return MediaRef(asset_id=self.asset_id, interval=interval)
