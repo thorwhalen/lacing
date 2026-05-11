@@ -26,6 +26,7 @@
    module_docs/lacing/schema
    module_docs/lacing/server
    module_docs/lacing/server/app
+   module_docs/lacing/server/awareness
    module_docs/lacing/server/deps
    module_docs/lacing/server/etag
    module_docs/lacing/server/mcp

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact &mdash; lacing 0.0.13 documentation</title>
+  <title>lacing.artifact &mdash; lacing 0.0.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9fc46840"></script>
+      <script src="../../_static/documentation_options.js?v=544df88d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -70,6 +70,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/schema.html">lacing.schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server.html">lacing.server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
@@ -199,11 +200,14 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_time</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_RATE</span>
+
     <span class="n">ns</span> <span class="o">=</span> <span class="n">_time</span><span class="o">.</span><span class="n">time_ns</span><span class="p">()</span>
     <span class="c1"># ns / 1e9 seconds, exactly. Quantize to DEFAULT_RATE by rounding.</span>
     <span class="c1"># rate=24000 ⇒ each sample is 1/24000s = ~41666.6ns; round to nearest sample.</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="p">(</span><span class="n">ns</span> <span class="o">*</span> <span class="n">DEFAULT_RATE</span> <span class="o">+</span> <span class="mi">500_000_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000_000_000</span>
-    <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_fraction</span><span class="p">(</span><span class="n">Fraction</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">DEFAULT_RATE</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">DEFAULT_RATE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_fraction</span><span class="p">(</span>
+        <span class="n">Fraction</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">DEFAULT_RATE</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">DEFAULT_RATE</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="hash_bytes">
@@ -264,9 +268,7 @@
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Remote URL (https / s3 / gs / signed) if the artifact lives remotely.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">bytes_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Size of the artifact in bytes.&quot;</span>
-    <span class="p">)</span>
+    <span class="n">bytes_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Size of the artifact in bytes.&quot;</span><span class="p">)</span>
     <span class="n">duration_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Duration in seconds (for audio/video).&quot;</span>
     <span class="p">)</span>
@@ -393,6 +395,7 @@
 <span class="sd">        ``MediaRef(asset_id=artifact.asset_id, interval=…)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MediaRef</span>
+
         <span class="k">return</span> <span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span></div>
 </div>
 

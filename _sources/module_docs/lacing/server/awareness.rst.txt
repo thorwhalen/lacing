@@ -1,0 +1,4 @@
+lacing.server.awareness
+=======================
+.. automodule:: lacing.server.awareness
+   :members:
