@@ -10,6 +10,8 @@ and third-party libs that demand a float.
 
 from __future__ import annotations
 
+import math
+import time
 from fractions import Fraction
 from typing import Any
 
@@ -86,12 +88,81 @@ class RationalTime:
         return cls(int(scaled), rate)
 
     @classmethod
+    def from_seconds_lossy(
+        cls,
+        seconds: float | Fraction | str | int,
+        *,
+        rate: int = DEFAULT_RATE,
+        mode: str = "round",
+    ) -> "RationalTime":
+        """Build from seconds, quantizing to the nearest sample at ``rate``.
+
+        Unlike :meth:`from_seconds` — which raises
+        :class:`LossyTimeConversionError` when the value cannot be
+        represented exactly — this method always succeeds by quantizing.
+        ``mode`` selects the rounding rule:
+
+        - ``"round"`` — nearest sample, ties to even (default)
+        - ``"floor"`` — largest sample <= ``seconds``
+        - ``"ceil"``  — smallest sample >= ``seconds``
+
+        Use this when sample-level quantization is knowingly acceptable —
+        the common case for user-supplied durations. Use :meth:`from_seconds`
+        when exactness matters and a lossy conversion should be an error.
+
+        Examples:
+            >>> RationalTime.from_seconds_lossy("0.1", rate=3).value
+            0
+            >>> RationalTime.from_seconds_lossy("0.1", rate=3, mode="ceil").value
+            1
+        """
+        if isinstance(seconds, str):
+            f = Fraction(seconds)
+        elif isinstance(seconds, bool):
+            raise TypeError("seconds must be str, int, float, or Fraction; got bool")
+        elif isinstance(seconds, (int, Fraction)):
+            f = Fraction(seconds)
+        elif isinstance(seconds, float):
+            f = Fraction(seconds)
+        else:
+            raise TypeError(
+                f"seconds must be str, int, float, or Fraction; "
+                f"got {type(seconds).__name__}"
+            )
+        scaled = f * rate
+        if mode == "round":
+            quantized = round(scaled)
+        elif mode == "floor":
+            quantized = math.floor(scaled)
+        elif mode == "ceil":
+            quantized = math.ceil(scaled)
+        else:
+            raise ValueError(
+                f"mode must be 'round', 'floor', or 'ceil'; got {mode!r}"
+            )
+        return cls(int(quantized), rate)
+
+    @classmethod
     def from_fraction(cls, f: Fraction, rate: int = DEFAULT_RATE) -> "RationalTime":
         return cls.from_seconds(f, rate=rate)
 
     @classmethod
     def zero(cls, rate: int = DEFAULT_RATE) -> "RationalTime":
         return cls(0, rate)
+
+    @classmethod
+    def now(cls, rate: int = DEFAULT_RATE) -> "RationalTime":
+        """Wall-clock time as a :class:`RationalTime`, quantized to ``rate``.
+
+        Uses ``time.time_ns()`` and builds the value directly, sidestepping
+        the float-quantization landmine of ``from_seconds(float)``. Every
+        producer of an annotation or artifact needs this for
+        ``Provenance.generated_at_time``.
+        """
+        ns = time.time_ns()
+        # Round to nearest sample: add half the divisor before integer division.
+        samples = (ns * rate + 500_000_000) // 1_000_000_000
+        return cls(int(samples), rate)
 
     def to_fraction(self) -> Fraction:
         return Fraction(self._value, self._rate)

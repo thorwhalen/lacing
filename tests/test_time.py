@@ -119,6 +119,56 @@ class TestRationalTime:
         assert z.value == 0
         assert z.rate == DEFAULT_RATE
 
+    def test_from_seconds_lossy_quantizes_instead_of_raising(self):
+        # "0.1" at rate=3 is lossy; from_seconds raises, from_seconds_lossy quantizes.
+        t = RationalTime.from_seconds_lossy("0.1", rate=3)
+        assert t.rate == 3
+        assert t.value == 0  # 0.3 samples rounds to 0
+
+    def test_from_seconds_lossy_modes(self):
+        # 0.1s * 3 = 0.3 samples
+        assert RationalTime.from_seconds_lossy("0.1", rate=3, mode="round").value == 0
+        assert RationalTime.from_seconds_lossy("0.1", rate=3, mode="floor").value == 0
+        assert RationalTime.from_seconds_lossy("0.1", rate=3, mode="ceil").value == 1
+        # 0.9s * 3 = 2.7 samples
+        assert RationalTime.from_seconds_lossy("0.9", rate=3, mode="round").value == 3
+        assert RationalTime.from_seconds_lossy("0.9", rate=3, mode="floor").value == 2
+        assert RationalTime.from_seconds_lossy("0.9", rate=3, mode="ceil").value == 3
+
+    def test_from_seconds_lossy_exact_is_exact(self):
+        # When the value IS representable, lossy conversion matches from_seconds.
+        assert RationalTime.from_seconds_lossy("1.5", rate=2).value == 3
+        assert RationalTime.from_seconds_lossy(2, rate=10).value == 20
+
+    def test_from_seconds_lossy_handles_float(self):
+        # The float landmine: 8.021333 doesn't quantize cleanly at 24000.
+        t = RationalTime.from_seconds_lossy(8.021333, rate=DEFAULT_RATE)
+        assert t.rate == DEFAULT_RATE
+        assert isinstance(t.value, int)
+
+    def test_from_seconds_lossy_bad_mode_rejected(self):
+        with pytest.raises(ValueError):
+            RationalTime.from_seconds_lossy("1.0", rate=2, mode="truncate")
+
+    def test_from_seconds_lossy_bool_rejected(self):
+        with pytest.raises(TypeError):
+            RationalTime.from_seconds_lossy(True)  # type: ignore[arg-type]
+
+    def test_now_returns_rational_time(self):
+        t = RationalTime.now()
+        assert isinstance(t, RationalTime)
+        assert t.rate == DEFAULT_RATE
+        assert t.value > 0
+
+    def test_now_respects_rate(self):
+        t = RationalTime.now(rate=48000)
+        assert t.rate == 48000
+
+    def test_now_is_monotonic_nondecreasing(self):
+        a = RationalTime.now()
+        b = RationalTime.now()
+        assert b >= a
+
     def test_repr(self):
         assert repr(RationalTime(1, 2)) == "RationalTime(1, 2)"
 
