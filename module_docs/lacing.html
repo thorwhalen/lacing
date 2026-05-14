@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.15 documentation</title>
+  <title>lacing &mdash; lacing 0.0.16 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=f0357c94"></script>
+      <script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -124,6 +124,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.from_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.from_seconds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.from_seconds_lossy"><code class="docutils literal notranslate"><span class="pre">RationalTime.from_seconds_lossy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.now"><code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_rate"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_seconds()</span></code></a></li>
 </ul>
@@ -619,6 +621,41 @@ their rational value, so <code class="docutils literal notranslate"><span class=
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_seconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Fraction</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.from_seconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.from_seconds" title="Link to this definition"></a></dt>
 <dd><p>Build from seconds. Quantizes to <code class="docutils literal notranslate"><span class="pre">rate</span></code>; raises if lossy.</p>
 <p><code class="docutils literal notranslate"><span class="pre">seconds</span></code> may be a <code class="docutils literal notranslate"><span class="pre">str</span></code> like <code class="docutils literal notranslate"><span class="pre">&quot;1.001&quot;</span></code> to avoid float ingestion.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.RationalTime.from_seconds_lossy">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_seconds_lossy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Fraction</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'round'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.from_seconds_lossy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.from_seconds_lossy" title="Link to this definition"></a></dt>
+<dd><p>Build from seconds, quantizing to the nearest sample at <code class="docutils literal notranslate"><span class="pre">rate</span></code>.</p>
+<p>Unlike <a class="reference internal" href="#lacing.RationalTime.from_seconds" title="lacing.RationalTime.from_seconds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_seconds()</span></code></a> — which raises
+<a class="reference internal" href="#lacing.LossyTimeConversionError" title="lacing.LossyTimeConversionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code></a> when the value cannot be
+represented exactly — this method always succeeds by quantizing.
+<code class="docutils literal notranslate"><span class="pre">mode</span></code> selects the rounding rule:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;round&quot;</span></code> — nearest sample, ties to even (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;floor&quot;</span></code> — largest sample &lt;= <code class="docutils literal notranslate"><span class="pre">seconds</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ceil&quot;</span></code>  — smallest sample &gt;= <code class="docutils literal notranslate"><span class="pre">seconds</span></code></p></li>
+</ul>
+<p>Use this when sample-level quantization is knowingly acceptable —
+the common case for user-supplied durations. Use <a class="reference internal" href="#lacing.RationalTime.from_seconds" title="lacing.RationalTime.from_seconds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_seconds()</span></code></a>
+when exactness matters and a lossy conversion should be an error.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds_lossy</span><span class="p">(</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds_lossy</span><span class="p">(</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ceil&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.RationalTime.now">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.now" title="Link to this definition"></a></dt>
+<dd><p>Wall-clock time as a <a class="reference internal" href="#lacing.RationalTime" title="lacing.RationalTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">RationalTime</span></code></a>, quantized to <code class="docutils literal notranslate"><span class="pre">rate</span></code>.</p>
+<p>Uses <code class="docutils literal notranslate"><span class="pre">time.time_ns()</span></code> and builds the value directly, sidestepping
+the float-quantization landmine of <code class="docutils literal notranslate"><span class="pre">from_seconds(float)</span></code>. Every
+producer of an annotation or artifact needs this for
+<code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">

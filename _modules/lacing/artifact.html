@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact &mdash; lacing 0.0.15 documentation</title>
+  <title>lacing.artifact &mdash; lacing 0.0.16 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f0357c94"></script>
+      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -192,22 +192,12 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_now_rt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RationalTime</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wall-clock time as a RationalTime, quantized to DEFAULT_RATE.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated private alias for :meth:`RationalTime.now`.</span>
 
-<span class="sd">    Uses ``time.time_ns()`` and constructs the Fraction directly to avoid</span>
-<span class="sd">    the float-quantization landmine of ``RationalTime.from_seconds(float)``.</span>
+<span class="sd">    Kept because ``nw``, ``falaw``, and ``artful`` import this symbol. New</span>
+<span class="sd">    code should call ``RationalTime.now()`` directly.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_time</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_RATE</span>
-
-    <span class="n">ns</span> <span class="o">=</span> <span class="n">_time</span><span class="o">.</span><span class="n">time_ns</span><span class="p">()</span>
-    <span class="c1"># ns / 1e9 seconds, exactly. Quantize to DEFAULT_RATE by rounding.</span>
-    <span class="c1"># rate=24000 ⇒ each sample is 1/24000s = ~41666.6ns; round to nearest sample.</span>
-    <span class="n">samples</span> <span class="o">=</span> <span class="p">(</span><span class="n">ns</span> <span class="o">*</span> <span class="n">DEFAULT_RATE</span> <span class="o">+</span> <span class="mi">500_000_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000_000_000</span>
-    <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_fraction</span><span class="p">(</span>
-        <span class="n">Fraction</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">DEFAULT_RATE</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">DEFAULT_RATE</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="hash_bytes">

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.time &mdash; lacing 0.0.15 documentation</title>
+  <title>lacing.time &mdash; lacing 0.0.16 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f0357c94"></script>
+      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -130,6 +130,8 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
@@ -213,6 +215,64 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">scaled</span><span class="p">),</span> <span class="n">rate</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="RationalTime.from_seconds_lossy">
+<a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.RationalTime.from_seconds_lossy">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_seconds_lossy</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Fraction</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RationalTime&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build from seconds, quantizing to the nearest sample at ``rate``.</span>
+
+<span class="sd">        Unlike :meth:`from_seconds` — which raises</span>
+<span class="sd">        :class:`LossyTimeConversionError` when the value cannot be</span>
+<span class="sd">        represented exactly — this method always succeeds by quantizing.</span>
+<span class="sd">        ``mode`` selects the rounding rule:</span>
+
+<span class="sd">        - ``&quot;round&quot;`` — nearest sample, ties to even (default)</span>
+<span class="sd">        - ``&quot;floor&quot;`` — largest sample &lt;= ``seconds``</span>
+<span class="sd">        - ``&quot;ceil&quot;``  — smallest sample &gt;= ``seconds``</span>
+
+<span class="sd">        Use this when sample-level quantization is knowingly acceptable —</span>
+<span class="sd">        the common case for user-supplied durations. Use :meth:`from_seconds`</span>
+<span class="sd">        when exactness matters and a lossy conversion should be an error.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; RationalTime.from_seconds_lossy(&quot;0.1&quot;, rate=3).value</span>
+<span class="sd">            0</span>
+<span class="sd">            &gt;&gt;&gt; RationalTime.from_seconds_lossy(&quot;0.1&quot;, rate=3, mode=&quot;ceil&quot;).value</span>
+<span class="sd">            1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;seconds must be str, int, float, or Fraction; got bool&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Fraction</span><span class="p">)):</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;seconds must be str, int, float, or Fraction; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">scaled</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="n">rate</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;round&quot;</span><span class="p">:</span>
+            <span class="n">quantized</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;floor&quot;</span><span class="p">:</span>
+            <span class="n">quantized</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ceil&quot;</span><span class="p">:</span>
+            <span class="n">quantized</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;mode must be &#39;round&#39;, &#39;floor&#39;, or &#39;ceil&#39;; got </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">quantized</span><span class="p">),</span> <span class="n">rate</span><span class="p">)</span></div>
+
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_fraction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Fraction</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RationalTime&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
@@ -220,6 +280,23 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">zero</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RationalTime&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RationalTime.now">
+<a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.RationalTime.now">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">now</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RationalTime&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wall-clock time as a :class:`RationalTime`, quantized to ``rate``.</span>
+
+<span class="sd">        Uses ``time.time_ns()`` and builds the value directly, sidestepping</span>
+<span class="sd">        the float-quantization landmine of ``from_seconds(float)``. Every</span>
+<span class="sd">        producer of an annotation or artifact needs this for</span>
+<span class="sd">        ``Provenance.generated_at_time``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time_ns</span><span class="p">()</span>
+        <span class="c1"># Round to nearest sample: add half the divisor before integer division.</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">(</span><span class="n">ns</span> <span class="o">*</span> <span class="n">rate</span> <span class="o">+</span> <span class="mi">500_000_000</span><span class="p">)</span> <span class="o">//</span> <span class="mi">1_000_000_000</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">rate</span><span class="p">)</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_fraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fraction</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span>
