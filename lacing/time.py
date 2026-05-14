@@ -137,9 +137,7 @@ class RationalTime:
         elif mode == "ceil":
             quantized = math.ceil(scaled)
         else:
-            raise ValueError(
-                f"mode must be 'round', 'floor', or 'ceil'; got {mode!r}"
-            )
+            raise ValueError(f"mode must be 'round', 'floor', or 'ceil'; got {mode!r}")
         return cls(int(quantized), rate)
 
     @classmethod
