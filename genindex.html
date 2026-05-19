@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.16 documentation</title>
+  <title>Index &mdash; lacing 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="_static/documentation_options.js?v=63b572e7"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -59,7 +59,9 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
@@ -182,14 +184,14 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.all">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.AllenRelation">AllenRelation (class in lacing)</a>
 
       <ul>
         <li><a href="module_docs/lacing/allen.html#lacing.allen.AllenRelation">(class in lacing.allen)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.Annotation">Annotation (class in lacing)</a>
 
       <ul>
@@ -224,6 +226,8 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.at_tier">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.Author">Author (in module lacing.bodies.review)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -286,6 +290,8 @@
         <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.contains">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1">ContinuityViolationBodyV1 (class in lacing.bodies.continuity_violation)</a>
+</li>
       <li><a href="module_docs/lacing/cli.html#lacing.cli.convert">convert() (in module lacing.cli)</a>
 </li>
   </ul></td>
@@ -644,10 +650,24 @@
 </li>
       </ul></li>
       <li>
+    lacing.bodies.continuity_violation
+
+      <ul>
+        <li><a href="module_docs/lacing/bodies/continuity_violation.html#module-lacing.bodies.continuity_violation">module</a>
+</li>
+      </ul></li>
+      <li>
     lacing.bodies.named_entity
 
       <ul>
         <li><a href="module_docs/lacing/bodies/named_entity.html#module-lacing.bodies.named_entity">module</a>
+</li>
+      </ul></li>
+      <li>
+    lacing.bodies.review
+
+      <ul>
+        <li><a href="module_docs/lacing/bodies/review.html#module-lacing.bodies.review">module</a>
 </li>
       </ul></li>
       <li>
@@ -692,6 +712,8 @@
         <li><a href="module_docs/lacing/processors.html#module-lacing.processors">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     lacing.quality
 
@@ -699,8 +721,6 @@
         <li><a href="module_docs/lacing/quality.html#module-lacing.quality">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     lacing.schema
 
@@ -879,9 +899,13 @@
 </li>
         <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.model_config">(lacing.artifact.Artifact attribute)</a>
 </li>
+        <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config">(lacing.bodies.continuity_violation.ContinuityViolationBodyV1 attribute)</a>
+</li>
         <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1.model_config">(lacing.bodies.named_entity.NamedEntityBodyV1 attribute)</a>
 </li>
         <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2.model_config">(lacing.bodies.named_entity.NamedEntityBodyV2 attribute)</a>
+</li>
+        <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1.model_config">(lacing.bodies.review.ReviewBodyV1 attribute)</a>
 </li>
         <li><a href="module_docs/lacing/bodies/word.html#lacing.bodies.word.WordBodyV1.model_config">(lacing.bodies.word.WordBodyV1 attribute)</a>
 </li>
@@ -932,7 +956,11 @@
 </li>
         <li><a href="module_docs/lacing/bodies.html#module-lacing.bodies">lacing.bodies</a>
 </li>
+        <li><a href="module_docs/lacing/bodies/continuity_violation.html#module-lacing.bodies.continuity_violation">lacing.bodies.continuity_violation</a>
+</li>
         <li><a href="module_docs/lacing/bodies/named_entity.html#module-lacing.bodies.named_entity">lacing.bodies.named_entity</a>
+</li>
+        <li><a href="module_docs/lacing/bodies/review.html#module-lacing.bodies.review">lacing.bodies.review</a>
 </li>
         <li><a href="module_docs/lacing/bodies/word.html#module-lacing.bodies.word">lacing.bodies.word</a>
 </li>
@@ -1127,14 +1155,14 @@
       </ul></li>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.registered">registered() (in module lacing.adapters)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.registered_processors">registered_processors() (in module lacing)</a>
 
       <ul>
         <li><a href="module_docs/lacing/processors.html#lacing.processors.registered_processors">(in module lacing.processors)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/schema.html#lacing.schema.registered_uris">registered_uris() (in module lacing.schema)</a>
 </li>
       <li><a href="module_docs/lacing/allen.html#lacing.allen.relate">relate() (in module lacing.allen)</a>
@@ -1158,6 +1186,12 @@
       <li><a href="module_docs/lacing/oplog.html#lacing.oplog.replay">replay() (in module lacing.oplog)</a>
 </li>
       <li><a href="module_docs/lacing.html#lacing.replay_oplog">replay_oplog() (in module lacing)</a>
+</li>
+      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1">ReviewBodyV1 (class in lacing.bodies.review)</a>
+</li>
+      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewKind">ReviewKind (in module lacing.bodies.review)</a>
+</li>
+      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewStatus">ReviewStatus (in module lacing.bodies.review)</a>
 </li>
       <li><a href="module_docs/lacing/processors.html#lacing.processors.run_async">run_async() (in module lacing.processors)</a>
 </li>
@@ -1229,6 +1263,8 @@
         <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack">(class in lacing.tracks.subtitle)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.SuggestedAction">SuggestedAction (in module lacing.bodies.continuity_violation)</a>
+</li>
       <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION">SYMBOLIC_ASSOCIATION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>

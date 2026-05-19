@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.named_entity &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing.bodies.continuity_violation &mdash; lacing 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -110,7 +110,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">lacing.bodies.named_entity</li>
+      <li class="breadcrumb-item active">lacing.bodies.continuity_violation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -119,70 +119,131 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for lacing.bodies.named_entity</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Body schemas for named-entity (NER) annotations.</span>
+  <h1>Source code for lacing.bodies.continuity_violation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Body schema for continuity violations — generic, cross-media.</span>
 
-<span class="sd">URIs:</span>
-<span class="sd">    annot://schema/named-entity/v1   -- type + text</span>
-<span class="sd">    annot://schema/named-entity/v2   -- entity_type + text + optional confidence (additive)</span>
+<span class="sd">URI: ``annot://schema/continuity-violation/v1``</span>
 
-<span class="sd">A v1 -&gt; v2 migration is registered to demonstrate the pattern.</span>
+<span class="sd">A *continuity violation* is a typed claim about a relationship between</span>
+<span class="sd">two or more annotations: &quot;panels 5 and 6 cross the 180° axis&quot;, &quot;the</span>
+<span class="sd">character drift between panel 3 and panel 4 exceeds the embed-distance</span>
+<span class="sd">threshold&quot;, &quot;object detection finds a prop in panel 7 absent from</span>
+<span class="sd">panel 8.&quot;</span>
+
+<span class="sd">The schema is intentionally generic. Specific rule families live in</span>
+<span class="sd">their producing packages — reelee defines axis_180, character_drift,</span>
+<span class="sd">prop_hallucination, etc. via dedicated Transforms — but the *envelope*</span>
+<span class="sd">that carries the result is generic enough to live in lacing.</span>
+
+<span class="sd">Violations attach as ``review/v1`` annotations whose ``review_kind ==</span>
+<span class="sd">&quot;continuity&quot;`` (see :mod:`lacing.bodies.review`).</span>
+
+<span class="sd">Reference: ``reelee/docs/Narrative to Storyboard.md`` §6.5, §8.1.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span><span class="p">,</span> <span class="n">register_migration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<div class="viewcode-block" id="NamedEntityBodyV1">
-<a class="viewcode-back" href="../../../module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NamedEntityBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Original NER body. ``type`` is the entity tag (PER, ORG, LOC, ...).&quot;&quot;&quot;</span>
+<span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;annot://schema/continuity-violation/v1&quot;</span>
+<span class="p">)</span>
+
+
+<span class="n">Severity</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">]</span>
+
+
+<span class="n">SuggestedAction</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
+    <span class="s2">&quot;regen_panel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;regen_with_ref&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;manual_edit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;accept&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;Coarse action the edit-loop UI offers in response. Producing</span>
+<span class="sd">Transforms pick one; the FE wires each to a button + acture command.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="ContinuityViolationBodyV1">
+<a class="viewcode-back" href="../../../module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContinuityViolationBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Body of a continuity-violation annotation.&quot;&quot;&quot;</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Entity type code (e.g., PER, ORG, LOC).&quot;</span><span class="p">)</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Surface form of the entity mention.&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="NamedEntityBodyV2">
-<a class="viewcode-back" href="../../../module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NamedEntityBodyV2</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;v2 renames ``type`` -&gt; ``entity_type`` and adds optional ``confidence``.</span>
-
-<span class="sd">    The rename makes v2 incompatible with v1, so we register a migration.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
-
-    <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Entity type code (e.g., PER, ORG, LOC).&quot;</span><span class="p">)</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Surface form of the entity mention.&quot;</span><span class="p">)</span>
-    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">rule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Producing-rule slug — e.g. &#39;axis_180&#39;, &#39;eyeline&#39;, &quot;</span>
+            <span class="s2">&quot;&#39;character_drift&#39;, &#39;environment_drift&#39;, &#39;prop_hallucination&#39;, &quot;</span>
+            <span class="s2">&quot;&#39;30_rule&#39;, &#39;costume&#39;, &#39;lighting&#39;, &#39;time_of_day&#39;, &#39;weather&#39;, &quot;</span>
+            <span class="s2">&quot;&#39;screen_direction&#39;. Strings rather than Literal so new &quot;</span>
+            <span class="s2">&quot;rules can be added without a schema bump.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">annotation_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;≥2 annotation ids the violation relates (e.g. the two &quot;</span>
+            <span class="s2">&quot;panels in conflict). Order is meaningful when the rule is &quot;</span>
+            <span class="s2">&quot;directional (e.g. &#39;character_drift&#39; from A to B).&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">severity</span><span class="p">:</span> <span class="n">Severity</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;info / warn / error.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">detection_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;How the violation was detected — &#39;face_embed_cosine&#39;, &quot;</span>
+            <span class="s2">&quot;&#39;optical_flow_direction&#39;, &#39;object_detect_set_diff&#39;, etc.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">detection_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional [0, 1] confidence — for soft labels and AI annotations.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Numeric detection signal (e.g. cosine distance). None for &quot;</span>
+            <span class="s2">&quot;boolean detections.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Threshold the value crossed to trigger the violation. None &quot;</span>
+            <span class="s2">&quot;for boolean detections.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">suggested_fix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Human-readable fix sentence; the FE renders it in the &quot;</span>
+            <span class="s2">&quot;continuity panel.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">suggested_action</span><span class="p">:</span> <span class="n">SuggestedAction</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;manual_edit&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Coarse action recommendation. Drives which button the FE &quot;</span>
+            <span class="s2">&quot;highlights.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">evidence</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Rule-specific evidence (e.g. eyeline vectors, bbox set &quot;</span>
+            <span class="s2">&quot;diffs). Opaque to lacing; consumed by the inspector.&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span></div>
 
 
 
-<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">&quot;annot://schema/named-entity/v1&quot;</span><span class="p">,</span> <span class="n">NamedEntityBodyV1</span><span class="p">)</span>
-<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">&quot;annot://schema/named-entity/v2&quot;</span><span class="p">,</span> <span class="n">NamedEntityBodyV2</span><span class="p">)</span>
-
-
-<span class="nd">@register_migration</span><span class="p">(</span>
-    <span class="n">schema_name</span><span class="o">=</span><span class="s2">&quot;named-entity&quot;</span><span class="p">,</span>
-    <span class="n">from_version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">to_version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="n">register_body_schema</span><span class="p">(</span>
+    <span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ContinuityViolationBodyV1</span>
 <span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_v1_to_v2</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename `type` -&gt; `entity_type`; leave confidence unset.&quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;type&quot;</span><span class="p">}</span>
-    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 
            </div>

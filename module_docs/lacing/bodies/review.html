@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.word &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing.bodies.review &mdash; lacing 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -24,8 +24,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="lacing.cli" href="../cli.html" />
-    <link rel="prev" title="lacing.bodies.review" href="review.html" /> 
+    <link rel="next" title="lacing.bodies.word" href="word.html" />
+    <link rel="prev" title="lacing.bodies.named_entity" href="named_entity.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -64,14 +64,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="named_entity.html">lacing.bodies.named_entity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="review.html">lacing.bodies.review</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.bodies.word</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.word.WordBodyV1"><code class="docutils literal notranslate"><span class="pre">WordBodyV1</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.word.WordBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">WordBodyV1.model_config</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.bodies.review</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.Author"><code class="docutils literal notranslate"><span class="pre">Author</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewBodyV1"><code class="docutils literal notranslate"><span class="pre">ReviewBodyV1</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.review.ReviewBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">ReviewBodyV1.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewKind"><code class="docutils literal notranslate"><span class="pre">ReviewKind</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewStatus"><code class="docutils literal notranslate"><span class="pre">ReviewStatus</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../oplog.html">lacing.oplog</a></li>
@@ -118,9 +121,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">lacing.bodies.word</li>
+      <li class="breadcrumb-item active">lacing.bodies.review</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/module_docs/lacing/bodies/word.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/module_docs/lacing/bodies/review.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -128,21 +131,62 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-lacing.bodies.word">
-<span id="lacing-bodies-word"></span><h1>lacing.bodies.word<a class="headerlink" href="#module-lacing.bodies.word" title="Link to this heading"></a></h1>
-<p>Body schema for word-level annotations (e.g., transcription, forced alignment).</p>
-<p>URI: <code class="docutils literal notranslate"><span class="pre">annot://schema/word/v1</span></code></p>
+  <section id="module-lacing.bodies.review">
+<span id="lacing-bodies-review"></span><h1>lacing.bodies.review<a class="headerlink" href="#module-lacing.bodies.review" title="Link to this heading"></a></h1>
+<p>Body schema for review notes — the edit-loop’s communication channel.</p>
+<p>URI: <code class="docutils literal notranslate"><span class="pre">annot://schema/review/v1</span></code></p>
+<p>A <em>review</em> annotation is a structured note attached to one or more
+artifacts (a panel, a beat, a segmentation alternate, a render result),
+optionally pointing at a typed payload like a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuityViolationBodyV1</span></code>. Reviews are produced by:</p>
+<ul class="simple">
+<li><p>automated checkers (continuity, grammar, timing, segmentation rules)</p></li>
+<li><p>the edit-loop (“this caption needs a revision”)</p></li>
+<li><p>the orchestrator (“the user declined the cost gate at panel 12”)</p></li>
+<li><p>the user (“approve” / “needs revision” notes)</p></li>
+</ul>
+<p>The body is intentionally minimal. The kind (<code class="docutils literal notranslate"><span class="pre">review_kind</span></code>) routes
+the FE renderer; the payload is opaque to lacing.</p>
+<p>References:
+- <code class="docutils literal notranslate"><span class="pre">reelee/docs/Narrative</span> <span class="pre">to</span> <span class="pre">Storyboard.md</span></code> §6.5–6.6.
+- <code class="docutils literal notranslate"><span class="pre">reelee/docs/reelee</span> <span class="pre">03</span> <span class="pre">--</span> <span class="pre">Human-AI</span> <span class="pre">Collaboration</span> <span class="pre">UX</span> <span class="pre">Patterns…</span></code> §10</p>
+<blockquote>
+<div><p>(annotation overlays).</p>
+</div></blockquote>
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.bodies.review.Author">
+<span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">Author</span></span><a class="headerlink" href="#lacing.bodies.review.Author" title="Link to this definition"></a></dt>
+<dd><p>Coarse author classification. The annotation envelope’s
+<code class="docutils literal notranslate"><span class="pre">was_attributed_to</span></code> carries the specific identity; this field is the
+quick chip for the FE.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘human’, ‘agent’, ‘system’]</p>
+</dd></dl>
+
 <dl class="py class">
-<dt class="sig sig-object py" id="lacing.bodies.word.WordBodyV1">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.word.</span></span><span class="sig-name descname"><span class="pre">WordBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speaker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/word.html#WordBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.word.WordBodyV1" title="Link to this definition"></a></dt>
-<dd><p>A single word annotation.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">text</span></code> is the surface form as it appears in the source media.</p>
+<dt class="sig sig-object py" id="lacing.bodies.review.ReviewBodyV1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*,</span> <span class="pre">review_kind:</span> <span class="pre">~typing.Literal['continuity',</span> <span class="pre">'segmentation',</span> <span class="pre">'prompt',</span> <span class="pre">'grammar',</span> <span class="pre">'timing',</span> <span class="pre">'iconic_moment',</span> <span class="pre">'manual',</span> <span class="pre">'approval'],</span> <span class="pre">target_annotation_ids:</span> <span class="pre">tuple[str,</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">message:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">status:</span> <span class="pre">~typing.Literal['open',</span> <span class="pre">'addressed',</span> <span class="pre">'wont_fix',</span> <span class="pre">'deferred']</span> <span class="pre">=</span> <span class="pre">'open',</span> <span class="pre">author:</span> <span class="pre">~typing.Literal['human',</span> <span class="pre">'agent',</span> <span class="pre">'system']</span> <span class="pre">=</span> <span class="pre">'human',</span> <span class="pre">violation_ref:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">suggested_action_slug:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/review.html#ReviewBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.review.ReviewBodyV1" title="Link to this definition"></a></dt>
+<dd><p>Body of a review annotation.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="lacing.bodies.word.WordBodyV1.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.bodies.word.WordBodyV1.model_config" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="lacing.bodies.review.ReviewBodyV1.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.bodies.review.ReviewBodyV1.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.bodies.review.ReviewKind">
+<span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewKind</span></span><a class="headerlink" href="#lacing.bodies.review.ReviewKind" title="Link to this definition"></a></dt>
+<dd><p>What flavor of review this is. Drives the FE’s renderer choice and
+the producing-Transform’s routing logic.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘continuity’, ‘segmentation’, ‘prompt’, ‘grammar’, ‘timing’, ‘iconic_moment’, ‘manual’, ‘approval’]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.bodies.review.ReviewStatus">
+<span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewStatus</span></span><a class="headerlink" href="#lacing.bodies.review.ReviewStatus" title="Link to this definition"></a></dt>
+<dd><p>Open is the initial state; the others are user / agent resolutions.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘open’, ‘addressed’, ‘wont_fix’, ‘deferred’]</p>
 </dd></dl>
 
 </section>
@@ -151,8 +195,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="review.html" class="btn btn-neutral float-left" title="lacing.bodies.review" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../cli.html" class="btn btn-neutral float-right" title="lacing.cli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="named_entity.html" class="btn btn-neutral float-left" title="lacing.bodies.named_entity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="word.html" class="btn btn-neutral float-right" title="lacing.bodies.word" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

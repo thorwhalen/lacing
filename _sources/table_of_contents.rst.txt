@@ -15,7 +15,9 @@
    module_docs/lacing/allen
    module_docs/lacing/artifact
    module_docs/lacing/bodies
+   module_docs/lacing/bodies/continuity_violation
    module_docs/lacing/bodies/named_entity
+   module_docs/lacing/bodies/review
    module_docs/lacing/bodies/word
    module_docs/lacing/cli
    module_docs/lacing/model

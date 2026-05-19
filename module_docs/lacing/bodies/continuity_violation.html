@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.word &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing.bodies.continuity_violation &mdash; lacing 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -24,8 +24,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="lacing.cli" href="../cli.html" />
-    <link rel="prev" title="lacing.bodies.review" href="review.html" /> 
+    <link rel="next" title="lacing.bodies.named_entity" href="named_entity.html" />
+    <link rel="prev" title="lacing.bodies" href="../bodies.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -62,16 +62,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../allen.html">lacing.allen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../artifact.html">lacing.artifact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies.html">lacing.bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.bodies.continuity_violation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.continuity_violation.ContinuityViolationBodyV1"><code class="docutils literal notranslate"><span class="pre">ContinuityViolationBodyV1</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">ContinuityViolationBodyV1.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.continuity_violation.SuggestedAction"><code class="docutils literal notranslate"><span class="pre">SuggestedAction</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="named_entity.html">lacing.bodies.named_entity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="review.html">lacing.bodies.review</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.bodies.word</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.word.WordBodyV1"><code class="docutils literal notranslate"><span class="pre">WordBodyV1</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.word.WordBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">WordBodyV1.model_config</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../oplog.html">lacing.oplog</a></li>
@@ -118,9 +119,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">lacing.bodies.word</li>
+      <li class="breadcrumb-item active">lacing.bodies.continuity_violation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/module_docs/lacing/bodies/word.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/module_docs/lacing/bodies/continuity_violation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -128,21 +129,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-lacing.bodies.word">
-<span id="lacing-bodies-word"></span><h1>lacing.bodies.word<a class="headerlink" href="#module-lacing.bodies.word" title="Link to this heading"></a></h1>
-<p>Body schema for word-level annotations (e.g., transcription, forced alignment).</p>
-<p>URI: <code class="docutils literal notranslate"><span class="pre">annot://schema/word/v1</span></code></p>
+  <section id="module-lacing.bodies.continuity_violation">
+<span id="lacing-bodies-continuity-violation"></span><h1>lacing.bodies.continuity_violation<a class="headerlink" href="#module-lacing.bodies.continuity_violation" title="Link to this heading"></a></h1>
+<p>Body schema for continuity violations — generic, cross-media.</p>
+<p>URI: <code class="docutils literal notranslate"><span class="pre">annot://schema/continuity-violation/v1</span></code></p>
+<p>A <em>continuity violation</em> is a typed claim about a relationship between
+two or more annotations: “panels 5 and 6 cross the 180° axis”, “the
+character drift between panel 3 and panel 4 exceeds the embed-distance
+threshold”, “object detection finds a prop in panel 7 absent from
+panel 8.”</p>
+<p>The schema is intentionally generic. Specific rule families live in
+their producing packages — reelee defines axis_180, character_drift,
+prop_hallucination, etc. via dedicated Transforms — but the <em>envelope</em>
+that carries the result is generic enough to live in lacing.</p>
+<p>Violations attach as <code class="docutils literal notranslate"><span class="pre">review/v1</span></code> annotations whose <code class="docutils literal notranslate"><span class="pre">review_kind</span> <span class="pre">==</span>
+<span class="pre">&quot;continuity&quot;</span></code> (see <a class="reference internal" href="review.html#module-lacing.bodies.review" title="lacing.bodies.review"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.bodies.review</span></code></a>).</p>
+<p>Reference: <code class="docutils literal notranslate"><span class="pre">reelee/docs/Narrative</span> <span class="pre">to</span> <span class="pre">Storyboard.md</span></code> §6.5, §8.1.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="lacing.bodies.word.WordBodyV1">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.word.</span></span><span class="sig-name descname"><span class="pre">WordBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speaker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/word.html#WordBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.word.WordBodyV1" title="Link to this definition"></a></dt>
-<dd><p>A single word annotation.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">text</span></code> is the surface form as it appears in the source media.</p>
+<dt class="sig sig-object py" id="lacing.bodies.continuity_violation.ContinuityViolationBodyV1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.continuity_violation.</span></span><span class="sig-name descname"><span class="pre">ContinuityViolationBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*,</span> <span class="pre">rule:</span> <span class="pre">str,</span> <span class="pre">annotation_ids:</span> <span class="pre">tuple[str,</span> <span class="pre">...],</span> <span class="pre">severity:</span> <span class="pre">~typing.Literal['info',</span> <span class="pre">'warn',</span> <span class="pre">'error']</span> <span class="pre">=</span> <span class="pre">'warn',</span> <span class="pre">detection_method:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">detection_value:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">threshold:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">suggested_fix:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">suggested_action:</span> <span class="pre">~typing.Literal['regen_panel',</span> <span class="pre">'regen_with_ref',</span> <span class="pre">'manual_edit',</span> <span class="pre">'accept']</span> <span class="pre">=</span> <span class="pre">'manual_edit',</span> <span class="pre">evidence:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/continuity_violation.html#ContinuityViolationBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.continuity_violation.ContinuityViolationBodyV1" title="Link to this definition"></a></dt>
+<dd><p>Body of a continuity-violation annotation.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="lacing.bodies.word.WordBodyV1.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.bodies.word.WordBodyV1.model_config" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.bodies.continuity_violation.SuggestedAction">
+<span class="sig-prename descclassname"><span class="pre">lacing.bodies.continuity_violation.</span></span><span class="sig-name descname"><span class="pre">SuggestedAction</span></span><a class="headerlink" href="#lacing.bodies.continuity_violation.SuggestedAction" title="Link to this definition"></a></dt>
+<dd><p>Coarse action the edit-loop UI offers in response. Producing
+Transforms pick one; the FE wires each to a button + acture command.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘regen_panel’, ‘regen_with_ref’, ‘manual_edit’, ‘accept’]</p>
 </dd></dl>
 
 </section>
@@ -151,8 +171,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="review.html" class="btn btn-neutral float-left" title="lacing.bodies.review" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../cli.html" class="btn btn-neutral float-right" title="lacing.cli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../bodies.html" class="btn btn-neutral float-left" title="lacing.bodies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="named_entity.html" class="btn btn-neutral float-right" title="lacing.bodies.named_entity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

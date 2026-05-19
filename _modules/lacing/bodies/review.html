@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.named_entity &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing.bodies.review &mdash; lacing 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -110,7 +110,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">lacing.bodies.named_entity</li>
+      <li class="breadcrumb-item active">lacing.bodies.review</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -119,70 +119,117 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for lacing.bodies.named_entity</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Body schemas for named-entity (NER) annotations.</span>
+  <h1>Source code for lacing.bodies.review</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Body schema for review notes — the edit-loop&#39;s communication channel.</span>
 
-<span class="sd">URIs:</span>
-<span class="sd">    annot://schema/named-entity/v1   -- type + text</span>
-<span class="sd">    annot://schema/named-entity/v2   -- entity_type + text + optional confidence (additive)</span>
+<span class="sd">URI: ``annot://schema/review/v1``</span>
 
-<span class="sd">A v1 -&gt; v2 migration is registered to demonstrate the pattern.</span>
+<span class="sd">A *review* annotation is a structured note attached to one or more</span>
+<span class="sd">artifacts (a panel, a beat, a segmentation alternate, a render result),</span>
+<span class="sd">optionally pointing at a typed payload like a</span>
+<span class="sd">:class:`ContinuityViolationBodyV1`. Reviews are produced by:</span>
+
+<span class="sd">- automated checkers (continuity, grammar, timing, segmentation rules)</span>
+<span class="sd">- the edit-loop (&quot;this caption needs a revision&quot;)</span>
+<span class="sd">- the orchestrator (&quot;the user declined the cost gate at panel 12&quot;)</span>
+<span class="sd">- the user (&quot;approve&quot; / &quot;needs revision&quot; notes)</span>
+
+<span class="sd">The body is intentionally minimal. The kind (``review_kind``) routes</span>
+<span class="sd">the FE renderer; the payload is opaque to lacing.</span>
+
+<span class="sd">References:</span>
+<span class="sd">- ``reelee/docs/Narrative to Storyboard.md`` §6.5–6.6.</span>
+<span class="sd">- ``reelee/docs/reelee 03 -- Human-AI Collaboration UX Patterns…`` §10</span>
+<span class="sd">  (annotation overlays).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span><span class="p">,</span> <span class="n">register_migration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<div class="viewcode-block" id="NamedEntityBodyV1">
-<a class="viewcode-back" href="../../../module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NamedEntityBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Original NER body. ``type`` is the entity tag (PER, ORG, LOC, ...).&quot;&quot;&quot;</span>
+<span class="n">REVIEW_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/review/v1&quot;</span>
+
+
+<span class="n">ReviewKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
+    <span class="s2">&quot;continuity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;segmentation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;prompt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grammar&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;timing&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;iconic_moment&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;manual&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;approval&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;What flavor of review this is. Drives the FE&#39;s renderer choice and</span>
+<span class="sd">the producing-Transform&#39;s routing logic.&quot;&quot;&quot;</span>
+
+
+<span class="n">ReviewStatus</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
+    <span class="s2">&quot;open&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;addressed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wont_fix&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;deferred&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;Open is the initial state; the others are user / agent resolutions.&quot;&quot;&quot;</span>
+
+
+<span class="n">Author</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;Coarse author classification. The annotation envelope&#39;s</span>
+<span class="sd">``was_attributed_to`` carries the specific identity; this field is the</span>
+<span class="sd">quick chip for the FE.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="ReviewBodyV1">
+<a class="viewcode-back" href="../../../module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReviewBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Body of a review annotation.&quot;&quot;&quot;</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
 
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Entity type code (e.g., PER, ORG, LOC).&quot;</span><span class="p">)</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Surface form of the entity mention.&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="NamedEntityBodyV2">
-<a class="viewcode-back" href="../../../module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NamedEntityBodyV2</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;v2 renames ``type`` -&gt; ``entity_type`` and adds optional ``confidence``.</span>
-
-<span class="sd">    The rename makes v2 incompatible with v1, so we register a migration.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
-
-    <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Entity type code (e.g., PER, ORG, LOC).&quot;</span><span class="p">)</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Surface form of the entity mention.&quot;</span><span class="p">)</span>
-    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">review_kind</span><span class="p">:</span> <span class="n">ReviewKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What flavor of review this is.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">target_annotation_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">tuple</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Annotation ids this review targets. Typically one, but &quot;</span>
+            <span class="s2">&quot;continuity reviews carry the same ids as the underlying &quot;</span>
+            <span class="s2">&quot;ContinuityViolationBodyV1.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Human-readable note shown in the review panel.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">ReviewStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lifecycle state.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">author</span><span class="p">:</span> <span class="n">Author</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Coarse author chip — human / agent / system.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">violation_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional [0, 1] confidence — for soft labels and AI annotations.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Optional id of a ``continuity-violation/v1`` (or other typed &quot;</span>
+            <span class="s2">&quot;payload) backing this review. The FE inspector follows this &quot;</span>
+            <span class="s2">&quot;ref to render rule-specific evidence.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">suggested_action_slug</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Optional acture command slug the FE should highlight as the &quot;</span>
+            <span class="s2">&quot;default action (e.g. &#39;panel.regen&#39;, &#39;panel.editPrompt&#39;).&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span></div>
 
 
 
-<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">&quot;annot://schema/named-entity/v1&quot;</span><span class="p">,</span> <span class="n">NamedEntityBodyV1</span><span class="p">)</span>
-<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">&quot;annot://schema/named-entity/v2&quot;</span><span class="p">,</span> <span class="n">NamedEntityBodyV2</span><span class="p">)</span>
-
-
-<span class="nd">@register_migration</span><span class="p">(</span>
-    <span class="n">schema_name</span><span class="o">=</span><span class="s2">&quot;named-entity&quot;</span><span class="p">,</span>
-    <span class="n">from_version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">to_version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_v1_to_v2</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename `type` -&gt; `entity_type`; leave confidence unset.&quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;type&quot;</span><span class="p">}</span>
-    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">out</span>
+<span class="n">register_body_schema</span><span class="p">(</span><span class="n">REVIEW_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ReviewBodyV1</span><span class="p">)</span>
 </pre></div>
 
            </div>
