@@ -67,9 +67,7 @@ class ReviewBodyV1(BaseModel):
 
     model_config = {"frozen": True, "extra": "forbid"}
 
-    review_kind: ReviewKind = Field(
-        ..., description="What flavor of review this is."
-    )
+    review_kind: ReviewKind = Field(..., description="What flavor of review this is.")
     target_annotation_ids: tuple[str, ...] = Field(
         default_factory=tuple,
         description=(
@@ -81,9 +79,7 @@ class ReviewBodyV1(BaseModel):
     message: str = Field(
         "", description="Human-readable note shown in the review panel."
     )
-    status: ReviewStatus = Field(
-        "open", description="Lifecycle state."
-    )
+    status: ReviewStatus = Field("open", description="Lifecycle state.")
     author: Author = Field(
         "human", description="Coarse author chip — human / agent / system."
     )

@@ -28,9 +28,7 @@ from pydantic import BaseModel, Field
 from lacing.schema import register_body_schema
 
 
-CONTINUITY_VIOLATION_BODY_SCHEMA_URI = (
-    "annot://schema/continuity-violation/v1"
-)
+CONTINUITY_VIOLATION_BODY_SCHEMA_URI = "annot://schema/continuity-violation/v1"
 
 
 Severity = Literal["info", "warn", "error"]
@@ -69,9 +67,7 @@ class ContinuityViolationBodyV1(BaseModel):
             "directional (e.g. 'character_drift' from A to B)."
         ),
     )
-    severity: Severity = Field(
-        "warn", description="info / warn / error."
-    )
+    severity: Severity = Field("warn", description="info / warn / error.")
     detection_method: str = Field(
         "",
         description=(
@@ -96,15 +92,13 @@ class ContinuityViolationBodyV1(BaseModel):
     suggested_fix: str = Field(
         "",
         description=(
-            "Human-readable fix sentence; the FE renders it in the "
-            "continuity panel."
+            "Human-readable fix sentence; the FE renders it in the continuity panel."
         ),
     )
     suggested_action: SuggestedAction = Field(
         "manual_edit",
         description=(
-            "Coarse action recommendation. Drives which button the FE "
-            "highlights."
+            "Coarse action recommendation. Drives which button the FE highlights."
         ),
     )
     evidence: dict = Field(
@@ -116,6 +110,4 @@ class ContinuityViolationBodyV1(BaseModel):
     )
 
 
-register_body_schema(
-    CONTINUITY_VIOLATION_BODY_SCHEMA_URI, ContinuityViolationBodyV1
-)
+register_body_schema(CONTINUITY_VIOLATION_BODY_SCHEMA_URI, ContinuityViolationBodyV1)
