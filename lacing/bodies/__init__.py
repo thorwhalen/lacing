@@ -10,6 +10,11 @@ own under their own names.
 Importing this package registers every built-in body schema.
 """
 
-from lacing.bodies import named_entity, word  # noqa: F401  registers
+from lacing.bodies import (  # noqa: F401  registers
+    continuity_violation,
+    named_entity,
+    review,
+    word,
+)
 
-__all__ = ["named_entity", "word"]
+__all__ = ["continuity_violation", "named_entity", "review", "word"]
