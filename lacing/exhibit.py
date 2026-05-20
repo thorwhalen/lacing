@@ -1,9 +1,14 @@
 """Artifact exhibit — render an annotation graph as a readable document.
 
 Walks a set of :class:`~lacing.Annotation`\\ s and lays them out as a
-document: each artifact is a card with its body, any generated images
-embedded inline, and **in-document hyperlinks** to the artifacts it was
-derived from and the ones it feeds into.
+document: each artifact is a card with its body, any generated images,
+and **in-document hyperlinks** to the artifacts it was derived from and
+the ones it feeds into.
+
+Images are written once as content-addressed sibling files under an
+``images/`` directory and referenced relatively, so the HTML and
+Markdown stay small. The PDF is still self-contained — weasyprint
+resolves the relative paths (via ``base_url``) and embeds the bytes.
 
 The annotation graph — annotations + ``provenance.was_derived_from`` +
 image references — *is* the "artifacts and links" model, so this runs on
@@ -32,6 +37,7 @@ of how media is stored or downloaded — the caller wires that in.
 from __future__ import annotations
 
 import base64
+import hashlib
 import html as _html
 import importlib
 import json
@@ -78,14 +84,20 @@ def _artifact_label(ann: Any) -> str:
     return _artifact_kind(ann)
 
 
-def _image_data_uri(
-    image: Mapping, resolver: Callable[[Mapping], Optional[str]]
+def _image_src(
+    image: Mapping,
+    resolver: Callable[[Mapping], Optional[str]],
+    images_dir: Optional[Path],
 ) -> Optional[str]:
-    """Best-effort ``data:`` URI for one image reference.
+    """Resolve one image reference to an HTML ``src``.
 
     The ``resolver`` turns an image reference into a local file path
-    (or ``None``). Returns ``None`` when the bytes can't be obtained —
-    the caller then shows a placeholder.
+    (or ``None``). With ``images_dir`` set, the bytes are written there
+    as a content-addressed file and a relative ``<dir>/<name>`` path is
+    returned — keeping the HTML and Markdown small. With ``images_dir``
+    ``None`` the image is inlined as a ``data:`` URI, so the HTML is a
+    single self-contained file. Returns ``None`` when the bytes can't be
+    obtained — the caller then shows a placeholder.
     """
     try:
         path = resolver(image)
@@ -98,8 +110,15 @@ def _image_data_uri(
     except OSError:
         return None
     ext = Path(path).suffix.lower().lstrip(".") or "jpeg"
-    mime = "jpeg" if ext == "jpg" else ext
-    return f"data:image/{mime};base64,{base64.b64encode(data).decode('ascii')}"
+    if images_dir is None:
+        mime = "jpeg" if ext == "jpg" else ext
+        return f"data:image/{mime};base64,{base64.b64encode(data).decode('ascii')}"
+    name = f"{hashlib.sha256(data).hexdigest()[:16]}.{ext}"
+    dest = images_dir / name
+    if not dest.exists():
+        images_dir.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(data)
+    return f"{images_dir.name}/{name}"
 
 
 def _render_value(value: Any) -> str:
@@ -160,10 +179,14 @@ def _build_exhibit_html(
     *,
     title: str,
     image_resolver: Callable[[Mapping], Optional[str]],
+    images_dir: Optional[Path] = None,
 ) -> str:
-    """Render the annotation graph as one self-contained HTML document —
-    each artifact a card, images inline, derivation links as
-    in-document hyperlinks."""
+    """Render the annotation graph as one HTML document — each artifact a
+    card, derivation links as in-document hyperlinks.
+
+    With ``images_dir`` set, panel images are written there as sibling
+    files and referenced relatively; with it ``None`` they are inlined
+    as ``data:`` URIs (a single self-contained file)."""
     by_id = {str(a.id): a for a in annotations}
     feeds: dict[str, list[str]] = {}
     for ann in annotations:
@@ -188,10 +211,10 @@ def _build_exhibit_html(
         body = ann.body or {}
         imgs = ""
         for image in body.get("images") or ():
-            uri = _image_data_uri(image, image_resolver)
+            src = _image_src(image, image_resolver, images_dir)
             imgs += (
-                f'<img class="panel" src="{uri}" alt="panel image">'
-                if uri
+                f'<img class="panel" src="{src}" alt="panel image">'
+                if src
                 else f"<p><em>image unavailable: "
                 f"{_html.escape(str(image.get('url') or ''))}</em></p>"
             )
@@ -267,9 +290,15 @@ def render_artifact_exhibit(
 ) -> list[Path]:
     """Render an annotation graph as a human-readable artifact exhibit.
 
-    Lays every annotation out as a card — body, embedded images, and
+    Lays every annotation out as a card — body, panel images, and
     in-document hyperlinks to the artifacts it derives from / feeds
     into. **HTML is authored**; the PDF and Markdown derive from it.
+
+    Panel images are written once as content-addressed sibling files
+    under ``<out_dir>/images/`` and referenced relatively, so the HTML
+    and Markdown stay small; the PDF embeds them and stays a single
+    self-contained file. The ``images/`` directory is created only when
+    the graph actually has images.
 
     Args:
         annotations: the lacing annotations to exhibit (any iterable).
@@ -294,10 +323,18 @@ def render_artifact_exhibit(
     """
     annotations = list(annotations)
     resolver = image_resolver or _default_image_resolver
-    html_doc = _build_exhibit_html(annotations, title=title, image_resolver=resolver)
 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    # Images land here as content-addressed sibling files; the dir is
+    # created lazily by the first write, so an image-free graph leaves
+    # no empty directory behind.
+    html_doc = _build_exhibit_html(
+        annotations,
+        title=title,
+        image_resolver=resolver,
+        images_dir=out / "images",
+    )
     written: list[Path] = []
 
     if "html" in formats:
@@ -308,9 +345,11 @@ def render_artifact_exhibit(
     if "pdf" in formats:
         # weasyprint, not wkhtmltopdf: only weasyprint carries the
         # in-document anchor links through to clickable PDF links.
+        # ``base_url`` lets it resolve the relative ``images/`` paths and
+        # embed the bytes, so the PDF stays a self-contained single file.
         weasyprint = _require("weasyprint", "the PDF export")
         p = out / "exhibit.pdf"
-        weasyprint.HTML(string=html_doc).write_pdf(str(p))
+        weasyprint.HTML(string=html_doc, base_url=str(out)).write_pdf(str(p))
         written.append(p)
 
     if "md" in formats:
