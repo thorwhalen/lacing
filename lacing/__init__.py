@@ -71,6 +71,7 @@ from lacing.store import (
     SchemaMismatchError,
     SqliteStore,
 )
+from lacing.exhibit import render_artifact_exhibit
 from lacing.tier import Tier, TierStereotype
 from lacing.time import (
     DEFAULT_RATE,
@@ -135,6 +136,7 @@ __all__ = [
     "register_migration",
     "json_schema",
     "export_json_schemas",
+    "render_artifact_exhibit",
     "migrate",
     "validate_body",
     "BodySchemaError",

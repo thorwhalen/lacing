@@ -84,6 +84,15 @@ otel = [
     "opentelemetry-api>=1.20",
     "opentelemetry-sdk>=1.20",
 ]
+exhibit = [
+    # Artifact-exhibit export (lacing.exhibit). HTML needs nothing
+    # extra; the PDF / Markdown derivations need these. weasyprint is
+    # used over wkhtmltopdf because it is the only HTML→PDF engine that
+    # carries the in-document artifact↔artifact anchor links through to
+    # clickable PDF links.
+    "weasyprint>=60",
+    "dn>=0.1",
+]
 
 [tool.ruff]
 line-length = 88
