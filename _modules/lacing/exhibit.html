@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.exhibit &mdash; lacing 0.0.18 documentation</title>
+  <title>lacing.exhibit &mdash; lacing 0.0.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
+      <script src="../../_static/documentation_options.js?v=2fd7553c"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -124,9 +124,14 @@
 <span></span><span class="sd">&quot;&quot;&quot;Artifact exhibit — render an annotation graph as a readable document.</span>
 
 <span class="sd">Walks a set of :class:`~lacing.Annotation`\\ s and lays them out as a</span>
-<span class="sd">document: each artifact is a card with its body, any generated images</span>
-<span class="sd">embedded inline, and **in-document hyperlinks** to the artifacts it was</span>
-<span class="sd">derived from and the ones it feeds into.</span>
+<span class="sd">document: each artifact is a card with its body, any generated images,</span>
+<span class="sd">and **in-document hyperlinks** to the artifacts it was derived from and</span>
+<span class="sd">the ones it feeds into.</span>
+
+<span class="sd">Images are written once as content-addressed sibling files under an</span>
+<span class="sd">``images/`` directory and referenced relatively, so the HTML and</span>
+<span class="sd">Markdown stay small. The PDF is still self-contained — weasyprint</span>
+<span class="sd">resolves the relative paths (via ``base_url``) and embeds the bytes.</span>
 
 <span class="sd">The annotation graph — annotations + ``provenance.was_derived_from`` +</span>
 <span class="sd">image references — *is* the &quot;artifacts and links&quot; model, so this runs on</span>
@@ -155,6 +160,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_html</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -201,14 +207,20 @@
     <span class="k">return</span> <span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_image_data_uri</span><span class="p">(</span>
-    <span class="n">image</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_image_src</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">images_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Best-effort ``data:`` URI for one image reference.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve one image reference to an HTML ``src``.</span>
 
 <span class="sd">    The ``resolver`` turns an image reference into a local file path</span>
-<span class="sd">    (or ``None``). Returns ``None`` when the bytes can&#39;t be obtained —</span>
-<span class="sd">    the caller then shows a placeholder.</span>
+<span class="sd">    (or ``None``). With ``images_dir`` set, the bytes are written there</span>
+<span class="sd">    as a content-addressed file and a relative ``&lt;dir&gt;/&lt;name&gt;`` path is</span>
+<span class="sd">    returned — keeping the HTML and Markdown small. With ``images_dir``</span>
+<span class="sd">    ``None`` the image is inlined as a ``data:`` URI, so the HTML is a</span>
+<span class="sd">    single self-contained file. Returns ``None`` when the bytes can&#39;t be</span>
+<span class="sd">    obtained — the caller then shows a placeholder.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">resolver</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -221,8 +233,15 @@
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;jpeg&quot;</span>
-    <span class="n">mime</span> <span class="o">=</span> <span class="s2">&quot;jpeg&quot;</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;jpg&quot;</span> <span class="k">else</span> <span class="n">ext</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;data:image/</span><span class="si">{</span><span class="n">mime</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">images_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mime</span> <span class="o">=</span> <span class="s2">&quot;jpeg&quot;</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;jpg&quot;</span> <span class="k">else</span> <span class="n">ext</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;data:image/</span><span class="si">{</span><span class="n">mime</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">dest</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">name</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dest</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">images_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dest</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">images_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_render_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -283,10 +302,14 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">image_resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">images_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the annotation graph as one self-contained HTML document —</span>
-<span class="sd">    each artifact a card, images inline, derivation links as</span>
-<span class="sd">    in-document hyperlinks.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the annotation graph as one HTML document — each artifact a</span>
+<span class="sd">    card, derivation links as in-document hyperlinks.</span>
+
+<span class="sd">    With ``images_dir`` set, panel images are written there as sibling</span>
+<span class="sd">    files and referenced relatively; with it ``None`` they are inlined</span>
+<span class="sd">    as ``data:`` URIs (a single self-contained file).&quot;&quot;&quot;</span>
     <span class="n">by_id</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">):</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">}</span>
     <span class="n">feeds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
@@ -311,12 +334,12 @@
         <span class="n">body</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">imgs</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">():</span>
-            <span class="n">uri</span> <span class="o">=</span> <span class="n">_image_data_uri</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image_resolver</span><span class="p">)</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">_image_src</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image_resolver</span><span class="p">,</span> <span class="n">images_dir</span><span class="p">)</span>
             <span class="n">imgs</span> <span class="o">+=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;&lt;img class=&quot;panel&quot; src=&quot;</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s1">&quot; alt=&quot;panel image&quot;&gt;&#39;</span>
-                <span class="k">if</span> <span class="n">uri</span>
+                <span class="sa">f</span><span class="s1">&#39;&lt;img class=&quot;panel&quot; src=&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">&quot; alt=&quot;panel image&quot;&gt;&#39;</span>
+                <span class="k">if</span> <span class="n">src</span>
                 <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;&lt;p&gt;&lt;em&gt;image unavailable: &quot;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">))</span><span class="si">}</span><span class="s1">&lt;/em&gt;&lt;/p&gt;&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;/em&gt;&lt;/p&gt;&quot;</span>
             <span class="p">)</span>
         <span class="n">derived</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_derived_from</span>
         <span class="n">links</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -392,9 +415,15 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Render an annotation graph as a human-readable artifact exhibit.</span>
 
-<span class="sd">    Lays every annotation out as a card — body, embedded images, and</span>
+<span class="sd">    Lays every annotation out as a card — body, panel images, and</span>
 <span class="sd">    in-document hyperlinks to the artifacts it derives from / feeds</span>
 <span class="sd">    into. **HTML is authored**; the PDF and Markdown derive from it.</span>
+
+<span class="sd">    Panel images are written once as content-addressed sibling files</span>
+<span class="sd">    under ``&lt;out_dir&gt;/images/`` and referenced relatively, so the HTML</span>
+<span class="sd">    and Markdown stay small; the PDF embeds them and stays a single</span>
+<span class="sd">    self-contained file. The ``images/`` directory is created only when</span>
+<span class="sd">    the graph actually has images.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        annotations: the lacing annotations to exhibit (any iterable).</span>
@@ -419,12 +448,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">annotations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
     <span class="n">resolver</span> <span class="o">=</span> <span class="n">image_resolver</span> <span class="ow">or</span> <span class="n">_default_image_resolver</span>
-    <span class="n">html_doc</span> <span class="o">=</span> <span class="n">_build_exhibit_html</span><span class="p">(</span>
-        <span class="n">annotations</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">image_resolver</span><span class="o">=</span><span class="n">resolver</span>
-    <span class="p">)</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
     <span class="n">out</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Images land here as content-addressed sibling files; the dir is</span>
+    <span class="c1"># created lazily by the first write, so an image-free graph leaves</span>
+    <span class="c1"># no empty directory behind.</span>
+    <span class="n">html_doc</span> <span class="o">=</span> <span class="n">_build_exhibit_html</span><span class="p">(</span>
+        <span class="n">annotations</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">image_resolver</span><span class="o">=</span><span class="n">resolver</span><span class="p">,</span>
+        <span class="n">images_dir</span><span class="o">=</span><span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">written</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">if</span> <span class="s2">&quot;html&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
@@ -435,17 +470,17 @@
     <span class="k">if</span> <span class="s2">&quot;pdf&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
         <span class="c1"># weasyprint, not wkhtmltopdf: only weasyprint carries the</span>
         <span class="c1"># in-document anchor links through to clickable PDF links.</span>
+        <span class="c1"># ``base_url`` lets it resolve the relative ``images/`` paths and</span>
+        <span class="c1"># embed the bytes, so the PDF stays a self-contained single file.</span>
         <span class="n">weasyprint</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">&quot;weasyprint&quot;</span><span class="p">,</span> <span class="s2">&quot;the PDF export&quot;</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;exhibit.pdf&quot;</span>
-        <span class="n">weasyprint</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="n">html_doc</span><span class="p">)</span><span class="o">.</span><span class="n">write_pdf</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">weasyprint</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="p">))</span><span class="o">.</span><span class="n">write_pdf</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
         <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;md&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
         <span class="n">dn</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">&quot;dn&quot;</span><span class="p">,</span> <span class="s2">&quot;the Markdown export&quot;</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;exhibit.md&quot;</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
-            <span class="n">dn</span><span class="o">.</span><span class="n">html_to_markdown</span><span class="p">(</span><span class="n">html_doc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
-        <span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">dn</span><span class="o">.</span><span class="n">html_to_markdown</span><span class="p">(</span><span class="n">html_doc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">written</span></div>

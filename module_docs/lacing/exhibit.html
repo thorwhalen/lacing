@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.exhibit &mdash; lacing 0.0.18 documentation</title>
+  <title>lacing.exhibit &mdash; lacing 0.0.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
+      <script src="../../_static/documentation_options.js?v=2fd7553c"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -130,9 +130,13 @@
 <span id="lacing-exhibit"></span><h1>lacing.exhibit<a class="headerlink" href="#module-lacing.exhibit" title="Link to this heading"></a></h1>
 <p>Artifact exhibit — render an annotation graph as a readable document.</p>
 <p>Walks a set of <a class="reference internal" href="../lacing.html#lacing.Annotation" title="lacing.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Annotation</span></code></a>s and lays them out as a
-document: each artifact is a card with its body, any generated images
-embedded inline, and <strong>in-document hyperlinks</strong> to the artifacts it was
-derived from and the ones it feeds into.</p>
+document: each artifact is a card with its body, any generated images,
+and <strong>in-document hyperlinks</strong> to the artifacts it was derived from and
+the ones it feeds into.</p>
+<p>Images are written once as content-addressed sibling files under an
+<code class="docutils literal notranslate"><span class="pre">images/</span></code> directory and referenced relatively, so the HTML and
+Markdown stay small. The PDF is still self-contained — weasyprint
+resolves the relative paths (via <code class="docutils literal notranslate"><span class="pre">base_url</span></code>) and embeds the bytes.</p>
 <p>The annotation graph — annotations + <code class="docutils literal notranslate"><span class="pre">provenance.was_derived_from</span></code> +
 image references — <em>is</em> the “artifacts and links” model, so this runs on
 <strong>any</strong> lacing graph: a project, a test run’s artifacts, anything. The
@@ -157,9 +161,14 @@ of how media is stored or downloaded — the caller wires that in.</p>
 <dt class="sig sig-object py" id="lacing.exhibit.render_artifact_exhibit">
 <span class="sig-prename descclassname"><span class="pre">lacing.exhibit.</span></span><span class="sig-name descname"><span class="pre">render_artifact_exhibit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('html',</span> <span class="pre">'pdf',</span> <span class="pre">'md')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Artifact</span> <span class="pre">exhibit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_resolver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/exhibit.html#render_artifact_exhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.exhibit.render_artifact_exhibit" title="Link to this definition"></a></dt>
 <dd><p>Render an annotation graph as a human-readable artifact exhibit.</p>
-<p>Lays every annotation out as a card — body, embedded images, and
+<p>Lays every annotation out as a card — body, panel images, and
 in-document hyperlinks to the artifacts it derives from / feeds
 into. <strong>HTML is authored</strong>; the PDF and Markdown derive from it.</p>
+<p>Panel images are written once as content-addressed sibling files
+under <code class="docutils literal notranslate"><span class="pre">&lt;out_dir&gt;/images/</span></code> and referenced relatively, so the HTML
+and Markdown stay small; the PDF embeds them and stays a single
+self-contained file. The <code class="docutils literal notranslate"><span class="pre">images/</span></code> directory is created only when
+the graph actually has images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
