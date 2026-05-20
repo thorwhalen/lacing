@@ -216,7 +216,7 @@ def _build_exhibit_html(
                 f'<img class="panel" src="{src}" alt="panel image">'
                 if src
                 else f"<p><em>image unavailable: "
-                f'{_html.escape(str(image.get("url") or ""))}</em></p>'
+                f"{_html.escape(str(image.get('url') or ''))}</em></p>"
             )
         derived = ann.provenance.was_derived_from
         links = ""
@@ -355,9 +355,7 @@ def render_artifact_exhibit(
     if "md" in formats:
         dn = _require("dn", "the Markdown export")
         p = out / "exhibit.md"
-        p.write_text(
-            dn.html_to_markdown(html_doc.encode("utf-8")), encoding="utf-8"
-        )
+        p.write_text(dn.html_to_markdown(html_doc.encode("utf-8")), encoding="utf-8")
         written.append(p)
 
     return written
