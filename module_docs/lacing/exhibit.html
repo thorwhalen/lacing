@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.exhibit &mdash; lacing 0.0.18 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.model" href="model.html" />
+    <link rel="prev" title="lacing.cli" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.exhibit</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.exhibit.render_artifact_exhibit"><code class="docutils literal notranslate"><span class="pre">render_artifact_exhibit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/awareness.html">lacing.server.awareness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.exhibit</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/exhibit.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.exhibit">
+<span id="lacing-exhibit"></span><h1>lacing.exhibit<a class="headerlink" href="#module-lacing.exhibit" title="Link to this heading"></a></h1>
+<p>Artifact exhibit — render an annotation graph as a readable document.</p>
+<p>Walks a set of <a class="reference internal" href="../lacing.html#lacing.Annotation" title="lacing.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Annotation</span></code></a>s and lays them out as a
+document: each artifact is a card with its body, any generated images
+embedded inline, and <strong>in-document hyperlinks</strong> to the artifacts it was
+derived from and the ones it feeds into.</p>
+<p>The annotation graph — annotations + <code class="docutils literal notranslate"><span class="pre">provenance.was_derived_from</span></code> +
+image references — <em>is</em> the “artifacts and links” model, so this runs on
+<strong>any</strong> lacing graph: a project, a test run’s artifacts, anything. The
+renderer is pure (graph → document) and has no knowledge of where the
+graph came from.</p>
+<p>HTML is the authored format; the PDF and Markdown derive from it so the
+three never drift:</p>
+<ul class="simple">
+<li><p><strong>PDF</strong> via <code class="docutils literal notranslate"><span class="pre">weasyprint</span></code> — chosen over wkhtmltopdf because it is the
+HTML→PDF engine that carries the in-document anchor links through to
+<strong>clickable PDF links</strong> (wkhtmltopdf renders them as broken external
+URIs).</p></li>
+<li><p><strong>Markdown</strong> via <code class="docutils literal notranslate"><span class="pre">dn.html_to_markdown</span></code>.</p></li>
+</ul>
+<p>Both derivations are optional — <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">lacing[exhibit]</span></code>. A
+missing converter raises an informative error naming the install
+command, rather than silently dropping the format.</p>
+<p>Images are resolved through an injected <code class="docutils literal notranslate"><span class="pre">image_resolver</span></code> callback
+(image-reference → local file path) so this module needs no knowledge
+of how media is stored or downloaded — the caller wires that in.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.exhibit.render_artifact_exhibit">
+<span class="sig-prename descclassname"><span class="pre">lacing.exhibit.</span></span><span class="sig-name descname"><span class="pre">render_artifact_exhibit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('html',</span> <span class="pre">'pdf',</span> <span class="pre">'md')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Artifact</span> <span class="pre">exhibit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_resolver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/exhibit.html#render_artifact_exhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.exhibit.render_artifact_exhibit" title="Link to this definition"></a></dt>
+<dd><p>Render an annotation graph as a human-readable artifact exhibit.</p>
+<p>Lays every annotation out as a card — body, embedded images, and
+in-document hyperlinks to the artifacts it derives from / feeds
+into. <strong>HTML is authored</strong>; the PDF and Markdown derive from it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotations</strong> – the lacing annotations to exhibit (any iterable).
+Order is preserved — pass them chain-ordered for a document
+that reads top-to-bottom.</p></li>
+<li><p><strong>out_dir</strong> – directory the <code class="docutils literal notranslate"><span class="pre">exhibit.{html,pdf,md}</span></code> files land in.</p></li>
+<li><p><strong>formats</strong> – which of <code class="docutils literal notranslate"><span class="pre">html</span></code> / <code class="docutils literal notranslate"><span class="pre">pdf</span></code> / <code class="docutils literal notranslate"><span class="pre">md</span></code> to write. The HTML
+is always built in memory (the others derive from it).</p></li>
+<li><p><strong>title</strong> – document title.</p></li>
+<li><p><strong>image_resolver</strong> – <code class="docutils literal notranslate"><span class="pre">image-reference</span> <span class="pre">→</span> <span class="pre">local</span> <span class="pre">file</span> <span class="pre">path</span></code> callback.
+Defaults to reading the reference’s own <code class="docutils literal notranslate"><span class="pre">path</span></code> field; a
+caller whose images live behind URLs passes a resolver that
+downloads / caches them (keeping this module media-agnostic).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The written file paths.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – when <code class="docutils literal notranslate"><span class="pre">pdf</span></code> / <code class="docutils literal notranslate"><span class="pre">md</span></code> is requested but its optional
+    converter (<code class="docutils literal notranslate"><span class="pre">weasyprint</span></code> / <code class="docutils literal notranslate"><span class="pre">dn</span></code>) is not installed — the
+    message names the install command.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="lacing.cli" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="model.html" class="btn btn-neutral float-right" title="lacing.model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

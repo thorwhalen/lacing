@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.continuity_violation &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing.bodies.continuity_violation &mdash; lacing 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -64,6 +64,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/otel.html">lacing.otel</a></li>
@@ -150,9 +151,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;annot://schema/continuity-violation/v1&quot;</span>
-<span class="p">)</span>
+<span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/continuity-violation/v1&quot;</span>
 
 
 <span class="n">Severity</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">]</span>
@@ -193,9 +192,7 @@
             <span class="s2">&quot;directional (e.g. &#39;character_drift&#39; from A to B).&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">severity</span><span class="p">:</span> <span class="n">Severity</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;info / warn / error.&quot;</span>
-    <span class="p">)</span>
+    <span class="n">severity</span><span class="p">:</span> <span class="n">Severity</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;info / warn / error.&quot;</span><span class="p">)</span>
     <span class="n">detection_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
@@ -220,15 +217,13 @@
     <span class="n">suggested_fix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Human-readable fix sentence; the FE renders it in the &quot;</span>
-            <span class="s2">&quot;continuity panel.&quot;</span>
+            <span class="s2">&quot;Human-readable fix sentence; the FE renders it in the continuity panel.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">suggested_action</span><span class="p">:</span> <span class="n">SuggestedAction</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">&quot;manual_edit&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Coarse action recommendation. Drives which button the FE &quot;</span>
-            <span class="s2">&quot;highlights.&quot;</span>
+            <span class="s2">&quot;Coarse action recommendation. Drives which button the FE highlights.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">evidence</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -241,9 +236,7 @@
 
 
 
-<span class="n">register_body_schema</span><span class="p">(</span>
-    <span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ContinuityViolationBodyV1</span>
-<span class="p">)</span>
+<span class="n">register_body_schema</span><span class="p">(</span><span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ContinuityViolationBodyV1</span><span class="p">)</span>
 </pre></div>
 
            </div>

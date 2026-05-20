@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.17 documentation</title>
+  <title>lacing &mdash; lacing 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -164,6 +164,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.render_artifact_exhibit"><code class="docutils literal notranslate"><span class="pre">render_artifact_exhibit()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.run_processor_async"><code class="docutils literal notranslate"><span class="pre">run_processor_async()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.run_processor_sync"><code class="docutils literal notranslate"><span class="pre">run_processor_sync()</span></code></a></li>
@@ -188,6 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/exhibit.html">lacing.exhibit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/oplog.html">lacing.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/otel.html">lacing.otel</a></li>
@@ -975,6 +977,40 @@ the previous entry — convenient in tests, intentional for hot-reload.</p>
 <dt class="sig sig-object py" id="lacing.registered_processors">
 <span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">registered_processors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/processors.html#registered_processors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.registered_processors" title="Link to this definition"></a></dt>
 <dd><p>Names of every registered processor, sorted.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.render_artifact_exhibit">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">render_artifact_exhibit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('html',</span> <span class="pre">'pdf',</span> <span class="pre">'md')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Artifact</span> <span class="pre">exhibit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_resolver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/exhibit.html#render_artifact_exhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.render_artifact_exhibit" title="Link to this definition"></a></dt>
+<dd><p>Render an annotation graph as a human-readable artifact exhibit.</p>
+<p>Lays every annotation out as a card — body, embedded images, and
+in-document hyperlinks to the artifacts it derives from / feeds
+into. <strong>HTML is authored</strong>; the PDF and Markdown derive from it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotations</strong> – the lacing annotations to exhibit (any iterable).
+Order is preserved — pass them chain-ordered for a document
+that reads top-to-bottom.</p></li>
+<li><p><strong>out_dir</strong> – directory the <code class="docutils literal notranslate"><span class="pre">exhibit.{html,pdf,md}</span></code> files land in.</p></li>
+<li><p><strong>formats</strong> – which of <code class="docutils literal notranslate"><span class="pre">html</span></code> / <code class="docutils literal notranslate"><span class="pre">pdf</span></code> / <code class="docutils literal notranslate"><span class="pre">md</span></code> to write. The HTML
+is always built in memory (the others derive from it).</p></li>
+<li><p><strong>title</strong> – document title.</p></li>
+<li><p><strong>image_resolver</strong> – <code class="docutils literal notranslate"><span class="pre">image-reference</span> <span class="pre">→</span> <span class="pre">local</span> <span class="pre">file</span> <span class="pre">path</span></code> callback.
+Defaults to reading the reference’s own <code class="docutils literal notranslate"><span class="pre">path</span></code> field; a
+caller whose images live behind URLs passes a resolver that
+downloads / caches them (keeping this module media-agnostic).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The written file paths.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – when <code class="docutils literal notranslate"><span class="pre">pdf</span></code> / <code class="docutils literal notranslate"><span class="pre">md</span></code> is requested but its optional
+    converter (<code class="docutils literal notranslate"><span class="pre">weasyprint</span></code> / <code class="docutils literal notranslate"><span class="pre">dn</span></code>) is not installed — the
+    message names the install command.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
