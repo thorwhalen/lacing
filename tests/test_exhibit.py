@@ -83,6 +83,36 @@ def test_render_artifact_exhibit_writes_html(tmp_path):
     assert "treatment" in (tmp_path / "exhibit.html").read_text()
 
 
+def test_render_artifact_exhibit_writes_images_as_sibling_files(tmp_path):
+    """A panel image is written once under ``images/`` and referenced
+    relatively — the HTML carries no base64 blob."""
+    img = tmp_path / "src.jpg"
+    img.write_bytes(b"\xff\xd8\xff" + b"fake-jpeg-bytes" * 80)
+    panel = _ann("p-1", "storyboard-panel", {"images": [{"path": str(img)}]})
+
+    out = tmp_path / "ex"
+    written = render_artifact_exhibit(
+        [panel], out_dir=out, formats=("html",), title="T"
+    )
+    html = written[0].read_text(encoding="utf-8")
+    # A relative reference, not an inlined base64 data URI.
+    assert 'src="images/' in html
+    assert "data:image" not in html
+    # The bytes landed once under images/.
+    image_files = list((out / "images").iterdir())
+    assert len(image_files) == 1
+    assert image_files[0].read_bytes() == img.read_bytes()
+
+
+def test_render_artifact_exhibit_no_images_leaves_no_images_dir(tmp_path):
+    """An image-free graph creates no empty ``images/`` directory."""
+    render_artifact_exhibit(
+        [_ann("t-1", "treatment", {"logline": "x"})],
+        out_dir=tmp_path, formats=("html",), title="T",
+    )
+    assert not (tmp_path / "images").exists()
+
+
 def test_require_raises_an_install_hint_for_a_missing_converter():
     """A missing optional converter fails with an actionable error
     naming the install command — never a silent drop."""
