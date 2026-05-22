@@ -65,6 +65,7 @@ from lacing.artifact import (
     hash_bytes,
     hash_file,
 )
+from lacing.artifact_store import ArtifactStore
 from lacing.store import (
     IntervalAnnotationStore,
     MemoryStore,
@@ -99,6 +100,7 @@ __all__ = [
     # artifact
     "Artifact",
     "ArtifactKind",
+    "ArtifactStore",
     "hash_bytes",
     "hash_file",
     # allen
