@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.19 documentation</title>
+  <title>Index &mdash; lacing 0.0.20 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=2fd7553c"></script>
+      <script src="_static/documentation_options.js?v=056c92e6"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -58,6 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
@@ -219,6 +220,12 @@
       </ul></li>
       <li><a href="module_docs/lacing/artifact.html#lacing.artifact.ArtifactKind">ArtifactKind (in module lacing.artifact)</a>
 </li>
+      <li><a href="module_docs/lacing.html#lacing.ArtifactStore">ArtifactStore (class in lacing)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore">(class in lacing.artifact_store)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.at_tier">at_tier() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
@@ -399,14 +406,20 @@
         <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.from_bytes">(lacing.artifact.Artifact class method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.from_directory">from_directory() (lacing.artifact_store.ArtifactStore class method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.from_directory">(lacing.ArtifactStore class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.from_memory">from_memory() (in module lacing.store.postgres)</a>
 
       <ul>
         <li><a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.from_memory">(in module lacing.store.sqlite)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing.html#lacing.Artifact.from_path">from_path() (lacing.Artifact class method)</a>
 
       <ul>
@@ -433,10 +446,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/lacing/adapters.html#lacing.adapters.get_adapter">get_adapter() (in module lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.get_body_schema">get_body_schema() (in module lacing.schema)</a>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.get_blob">get_blob() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.get_blob">(lacing.ArtifactStore method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/schema.html#lacing.schema.get_body_schema">get_body_schema() (in module lacing.schema)</a>
+</li>
       <li><a href="module_docs/lacing.html#lacing.get_tracer">get_tracer() (in module lacing)</a>
 
       <ul>
@@ -449,6 +468,12 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.has_blob">has_blob() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.has_blob">(lacing.ArtifactStore method)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing.html#lacing.hash_bytes">hash_bytes() (in module lacing)</a>
 
       <ul>
@@ -469,10 +494,22 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.in_memory">in_memory() (lacing.artifact_store.ArtifactStore class method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.in_memory">(lacing.ArtifactStore class method)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.INCLUDED_IN">INCLUDED_IN (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
         <li><a href="module_docs/lacing.html#lacing.TierStereotype.INCLUDED_IN">(lacing.TierStereotype attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.index">index() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.index">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
       <li><a href="module_docs/lacing.html#lacing.InMemoryOpLog">InMemoryOpLog (class in lacing)</a>
@@ -641,6 +678,13 @@
 
       <ul>
         <li><a href="module_docs/lacing/artifact.html#module-lacing.artifact">module</a>
+</li>
+      </ul></li>
+      <li>
+    lacing.artifact_store
+
+      <ul>
+        <li><a href="module_docs/lacing/artifact_store.html#module-lacing.artifact_store">module</a>
 </li>
       </ul></li>
       <li>
@@ -962,6 +1006,8 @@
 </li>
         <li><a href="module_docs/lacing/artifact.html#module-lacing.artifact">lacing.artifact</a>
 </li>
+        <li><a href="module_docs/lacing/artifact_store.html#module-lacing.artifact_store">lacing.artifact_store</a>
+</li>
         <li><a href="module_docs/lacing/bodies.html#module-lacing.bodies">lacing.bodies</a>
 </li>
         <li><a href="module_docs/lacing/bodies/continuity_violation.html#module-lacing.bodies.continuity_violation">lacing.bodies.continuity_violation</a>
@@ -1107,6 +1153,12 @@
         <li><a href="module_docs/lacing/model.html#lacing.model.Provenance">(class in lacing.model)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.put_blob">put_blob() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.put_blob">(lacing.ArtifactStore method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1223,6 +1275,12 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.save">save() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.save">(lacing.ArtifactStore method)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.SCHEMA_VERSION">SCHEMA_VERSION (in module lacing.store.postgres)</a>
 
       <ul>

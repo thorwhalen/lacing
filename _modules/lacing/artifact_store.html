@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.artifact_store &mdash; lacing 0.0.20 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=056c92e6"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.artifact_store</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.artifact_store</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Artifact store — a metadata catalog and a blob store behind one facade.</span>
+
+<span class="sd">An :class:`~lacing.artifact.Artifact` describes a generated file; this module</span>
+<span class="sd">*persists* artifacts. It is the storage layer that ``reelee`` (and any other</span>
+<span class="sd">producer) builds on so artifacts survive a process restart and are reachable</span>
+<span class="sd">from another machine — not just from the browser tab that generated them.</span>
+
+<span class="sd">Design</span>
+<span class="sd">------</span>
+
+<span class="sd">The store keeps **three concerns separate** (see</span>
+<span class="sd">``misc/docs/Artifact Store Architecture — design notes.md``):</span>
+
+<span class="sd">- **Data organization** — artifacts are *physically flat*: a **catalog**</span>
+<span class="sd">  (``id -&gt; record``) holds metadata, a **blob store** (``content_hash -&gt;</span>
+<span class="sd">  bytes``) holds the heavy bytes. Neither key encodes ownership or grouping.</span>
+<span class="sd">- **Infrastructure mapping** — :class:`ArtifactStore` is a thin *facade* that</span>
+<span class="sd">  composes two **injected** key-value stores. The backing stores are ordinary</span>
+<span class="sd">  ``MutableMapping`` objects, so the backend swaps (in-memory -&gt; filesystem -&gt;</span>
+<span class="sd">  object store) by dependency injection, with no change to callers.</span>
+<span class="sd">- **Access calculus** — deliberately *absent here*. :class:`ArtifactStore` is</span>
+<span class="sd">  an unprivileged primitive that checks nothing; a caller that needs access</span>
+<span class="sd">  control wraps it in a permission-enforcing facade of its own.</span>
+
+<span class="sd">Identity is an **explicit string key**, not assumed to be the content hash:</span>
+<span class="sd">artifacts often get a stable id *before* their bytes exist (and hence before</span>
+<span class="sd">they can be hashed). The catalog is therefore generic over the record type and</span>
+<span class="sd">keyed by whatever id the caller chooses; the content hash, when known, is just</span>
+<span class="sd">a field on the record and the key of the blob store.</span>
+
+<span class="sd">Consistency: there is no transaction spanning the two stores, so :meth:`save`</span>
+<span class="sd">writes the **blob first, then the catalog row**. Because blobs are</span>
+<span class="sd">content-addressed the blob write is idempotent; a crash in between leaves at</span>
+<span class="sd">worst an unreferenced (orphan) blob — never a catalog row pointing at missing</span>
+<span class="sd">bytes.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+
+<span class="sd">&gt;&gt;&gt; from lacing import Artifact</span>
+<span class="sd">&gt;&gt;&gt; store = ArtifactStore.in_memory()</span>
+<span class="sd">&gt;&gt;&gt; art = Artifact.from_bytes(</span>
+<span class="sd">...     b&quot;fake-png-bytes&quot;, kind=&quot;image&quot;,</span>
+<span class="sd">...     was_generated_by=&quot;agent:flux&quot;, was_attributed_to=&quot;user:thor&quot;,</span>
+<span class="sd">... )</span>
+<span class="sd">&gt;&gt;&gt; _ = store.save(art.asset_id, art)</span>
+<span class="sd">&gt;&gt;&gt; store[art.asset_id].kind</span>
+<span class="sd">&#39;image&#39;</span>
+<span class="sd">&gt;&gt;&gt; art.asset_id in store</span>
+<span class="sd">True</span>
+<span class="sd">&gt;&gt;&gt; len(store)</span>
+<span class="sd">1</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">Files</span><span class="p">,</span> <span class="n">filt_iter</span><span class="p">,</span> <span class="n">wrap_kvs</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">hash_bytes</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ArtifactStore&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ArtifactStore">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArtifactStore</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Facade over an artifact ``catalog`` and an optional ``blobs`` store.</span>
+
+<span class="sd">    The object *is* a ``MutableMapping[str, record]`` over the catalog —</span>
+<span class="sd">    ``store[artifact_id]``, iteration, ``len``, ``get``, ``clear`` and the</span>
+<span class="sd">    rest of the mapping surface all act on artifact **metadata records**. The</span>
+<span class="sd">    heavier byte operations (:meth:`put_blob`, :meth:`get_blob`,</span>
+<span class="sd">    :meth:`has_blob`) are rich methods that are deliberately *not* squeezed</span>
+<span class="sd">    into the mapping protocol.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        catalog: Injected ``id -&gt; record`` store. Records are pydantic models</span>
+<span class="sd">            (``lacing.Artifact`` by default, but any ``BaseModel`` works — the</span>
+<span class="sd">            store does not inspect the record&#39;s shape).</span>
+<span class="sd">        blobs: Injected ``content_hash -&gt; bytes`` store, or ``None`` for a</span>
+<span class="sd">            catalog-only store (Stage-1 metadata persistence). Blob methods</span>
+<span class="sd">            raise / no-op when it is ``None``.</span>
+
+<span class="sd">    Construct one with :meth:`in_memory` or :meth:`from_directory` rather than</span>
+<span class="sd">    wiring the backing stores by hand, unless you are injecting a custom</span>
+<span class="sd">    backend.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">catalog</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]</span>
+    <span class="n">blobs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># -- catalog: the MutableMapping surface (artifact_id -&gt; record) --------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">[</span><span class="n">artifact_id</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">[</span><span class="n">artifact_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">[</span><span class="n">artifact_id</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">)</span>
+
+    <span class="c1"># -- domain verbs ------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ArtifactStore.save">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Persist one artifact, optionally with its bytes.</span>
+
+<span class="sd">        Writes the blob (if ``data`` is given) **before** the catalog row, so a</span>
+<span class="sd">        crash never leaves the catalog pointing at missing bytes. Idempotent on</span>
+<span class="sd">        ``artifact_id`` — and, for the blob, on content — so retries are safe.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            artifact_id: The stable string id this artifact is filed under.</span>
+<span class="sd">            record: The metadata record to store in the catalog.</span>
+<span class="sd">            data: Optional raw bytes. When given, they are stored</span>
+<span class="sd">                content-addressed and the content hash is returned; the caller</span>
+<span class="sd">                is responsible for also recording that hash on ``record``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The blob&#39;s content hash if ``data`` was written, else ``None``.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: ``data`` was given but no blob store is configured.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;ArtifactStore.save received blob bytes but has no blob &quot;</span>
+                    <span class="s2">&quot;store configured. Construct it with .in_memory() or &quot;</span>
+                    <span class="s2">&quot;.from_directory(), or inject a `blobs` store.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hash_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>  <span class="c1"># content-addressed -&gt; idempotent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">[</span><span class="n">artifact_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+        <span class="k">return</span> <span class="n">content_hash</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.index">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the whole catalog as a plain dict (e.g. for UI hydration).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -- blobs: rich byte methods ------------------------------------------</span>
+
+<div class="viewcode-block" id="ArtifactStore.put_blob">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.put_blob">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">put_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store ``data`` content-addressed; return its content hash.</span>
+
+<span class="sd">        Idempotent: identical bytes always map to the same hash and overwrite</span>
+<span class="sd">        an identical blob.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: no blob store is configured.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ArtifactStore has no blob store configured.&quot;</span><span class="p">)</span>
+        <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hash_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">content_hash</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.get_blob">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.get_blob">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the bytes for ``content_hash``, or ``None`` if absent.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.has_blob">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.has_blob">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the blob store holds ``content_hash``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">content_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span></div>
+
+
+    <span class="c1"># -- constructors ------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ArtifactStore.in_memory">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.in_memory">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">in_memory</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore backed entirely by in-memory dicts.</span>
+
+<span class="sd">        For tests, scratch work, and as the trivial reference backend. Nothing</span>
+<span class="sd">        persists across processes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="p">{},</span> <span class="n">blobs</span><span class="o">=</span><span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.from_directory">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.from_directory">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_directory</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore persisted under ``root``.</span>
+
+<span class="sd">        Lays out two subdirectories: ``catalog/`` (one ``&lt;id&gt;.json`` file per</span>
+<span class="sd">        record) and ``blobs/`` (one file per content hash). Both are ``dol``</span>
+<span class="sd">        filesystem stores, so the same facade works unchanged over any other</span>
+<span class="sd">        ``dol`` backend (object storage, etc.) when injected directly.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root: Directory to hold the store. Created if missing.</span>
+<span class="sd">            record_type: The pydantic model the catalog deserializes JSON into.</span>
+<span class="sd">                Defaults to :class:`~lacing.artifact.Artifact`; callers with</span>
+<span class="sd">                their own record schema pass their model here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">catalog_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">&quot;catalog&quot;</span>
+        <span class="n">blob_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">&quot;blobs&quot;</span>
+        <span class="n">catalog_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">blob_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">catalog</span> <span class="o">=</span> <span class="n">wrap_kvs</span><span class="p">(</span>
+            <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">catalog_dir</span><span class="p">)),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)),</span>
+            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_id</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span>
+            <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
+            <span class="p">),</span>
+            <span class="n">data_of_obj</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+            <span class="n">obj_of_data</span><span class="o">=</span><span class="k">lambda</span> <span class="n">raw</span><span class="p">:</span> <span class="n">record_type</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">blobs</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">blob_dir</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+lacing.artifact_store
+=====================
+.. automodule:: lacing.artifact_store
+   :members:

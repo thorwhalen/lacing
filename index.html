@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.19 documentation</title>
+  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.20 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=2fd7553c"></script>
+      <script src="_static/documentation_options.js?v=056c92e6"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -60,6 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
@@ -132,6 +133,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Annotation"><code class="docutils literal notranslate"><span class="pre">Annotation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.AnnotationRef"><code class="docutils literal notranslate"><span class="pre">AnnotationRef</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Artifact"><code class="docutils literal notranslate"><span class="pre">Artifact</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.InMemoryOpLog"><code class="docutils literal notranslate"><span class="pre">InMemoryOpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></li>
@@ -253,6 +255,11 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.ArtifactKind"><code class="docutils literal notranslate"><span class="pre">ArtifactKind</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.hash_bytes"><code class="docutils literal notranslate"><span class="pre">hash_bytes()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact_store.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
@@ -440,8 +447,8 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<p>Release: 0.0.19</p>
-<p>Last change: May 20, 2026</p>
+<p>Release: 0.0.20</p>
+<p>Last change: May 23, 2026</p>
 </section>
 
 

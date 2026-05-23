@@ -14,6 +14,7 @@
    module_docs/lacing/adapters/webvtt
    module_docs/lacing/allen
    module_docs/lacing/artifact
+   module_docs/lacing/artifact_store
    module_docs/lacing/bodies
    module_docs/lacing/bodies/continuity_violation
    module_docs/lacing/bodies/named_entity
