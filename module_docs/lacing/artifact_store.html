@@ -64,12 +64,15 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.artifact_store</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#design">Design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_path"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.blob_path()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_directory()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.get_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.get_blob()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.has_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.has_blob()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.in_memory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.in_memory()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.index"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.iter_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.iter_blob()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.put_blob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob_stream"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.put_blob_stream()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.save"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.save()</span></code></a></li>
 </ul>
 </li>
@@ -213,6 +216,27 @@ raise / no-op when it is <code class="docutils literal notranslate"><span class=
 wiring the backing stores by hand, unless you are injecting a custom
 backend.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.blob_path">
+<span class="sig-name descname"><span class="pre">blob_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.blob_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.blob_path" title="Link to this definition"></a></dt>
+<dd><p>Return the local filesystem path of the blob, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>The store’s blob backend is opaque (any <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>), but some
+backends — notably the filesystem-backed <code class="docutils literal notranslate"><span class="pre">dol.Files</span></code> produced by
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory" title="lacing.artifact_store.ArtifactStore.from_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_directory()</span></code></a> — store each blob as one file under a known
+root directory. This method exposes that path <em>when available</em>, so a
+caller (e.g. a FastAPI route serving video) can hand the OS the file
+descriptor and let it answer HTTP <code class="docutils literal notranslate"><span class="pre">Range</span></code> requests directly. It
+returns <code class="docutils literal notranslate"><span class="pre">None</span></code> for:</p>
+<ul class="simple">
+<li><p>blob stores without a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> attribute (e.g. plain <code class="docutils literal notranslate"><span class="pre">dict</span></code>,
+object-store backends — callers should fall back to
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.iter_blob" title="lacing.artifact_store.ArtifactStore.iter_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">iter_blob()</span></code></a>);</p></li>
+<li><p>blobs that are not present.</p></li>
+</ul>
+<p>Callers must treat <code class="docutils literal notranslate"><span class="pre">None</span></code> as the cue to use the streaming read
+path, not as an error.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_directory">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'lacing.artifact.Artifact'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore" title="lacing.artifact_store.ArtifactStore"><span class="pre">ArtifactStore</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.from_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_directory" title="Link to this definition"></a></dt>
 <dd><p>An ArtifactStore persisted under <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p>
@@ -259,11 +283,46 @@ persists across processes.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.iter_blob">
+<span class="sig-name descname"><span class="pre">iter_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">65536</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.iter_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.iter_blob" title="Link to this definition"></a></dt>
+<dd><p>Yield the blob’s bytes in <code class="docutils literal notranslate"><span class="pre">chunk_size</span></code> chunks.</p>
+<p>The streaming counterpart to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.get_blob" title="lacing.artifact_store.ArtifactStore.get_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_blob()</span></code></a> — what an HTTP response
+body iterates over when serving a large blob without holding it all
+in process memory. The default implementation reads the whole blob
+via <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.get_blob" title="lacing.artifact_store.ArtifactStore.get_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_blob()</span></code></a> and re-chunks it; a filesystem-backed store can
+be swapped for a true streaming reader without changing this API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>KeyError</strong> – no blob exists for <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.put_blob">
 <span class="sig-name descname"><span class="pre">put_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.put_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.put_blob" title="Link to this definition"></a></dt>
 <dd><p>Store <code class="docutils literal notranslate"><span class="pre">data</span></code> content-addressed; return its content hash.</p>
 <p>Idempotent: identical bytes always map to the same hash and overwrite
 an identical blob.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – no blob store is configured.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.put_blob_stream">
+<span class="sig-name descname"><span class="pre">put_blob_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.put_blob_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.put_blob_stream" title="Link to this definition"></a></dt>
+<dd><p>Stream <code class="docutils literal notranslate"><span class="pre">chunks</span></code> content-addressed; return their SHA-256 hash.</p>
+<p>The streaming-friendly counterpart to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob" title="lacing.artifact_store.ArtifactStore.put_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">put_blob()</span></code></a> — callers hand
+in an iterable (e.g. <code class="docutils literal notranslate"><span class="pre">requests.Response.iter_content</span></code>) instead of
+materializing the whole bytestring upfront. The hash is computed on
+the fly. The default implementation still buffers the bytes in the
+store’s own memory before writing; that is adequate for files up to a
+few hundred megabytes. A future filesystem-aware optimization
+(write-to-tempfile + atomic rename) is an internal change that does
+not touch this API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>RuntimeError</strong> – no blob store is configured.</p>

@@ -178,7 +178,8 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -304,6 +305,35 @@
         <span class="k">return</span> <span class="n">content_hash</span></div>
 
 
+<div class="viewcode-block" id="ArtifactStore.put_blob_stream">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.put_blob_stream">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">put_blob_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stream ``chunks`` content-addressed; return their SHA-256 hash.</span>
+
+<span class="sd">        The streaming-friendly counterpart to :meth:`put_blob` — callers hand</span>
+<span class="sd">        in an iterable (e.g. ``requests.Response.iter_content``) instead of</span>
+<span class="sd">        materializing the whole bytestring upfront. The hash is computed on</span>
+<span class="sd">        the fly. The default implementation still buffers the bytes in the</span>
+<span class="sd">        store&#39;s own memory before writing; that is adequate for files up to a</span>
+<span class="sd">        few hundred megabytes. A future filesystem-aware optimization</span>
+<span class="sd">        (write-to-tempfile + atomic rename) is an internal change that does</span>
+<span class="sd">        not touch this API.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: no blob store is configured.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ArtifactStore has no blob store configured.&quot;</span><span class="p">)</span>
+        <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">buf</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">content_hash</span></div>
+
+
 <div class="viewcode-block" id="ArtifactStore.get_blob">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.get_blob">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
@@ -314,6 +344,59 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.iter_blob">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.iter_blob">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iter_blob</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield the blob&#39;s bytes in ``chunk_size`` chunks.</span>
+
+<span class="sd">        The streaming counterpart to :meth:`get_blob` — what an HTTP response</span>
+<span class="sd">        body iterates over when serving a large blob without holding it all</span>
+<span class="sd">        in process memory. The default implementation reads the whole blob</span>
+<span class="sd">        via :meth:`get_blob` and re-chunks it; a filesystem-backed store can</span>
+<span class="sd">        be swapped for a true streaming reader without changing this API.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: no blob exists for ``content_hash``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_blob</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">data</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.blob_path">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.blob_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blob_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the local filesystem path of the blob, or ``None``.</span>
+
+<span class="sd">        The store&#39;s blob backend is opaque (any ``MutableMapping``), but some</span>
+<span class="sd">        backends — notably the filesystem-backed ``dol.Files`` produced by</span>
+<span class="sd">        :meth:`from_directory` — store each blob as one file under a known</span>
+<span class="sd">        root directory. This method exposes that path *when available*, so a</span>
+<span class="sd">        caller (e.g. a FastAPI route serving video) can hand the OS the file</span>
+<span class="sd">        descriptor and let it answer HTTP ``Range`` requests directly. It</span>
+<span class="sd">        returns ``None`` for:</span>
+
+<span class="sd">        - blob stores without a ``rootdir`` attribute (e.g. plain ``dict``,</span>
+<span class="sd">          object-store backends — callers should fall back to</span>
+<span class="sd">          :meth:`iter_blob`);</span>
+<span class="sd">        - blobs that are not present.</span>
+
+<span class="sd">        Callers must treat ``None`` as the cue to use the streaming read</span>
+<span class="sd">        path, not as an error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">content_hash</span>
+        <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.has_blob">
