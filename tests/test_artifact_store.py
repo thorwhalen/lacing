@@ -106,6 +106,93 @@ def test_get_blob_missing_returns_none():
     assert store.has_blob("0" * 64) is False
 
 
+# -- streaming + path access (Stage 2 heavy-media seams) ---------------------
+
+
+def test_put_blob_stream_hashes_and_stores():
+    store = ArtifactStore.in_memory()
+    data = b"hello-streaming-world"
+    chunks = [data[:5], data[5:11], data[11:]]
+    content_hash = store.put_blob_stream(chunks)
+    assert content_hash == hash_bytes(data)
+    assert store.get_blob(content_hash) == data
+
+
+def test_put_blob_stream_handles_empty():
+    store = ArtifactStore.in_memory()
+    content_hash = store.put_blob_stream(iter(()))
+    assert content_hash == hash_bytes(b"")
+    assert store.get_blob(content_hash) == b""
+
+
+def test_put_blob_stream_is_idempotent_on_content():
+    store = ArtifactStore.in_memory()
+    data = b"identical-bytes"
+    h1 = store.put_blob_stream([data])
+    h2 = store.put_blob_stream([data[:7], data[7:]])
+    assert h1 == h2 == hash_bytes(data)
+
+
+def test_put_blob_stream_raises_without_blob_store():
+    store = ArtifactStore(catalog={})
+    with pytest.raises(RuntimeError):
+        store.put_blob_stream([b"bytes"])
+
+
+def test_iter_blob_yields_expected_chunks():
+    store = ArtifactStore.in_memory()
+    data = b"x" * 1000
+    content_hash = store.put_blob(data)
+    chunks = list(store.iter_blob(content_hash, chunk_size=300))
+    # 300 + 300 + 300 + 100
+    assert [len(c) for c in chunks] == [300, 300, 300, 100]
+    assert b"".join(chunks) == data
+
+
+def test_iter_blob_raises_keyerror_for_missing():
+    store = ArtifactStore.in_memory()
+    with pytest.raises(KeyError):
+        list(store.iter_blob("0" * 64))
+
+
+def test_iter_blob_on_catalog_only_store_raises_keyerror():
+    # No blob store at all -> the hash is "missing", same surface.
+    store = ArtifactStore(catalog={})
+    with pytest.raises(KeyError):
+        list(store.iter_blob("0" * 64))
+
+
+def test_blob_path_returns_none_for_in_memory_backend():
+    store = ArtifactStore.in_memory()
+    data = b"in-memory-bytes"
+    content_hash = store.put_blob(data)
+    # dict has no rootdir -> no local path
+    assert store.blob_path(content_hash) is None
+
+
+def test_blob_path_returns_none_when_no_blob_store():
+    store = ArtifactStore(catalog={})
+    assert store.blob_path("0" * 64) is None
+
+
+def test_blob_path_returns_path_for_filesystem_backend(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    store = ArtifactStore.from_directory(root)
+    data = b"on-disk-bytes"
+    content_hash = store.put_blob(data)
+    path = store.blob_path(content_hash)
+    assert path is not None
+    assert path.is_file()
+    assert path.read_bytes() == data
+
+
+def test_blob_path_returns_none_for_missing_blob(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    store = ArtifactStore.from_directory(root)
+    # An untouched store has the rootdir but nothing in it.
+    assert store.blob_path("0" * 64) is None
+
+
 # -- catalog-only store (the Stage-1 shape: no blob store) --------------------
 
 
