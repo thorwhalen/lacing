@@ -54,7 +54,8 @@ True
 
 from __future__ import annotations
 
-from collections.abc import Iterator, MutableMapping
+import hashlib
+from collections.abc import Iterable, Iterator, MutableMapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -169,6 +170,32 @@ class ArtifactStore(MutableMapping):
         self.blobs[content_hash] = data
         return content_hash
 
+    def put_blob_stream(self, chunks: Iterable[bytes]) -> str:
+        """Stream ``chunks`` content-addressed; return their SHA-256 hash.
+
+        The streaming-friendly counterpart to :meth:`put_blob` — callers hand
+        in an iterable (e.g. ``requests.Response.iter_content``) instead of
+        materializing the whole bytestring upfront. The hash is computed on
+        the fly. The default implementation still buffers the bytes in the
+        store's own memory before writing; that is adequate for files up to a
+        few hundred megabytes. A future filesystem-aware optimization
+        (write-to-tempfile + atomic rename) is an internal change that does
+        not touch this API.
+
+        Raises:
+            RuntimeError: no blob store is configured.
+        """
+        if self.blobs is None:
+            raise RuntimeError("ArtifactStore has no blob store configured.")
+        hasher = hashlib.sha256()
+        buf = bytearray()
+        for chunk in chunks:
+            hasher.update(chunk)
+            buf.extend(chunk)
+        content_hash = hasher.hexdigest()
+        self.blobs[content_hash] = bytes(buf)
+        return content_hash
+
     def get_blob(self, content_hash: str) -> bytes | None:
         """Return the bytes for ``content_hash``, or ``None`` if absent."""
         if self.blobs is None:
@@ -177,6 +204,53 @@ class ArtifactStore(MutableMapping):
             return self.blobs[content_hash]
         except KeyError:
             return None
+
+    def iter_blob(
+        self, content_hash: str, *, chunk_size: int = 1 << 16
+    ) -> Iterator[bytes]:
+        """Yield the blob's bytes in ``chunk_size`` chunks.
+
+        The streaming counterpart to :meth:`get_blob` — what an HTTP response
+        body iterates over when serving a large blob without holding it all
+        in process memory. The default implementation reads the whole blob
+        via :meth:`get_blob` and re-chunks it; a filesystem-backed store can
+        be swapped for a true streaming reader without changing this API.
+
+        Raises:
+            KeyError: no blob exists for ``content_hash``.
+        """
+        data = self.get_blob(content_hash)
+        if data is None:
+            raise KeyError(content_hash)
+        for offset in range(0, len(data), chunk_size):
+            yield data[offset : offset + chunk_size]
+
+    def blob_path(self, content_hash: str) -> Path | None:
+        """Return the local filesystem path of the blob, or ``None``.
+
+        The store's blob backend is opaque (any ``MutableMapping``), but some
+        backends — notably the filesystem-backed ``dol.Files`` produced by
+        :meth:`from_directory` — store each blob as one file under a known
+        root directory. This method exposes that path *when available*, so a
+        caller (e.g. a FastAPI route serving video) can hand the OS the file
+        descriptor and let it answer HTTP ``Range`` requests directly. It
+        returns ``None`` for:
+
+        - blob stores without a ``rootdir`` attribute (e.g. plain ``dict``,
+          object-store backends — callers should fall back to
+          :meth:`iter_blob`);
+        - blobs that are not present.
+
+        Callers must treat ``None`` as the cue to use the streaming read
+        path, not as an error.
+        """
+        if self.blobs is None:
+            return None
+        rootdir = getattr(self.blobs, "rootdir", None)
+        if rootdir is None:
+            return None
+        path = Path(rootdir) / content_hash
+        return path if path.is_file() else None
 
     def has_blob(self, content_hash: str) -> bool:
         """Whether the blob store holds ``content_hash``."""
