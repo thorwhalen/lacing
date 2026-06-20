@@ -193,6 +193,40 @@ def test_blob_path_returns_none_for_missing_blob(tmp_path: Path):
     assert store.blob_path("0" * 64) is None
 
 
+# -- blob_location: the generalized servable-location probe -------------------
+
+
+def test_blob_location_returns_path_for_filesystem_backend(tmp_path: Path):
+    store = ArtifactStore.from_directory(tmp_path / "artifacts")
+    content_hash = store.put_blob(b"on-disk")
+    location = store.blob_location(content_hash)
+    assert isinstance(location, Path)
+    assert location.read_bytes() == b"on-disk"
+
+
+def test_blob_location_returns_none_for_in_memory_and_missing():
+    store = ArtifactStore.in_memory()
+    content_hash = store.put_blob(b"x")
+    assert store.blob_location(content_hash) is None  # dict: no path, no url
+    assert store.blob_location("0" * 64) is None  # missing blob
+
+
+def test_blob_location_returns_presigned_url_when_backend_supports_it():
+    """An object-store backend exposing ``url_for(key)`` → a URL string the
+    HTTP layer 302-redirects to (S3/R2 presigned-URL serving path)."""
+
+    class _S3ish(dict):
+        def url_for(self, key: str) -> str:
+            return f"https://bucket.example/{key}?sig=abc"
+
+    store = ArtifactStore(catalog={}, blobs=_S3ish())
+    content_hash = store.put_blob(b"video-bytes")
+    location = store.blob_location(content_hash)
+    assert location == f"https://bucket.example/{content_hash}?sig=abc"
+    # A missing blob still returns None even with url_for present.
+    assert store.blob_location("0" * 64) is None
+
+
 # -- catalog-only store (the Stage-1 shape: no blob store) --------------------
 
 

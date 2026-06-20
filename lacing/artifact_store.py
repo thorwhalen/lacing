@@ -256,6 +256,32 @@ class ArtifactStore(MutableMapping):
         """Whether the blob store holds ``content_hash``."""
         return self.blobs is not None and content_hash in self.blobs
 
+    def blob_location(self, content_hash: str) -> "str | Path | None":
+        """Resolve the cheapest *servable* location for a blob — without
+        reading its bytes. The capability the HTTP layer probes to serve a
+        blob the most efficient way, generalizing :meth:`blob_path` so
+        filesystem / S3 / R2 backends all answer one probe:
+
+        - **object-store** backends (S3/R2) that expose a presigned-URL
+          capability — a ``url_for(content_hash)`` callable — return a **URL
+          string**, so the caller can 302-redirect and let the object store
+          serve the bytes (and HTTP ``Range``) directly, off the app process;
+        - **filesystem** backends return a local **Path** (see
+          :meth:`blob_path`) so the caller hands the OS the file (Range free);
+        - everything else (plain ``dict``, or a missing blob) returns
+          ``None`` — the cue to fall back to :meth:`iter_blob` streaming.
+
+        Callers treat ``None`` as "stream it", not as an error.
+        """
+        if self.blobs is None or content_hash not in self.blobs:
+            return None
+        url_for = getattr(self.blobs, "url_for", None)
+        if callable(url_for):
+            url = url_for(content_hash)
+            if url:
+                return url
+        return self.blob_path(content_hash)
+
     # -- constructors ------------------------------------------------------
 
     @classmethod
