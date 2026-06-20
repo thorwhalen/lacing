@@ -11,10 +11,14 @@ from lacing.store.sqlite import SchemaMismatchError, SqliteStore
 # Postgres backend is optional — psycopg may not be installed.
 try:
     from lacing.store.postgres import (
+        DEFAULT_OWNER_ID,
+        DEFAULT_PROJECT_ID,
         PgSchemaMismatchError,
         PostgresStore,
         RateMismatchError,
         TierOverlapError,
+        close_all_pools,
+        get_pool,
     )
 
     _HAS_POSTGRES = True
@@ -34,5 +38,9 @@ if _HAS_POSTGRES:
             "PgSchemaMismatchError",
             "TierOverlapError",
             "RateMismatchError",
+            "DEFAULT_OWNER_ID",
+            "DEFAULT_PROJECT_ID",
+            "get_pool",
+            "close_all_pools",
         ]
     )

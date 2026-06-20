@@ -16,17 +16,49 @@ strict overlap ``a && b AND lower(a) < lower(b) AND upper(a) < upper(b)``
 ============== =====================================================
 
 We store intervals as ``int8range(start_value, end_value, '[)')`` — half-open,
-matching lacing's ``TimeInterval`` semantics — at a **project-wide rate**
-recorded in ``meta``. All inserts must be at that rate; re-quantizing happens
-on insert if necessary.
+matching lacing's ``TimeInterval`` semantics — at a **per-(owner, project)
+rate** recorded in the ``projects`` table. All inserts must be at that rate;
+re-quantizing happens on insert if necessary.
 
 GiST index on the range column gives sub-millisecond overlap queries at
 million-row scale. Optional ``EXCLUDE USING GIST`` constraints are added
 **per tier** for stereotypes like ``TIME_SUBDIVISION`` that forbid overlap.
 
+Multi-tenancy (Phase 4, reelee#177)
+-----------------------------------
+
+Multiple logical stores (one per nw/reelee project) coexist in a single
+Postgres database via **tenant columns on shared tables** (the decision in
+``reelee/docs/storage_migration_plan.md`` §"Postgres tenancy"): every
+``annotations`` and ``tiers`` row carries an ``owner_id`` and a ``project_id``,
+and every query is scoped by ``(owner_id, project_id)``. A ``PostgresStore``
+instance is bound to one ``(owner_id, project_id)`` at construction and behaves
+exactly like a single-tenant store; two stores with different project ids over
+the same database never see each other's rows.
+
+``owner_id`` is a forward seam for the multi-tenant access layer (reelee#174):
+the column is carried and scoped now, but its *enforcement* (the policy
+decision point) is deferred — today every store defaults ``owner_id="default"``.
+
+The per-tier ``EXCLUDE USING GIST`` no-overlap constraint is likewise scoped by
+``(owner_id, project_id, tier)`` so one project's non-overlap rule cannot block
+another project's annotations.
+
+Connection pooling (Phase 4)
+----------------------------
+
+``nw``'s :class:`~nw.graph.ProjectGraph` opens and closes the store per
+operation. That is fine for a SQLite file but pathological for a network DB, so
+this module keeps a process-wide :class:`psycopg_pool.ConnectionPool` per
+connection string (see :func:`get_pool`); a ``PostgresStore`` borrows a
+connection from the pool for its lifetime and returns it on ``close()`` instead
+of opening a fresh TCP/auth round-trip each time. When ``psycopg_pool`` is not
+installed (or a caller passes ``use_pool=False``) we fall back to a dedicated
+long-lived connection.
+
 Schema versioning lives in ``meta``; mismatched versions raise on open.
 
-Status: Phase 1. Tested via ``pytest-postgresql`` sandbox (no live server
+Status: Phase 4. Tested via ``pytest-postgresql`` sandbox (no live server
 needed for development).
 """
 
@@ -54,8 +86,22 @@ from lacing.tier import Tier, TierStereotype
 from lacing.time import LossyTimeConversionError, RationalTime, TimeInterval
 
 
-SCHEMA_VERSION = 1
-"""Current schema version stored in the ``meta`` table."""
+SCHEMA_VERSION = 2
+"""Current schema version stored in the ``meta`` table.
+
+v2 (Phase 4, reelee#177) added tenant columns (``owner_id`` / ``project_id``)
+to ``tiers`` and ``annotations``, and a per-``(owner, project)`` ``projects``
+table holding the rate (was a single ``meta`` row in v1).
+"""
+
+DEFAULT_OWNER_ID = "default"
+"""Owner placeholder until the multi-tenant access layer (reelee#174) lands.
+
+The ``owner_id`` column is carried and scoped now; its enforcement is deferred.
+"""
+
+DEFAULT_PROJECT_ID = "default"
+"""Project placeholder for single-project / legacy use."""
 
 
 _DDL = """
@@ -64,17 +110,32 @@ CREATE TABLE IF NOT EXISTS meta (
     value TEXT NOT NULL
 );
 
+-- One row per logical store: the per-(owner, project) project-wide rate.
+CREATE TABLE IF NOT EXISTS projects (
+    owner_id    TEXT NOT NULL,
+    project_id  TEXT NOT NULL,
+    rate        INTEGER NOT NULL,
+    PRIMARY KEY (owner_id, project_id)
+);
+
 CREATE TABLE IF NOT EXISTS tiers (
-    name        TEXT PRIMARY KEY,
+    owner_id    TEXT NOT NULL,
+    project_id  TEXT NOT NULL,
+    name        TEXT NOT NULL,
     stereotype  TEXT NOT NULL,
-    parent      TEXT REFERENCES tiers(name) ON DELETE RESTRICT,
+    parent      TEXT,
     metadata    JSONB NOT NULL DEFAULT '{}'::jsonb,
-    enforce_no_overlap BOOLEAN NOT NULL DEFAULT FALSE
+    enforce_no_overlap BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (owner_id, project_id, name),
+    FOREIGN KEY (owner_id, project_id, parent)
+        REFERENCES tiers(owner_id, project_id, name) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS annotations (
     id              UUID PRIMARY KEY,
-    tier            TEXT NOT NULL REFERENCES tiers(name) ON DELETE RESTRICT,
+    owner_id        TEXT NOT NULL,
+    project_id      TEXT NOT NULL,
+    tier            TEXT NOT NULL,
     ref_kind        TEXT NOT NULL CHECK (ref_kind IN ('media', 'node', 'annotation')),
     asset_id        TEXT,
     scene_path      TEXT,
@@ -88,23 +149,18 @@ CREATE TABLE IF NOT EXISTS annotations (
     prov_generated_at_value BIGINT NOT NULL,
     prov_generated_at_rate  INTEGER NOT NULL,
     prov_activity           TEXT NOT NULL,
-    confidence              REAL
+    confidence              REAL,
+    FOREIGN KEY (owner_id, project_id, tier)
+        REFERENCES tiers(owner_id, project_id, name) ON DELETE RESTRICT
 );
 
 -- GiST spatial index over the range column for sub-ms overlap queries.
+-- Tenant columns lead the btree indexes so per-project scans stay selective.
 CREATE INDEX IF NOT EXISTS idx_ann_span_gist ON annotations USING GIST (span);
-CREATE INDEX IF NOT EXISTS idx_ann_tier      ON annotations (tier);
-CREATE INDEX IF NOT EXISTS idx_ann_asset     ON annotations (asset_id);
-"""
-
-
-# Per-tier non-overlap constraint (added on demand when a tier is registered
-# with enforce_no_overlap=True). Constraint name is unique per tier.
-_PER_TIER_EXCLUSION_DDL = """
-ALTER TABLE annotations
-    ADD CONSTRAINT no_overlap_in_{tier_id}
-    EXCLUDE USING GIST (span WITH &&)
-    WHERE (tier = {tier_lit})
+CREATE INDEX IF NOT EXISTS idx_ann_tenant_tier
+    ON annotations (owner_id, project_id, tier);
+CREATE INDEX IF NOT EXISTS idx_ann_tenant_asset
+    ON annotations (owner_id, project_id, asset_id);
 """
 
 
@@ -144,14 +200,72 @@ def _require_psycopg():
 
 
 def _safe_tier_id(name: str) -> str:
-    """Build a constraint-name-safe identifier from a tier name."""
+    """Build a constraint-name-safe fragment from a string.
+
+    Used to assemble per-tenant per-tier EXCLUDE-constraint names. Lowercased,
+    non-identifier characters collapsed to ``_``, length-bounded so the full
+    constraint name stays within Postgres's 63-byte identifier limit.
+    """
     out = []
     for ch in name:
         if ch.isalnum() or ch == "_":
             out.append(ch.lower())
         else:
             out.append("_")
-    return "".join(out)[:50] or "tier"
+    return "".join(out)[:40] or "x"
+
+
+# ---------------------------------------------------------------------------
+# connection pooling
+# ---------------------------------------------------------------------------
+
+# Process-wide pool registry, keyed by the connection string. ``nw`` reopens a
+# store per operation, so without pooling every op pays a fresh TCP + auth
+# round-trip. The pool amortizes that. Keyed by conninfo so independent stores
+# over the same DB share one pool.
+_POOLS: dict[str, Any] = {}
+
+
+def get_pool(connection_string: str, **pool_kwargs):
+    """Return a process-wide :class:`psycopg_pool.ConnectionPool` for a conninfo.
+
+    One pool per distinct ``connection_string`` (the keying happens here, not at
+    the call-site), created lazily on first request. Raises :class:`ImportError`
+    if ``psycopg_pool`` is not installed — callers that want a graceful fallback
+    catch it (see :class:`PostgresStore`).
+
+    Args:
+        connection_string: psycopg conninfo URL (the registry key).
+        **pool_kwargs: forwarded to :class:`~psycopg_pool.ConnectionPool` on
+            first creation (e.g. ``min_size``, ``max_size``); ignored on reuse.
+
+    Returns:
+        The shared pool for this conninfo.
+    """
+    pool = _POOLS.get(connection_string)
+    if pool is None:
+        try:
+            from psycopg_pool import ConnectionPool
+        except ImportError as exc:  # pragma: no cover  — optional dep
+            raise ImportError(
+                "Connection pooling needs psycopg_pool. Install with: "
+                "pip install 'lacing[postgres]'  (or: pip install psycopg_pool). "
+                "Pass use_pool=False to use a single long-lived connection instead."
+            ) from exc
+        kwargs = {"min_size": 1, "max_size": 8, "open": True, **pool_kwargs}
+        pool = ConnectionPool(connection_string, **kwargs)
+        _POOLS[connection_string] = pool
+    return pool
+
+
+def close_all_pools() -> None:
+    """Close every registered connection pool (test teardown / shutdown)."""
+    for pool in list(_POOLS.values()):
+        try:
+            pool.close()
+        except Exception:  # pragma: no cover  — best-effort
+            pass
+    _POOLS.clear()
 
 
 # ---------------------------------------------------------------------------
@@ -160,15 +274,31 @@ def _safe_tier_id(name: str) -> str:
 
 
 class PostgresStore:
-    """PostgreSQL-backed ``IntervalAnnotationStore``.
+    """PostgreSQL-backed ``IntervalAnnotationStore``, scoped to one tenant.
+
+    A store instance is bound to one ``(owner_id, project_id)`` pair; multiple
+    instances over the same database (different project ids) coexist without
+    seeing each other's annotations or tiers (see the module docstring on
+    multi-tenancy). The mapping/Allen/tier surface is unchanged — the tenant
+    scoping is transparent.
 
     Args:
-        connection_string: A psycopg-compatible URL or kwargs dict.
-        rate: Project-wide rate. Set on first init; a re-open with a
-            different rate raises ``PgSchemaMismatchError``.
-        autocommit: If True (default), we run individual statements in
-            their own transaction. Set to False when batching via
-            :meth:`extend` (it manages its own BEGIN/COMMIT).
+        connection_string: A psycopg-compatible conninfo URL, or a kwargs dict
+            (``host``/``port``/``user``/``password``/``dbname``).
+        rate: Project-wide rate for *this* ``(owner, project)``. Set on first
+            init for the pair; re-opening the same pair with a different rate
+            raises :class:`PgSchemaMismatchError`. Different projects in the
+            same DB may have different rates.
+        owner_id: Tenant owner. Defaults to :data:`DEFAULT_OWNER_ID` — the
+            forward seam for the access layer (reelee#174); enforcement deferred.
+        project_id: Logical project key. Defaults to :data:`DEFAULT_PROJECT_ID`.
+            ``nw`` passes the project's ``project_asset_id`` here.
+        autocommit: If True (default), statements run in their own transaction.
+        use_pool: When True (default) and the connection is given as a string,
+            borrow a connection from a process-wide pool keyed by the conninfo
+            (amortizes per-op connect cost; see :func:`get_pool`). Falls back to
+            a dedicated connection when ``psycopg_pool`` is unavailable, when the
+            connection is given as a dict, or when ``use_pool=False``.
     """
 
     def __init__(
@@ -176,17 +306,40 @@ class PostgresStore:
         connection_string: str | dict,
         *,
         rate: int = 24000,
+        owner_id: str = DEFAULT_OWNER_ID,
+        project_id: str = DEFAULT_PROJECT_ID,
         autocommit: bool = True,
+        use_pool: bool = True,
     ) -> None:
         psycopg, _sql, _range = _require_psycopg()
         self._psycopg = psycopg
         self._sql = _sql
         self._Range = _range
+        self._owner_id = owner_id
+        self._project_id = project_id
 
+        # Normalize to a conninfo string so we can pool. A dict still works but
+        # can't be a pool key, so it always takes the dedicated-connection path.
         if isinstance(connection_string, dict):
-            self._conn = psycopg.connect(**connection_string, autocommit=autocommit)
+            conninfo = psycopg.conninfo.make_conninfo(**connection_string)
+            poolable = False
         else:
-            self._conn = psycopg.connect(connection_string, autocommit=autocommit)
+            conninfo = connection_string
+            poolable = True
+
+        self._pool = None
+        self._pooled = False
+        if use_pool and poolable:
+            try:
+                self._pool = get_pool(conninfo)
+                self._conn = self._pool.getconn()
+                self._conn.autocommit = autocommit
+                self._pooled = True
+            except ImportError:
+                # psycopg_pool not installed — fall back transparently.
+                self._conn = psycopg.connect(conninfo, autocommit=autocommit)
+        else:
+            self._conn = psycopg.connect(conninfo, autocommit=autocommit)
 
         self._init_schema(rate)
 
@@ -195,19 +348,16 @@ class PostgresStore:
     def _init_schema(self, rate: int) -> None:
         with self._conn.cursor() as cur:
             cur.execute(_DDL)
+            # Global schema version (shared across all tenants in the DB).
             row = cur.execute(
                 "SELECT value FROM meta WHERE key = 'schema_version'"
             ).fetchone()
             if row is None:
                 cur.execute(
-                    "INSERT INTO meta (key, value) VALUES (%s, %s)",
+                    "INSERT INTO meta (key, value) VALUES (%s, %s) "
+                    "ON CONFLICT (key) DO NOTHING",
                     ("schema_version", str(SCHEMA_VERSION)),
                 )
-                cur.execute(
-                    "INSERT INTO meta (key, value) VALUES (%s, %s)",
-                    ("rate", str(rate)),
-                )
-                self._rate = rate
             else:
                 got_version = int(row[0])
                 if got_version != SCHEMA_VERSION:
@@ -215,14 +365,27 @@ class PostgresStore:
                         f"database has schema_version={got_version}, "
                         f"this build expects {SCHEMA_VERSION}."
                     )
-                row = cur.execute(
-                    "SELECT value FROM meta WHERE key = 'rate'"
-                ).fetchone()
-                stored_rate = int(row[0]) if row else rate
+
+            # Per-(owner, project) rate.
+            row = cur.execute(
+                "SELECT rate FROM projects WHERE owner_id = %s AND project_id = %s",
+                (self._owner_id, self._project_id),
+            ).fetchone()
+            if row is None:
+                cur.execute(
+                    "INSERT INTO projects (owner_id, project_id, rate) "
+                    "VALUES (%s, %s, %s) "
+                    "ON CONFLICT (owner_id, project_id) DO NOTHING",
+                    (self._owner_id, self._project_id, rate),
+                )
+                self._rate = rate
+            else:
+                stored_rate = int(row[0])
                 if rate != stored_rate:
                     raise PgSchemaMismatchError(
-                        f"database has rate={stored_rate}, opened with rate={rate}. "
-                        f"Re-quantize the data or open with the original rate."
+                        f"project ({self._owner_id!r}, {self._project_id!r}) has "
+                        f"rate={stored_rate}, opened with rate={rate}. Re-quantize "
+                        f"the data or open with the original rate."
                     )
                 self._rate = stored_rate
 
@@ -231,11 +394,26 @@ class PostgresStore:
         return self._rate
 
     @property
+    def owner_id(self) -> str:
+        return self._owner_id
+
+    @property
+    def project_id(self) -> str:
+        return self._project_id
+
+    @property
     def schema_version(self) -> int:
         return SCHEMA_VERSION
 
     def close(self) -> None:
-        self._conn.close()
+        if self._pooled and self._pool is not None:
+            # Return the connection to the pool rather than closing the socket.
+            try:
+                self._pool.putconn(self._conn)
+            except Exception:  # pragma: no cover  — best-effort
+                self._conn.close()
+        else:
+            self._conn.close()
 
     def __enter__(self) -> "PostgresStore":
         return self
@@ -245,19 +423,38 @@ class PostgresStore:
 
     # --- meta ----------------------------------------------------------
 
+    def _meta_key(self, key: str) -> str:
+        """Namespace a user meta key by tenant so projects don't collide.
+
+        ``schema_version`` is the one global key (set in :meth:`_init_schema`);
+        all caller-set keys are stored under ``"<owner>/<project>:<key>"``.
+        """
+        return f"{self._owner_id}/{self._project_id}:{key}"
+
     def get_meta(self, key: str) -> str | None:
         with self._conn.cursor() as cur:
             row = cur.execute(
-                "SELECT value FROM meta WHERE key = %s", (key,)
+                "SELECT value FROM meta WHERE key = %s", (self._meta_key(key),)
             ).fetchone()
-            return None if row is None else row[0]
+            if row is not None:
+                return row[0]
+            # schema_version is stored unscoped (DB-global); allow reading it.
+            if key == "schema_version":
+                gv = cur.execute(
+                    "SELECT value FROM meta WHERE key = 'schema_version'"
+                ).fetchone()
+                return None if gv is None else gv[0]
+            # rate moved to the projects table in v2; expose it via get_meta too.
+            if key == "rate":
+                return str(self._rate)
+            return None
 
     def set_meta(self, key: str, value: str) -> None:
         with self._conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO meta (key, value) VALUES (%s, %s) "
                 "ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value",
-                (key, value),
+                (self._meta_key(key), value),
             )
 
     # --- tier registry ------------------------------------------------
@@ -272,19 +469,22 @@ class PostgresStore:
                 this tier. Required for proper TIME_SUBDIVISION enforcement.
                 Cannot be toggled after the tier has annotations.
         """
-        psycopg = self._psycopg
         sql = self._sql
 
         with self._conn.cursor() as cur:
             cur.execute(
-                "INSERT INTO tiers (name, stereotype, parent, metadata, enforce_no_overlap) "
-                "VALUES (%s, %s, %s, %s::jsonb, %s) "
-                "ON CONFLICT(name) DO UPDATE SET "
+                "INSERT INTO tiers "
+                "  (owner_id, project_id, name, stereotype, parent, metadata, "
+                "   enforce_no_overlap) "
+                "VALUES (%s, %s, %s, %s, %s, %s::jsonb, %s) "
+                "ON CONFLICT(owner_id, project_id, name) DO UPDATE SET "
                 "  stereotype = EXCLUDED.stereotype, "
                 "  parent     = EXCLUDED.parent, "
                 "  metadata   = EXCLUDED.metadata, "
                 "  enforce_no_overlap = EXCLUDED.enforce_no_overlap",
                 (
+                    self._owner_id,
+                    self._project_id,
                     tier.name,
                     tier.stereotype.value,
                     tier.parent,
@@ -293,20 +493,25 @@ class PostgresStore:
                 ),
             )
 
-            constraint_name = f"no_overlap_in_{_safe_tier_id(tier.name)}"
+            # Constraint name is unique per (owner, project, tier) so one
+            # project's no-overlap rule never blocks another's annotations.
+            constraint_name = self._exclusion_constraint_name(tier.name)
             existing = cur.execute(
                 "SELECT 1 FROM pg_constraint WHERE conname = %s",
                 (constraint_name,),
             ).fetchone()
 
             if enforce_no_overlap and not existing:
-                # Install the partial EXCLUDE constraint.
+                # Partial EXCLUDE constraint scoped to this tenant + tier.
                 stmt = sql.SQL(
                     "ALTER TABLE annotations "
                     "ADD CONSTRAINT {name} EXCLUDE USING GIST (span WITH &&) "
-                    "WHERE (tier = {tier_lit})"
+                    "WHERE (owner_id = {owner} AND project_id = {project} "
+                    "       AND tier = {tier_lit})"
                 ).format(
                     name=sql.Identifier(constraint_name),
+                    owner=sql.Literal(self._owner_id),
+                    project=sql.Literal(self._project_id),
                     tier_lit=sql.Literal(tier.name),
                 )
                 cur.execute(stmt)
@@ -316,26 +521,37 @@ class PostgresStore:
                 )
                 cur.execute(stmt)
 
+    def _exclusion_constraint_name(self, tier_name: str) -> str:
+        """Per-(owner, project, tier) constraint name, within PG's 63-byte cap."""
+        return (
+            f"no_ovl_{_safe_tier_id(self._owner_id)}_"
+            f"{_safe_tier_id(self._project_id)}_{_safe_tier_id(tier_name)}"
+        )[:63]
+
     def get_tier(self, name: str) -> Tier | None:
         with self._conn.cursor() as cur:
             row = cur.execute(
-                "SELECT name, stereotype, parent, metadata FROM tiers WHERE name = %s",
-                (name,),
+                "SELECT name, stereotype, parent, metadata FROM tiers "
+                "WHERE owner_id = %s AND project_id = %s AND name = %s",
+                (self._owner_id, self._project_id, name),
             ).fetchone()
             return None if row is None else _row_to_tier(row)
 
     def tiers(self) -> Iterator[Tier]:
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                "SELECT name, stereotype, parent, metadata FROM tiers ORDER BY name"
+                "SELECT name, stereotype, parent, metadata FROM tiers "
+                "WHERE owner_id = %s AND project_id = %s ORDER BY name",
+                (self._owner_id, self._project_id),
             ).fetchall()
         return iter([_row_to_tier(r) for r in rows])
 
     def is_no_overlap_enforced(self, tier_name: str) -> bool:
         with self._conn.cursor() as cur:
             row = cur.execute(
-                "SELECT enforce_no_overlap FROM tiers WHERE name = %s",
-                (tier_name,),
+                "SELECT enforce_no_overlap FROM tiers "
+                "WHERE owner_id = %s AND project_id = %s AND name = %s",
+                (self._owner_id, self._project_id, tier_name),
             ).fetchone()
             return bool(row[0]) if row else False
 
@@ -350,6 +566,14 @@ class PostgresStore:
                 f"{annotation.tier!r} (per-tier EXCLUDE constraint is active)"
             ) from exc
 
+    def _scope(self) -> tuple[str, tuple[str, str]]:
+        """SQL ``AND``-able tenant predicate + its params.
+
+        Every annotation query carries this so a store only ever sees rows for
+        its own ``(owner_id, project_id)``.
+        """
+        return "owner_id = %s AND project_id = %s", (self._owner_id, self._project_id)
+
     def _do_add(self, annotation: Annotation) -> None:
         cols, values = self._annotation_to_row(annotation)
         with self._conn.cursor() as cur:
@@ -360,40 +584,54 @@ class PostgresStore:
             )
 
     def remove(self, annotation_id: UUID) -> Annotation | None:
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
-            cur.execute("SELECT * FROM annotations WHERE id = %s", (annotation_id,))
+            cur.execute(
+                f"SELECT * FROM annotations WHERE id = %s AND {scope}",
+                (annotation_id, *params),
+            )
             row = cur.fetchone()
             if row is None:
                 return None
             cols = [d.name for d in cur.description]
             ann = self._row_to_annotation(dict(zip(cols, row)))
-            cur.execute("DELETE FROM annotations WHERE id = %s", (annotation_id,))
+            cur.execute(
+                f"DELETE FROM annotations WHERE id = %s AND {scope}",
+                (annotation_id, *params),
+            )
         return ann
 
     def all(self) -> Iterator[Annotation]:
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
-            rows = cur.execute("SELECT * FROM annotations").fetchall()
+            rows = cur.execute(
+                f"SELECT * FROM annotations WHERE {scope}", params
+            ).fetchall()
             cols = [d.name for d in cur.description]
         for row in rows:
             yield self._row_to_annotation(dict(zip(cols, row)))
 
     def __len__(self) -> int:
         # Number of distinct interval keys; matches MutableMapping facade.
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             row = cur.execute(
-                "SELECT COUNT(DISTINCT span) FROM annotations "
-                "WHERE ref_kind = 'media' AND span IS NOT NULL"
+                f"SELECT COUNT(DISTINCT span) FROM annotations "
+                f"WHERE {scope} AND ref_kind = 'media' AND span IS NOT NULL",
+                params,
             ).fetchone()
             return int(row[0])
 
     def __iter__(self) -> Iterator[TimeInterval]:
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                "SELECT span FROM ("
-                "  SELECT DISTINCT span FROM annotations "
-                "  WHERE ref_kind = 'media' AND span IS NOT NULL"
-                ") AS d "
-                "ORDER BY lower(span), upper(span)"
+                f"SELECT span FROM ("
+                f"  SELECT DISTINCT span FROM annotations "
+                f"  WHERE {scope} AND ref_kind = 'media' AND span IS NOT NULL"
+                f") AS d "
+                f"ORDER BY lower(span), upper(span)",
+                params,
             ).fetchall()
         for (span,) in rows:
             yield self._span_to_interval(span)
@@ -402,17 +640,21 @@ class PostgresStore:
         if not isinstance(key, TimeInterval):
             return False
         span = self._interval_to_span(key)
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             row = cur.execute(
-                "SELECT 1 FROM annotations WHERE span = %s LIMIT 1", (span,)
+                f"SELECT 1 FROM annotations WHERE {scope} AND span = %s LIMIT 1",
+                (*params, span),
             ).fetchone()
         return row is not None
 
     def __getitem__(self, key: TimeInterval) -> list[Annotation]:
         span = self._interval_to_span(key)
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                "SELECT * FROM annotations WHERE span = %s", (span,)
+                f"SELECT * FROM annotations WHERE {scope} AND span = %s",
+                (*params, span),
             ).fetchall()
             cols = [d.name for d in cur.description] if cur.description else []
         if not rows:
@@ -421,8 +663,12 @@ class PostgresStore:
 
     def __setitem__(self, key: TimeInterval, value: list[Annotation]) -> None:
         span = self._interval_to_span(key)
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
-            cur.execute("DELETE FROM annotations WHERE span = %s", (span,))
+            cur.execute(
+                f"DELETE FROM annotations WHERE {scope} AND span = %s",
+                (*params, span),
+            )
         for ann in value:
             self.add(ann)
 
@@ -484,9 +730,10 @@ class PostgresStore:
 
     def _query_with_op(self, op: str, query: TimeInterval) -> Iterator[Annotation]:
         span = self._interval_to_span(query)
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
-            sql_text = f"SELECT * FROM annotations WHERE span {op} %s"
-            rows = cur.execute(sql_text, (span,)).fetchall()
+            sql_text = f"SELECT * FROM annotations WHERE {scope} AND span {op} %s"
+            rows = cur.execute(sql_text, (*params, span)).fetchall()
             cols = [d.name for d in cur.description] if cur.description else []
         for row in rows:
             yield self._row_to_annotation(dict(zip(cols, row)))
@@ -514,10 +761,12 @@ class PostgresStore:
 
     def _touching_candidates(self, query: TimeInterval) -> Iterator[Annotation]:
         span = self._interval_to_span(query)
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                "SELECT * FROM annotations WHERE (span && %s) OR (span -|- %s)",
-                (span, span),
+                f"SELECT * FROM annotations WHERE {scope} "
+                f"AND ((span && %s) OR (span -|- %s))",
+                (*params, span, span),
             ).fetchall()
             cols = [d.name for d in cur.description] if cur.description else []
         for row in rows:
@@ -526,9 +775,11 @@ class PostgresStore:
     # --- tier filters ------------------------------------------------
 
     def by_tier(self, tier_name: str) -> Iterator[Annotation]:
+        scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                "SELECT * FROM annotations WHERE tier = %s", (tier_name,)
+                f"SELECT * FROM annotations WHERE {scope} AND tier = %s",
+                (*params, tier_name),
             ).fetchall()
             cols = [d.name for d in cur.description] if cur.description else []
         for row in rows:
@@ -565,14 +816,20 @@ class PostgresStore:
     # --- repr -------------------------------------------------------
 
     def __repr__(self) -> str:
+        scope, params = self._scope()
         try:
             with self._conn.cursor() as cur:
-                n_anns = cur.execute("SELECT COUNT(*) FROM annotations").fetchone()[0]
-                n_tiers = cur.execute("SELECT COUNT(*) FROM tiers").fetchone()[0]
+                n_anns = cur.execute(
+                    f"SELECT COUNT(*) FROM annotations WHERE {scope}", params
+                ).fetchone()[0]
+                n_tiers = cur.execute(
+                    f"SELECT COUNT(*) FROM tiers WHERE {scope}", params
+                ).fetchone()[0]
         except Exception:  # pragma: no cover  — closed connection
-            return f"PostgresStore(<closed>)"
+            return "PostgresStore(<closed>)"
         return (
-            f"PostgresStore({n_anns} annotations, {n_tiers} tiers, rate={self._rate})"
+            f"PostgresStore(owner={self._owner_id!r}, project={self._project_id!r}, "
+            f"{n_anns} annotations, {n_tiers} tiers, rate={self._rate})"
         )
 
     # --- conversion helpers -----------------------------------------
@@ -629,6 +886,8 @@ class PostgresStore:
 
         cols = (
             "id",
+            "owner_id",
+            "project_id",
             "tier",
             "ref_kind",
             "asset_id",
@@ -656,6 +915,8 @@ class PostgresStore:
 
         values = (
             ann.id,
+            self._owner_id,
+            self._project_id,
             ann.tier,
             ref_kind,
             asset_id,
@@ -733,10 +994,17 @@ def _row_to_tier(row) -> Tier:
 
 
 def from_memory(
-    memory_store, connection_string: str | dict, *, rate: int = 24000
+    memory_store,
+    connection_string: str | dict,
+    *,
+    rate: int = 24000,
+    owner_id: str = DEFAULT_OWNER_ID,
+    project_id: str = DEFAULT_PROJECT_ID,
 ) -> PostgresStore:
-    """Replicate an in-memory store into a Postgres database."""
-    pg = PostgresStore(connection_string, rate=rate)
+    """Replicate an in-memory store into a Postgres database (one tenant)."""
+    pg = PostgresStore(
+        connection_string, rate=rate, owner_id=owner_id, project_id=project_id
+    )
     for tier in memory_store.tiers():
         pg.add_tier(tier)
     pg.extend(memory_store.all())

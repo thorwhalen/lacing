@@ -101,8 +101,8 @@ def postgres_store(postgresql):
 
 class TestSchema:
     def test_initial_schema_version(self, postgres_store):
-        assert postgres_store.schema_version == 1
-        assert postgres_store.get_meta("schema_version") == "1"
+        assert postgres_store.schema_version == 2
+        assert postgres_store.get_meta("schema_version") == "2"
 
     def test_rate_persisted(self, postgres_store):
         assert postgres_store.rate == 24000
@@ -500,3 +500,197 @@ class TestFromMemory:
             assert phon.stereotype == TierStereotype.TIME_SUBDIVISION
         finally:
             pg.close()
+
+
+# ---------------------------------------------------------------------------
+# multi-tenancy — tenant columns on shared tables (Phase 4, reelee#177)
+# ---------------------------------------------------------------------------
+
+
+def _conn_kwargs(postgresql) -> dict:
+    info = postgresql.info
+    return {
+        "host": info.host,
+        "port": info.port,
+        "user": info.user,
+        "password": info.password or "",
+        "dbname": info.dbname,
+    }
+
+
+class TestMultiTenant:
+    def test_two_projects_in_one_db_are_isolated(self, postgresql):
+        """The headline guarantee: distinct project_ids share a DB but never
+        see each other's annotations or tiers."""
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, project_id="proj-a")
+        b = PostgresStore(ck, rate=24000, project_id="proj-b")
+        try:
+            a.add_tier(Tier("words"))
+            b.add_tier(Tier("words"))
+            a.add(_ann(_ti(0, 10), tier="words", text="from-a"))
+            b.add(_ann(_ti(0, 10), tier="words", text="from-b"))
+            b.add(_ann(_ti(20, 30), tier="words", text="from-b-2"))
+
+            a_anns = list(a.all())
+            b_anns = list(b.all())
+            assert len(a_anns) == 1
+            assert len(b_anns) == 2
+            assert a_anns[0].body["text"] == "from-a"
+            assert {x.body["text"] for x in b_anns} == {"from-b", "from-b-2"}
+
+            # Interval queries are scoped too.
+            assert len(list(a.intersects(_ti(0, 40)))) == 1
+            assert len(list(b.intersects(_ti(0, 40)))) == 2
+
+            # __len__ (distinct interval keys) is per-tenant.
+            assert len(a) == 1
+            assert len(b) == 2
+        finally:
+            a.close()
+            b.close()
+
+    def test_default_owner_and_project(self, postgresql):
+        from lacing.store.postgres import DEFAULT_OWNER_ID, DEFAULT_PROJECT_ID
+
+        s = PostgresStore(_conn_kwargs(postgresql), rate=24000)
+        try:
+            assert s.owner_id == DEFAULT_OWNER_ID
+            assert s.project_id == DEFAULT_PROJECT_ID
+        finally:
+            s.close()
+
+    def test_per_project_rate(self, postgresql):
+        """Each (owner, project) carries its own rate; another project in the
+        same DB can use a different one."""
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, project_id="proj-a")
+        b = PostgresStore(ck, rate=48000, project_id="proj-b")
+        try:
+            assert a.rate == 24000
+            assert b.rate == 48000
+            assert a.get_meta("rate") == "24000"
+            assert b.get_meta("rate") == "48000"
+        finally:
+            a.close()
+            b.close()
+
+    def test_per_project_rate_mismatch_raises(self, postgresql):
+        ck = _conn_kwargs(postgresql)
+        s = PostgresStore(ck, rate=24000, project_id="proj-a")
+        s.close()
+        with pytest.raises(PgSchemaMismatchError):
+            PostgresStore(ck, rate=48000, project_id="proj-a")
+
+    def test_owner_scoping(self, postgresql):
+        """owner_id scopes alongside project_id (forward seam for #174)."""
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, owner_id="alice", project_id="p")
+        b = PostgresStore(ck, rate=24000, owner_id="bob", project_id="p")
+        try:
+            a.add_tier(Tier("words"))
+            b.add_tier(Tier("words"))
+            a.add(_ann(_ti(0, 10), tier="words"))
+            assert len(list(a.all())) == 1
+            assert len(list(b.all())) == 0  # same project_id, different owner
+        finally:
+            a.close()
+            b.close()
+
+    def test_meta_is_tenant_scoped(self, postgresql):
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, project_id="proj-a")
+        b = PostgresStore(ck, rate=24000, project_id="proj-b")
+        try:
+            a.set_meta("title", "Project A")
+            b.set_meta("title", "Project B")
+            assert a.get_meta("title") == "Project A"
+            assert b.get_meta("title") == "Project B"
+        finally:
+            a.close()
+            b.close()
+
+    def test_no_overlap_constraint_is_per_project(self, postgresql):
+        """One project's per-tier EXCLUDE rule must not block another's
+        identical-span insert. proj-a enforces no-overlap on 'words'; proj-b
+        does not — so the span that proj-a rejects is accepted by proj-b."""
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, project_id="proj-a")
+        b = PostgresStore(ck, rate=24000, project_id="proj-b")
+        try:
+            a.add_tier(Tier("words"), enforce_no_overlap=True)
+            b.add_tier(Tier("words"))  # no constraint in proj-b
+            a.add(_ann(_ti(0, 100), tier="words"))
+            # Overlap in proj-a is forbidden by its per-tenant EXCLUDE...
+            with pytest.raises(TierOverlapError):
+                a.add(_ann(_ti(50, 150), tier="words"))
+            # ...but proj-b can freely add overlapping spans of the same tier.
+            b.add(_ann(_ti(0, 100), tier="words"))
+            b.add(_ann(_ti(50, 150), tier="words"))
+            assert len(list(b.all())) == 2
+        finally:
+            a.close()
+            b.close()
+
+    def test_remove_is_tenant_scoped(self, postgresql):
+        ck = _conn_kwargs(postgresql)
+        a = PostgresStore(ck, rate=24000, project_id="proj-a")
+        b = PostgresStore(ck, rate=24000, project_id="proj-b")
+        try:
+            a.add_tier(Tier("words"))
+            b.add_tier(Tier("words"))
+            ann = _ann(_ti(0, 10), tier="words")
+            a.add(ann)
+            # b cannot remove a's annotation by id.
+            assert b.remove(ann.id) is None
+            assert len(list(a.all())) == 1
+            # a can.
+            assert a.remove(ann.id) is not None
+        finally:
+            a.close()
+            b.close()
+
+
+# ---------------------------------------------------------------------------
+# connection pooling
+# ---------------------------------------------------------------------------
+
+
+class TestPooling:
+    def test_pool_reuse_across_reopens(self, postgresql):
+        """A string conninfo with pooling reuses one pool across open/close
+        cycles (the nw per-op pattern)."""
+        pytest.importorskip("psycopg_pool")
+        from lacing.store.postgres import close_all_pools, get_pool
+        import psycopg
+
+        conninfo = psycopg.conninfo.make_conninfo(**_conn_kwargs(postgresql))
+        try:
+            s1 = PostgresStore(conninfo, rate=24000, use_pool=True)
+            assert s1._pooled is True
+            pool = get_pool(conninfo)
+            s1.add_tier(Tier("words"))
+            s1.add(_ann(_ti(0, 10), tier="words"))
+            s1.close()  # returns the conn to the pool, does not close it
+
+            # Reopen: same pool object, data persists.
+            s2 = PostgresStore(conninfo, rate=24000, use_pool=True)
+            assert get_pool(conninfo) is pool
+            assert len(list(s2.all())) == 1
+            s2.close()
+        finally:
+            close_all_pools()
+
+    def test_no_pool_path_still_works(self, postgresql):
+        """use_pool=False falls back to a dedicated connection."""
+        conninfo = __import__("psycopg").conninfo.make_conninfo(
+            **_conn_kwargs(postgresql)
+        )
+        s = PostgresStore(conninfo, rate=24000, use_pool=False)
+        try:
+            assert s._pooled is False
+            s.add_tier(Tier("words"))
+            s.add(_ann(_ti(0, 10), tier="words"))
+            assert len(list(s.all())) == 1
+        finally:
+            s.close()
