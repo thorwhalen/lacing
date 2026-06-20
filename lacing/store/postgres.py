@@ -141,6 +141,13 @@ CREATE TABLE IF NOT EXISTS annotations (
     scene_path      TEXT,
     target_id       UUID,
     span            INT8RANGE,                 -- NULL only when ref has no interval
+    -- Integer endpoints at the project rate are the lossless source of truth
+    -- for time (mirrors SqliteStore). `span` is the GiST-indexed *query*
+    -- column; Postgres canonicalizes a half-open point [n, n) to the empty
+    -- range and loses its position, so point/zero-width intervals are
+    -- reconstructed from these columns, never from `span`.
+    start_value     BIGINT,
+    end_value       BIGINT,
     body            JSONB NOT NULL,
     body_schema_uri TEXT NOT NULL,
     prov_was_generated_by   TEXT NOT NULL,
@@ -613,11 +620,15 @@ class PostgresStore:
 
     def __len__(self) -> int:
         # Number of distinct interval keys; matches MutableMapping facade.
+        # Keyed on the integer endpoints (point intervals share an empty span,
+        # so DISTINCT span would wrongly collapse them).
         scope, params = self._scope()
         with self._conn.cursor() as cur:
             row = cur.execute(
-                f"SELECT COUNT(DISTINCT span) FROM annotations "
-                f"WHERE {scope} AND ref_kind = 'media' AND span IS NOT NULL",
+                f"SELECT COUNT(*) FROM ("
+                f"  SELECT DISTINCT start_value, end_value FROM annotations "
+                f"  WHERE {scope} AND ref_kind = 'media' AND start_value IS NOT NULL"
+                f") AS d",
                 params,
             ).fetchone()
             return int(row[0])
@@ -626,35 +637,46 @@ class PostgresStore:
         scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                f"SELECT span FROM ("
-                f"  SELECT DISTINCT span FROM annotations "
-                f"  WHERE {scope} AND ref_kind = 'media' AND span IS NOT NULL"
-                f") AS d "
-                f"ORDER BY lower(span), upper(span)",
+                f"SELECT DISTINCT start_value, end_value FROM annotations "
+                f"WHERE {scope} AND ref_kind = 'media' AND start_value IS NOT NULL "
+                f"ORDER BY start_value, end_value",
                 params,
             ).fetchall()
-        for (span,) in rows:
-            yield self._span_to_interval(span)
+        for start_value, end_value in rows:
+            yield TimeInterval(
+                RationalTime(start_value, self._rate),
+                RationalTime(end_value, self._rate),
+            )
+
+    def _key_endpoints(self, key: TimeInterval) -> tuple[int, int]:
+        """Integer endpoints at the project rate for an exact-key lookup.
+
+        Used by the mapping operations, which key on the exact interval — the
+        integer pair, not ``span`` (a half-open point has an empty span).
+        """
+        return self._normalize_value(key.start), self._normalize_value(key.end)
 
     def __contains__(self, key: object) -> bool:
         if not isinstance(key, TimeInterval):
             return False
-        span = self._interval_to_span(key)
+        sv, ev = self._key_endpoints(key)
         scope, params = self._scope()
         with self._conn.cursor() as cur:
             row = cur.execute(
-                f"SELECT 1 FROM annotations WHERE {scope} AND span = %s LIMIT 1",
-                (*params, span),
+                f"SELECT 1 FROM annotations WHERE {scope} "
+                f"AND start_value = %s AND end_value = %s LIMIT 1",
+                (*params, sv, ev),
             ).fetchone()
         return row is not None
 
     def __getitem__(self, key: TimeInterval) -> list[Annotation]:
-        span = self._interval_to_span(key)
+        sv, ev = self._key_endpoints(key)
         scope, params = self._scope()
         with self._conn.cursor() as cur:
             rows = cur.execute(
-                f"SELECT * FROM annotations WHERE {scope} AND span = %s",
-                (*params, span),
+                f"SELECT * FROM annotations WHERE {scope} "
+                f"AND start_value = %s AND end_value = %s",
+                (*params, sv, ev),
             ).fetchall()
             cols = [d.name for d in cur.description] if cur.description else []
         if not rows:
@@ -662,12 +684,13 @@ class PostgresStore:
         return [self._row_to_annotation(dict(zip(cols, r))) for r in rows]
 
     def __setitem__(self, key: TimeInterval, value: list[Annotation]) -> None:
-        span = self._interval_to_span(key)
+        sv, ev = self._key_endpoints(key)
         scope, params = self._scope()
         with self._conn.cursor() as cur:
             cur.execute(
-                f"DELETE FROM annotations WHERE {scope} AND span = %s",
-                (*params, span),
+                f"DELETE FROM annotations WHERE {scope} "
+                f"AND start_value = %s AND end_value = %s",
+                (*params, sv, ev),
             )
         for ann in value:
             self.add(ann)
@@ -883,6 +906,12 @@ class PostgresStore:
             raise TypeError(f"unknown reference kind: {type(ref).__name__}")
 
         span = self._interval_to_span(iv) if iv is not None else None
+        if iv is not None:
+            start_value = self._normalize_value(iv.start)
+            end_value = self._normalize_value(iv.end)
+        else:
+            start_value = None
+            end_value = None
 
         cols = (
             "id",
@@ -894,6 +923,8 @@ class PostgresStore:
             "scene_path",
             "target_id",
             "span",
+            "start_value",
+            "end_value",
             "body",
             "body_schema_uri",
             "prov_was_generated_by",
@@ -923,6 +954,8 @@ class PostgresStore:
             scene_path,
             target_id,
             span,
+            start_value,
+            end_value,
             self._psycopg.types.json.Jsonb(ann.body),
             ann.body_schema_uri,
             ann.provenance.was_generated_by,
@@ -938,9 +971,14 @@ class PostgresStore:
         return cols, values
 
     def _row_to_annotation(self, row: dict) -> Annotation:
-        span = row["span"]
-        if span is not None:
-            interval: TimeInterval | None = self._span_to_interval(span)
+        # Reconstruct the interval from the integer endpoints (lossless source
+        # of truth), NOT from `span`: Postgres canonicalizes a half-open point
+        # [n, n) to the empty range and reports lower/upper as NULL on readback.
+        if row.get("start_value") is not None:
+            interval: TimeInterval | None = TimeInterval(
+                RationalTime(row["start_value"], self._rate),
+                RationalTime(row["end_value"], self._rate),
+            )
         else:
             interval = None
 
