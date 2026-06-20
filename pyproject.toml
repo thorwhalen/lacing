@@ -49,10 +49,15 @@ dev = [
     "opentimelineio>=0.17",
     "opentelemetry-api>=1.20",
     "opentelemetry-sdk>=1.20",
+    "s3dol",
+    "moto[s3]>=5.0",
 ]
 docs = [
     "sphinx>=6.0",
     "sphinx-rtd-theme>=1.0",
+]
+s3 = [
+    "s3dol",
 ]
 textgrid = [
     "praatio>=6.0",

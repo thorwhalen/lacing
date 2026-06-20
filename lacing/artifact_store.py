@@ -327,3 +327,43 @@ class ArtifactStore(MutableMapping):
         )
         blobs = Files(str(blob_dir))
         return cls(catalog=catalog, blobs=blobs)
+
+    @classmethod
+    def from_s3(
+        cls,
+        bucket_name: str,
+        *,
+        catalog: "MutableMapping[str, BaseModel] | None" = None,
+        prefix: str | None = None,
+        **s3_kwargs,
+    ) -> ArtifactStore:
+        """An ArtifactStore with **blobs in an S3-compatible object store**
+        (AWS S3 / Cloudflare R2 / MinIO / Supabase) via ``s3dol``.
+
+        Content-addressed blobs are a natural fit for object storage: flat,
+        immutable, dedup-friendly, forever-cacheable keys. :meth:`blob_location`
+        returns a presigned GET URL (via s3dol's ``url_for``) so a serving layer
+        can 302-redirect and let the store deliver the bytes (and HTTP ``Range``)
+        directly, off the app process.
+
+        The blob and catalog backends are independent by design: the catalog
+        defaults to an in-memory dict here — swap in a durable catalog (e.g. a
+        Postgres-backed ``MutableMapping``) for production.
+
+        Args:
+            bucket_name: The object-store bucket.
+            catalog: The ``id -> record`` catalog ``MutableMapping``. Defaults
+                to ``{}`` (in-memory).
+            prefix: Optional key prefix within the bucket (e.g. ``"blobs"``).
+            **s3_kwargs: Forwarded to ``s3dol.store.S3Store`` — credentials
+                (``aws_access_key_id`` / ``aws_secret_access_key`` /
+                ``profile_name``), ``endpoint_url`` (set for R2 / MinIO /
+                Supabase), ``region_name``, ``make_bucket``, etc.
+
+        Requires ``s3dol`` (and ``boto3``) — imported lazily so the dependency
+        is only needed when this constructor is used.
+        """
+        from s3dol.store import S3Store
+
+        blobs = S3Store(bucket_name, path=prefix, **s3_kwargs)
+        return cls(catalog={} if catalog is None else catalog, blobs=blobs)
