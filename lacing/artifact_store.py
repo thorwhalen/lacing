@@ -55,7 +55,7 @@ True
 from __future__ import annotations
 
 import hashlib
-from collections.abc import Iterable, Iterator, MutableMapping
+from collections.abc import Callable, Iterable, Iterator, MutableMapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -66,6 +66,30 @@ from dol import Files, filt_iter, wrap_kvs
 from lacing.artifact import Artifact, hash_bytes
 
 __all__ = ["ArtifactStore"]
+
+
+def _mk_sql_refcount(sql_store) -> Callable[[str], int]:
+    """Build a ``content_hash -> row count`` query over a ``sqldol`` store.
+
+    Reaches through the ``sqldol.SQLAlchemyStore`` to its persister's ORM
+    session and counts rows whose indexed ``content_hash`` column matches —
+    one query, not a scan. Used by :meth:`ArtifactStore.from_sql` to wire the
+    GC reference-count capability that :meth:`ArtifactStore.count_refs` probes
+    for. Works identically on SQLite and Postgres (plain SQLAlchemy).
+    """
+    from sqlalchemy import func
+
+    persister = sql_store.store  # the SQLAlchemyPersister behind the dol Store
+    table = persister.table.__table__
+
+    def refcount(content_hash: str) -> int:
+        return (
+            persister.session.query(func.count())
+            .filter(table.c.content_hash == content_hash)
+            .scalar()
+        )
+
+    return refcount
 
 
 @dataclass(eq=False)
@@ -328,6 +352,46 @@ class ArtifactStore(MutableMapping):
         blobs = Files(str(blob_dir))
         return cls(catalog=catalog, blobs=blobs)
 
+    def count_refs(self, content_hash: str) -> int:
+        """How many catalog records point at ``content_hash`` (a blob).
+
+        The reference count that a garbage collector needs: a blob is safe to
+        delete only when **no** catalog record still names its content hash.
+        Content-addressed blobs are deduplicated, so two artifacts can share
+        one blob — deleting the blob the moment one of them goes away would
+        orphan the other.
+
+        This is the *probe* half of a capability pair (mirroring
+        :meth:`blob_location` probing a blob store for ``url_for``): a catalog
+        backend that can answer the count cheaply — the SQL catalog from
+        :meth:`from_sql`, via an indexed ``content_hash`` column — exposes a
+        ``refcount_by_content_hash`` callable, and this method uses it so the
+        count is **one indexed query, not a full catalog scan**. Any other
+        catalog (dict, ``Files``) falls back to scanning every record. The
+        facade is unchanged either way; only the speed differs.
+
+        Args:
+            content_hash: The blob's content hash (``Artifact.asset_id``).
+
+        Returns:
+            The number of catalog records whose content hash equals
+            ``content_hash``.
+        """
+        fast = getattr(self.catalog, "refcount_by_content_hash", None)
+        if callable(fast):
+            return fast(content_hash)
+        # Fallback: scan every record. Reads the content hash off whichever of
+        # the conventional fields the record carries (``asset_id`` first — the
+        # canonical Artifact field — then ``content_hash``).
+        count = 0
+        for record in self.catalog.values():
+            rec_hash = getattr(record, "asset_id", None) or getattr(
+                record, "content_hash", None
+            )
+            if rec_hash == content_hash:
+                count += 1
+        return count
+
     @classmethod
     def from_s3(
         cls,
@@ -367,3 +431,140 @@ class ArtifactStore(MutableMapping):
 
         blobs = S3Store(bucket_name, path=prefix, **s3_kwargs)
         return cls(catalog={} if catalog is None else catalog, blobs=blobs)
+
+    @classmethod
+    def from_sql(
+        cls,
+        uri: str,
+        *,
+        blobs: "MutableMapping[str, bytes] | None" = None,
+        record_type: type[BaseModel] = Artifact,
+        collection_name: str = "artifact_catalog",
+        content_hash_of: "Callable[[BaseModel], str | None] | None" = None,
+        **db_kwargs,
+    ) -> ArtifactStore:
+        """An ArtifactStore with a **SQL-backed catalog** (durable, queryable)
+        via ``sqldol`` — the SQL counterpart of :meth:`from_s3`'s object store.
+
+        The catalog row schema is deliberately minimal and **vendor-neutral**:
+        one ``TEXT`` column holds the record serialized exactly as
+        :meth:`from_directory` serializes it (``record.model_dump_json`` out,
+        ``record_type.model_validate_json`` in), and one indexed ``content_hash``
+        column carries the record's blob hash so the GC reference count
+        (:meth:`count_refs`) is a single indexed query rather than a full scan.
+
+        Because the connection is just a SQLAlchemy URI, the *same* code runs
+        on SQLite for tests and on Postgres in production — that is the whole
+        point of the facade. Pick the backend with the ``uri`` alone::
+
+            ArtifactStore.from_sql("sqlite:///artifacts.db")          # local / tests
+            ArtifactStore.from_sql("postgresql://u:p@host:5432/db")   # production
+
+        The catalog and blob backends are independent: pass ``blobs`` to pair a
+        SQL catalog with any blob store (e.g. ``from_s3``'s ``S3Store``), or
+        leave it ``None`` for a catalog-only store (Stage-1 metadata
+        persistence; see :meth:`from_aws` for the common S3 + SQL pairing).
+
+        Args:
+            uri: SQLAlchemy connection URI (``sqlite:///…`` or
+                ``postgresql://…``). The single knob that selects the vendor.
+            blobs: Optional ``content_hash -> bytes`` blob store. ``None`` for a
+                catalog-only store.
+            record_type: The pydantic model the catalog deserializes JSON into.
+                Defaults to :class:`~lacing.artifact.Artifact`; callers with
+                their own record schema pass their model here.
+            collection_name: The SQL table name for the catalog.
+            content_hash_of: How to read a record's blob hash for the indexed
+                ``content_hash`` column. Defaults to ``asset_id`` (the canonical
+                Artifact field), then ``content_hash``. Pass a callable for a
+                record whose hash lives elsewhere; records without a hash store
+                an empty string.
+            **db_kwargs: Forwarded to ``sqldol.SQLAlchemyStore`` /
+                SQLAlchemy's ``create_engine`` (e.g. ``connect_args``,
+                ``pool_size``).
+
+        Requires ``sqldol`` (and ``SQLAlchemy``) — imported lazily so the
+        dependency is only needed when this constructor is used.
+        """
+        from sqldol import SQLAlchemyStore
+        from sqldol.sql_base import SQLAlchemyPersister
+
+        if content_hash_of is None:
+
+            def content_hash_of(record: BaseModel) -> str | None:
+                return getattr(record, "asset_id", None) or getattr(
+                    record, "content_hash", None
+                )
+
+        raw = SQLAlchemyStore(
+            uri=uri,
+            collection_name=collection_name,
+            key_fields={"artifact_id": SQLAlchemyPersister.TYPE_STRING},
+            data_fields={
+                "record_json": SQLAlchemyPersister.TYPE_TEXT,
+                "content_hash": SQLAlchemyPersister.TYPE_STRING,
+            },
+            **db_kwargs,
+        )
+
+        def _key_of_id(row_or_key):
+            # ``wrap_kvs`` hands this the key dict on writes and the ORM row on
+            # iteration (sqldol's ``__iter__`` yields rows, not keys).
+            if isinstance(row_or_key, dict):
+                return row_or_key["artifact_id"]
+            return row_or_key.artifact_id
+
+        catalog = wrap_kvs(
+            raw,
+            id_of_key=lambda artifact_id: {"artifact_id": artifact_id},
+            key_of_id=_key_of_id,
+            data_of_obj=lambda record: {
+                "record_json": record.model_dump_json(),
+                "content_hash": content_hash_of(record) or "",
+            },
+            obj_of_data=lambda row: record_type.model_validate_json(row.record_json),
+        )
+        # Attach the GC reference-count capability so ``count_refs`` resolves it
+        # to a single indexed query (the probe pattern; see ``count_refs``).
+        catalog.refcount_by_content_hash = _mk_sql_refcount(raw)
+        return cls(catalog=catalog, blobs=blobs)
+
+    @classmethod
+    def from_aws(
+        cls,
+        bucket_name: str,
+        uri: str,
+        *,
+        record_type: type[BaseModel] = Artifact,
+        collection_name: str = "artifact_catalog",
+        prefix: str | None = None,
+        s3_kwargs: "dict | None" = None,
+        sql_kwargs: "dict | None" = None,
+    ) -> ArtifactStore:
+        """The production pairing: **S3-compatible blobs + SQL catalog**.
+
+        A thin convenience over :meth:`from_s3` (blobs) and :meth:`from_sql`
+        (catalog) so the common cloud deployment is one call. The blob store is
+        an ``S3Store`` (AWS S3 / Cloudflare R2 / MinIO / Supabase); the catalog
+        is the durable, queryable SQL table — Postgres in production, SQLite for
+        a smoke test. Vendor specifics live only in the two kwargs dicts.
+
+        Args:
+            bucket_name: Object-store bucket for the content-addressed blobs.
+            uri: SQLAlchemy URI for the catalog (``postgresql://…`` in prod).
+            record_type: Pydantic model the catalog (de)serializes.
+            collection_name: SQL table name for the catalog.
+            prefix: Optional key prefix within the bucket.
+            s3_kwargs: Extra kwargs forwarded to :meth:`from_s3` (credentials,
+                ``endpoint_url`` for R2/MinIO/Supabase, ``region_name``, …).
+            sql_kwargs: Extra kwargs forwarded to :meth:`from_sql`
+                (``content_hash_of``, SQLAlchemy engine kwargs, …).
+        """
+        s3_store = cls.from_s3(bucket_name, prefix=prefix, **(s3_kwargs or {}))
+        return cls.from_sql(
+            uri,
+            blobs=s3_store.blobs,
+            record_type=record_type,
+            collection_name=collection_name,
+            **(sql_kwargs or {}),
+        )

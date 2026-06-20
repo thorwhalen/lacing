@@ -51,6 +51,8 @@ dev = [
     "opentelemetry-sdk>=1.20",
     "s3dol",
     "moto[s3]>=5.0",
+    "sqldol",
+    "sqlalchemy>=1.4",
 ]
 docs = [
     "sphinx>=6.0",
@@ -58,6 +60,10 @@ docs = [
 ]
 s3 = [
     "s3dol",
+]
+sql = [
+    "sqldol",
+    "sqlalchemy>=1.4",
 ]
 textgrid = [
     "praatio>=6.0",
