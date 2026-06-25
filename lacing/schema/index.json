@@ -11,6 +11,12 @@
     "path": "named-entity/v2.json",
     "version": "2"
   },
+  "annot://schema/reference-lock/v1": {
+    "model": "lacing.bodies.reference_lock.ReferenceLockBodyV1",
+    "name": "reference-lock",
+    "path": "reference-lock/v1.json",
+    "version": "1"
+  },
   "annot://schema/word/v1": {
     "model": "lacing.bodies.word.WordBodyV1",
     "name": "word",

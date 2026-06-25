@@ -1,0 +1,136 @@
+{
+  "additionalProperties": false,
+  "description": "Body of a reference-lock annotation.\n\nRecords that ``locked_artifact_ids`` are the canonical anchor for\n``subject_id`` (a ``subject_kind``), the aspects a supervisor should\ncompare (``checklist``), which of those block vs merely warn\n(``hard_gates``), and the advisory identity threshold\n(``min_similarity``).",
+  "properties": {
+    "subject_kind": {
+      "description": "What this lock anchors \u2014 character / location / style / prop / other.",
+      "enum": [
+        "character",
+        "location",
+        "style",
+        "prop",
+        "other"
+      ],
+      "title": "Subject Kind",
+      "type": "string"
+    },
+    "subject_id": {
+      "description": "Id (or stable name) of the entity this lock anchors \u2014 e.g. a character-ref / location-ref annotation id.",
+      "minLength": 1,
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "locked_artifact_ids": {
+      "description": "1..N reference artifact / annotation ids that *are* the canonical anchor. One canonical image, or a set (front / three-quarter / full-body / expressions).",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Locked Artifact Ids",
+      "type": "array"
+    },
+    "primary_artifact_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The representative artifact to display; must be one of ``locked_artifact_ids``. Defaults to the first when omitted.",
+      "title": "Primary Artifact Id"
+    },
+    "scope": {
+      "default": "project",
+      "description": "Lock scope \u2014 'project' (whole piece) or 'scene' (re-lock).",
+      "enum": [
+        "project",
+        "scene"
+      ],
+      "title": "Scope",
+      "type": "string"
+    },
+    "scope_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "When ``scope == 'scene'``, the scene/segment id this lock applies to. Must be None for project scope.",
+      "title": "Scope Ref"
+    },
+    "checklist": {
+      "default": [
+        "face"
+      ],
+      "description": "Aspects the supervisor compares against the anchor \u2014 e.g. 'face', 'architecture', 'props', 'lighting', 'costume', 'palette'. Strings (not Literal) so new aspects need no schema bump.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Checklist",
+      "type": "array"
+    },
+    "hard_gates": {
+      "default": [],
+      "description": "Subset of ``checklist`` that BLOCKS on mismatch (auto-reject / queue regen). Empty by default \u2192 every aspect is advisory (flag, never auto-block).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Hard Gates",
+      "type": "array"
+    },
+    "min_similarity": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Advisory identity-similarity threshold in [0, 1]; a candidate scoring below this is flagged as drift. None \u2192 use the supervisor's system default.",
+      "title": "Min Similarity"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Prior reference-lock annotation id this re-lock replaces (costume change, scene re-lock). None for the first lock.",
+      "title": "Supersedes"
+    },
+    "notes": {
+      "default": "",
+      "description": "Human checklist hints the vision supervisor can use \u2014 e.g. 'the green flat cap is present', 'same bar layout'.",
+      "title": "Notes",
+      "type": "string"
+    },
+    "params": {
+      "additionalProperties": true,
+      "description": "Opaque per-aspect config (e.g. per-aspect thresholds). Ignored by lacing; consumed by the producing supervisor.",
+      "title": "Params",
+      "type": "object"
+    }
+  },
+  "required": [
+    "subject_kind",
+    "subject_id",
+    "locked_artifact_ids"
+  ],
+  "title": "ReferenceLockBodyV1",
+  "type": "object"
+}
