@@ -13,8 +13,15 @@ Importing this package registers every built-in body schema.
 from lacing.bodies import (  # noqa: F401  registers
     continuity_violation,
     named_entity,
+    reference_lock,
     review,
     word,
 )
 
-__all__ = ["continuity_violation", "named_entity", "review", "word"]
+__all__ = [
+    "continuity_violation",
+    "named_entity",
+    "reference_lock",
+    "review",
+    "word",
+]
