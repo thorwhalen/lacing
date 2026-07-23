@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.21 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.22 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a11416ff"></script>
+      <script src="../../_static/documentation_options.js?v=96ec9c95"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -64,8 +64,13 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.artifact_store</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#design">Design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_location"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.blob_location()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_path"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.blob_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.count_refs"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.count_refs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_aws"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_aws()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_s3"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_s3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_sql"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_sql()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.get_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.get_blob()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.has_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.has_blob()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore.in_memory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.in_memory()</span></code></a></li>
@@ -81,6 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
@@ -216,6 +222,26 @@ raise / no-op when it is <code class="docutils literal notranslate"><span class=
 wiring the backing stores by hand, unless you are injecting a custom
 backend.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.blob_location">
+<span class="sig-name descname"><span class="pre">blob_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.blob_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.blob_location" title="Link to this definition"></a></dt>
+<dd><p>Resolve the cheapest <em>servable</em> location for a blob — without
+reading its bytes. The capability the HTTP layer probes to serve a
+blob the most efficient way, generalizing <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_path" title="lacing.artifact_store.ArtifactStore.blob_path"><code class="xref py py-meth docutils literal notranslate"><span class="pre">blob_path()</span></code></a> so
+filesystem / S3 / R2 backends all answer one probe:</p>
+<ul class="simple">
+<li><p><strong>object-store</strong> backends (S3/R2) that expose a presigned-URL
+capability — a <code class="docutils literal notranslate"><span class="pre">url_for(content_hash)</span></code> callable — return a <strong>URL
+string</strong>, so the caller can 302-redirect and let the object store
+serve the bytes (and HTTP <code class="docutils literal notranslate"><span class="pre">Range</span></code>) directly, off the app process;</p></li>
+<li><p><strong>filesystem</strong> backends return a local <strong>Path</strong> (see
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_path" title="lacing.artifact_store.ArtifactStore.blob_path"><code class="xref py py-meth docutils literal notranslate"><span class="pre">blob_path()</span></code></a>) so the caller hands the OS the file (Range free);</p></li>
+<li><p>everything else (plain <code class="docutils literal notranslate"><span class="pre">dict</span></code>, or a missing blob) returns
+<code class="docutils literal notranslate"><span class="pre">None</span></code> — the cue to fall back to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.iter_blob" title="lacing.artifact_store.ArtifactStore.iter_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">iter_blob()</span></code></a> streaming.</p></li>
+</ul>
+<p>Callers treat <code class="docutils literal notranslate"><span class="pre">None</span></code> as “stream it”, not as an error.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.blob_path">
 <span class="sig-name descname"><span class="pre">blob_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.blob_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.blob_path" title="Link to this definition"></a></dt>
 <dd><p>Return the local filesystem path of the blob, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
@@ -237,6 +263,60 @@ path, not as an error.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.count_refs">
+<span class="sig-name descname"><span class="pre">count_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.count_refs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.count_refs" title="Link to this definition"></a></dt>
+<dd><p>How many catalog records point at <code class="docutils literal notranslate"><span class="pre">content_hash</span></code> (a blob).</p>
+<p>The reference count that a garbage collector needs: a blob is safe to
+delete only when <strong>no</strong> catalog record still names its content hash.
+Content-addressed blobs are deduplicated, so two artifacts can share
+one blob — deleting the blob the moment one of them goes away would
+orphan the other.</p>
+<p>This is the <em>probe</em> half of a capability pair (mirroring
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_location" title="lacing.artifact_store.ArtifactStore.blob_location"><code class="xref py py-meth docutils literal notranslate"><span class="pre">blob_location()</span></code></a> probing a blob store for <code class="docutils literal notranslate"><span class="pre">url_for</span></code>): a catalog
+backend that can answer the count cheaply — the SQL catalog from
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_sql" title="lacing.artifact_store.ArtifactStore.from_sql"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_sql()</span></code></a>, via an indexed <code class="docutils literal notranslate"><span class="pre">content_hash</span></code> column — exposes a
+<code class="docutils literal notranslate"><span class="pre">refcount_by_content_hash</span></code> callable, and this method uses it so the
+count is <strong>one indexed query, not a full catalog scan</strong>. Any other
+catalog (dict, <code class="docutils literal notranslate"><span class="pre">Files</span></code>) falls back to scanning every record. The
+facade is unchanged either way; only the speed differs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>content_hash</strong> – The blob’s content hash (<code class="docutils literal notranslate"><span class="pre">Artifact.asset_id</span></code>).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of catalog records whose content hash equals
+<code class="docutils literal notranslate"><span class="pre">content_hash</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_aws">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_aws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'lacing.artifact.Artifact'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'artifact_catalog'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore" title="lacing.artifact_store.ArtifactStore"><span class="pre">ArtifactStore</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.from_aws"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_aws" title="Link to this definition"></a></dt>
+<dd><p>The production pairing: <strong>S3-compatible blobs + SQL catalog</strong>.</p>
+<p>A thin convenience over <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_s3" title="lacing.artifact_store.ArtifactStore.from_s3"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_s3()</span></code></a> (blobs) and <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_sql" title="lacing.artifact_store.ArtifactStore.from_sql"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_sql()</span></code></a>
+(catalog) so the common cloud deployment is one call. The blob store is
+an <code class="docutils literal notranslate"><span class="pre">S3Store</span></code> (AWS S3 / Cloudflare R2 / MinIO / Supabase); the catalog
+is the durable, queryable SQL table — Postgres in production, SQLite for
+a smoke test. Vendor specifics live only in the two kwargs dicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bucket_name</strong> – Object-store bucket for the content-addressed blobs.</p></li>
+<li><p><strong>uri</strong> – SQLAlchemy URI for the catalog (<code class="docutils literal notranslate"><span class="pre">postgresql://…</span></code> in prod).</p></li>
+<li><p><strong>record_type</strong> – Pydantic model the catalog (de)serializes.</p></li>
+<li><p><strong>collection_name</strong> – SQL table name for the catalog.</p></li>
+<li><p><strong>prefix</strong> – Optional key prefix within the bucket.</p></li>
+<li><p><strong>s3_kwargs</strong> – Extra kwargs forwarded to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_s3" title="lacing.artifact_store.ArtifactStore.from_s3"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_s3()</span></code></a> (credentials,
+<code class="docutils literal notranslate"><span class="pre">endpoint_url</span></code> for R2/MinIO/Supabase, <code class="docutils literal notranslate"><span class="pre">region_name</span></code>, …).</p></li>
+<li><p><strong>sql_kwargs</strong> – Extra kwargs forwarded to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_sql" title="lacing.artifact_store.ArtifactStore.from_sql"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_sql()</span></code></a>
+(<code class="docutils literal notranslate"><span class="pre">content_hash_of</span></code>, SQLAlchemy engine kwargs, …).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_directory">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'lacing.artifact.Artifact'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore" title="lacing.artifact_store.ArtifactStore"><span class="pre">ArtifactStore</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.from_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_directory" title="Link to this definition"></a></dt>
 <dd><p>An ArtifactStore persisted under <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p>
@@ -254,6 +334,85 @@ their own record schema pass their model here.</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_s3">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_s3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">BaseModel</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">s3_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore" title="lacing.artifact_store.ArtifactStore"><span class="pre">ArtifactStore</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.from_s3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_s3" title="Link to this definition"></a></dt>
+<dd><p>An ArtifactStore with <strong>blobs in an S3-compatible object store</strong>
+(AWS S3 / Cloudflare R2 / MinIO / Supabase) via <code class="docutils literal notranslate"><span class="pre">s3dol</span></code>.</p>
+<p>Content-addressed blobs are a natural fit for object storage: flat,
+immutable, dedup-friendly, forever-cacheable keys. <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_location" title="lacing.artifact_store.ArtifactStore.blob_location"><code class="xref py py-meth docutils literal notranslate"><span class="pre">blob_location()</span></code></a>
+returns a presigned GET URL (via s3dol’s <code class="docutils literal notranslate"><span class="pre">url_for</span></code>) so a serving layer
+can 302-redirect and let the store deliver the bytes (and HTTP <code class="docutils literal notranslate"><span class="pre">Range</span></code>)
+directly, off the app process.</p>
+<p>The blob and catalog backends are independent by design: the catalog
+defaults to an in-memory dict here — swap in a durable catalog (e.g. a
+Postgres-backed <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>) for production.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bucket_name</strong> – The object-store bucket.</p></li>
+<li><p><strong>catalog</strong> – The <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">-&gt;</span> <span class="pre">record</span></code> catalog <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>. Defaults
+to <code class="docutils literal notranslate"><span class="pre">{}</span></code> (in-memory).</p></li>
+<li><p><strong>prefix</strong> – Optional key prefix within the bucket (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;blobs&quot;</span></code>).</p></li>
+<li><p><strong>**s3_kwargs</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">s3dol.store.S3Store</span></code> — credentials
+(<code class="docutils literal notranslate"><span class="pre">aws_access_key_id</span></code> / <code class="docutils literal notranslate"><span class="pre">aws_secret_access_key</span></code> /
+<code class="docutils literal notranslate"><span class="pre">profile_name</span></code>), <code class="docutils literal notranslate"><span class="pre">endpoint_url</span></code> (set for R2 / MinIO /
+Supabase), <code class="docutils literal notranslate"><span class="pre">region_name</span></code>, <code class="docutils literal notranslate"><span class="pre">make_bucket</span></code>, etc.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Requires <code class="docutils literal notranslate"><span class="pre">s3dol</span></code> (and <code class="docutils literal notranslate"><span class="pre">boto3</span></code>) — imported lazily so the dependency
+is only needed when this constructor is used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_sql">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_sql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">uri:</span> <span class="pre">str,</span> <span class="pre">*,</span> <span class="pre">blobs:</span> <span class="pre">~collections.abc.MutableMapping[str,</span> <span class="pre">bytes]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">record_type:</span> <span class="pre">type[~pydantic.main.BaseModel]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'lacing.artifact.Artifact'&gt;,</span> <span class="pre">collection_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'artifact_catalog',</span> <span class="pre">content_hash_of:</span> <span class="pre">~collections.abc.Callable[[~pydantic.main.BaseModel],</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**db_kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.artifact_store.ArtifactStore" title="lacing.artifact_store.ArtifactStore"><span class="pre">ArtifactStore</span></a></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.from_sql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_sql" title="Link to this definition"></a></dt>
+<dd><p>An ArtifactStore with a <strong>SQL-backed catalog</strong> (durable, queryable)
+via <code class="docutils literal notranslate"><span class="pre">sqldol</span></code> — the SQL counterpart of <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_s3" title="lacing.artifact_store.ArtifactStore.from_s3"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_s3()</span></code></a>’s object store.</p>
+<p>The catalog row schema is deliberately minimal and <strong>vendor-neutral</strong>:
+one <code class="docutils literal notranslate"><span class="pre">TEXT</span></code> column holds the record serialized exactly as
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory" title="lacing.artifact_store.ArtifactStore.from_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_directory()</span></code></a> serializes it (<code class="docutils literal notranslate"><span class="pre">record.model_dump_json</span></code> out,
+<code class="docutils literal notranslate"><span class="pre">record_type.model_validate_json</span></code> in), and one indexed <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>
+column carries the record’s blob hash so the GC reference count
+(<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.count_refs" title="lacing.artifact_store.ArtifactStore.count_refs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">count_refs()</span></code></a>) is a single indexed query rather than a full scan.</p>
+<p>Because the connection is just a SQLAlchemy URI, the <em>same</em> code runs
+on SQLite for tests and on Postgres in production — that is the whole
+point of the facade. Pick the backend with the <code class="docutils literal notranslate"><span class="pre">uri</span></code> alone:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">&quot;sqlite:///artifacts.db&quot;</span><span class="p">)</span>          <span class="c1"># local / tests</span>
+<span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">&quot;postgresql://u:p@host:5432/db&quot;</span><span class="p">)</span>   <span class="c1"># production</span>
+</pre></div>
+</div>
+<p>The catalog and blob backends are independent: pass <code class="docutils literal notranslate"><span class="pre">blobs</span></code> to pair a
+SQL catalog with any blob store (e.g. <code class="docutils literal notranslate"><span class="pre">from_s3</span></code>’s <code class="docutils literal notranslate"><span class="pre">S3Store</span></code>), or
+leave it <code class="docutils literal notranslate"><span class="pre">None</span></code> for a catalog-only store (Stage-1 metadata
+persistence; see <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_aws" title="lacing.artifact_store.ArtifactStore.from_aws"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_aws()</span></code></a> for the common S3 + SQL pairing).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uri</strong> – SQLAlchemy connection URI (<code class="docutils literal notranslate"><span class="pre">sqlite:///…</span></code> or
+<code class="docutils literal notranslate"><span class="pre">postgresql://…</span></code>). The single knob that selects the vendor.</p></li>
+<li><p><strong>blobs</strong> – Optional <code class="docutils literal notranslate"><span class="pre">content_hash</span> <span class="pre">-&gt;</span> <span class="pre">bytes</span></code> blob store. <code class="docutils literal notranslate"><span class="pre">None</span></code> for a
+catalog-only store.</p></li>
+<li><p><strong>record_type</strong> – The pydantic model the catalog deserializes JSON into.
+Defaults to <a class="reference internal" href="artifact.html#lacing.artifact.Artifact" title="lacing.artifact.Artifact"><code class="xref py py-class docutils literal notranslate"><span class="pre">Artifact</span></code></a>; callers with
+their own record schema pass their model here.</p></li>
+<li><p><strong>collection_name</strong> – The SQL table name for the catalog.</p></li>
+<li><p><strong>content_hash_of</strong> – How to read a record’s blob hash for the indexed
+<code class="docutils literal notranslate"><span class="pre">content_hash</span></code> column. Defaults to <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (the canonical
+Artifact field), then <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>. Pass a callable for a
+record whose hash lives elsewhere; records without a hash store
+an empty string.</p></li>
+<li><p><strong>**db_kwargs</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">sqldol.SQLAlchemyStore</span></code> /
+SQLAlchemy’s <code class="docutils literal notranslate"><span class="pre">create_engine</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">connect_args</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pool_size</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+<p>Requires <code class="docutils literal notranslate"><span class="pre">sqldol</span></code> (and <code class="docutils literal notranslate"><span class="pre">SQLAlchemy</span></code>) — imported lazily so the
+dependency is only needed when this constructor is used.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -371,7 +530,7 @@ is responsible for also recording that hash on <code class="docutils literal not
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

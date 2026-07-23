@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.postgres &mdash; lacing 0.0.21 documentation</title>
+  <title>lacing.store.postgres &mdash; lacing 0.0.22 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=a11416ff"></script>
+      <script src="../../../_static/documentation_options.js?v=96ec9c95"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -65,6 +65,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
@@ -92,6 +93,10 @@
 <li class="toctree-l1"><a class="reference internal" href="base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="memory.html">lacing.store.memory</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.store.postgres</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multi-tenancy-phase-4-reelee-177">Multi-tenancy (Phase 4, reelee#177)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connection-pooling-phase-4">Connection pooling (Phase 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.DEFAULT_OWNER_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.store.postgres.PostgresStore.add_tier"><code class="docutils literal notranslate"><span class="pre">PostgresStore.add_tier()</span></code></a></li>
@@ -100,7 +105,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.postgres.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
 </ul>
 </li>
@@ -174,15 +181,56 @@
 </tbody>
 </table>
 <p>We store intervals as <code class="docutils literal notranslate"><span class="pre">int8range(start_value,</span> <span class="pre">end_value,</span> <span class="pre">'[)')</span></code> — half-open,
-matching lacing’s <code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code> semantics — at a <strong>project-wide rate</strong>
-recorded in <code class="docutils literal notranslate"><span class="pre">meta</span></code>. All inserts must be at that rate; re-quantizing happens
-on insert if necessary.</p>
+matching lacing’s <code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code> semantics — at a <strong>per-(owner, project)
+rate</strong> recorded in the <code class="docutils literal notranslate"><span class="pre">projects</span></code> table. All inserts must be at that rate;
+re-quantizing happens on insert if necessary.</p>
 <p>GiST index on the range column gives sub-millisecond overlap queries at
 million-row scale. Optional <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span> <span class="pre">GIST</span></code> constraints are added
 <strong>per tier</strong> for stereotypes like <code class="docutils literal notranslate"><span class="pre">TIME_SUBDIVISION</span></code> that forbid overlap.</p>
+<section id="multi-tenancy-phase-4-reelee-177">
+<h2>Multi-tenancy (Phase 4, reelee#177)<a class="headerlink" href="#multi-tenancy-phase-4-reelee-177" title="Link to this heading"></a></h2>
+<p>Multiple logical stores (one per nw/reelee project) coexist in a single
+Postgres database via <strong>tenant columns on shared tables</strong> (the decision in
+<code class="docutils literal notranslate"><span class="pre">reelee/docs/storage_migration_plan.md</span></code> §”Postgres tenancy”): every
+<code class="docutils literal notranslate"><span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">tiers</span></code> row carries an <code class="docutils literal notranslate"><span class="pre">owner_id</span></code> and a <code class="docutils literal notranslate"><span class="pre">project_id</span></code>,
+and every query is scoped by <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code>. A <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code>
+instance is bound to one <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code> at construction and behaves
+exactly like a single-tenant store; two stores with different project ids over
+the same database never see each other’s rows.</p>
+<p><code class="docutils literal notranslate"><span class="pre">owner_id</span></code> is a forward seam for the multi-tenant access layer (reelee#174):
+the column is carried and scoped now, but its <em>enforcement</em> (the policy
+decision point) is deferred — today every store defaults <code class="docutils literal notranslate"><span class="pre">owner_id=&quot;default&quot;</span></code>.</p>
+<p>The per-tier <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span> <span class="pre">GIST</span></code> no-overlap constraint is likewise scoped by
+<code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id,</span> <span class="pre">tier)</span></code> so one project’s non-overlap rule cannot block
+another project’s annotations.</p>
+</section>
+<section id="connection-pooling-phase-4">
+<h2>Connection pooling (Phase 4)<a class="headerlink" href="#connection-pooling-phase-4" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">nw</span></code>’s <code class="xref py py-class docutils literal notranslate"><span class="pre">ProjectGraph</span></code> opens and closes the store per
+operation. That is fine for a SQLite file but pathological for a network DB, so
+this module keeps a process-wide <code class="xref py py-class docutils literal notranslate"><span class="pre">psycopg_pool.ConnectionPool</span></code> per
+connection string (see <a class="reference internal" href="#lacing.store.postgres.get_pool" title="lacing.store.postgres.get_pool"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pool()</span></code></a>); a <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code> borrows a
+connection from the pool for its lifetime and returns it on <code class="docutils literal notranslate"><span class="pre">close()</span></code> instead
+of opening a fresh TCP/auth round-trip each time. When <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is not
+installed (or a caller passes <code class="docutils literal notranslate"><span class="pre">use_pool=False</span></code>) we fall back to a dedicated
+long-lived connection.</p>
 <p>Schema versioning lives in <code class="docutils literal notranslate"><span class="pre">meta</span></code>; mismatched versions raise on open.</p>
-<p>Status: Phase 1. Tested via <code class="docutils literal notranslate"><span class="pre">pytest-postgresql</span></code> sandbox (no live server
+<p>Status: Phase 4. Tested via <code class="docutils literal notranslate"><span class="pre">pytest-postgresql</span></code> sandbox (no live server
 needed for development).</p>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.postgres.DEFAULT_OWNER_ID">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_OWNER_ID</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></span><a class="headerlink" href="#lacing.store.postgres.DEFAULT_OWNER_ID" title="Link to this definition"></a></dt>
+<dd><p>Owner placeholder until the multi-tenant access layer (reelee#174) lands.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">owner_id</span></code> column is carried and scoped now; its enforcement is deferred.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.postgres.DEFAULT_PROJECT_ID">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_PROJECT_ID</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></span><a class="headerlink" href="#lacing.store.postgres.DEFAULT_PROJECT_ID" title="Link to this definition"></a></dt>
+<dd><p>Project placeholder for single-project / legacy use.</p>
+</dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="lacing.store.postgres.PgSchemaMismatchError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">PgSchemaMismatchError</span></span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#PgSchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PgSchemaMismatchError" title="Link to this definition"></a></dt>
@@ -191,17 +239,32 @@ needed for development).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.store.postgres.PostgresStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">PostgresStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autocommit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#PostgresStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PostgresStore" title="Link to this definition"></a></dt>
-<dd><p>PostgreSQL-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">PostgresStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autocommit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#PostgresStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PostgresStore" title="Link to this definition"></a></dt>
+<dd><p>PostgreSQL-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>, scoped to one tenant.</p>
+<p>A store instance is bound to one <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code> pair; multiple
+instances over the same database (different project ids) coexist without
+seeing each other’s annotations or tiers (see the module docstring on
+multi-tenancy). The mapping/Allen/tier surface is unchanged — the tenant
+scoping is transparent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection_string</strong> – A psycopg-compatible URL or kwargs dict.</p></li>
-<li><p><strong>rate</strong> – Project-wide rate. Set on first init; a re-open with a
-different rate raises <code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code>.</p></li>
-<li><p><strong>autocommit</strong> – If True (default), we run individual statements in
-their own transaction. Set to False when batching via
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">extend()</span></code> (it manages its own BEGIN/COMMIT).</p></li>
+<li><p><strong>connection_string</strong> – A psycopg-compatible conninfo URL, or a kwargs dict
+(<code class="docutils literal notranslate"><span class="pre">host</span></code>/<code class="docutils literal notranslate"><span class="pre">port</span></code>/<code class="docutils literal notranslate"><span class="pre">user</span></code>/<code class="docutils literal notranslate"><span class="pre">password</span></code>/<code class="docutils literal notranslate"><span class="pre">dbname</span></code>).</p></li>
+<li><p><strong>rate</strong> – Project-wide rate for <em>this</em> <code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code>. Set on first
+init for the pair; re-opening the same pair with a different rate
+raises <a class="reference internal" href="#lacing.store.postgres.PgSchemaMismatchError" title="lacing.store.postgres.PgSchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a>. Different projects in the
+same DB may have different rates.</p></li>
+<li><p><strong>owner_id</strong> – Tenant owner. Defaults to <a class="reference internal" href="#lacing.store.postgres.DEFAULT_OWNER_ID" title="lacing.store.postgres.DEFAULT_OWNER_ID"><code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a> — the
+forward seam for the access layer (reelee#174); enforcement deferred.</p></li>
+<li><p><strong>project_id</strong> – Logical project key. Defaults to <a class="reference internal" href="#lacing.store.postgres.DEFAULT_PROJECT_ID" title="lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a>.
+<code class="docutils literal notranslate"><span class="pre">nw</span></code> passes the project’s <code class="docutils literal notranslate"><span class="pre">project_asset_id</span></code> here.</p></li>
+<li><p><strong>autocommit</strong> – If True (default), statements run in their own transaction.</p></li>
+<li><p><strong>use_pool</strong> – When True (default) and the connection is given as a string,
+borrow a connection from a process-wide pool keyed by the conninfo
+(amortizes per-op connect cost; see <a class="reference internal" href="#lacing.store.postgres.get_pool" title="lacing.store.postgres.get_pool"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pool()</span></code></a>). Falls back to
+a dedicated connection when <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is unavailable, when the
+connection is given as a dict, or when <code class="docutils literal notranslate"><span class="pre">use_pool=False</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -232,8 +295,11 @@ Cannot be toggled after the tier has annotations.</p></li>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="lacing.store.postgres.SCHEMA_VERSION">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#lacing.store.postgres.SCHEMA_VERSION" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#lacing.store.postgres.SCHEMA_VERSION" title="Link to this definition"></a></dt>
 <dd><p>Current schema version stored in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table.</p>
+<p>v2 (Phase 4, reelee#177) added tenant columns (<code class="docutils literal notranslate"><span class="pre">owner_id</span></code> / <code class="docutils literal notranslate"><span class="pre">project_id</span></code>)
+to <code class="docutils literal notranslate"><span class="pre">tiers</span></code> and <code class="docutils literal notranslate"><span class="pre">annotations</span></code>, and a per-<code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code> <code class="docutils literal notranslate"><span class="pre">projects</span></code>
+table holding the rate (was a single <code class="docutils literal notranslate"><span class="pre">meta</span></code> row in v1).</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -243,9 +309,37 @@ Cannot be toggled after the tier has annotations.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.close_all_pools">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">close_all_pools</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#close_all_pools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.close_all_pools" title="Link to this definition"></a></dt>
+<dd><p>Close every registered connection pool (test teardown / shutdown).</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lacing.store.postgres.from_memory">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">from_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><span class="pre">PostgresStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#from_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.from_memory" title="Link to this definition"></a></dt>
-<dd><p>Replicate an in-memory store into a Postgres database.</p>
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">from_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><span class="pre">PostgresStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#from_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.from_memory" title="Link to this definition"></a></dt>
+<dd><p>Replicate an in-memory store into a Postgres database (one tenant).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.get_pool">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">get_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pool_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/store/postgres.html#get_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.get_pool" title="Link to this definition"></a></dt>
+<dd><p>Return a process-wide <code class="xref py py-class docutils literal notranslate"><span class="pre">psycopg_pool.ConnectionPool</span></code> for a conninfo.</p>
+<p>One pool per distinct <code class="docutils literal notranslate"><span class="pre">connection_string</span></code> (the keying happens here, not at
+the call-site), created lazily on first request. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">ImportError</span></code>
+if <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is not installed — callers that want a graceful fallback
+catch it (see <a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostgresStore</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_string</strong> – psycopg conninfo URL (the registry key).</p></li>
+<li><p><strong>**pool_kwargs</strong> – forwarded to <code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionPool</span></code> on
+first creation (e.g. <code class="docutils literal notranslate"><span class="pre">min_size</span></code>, <code class="docutils literal notranslate"><span class="pre">max_size</span></code>); ignored on reuse.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The shared pool for this conninfo.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -267,7 +361,7 @@ Cannot be toggled after the tier has annotations.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

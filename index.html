@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.21 documentation</title>
+  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.22 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=a11416ff"></script>
+      <script src="_static/documentation_options.js?v=96ec9c95"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -64,6 +64,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
@@ -273,6 +274,12 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2"><code class="docutils literal notranslate"><span class="pre">NamedEntityBodyV2</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1"><code class="docutils literal notranslate"><span class="pre">ReferenceLockBodyV1</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.Scope"><code class="docutils literal notranslate"><span class="pre">Scope</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.SubjectKind"><code class="docutils literal notranslate"><span class="pre">SubjectKind</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.Author"><code class="docutils literal notranslate"><span class="pre">Author</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1"><code class="docutils literal notranslate"><span class="pre">ReviewBodyV1</span></code></a></li>
@@ -379,6 +386,8 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/base.html">lacing.store.base</a><ul>
@@ -390,12 +399,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/postgres.html">lacing.store.postgres</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#multi-tenancy-phase-4-reelee-177">Multi-tenancy (Phase 4, reelee#177)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#connection-pooling-phase-4">Connection pooling (Phase 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_OWNER_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
 </ul>
 </li>
@@ -447,8 +462,8 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<p>Release: 0.0.21</p>
-<p>Last change: May 27, 2026</p>
+<p>Release: 0.0.22</p>
+<p>Last change: Jul 23, 2026</p>
 </section>
 
 
@@ -461,7 +476,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

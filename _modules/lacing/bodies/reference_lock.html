@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.bodies.reference_lock &mdash; lacing 0.0.22 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=96ec9c95"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.bodies.reference_lock</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.bodies.reference_lock</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Body schema for a *locked reference* — a first-class “this is canonical”.</span>
+
+<span class="sd">URI: ``annot://schema/reference-lock/v1``</span>
+
+<span class="sd">A **reference lock** records the decision that one or more reference</span>
+<span class="sd">artifacts *are* the canonical anchor for some subject — a character&#39;s</span>
+<span class="sd">face, a location&#39;s architecture, a style, a prop. Once a subject is</span>
+<span class="sd">locked, a *supervisor* can check every later generation against the</span>
+<span class="sd">locked anchor and flag drift (the consumer in reelee runs the</span>
+<span class="sd">identity/likeness comparison and emits ``continuity-violation/v1``</span>
+<span class="sd">annotations; this schema only carries the *decision*, not the result).</span>
+
+<span class="sd">The shape is deliberately general so it fits several real workflows</span>
+<span class="sd">without a schema bump:</span>
+
+<span class="sd">- **One image or a set.** ``locked_artifact_ids`` holds 1..N artifacts.</span>
+<span class="sd">  Lock a single canonical headshot, or a set (front / three-quarter /</span>
+<span class="sd">  full-body / expression sheet). ``primary_artifact_id`` names the one</span>
+<span class="sd">  to show by default.</span>
+<span class="sd">- **Project- or scene-scoped.** ``scope`` is ``&quot;project&quot;`` by default</span>
+<span class="sd">  (the character is locked for the whole piece) or ``&quot;scene&quot;`` (a</span>
+<span class="sd">  re-lock for a flashback / costume change), in which case</span>
+<span class="sd">  ``scope_ref`` names the scene/segment it applies to. Re-locks chain</span>
+<span class="sd">  via ``supersedes`` (the prior lock&#39;s annotation id).</span>
+<span class="sd">- **Per-aspect checklist with advisory-by-default gating.**</span>
+<span class="sd">  ``checklist`` is the set of aspects the supervisor compares</span>
+<span class="sd">  (``&quot;face&quot;``, ``&quot;architecture&quot;``, ``&quot;props&quot;``, ``&quot;lighting&quot;``,</span>
+<span class="sd">  ``&quot;costume&quot;``, ``&quot;palette&quot;``, …). ``hard_gates`` is the subset that</span>
+<span class="sd">  *blocks* on mismatch; it defaults to empty, so every aspect is</span>
+<span class="sd">  **advisory** (flag, never auto-reject) — honouring the field</span>
+<span class="sd">  observation that over-strict likeness filters waste the user&#39;s time</span>
+<span class="sd">  rejecting perfectly good images.</span>
+
+<span class="sd">The lock is itself an annotation; *who* locked it and *when* live in</span>
+<span class="sd">the annotation&#39;s PROV-O provenance, not in this body.</span>
+
+<span class="sd">Reference: ``reelee/docs/Narrative to Storyboard.md`` (reference</span>
+<span class="sd">consistency); reelee-web epic #151, lacing #9.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
+
+
+<span class="n">REFERENCE_LOCK_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/reference-lock/v1&quot;</span>
+
+
+<span class="n">SubjectKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;character&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">,</span> <span class="s2">&quot;prop&quot;</span><span class="p">,</span> <span class="s2">&quot;other&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;What the lock anchors. ``character`` (a face/identity), ``location``</span>
+<span class="sd">(architecture / set), ``style`` (look anchor), ``prop`` (a recurring</span>
+<span class="sd">object), or ``other`` for anything not yet enumerated.&quot;&quot;&quot;</span>
+
+
+<span class="n">Scope</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;scene&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;``project`` — locked for the whole piece (the default). ``scene`` —</span>
+<span class="sd">re-locked for one scene/segment (flashback, costume change); requires</span>
+<span class="sd">``scope_ref``.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="ReferenceLockBodyV1">
+<a class="viewcode-back" href="../../../module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReferenceLockBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Body of a reference-lock annotation.</span>
+
+<span class="sd">    Records that ``locked_artifact_ids`` are the canonical anchor for</span>
+<span class="sd">    ``subject_id`` (a ``subject_kind``), the aspects a supervisor should</span>
+<span class="sd">    compare (``checklist``), which of those block vs merely warn</span>
+<span class="sd">    (``hard_gates``), and the advisory identity threshold</span>
+<span class="sd">    (``min_similarity``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+
+    <span class="n">subject_kind</span><span class="p">:</span> <span class="n">SubjectKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What this lock anchors — character / location / style / prop / other.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">subject_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Id (or stable name) of the entity this lock anchors — e.g. a &quot;</span>
+            <span class="s2">&quot;character-ref / location-ref annotation id.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">locked_artifact_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;1..N reference artifact / annotation ids that *are* the &quot;</span>
+            <span class="s2">&quot;canonical anchor. One canonical image, or a set &quot;</span>
+            <span class="s2">&quot;(front / three-quarter / full-body / expressions).&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">primary_artifact_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The representative artifact to display; must be one of &quot;</span>
+            <span class="s2">&quot;``locked_artifact_ids``. Defaults to the first when omitted.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;project&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lock scope — &#39;project&#39; (whole piece) or &#39;scene&#39; (re-lock).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scope_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;When ``scope == &#39;scene&#39;``, the scene/segment id this lock &quot;</span>
+            <span class="s2">&quot;applies to. Must be None for project scope.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">checklist</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="p">(</span><span class="s2">&quot;face&quot;</span><span class="p">,),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Aspects the supervisor compares against the anchor — e.g. &quot;</span>
+            <span class="s2">&quot;&#39;face&#39;, &#39;architecture&#39;, &#39;props&#39;, &#39;lighting&#39;, &#39;costume&#39;, &quot;</span>
+            <span class="s2">&quot;&#39;palette&#39;. Strings (not Literal) so new aspects need no &quot;</span>
+            <span class="s2">&quot;schema bump.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">hard_gates</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="p">(),</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Subset of ``checklist`` that BLOCKS on mismatch (auto-reject &quot;</span>
+            <span class="s2">&quot;/ queue regen). Empty by default → every aspect is advisory &quot;</span>
+            <span class="s2">&quot;(flag, never auto-block).&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">min_similarity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Advisory identity-similarity threshold in [0, 1]; a candidate &quot;</span>
+            <span class="s2">&quot;scoring below this is flagged as drift. None → use the &quot;</span>
+            <span class="s2">&quot;supervisor&#39;s system default.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">supersedes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Prior reference-lock annotation id this re-lock replaces &quot;</span>
+            <span class="s2">&quot;(costume change, scene re-lock). None for the first lock.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">notes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Human checklist hints the vision supervisor can use — e.g. &quot;</span>
+            <span class="s2">&quot;&#39;the green flat cap is present&#39;, &#39;same bar layout&#39;.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Opaque per-aspect config (e.g. per-aspect thresholds). &quot;</span>
+            <span class="s2">&quot;Ignored by lacing; consumed by the producing supervisor.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ReferenceLockBodyV1&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locked_artifact_ids</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;primary_artifact_id must be one of locked_artifact_ids &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span><span class="si">!r}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="n">extra_gates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_gates</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checklist</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_gates</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;hard_gates must be a subset of checklist; unknown: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">extra_gates</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">&quot;scene&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scope_ref is required when scope == &#39;scene&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">&quot;project&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scope_ref must be None when scope == &#39;project&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">primary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The artifact id to display — ``primary_artifact_id`` or the first locked one.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">locked_artifact_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<span class="n">register_body_schema</span><span class="p">(</span><span class="n">REFERENCE_LOCK_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ReferenceLockBodyV1</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

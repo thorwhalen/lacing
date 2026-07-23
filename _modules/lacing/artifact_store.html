@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.21 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.22 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=a11416ff"></script>
+      <script src="../../_static/documentation_options.js?v=96ec9c95"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -62,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
@@ -179,7 +180,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -190,6 +191,30 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">hash_bytes</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ArtifactStore&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_mk_sql_refcount</span><span class="p">(</span><span class="n">sql_store</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a ``content_hash -&gt; row count`` query over a ``sqldol`` store.</span>
+
+<span class="sd">    Reaches through the ``sqldol.SQLAlchemyStore`` to its persister&#39;s ORM</span>
+<span class="sd">    session and counts rows whose indexed ``content_hash`` column matches —</span>
+<span class="sd">    one query, not a scan. Used by :meth:`ArtifactStore.from_sql` to wire the</span>
+<span class="sd">    GC reference-count capability that :meth:`ArtifactStore.count_refs` probes</span>
+<span class="sd">    for. Works identically on SQLite and Postgres (plain SQLAlchemy).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">func</span>
+
+    <span class="n">persister</span> <span class="o">=</span> <span class="n">sql_store</span><span class="o">.</span><span class="n">store</span>  <span class="c1"># the SQLAlchemyPersister behind the dol Store</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">persister</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">__table__</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">refcount</span><span class="p">(</span><span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">persister</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">content_hash</span> <span class="o">==</span> <span class="n">content_hash</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">refcount</span>
 
 
 <div class="viewcode-block" id="ArtifactStore">
@@ -406,6 +431,35 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">content_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span></div>
 
 
+<div class="viewcode-block" id="ArtifactStore.blob_location">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.blob_location">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blob_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;str | Path | None&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the cheapest *servable* location for a blob — without</span>
+<span class="sd">        reading its bytes. The capability the HTTP layer probes to serve a</span>
+<span class="sd">        blob the most efficient way, generalizing :meth:`blob_path` so</span>
+<span class="sd">        filesystem / S3 / R2 backends all answer one probe:</span>
+
+<span class="sd">        - **object-store** backends (S3/R2) that expose a presigned-URL</span>
+<span class="sd">          capability — a ``url_for(content_hash)`` callable — return a **URL</span>
+<span class="sd">          string**, so the caller can 302-redirect and let the object store</span>
+<span class="sd">          serve the bytes (and HTTP ``Range``) directly, off the app process;</span>
+<span class="sd">        - **filesystem** backends return a local **Path** (see</span>
+<span class="sd">          :meth:`blob_path`) so the caller hands the OS the file (Range free);</span>
+<span class="sd">        - everything else (plain ``dict``, or a missing blob) returns</span>
+<span class="sd">          ``None`` — the cue to fall back to :meth:`iter_blob` streaming.</span>
+
+<span class="sd">        Callers treat ``None`` as &quot;stream it&quot;, not as an error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">content_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">url_for</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;url_for&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">url_for</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">url</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_path</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span></div>
+
+
     <span class="c1"># -- constructors ------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ArtifactStore.in_memory">
@@ -456,6 +510,235 @@
         <span class="p">)</span>
         <span class="n">blobs</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">blob_dir</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.count_refs">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.count_refs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_refs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;How many catalog records point at ``content_hash`` (a blob).</span>
+
+<span class="sd">        The reference count that a garbage collector needs: a blob is safe to</span>
+<span class="sd">        delete only when **no** catalog record still names its content hash.</span>
+<span class="sd">        Content-addressed blobs are deduplicated, so two artifacts can share</span>
+<span class="sd">        one blob — deleting the blob the moment one of them goes away would</span>
+<span class="sd">        orphan the other.</span>
+
+<span class="sd">        This is the *probe* half of a capability pair (mirroring</span>
+<span class="sd">        :meth:`blob_location` probing a blob store for ``url_for``): a catalog</span>
+<span class="sd">        backend that can answer the count cheaply — the SQL catalog from</span>
+<span class="sd">        :meth:`from_sql`, via an indexed ``content_hash`` column — exposes a</span>
+<span class="sd">        ``refcount_by_content_hash`` callable, and this method uses it so the</span>
+<span class="sd">        count is **one indexed query, not a full catalog scan**. Any other</span>
+<span class="sd">        catalog (dict, ``Files``) falls back to scanning every record. The</span>
+<span class="sd">        facade is unchanged either way; only the speed differs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            content_hash: The blob&#39;s content hash (``Artifact.asset_id``).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The number of catalog records whose content hash equals</span>
+<span class="sd">            ``content_hash``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span> <span class="s2">&quot;refcount_by_content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">fast</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fast</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+        <span class="c1"># Fallback: scan every record. Reads the content hash off whichever of</span>
+        <span class="c1"># the conventional fields the record carries (``asset_id`` first — the</span>
+        <span class="c1"># canonical Artifact field — then ``content_hash``).</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">rec_hash</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">record</span><span class="p">,</span> <span class="s2">&quot;content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">rec_hash</span> <span class="o">==</span> <span class="n">content_hash</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.from_s3">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.from_s3">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_s3</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">catalog</span><span class="p">:</span> <span class="s2">&quot;MutableMapping[str, BaseModel] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">s3_kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore with **blobs in an S3-compatible object store**</span>
+<span class="sd">        (AWS S3 / Cloudflare R2 / MinIO / Supabase) via ``s3dol``.</span>
+
+<span class="sd">        Content-addressed blobs are a natural fit for object storage: flat,</span>
+<span class="sd">        immutable, dedup-friendly, forever-cacheable keys. :meth:`blob_location`</span>
+<span class="sd">        returns a presigned GET URL (via s3dol&#39;s ``url_for``) so a serving layer</span>
+<span class="sd">        can 302-redirect and let the store deliver the bytes (and HTTP ``Range``)</span>
+<span class="sd">        directly, off the app process.</span>
+
+<span class="sd">        The blob and catalog backends are independent by design: the catalog</span>
+<span class="sd">        defaults to an in-memory dict here — swap in a durable catalog (e.g. a</span>
+<span class="sd">        Postgres-backed ``MutableMapping``) for production.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket_name: The object-store bucket.</span>
+<span class="sd">            catalog: The ``id -&gt; record`` catalog ``MutableMapping``. Defaults</span>
+<span class="sd">                to ``{}`` (in-memory).</span>
+<span class="sd">            prefix: Optional key prefix within the bucket (e.g. ``&quot;blobs&quot;``).</span>
+<span class="sd">            **s3_kwargs: Forwarded to ``s3dol.store.S3Store`` — credentials</span>
+<span class="sd">                (``aws_access_key_id`` / ``aws_secret_access_key`` /</span>
+<span class="sd">                ``profile_name``), ``endpoint_url`` (set for R2 / MinIO /</span>
+<span class="sd">                Supabase), ``region_name``, ``make_bucket``, etc.</span>
+
+<span class="sd">        Requires ``s3dol`` (and ``boto3``) — imported lazily so the dependency</span>
+<span class="sd">        is only needed when this constructor is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">s3dol.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">S3Store</span>
+
+        <span class="n">blobs</span> <span class="o">=</span> <span class="n">S3Store</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="n">s3_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="p">{}</span> <span class="k">if</span> <span class="n">catalog</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.from_sql">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.from_sql">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_sql</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">blobs</span><span class="p">:</span> <span class="s2">&quot;MutableMapping[str, bytes] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;artifact_catalog&quot;</span><span class="p">,</span>
+        <span class="n">content_hash_of</span><span class="p">:</span> <span class="s2">&quot;Callable[[BaseModel], str | None] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">db_kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore with a **SQL-backed catalog** (durable, queryable)</span>
+<span class="sd">        via ``sqldol`` — the SQL counterpart of :meth:`from_s3`&#39;s object store.</span>
+
+<span class="sd">        The catalog row schema is deliberately minimal and **vendor-neutral**:</span>
+<span class="sd">        one ``TEXT`` column holds the record serialized exactly as</span>
+<span class="sd">        :meth:`from_directory` serializes it (``record.model_dump_json`` out,</span>
+<span class="sd">        ``record_type.model_validate_json`` in), and one indexed ``content_hash``</span>
+<span class="sd">        column carries the record&#39;s blob hash so the GC reference count</span>
+<span class="sd">        (:meth:`count_refs`) is a single indexed query rather than a full scan.</span>
+
+<span class="sd">        Because the connection is just a SQLAlchemy URI, the *same* code runs</span>
+<span class="sd">        on SQLite for tests and on Postgres in production — that is the whole</span>
+<span class="sd">        point of the facade. Pick the backend with the ``uri`` alone::</span>
+
+<span class="sd">            ArtifactStore.from_sql(&quot;sqlite:///artifacts.db&quot;)          # local / tests</span>
+<span class="sd">            ArtifactStore.from_sql(&quot;postgresql://u:p@host:5432/db&quot;)   # production</span>
+
+<span class="sd">        The catalog and blob backends are independent: pass ``blobs`` to pair a</span>
+<span class="sd">        SQL catalog with any blob store (e.g. ``from_s3``&#39;s ``S3Store``), or</span>
+<span class="sd">        leave it ``None`` for a catalog-only store (Stage-1 metadata</span>
+<span class="sd">        persistence; see :meth:`from_aws` for the common S3 + SQL pairing).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            uri: SQLAlchemy connection URI (``sqlite:///…`` or</span>
+<span class="sd">                ``postgresql://…``). The single knob that selects the vendor.</span>
+<span class="sd">            blobs: Optional ``content_hash -&gt; bytes`` blob store. ``None`` for a</span>
+<span class="sd">                catalog-only store.</span>
+<span class="sd">            record_type: The pydantic model the catalog deserializes JSON into.</span>
+<span class="sd">                Defaults to :class:`~lacing.artifact.Artifact`; callers with</span>
+<span class="sd">                their own record schema pass their model here.</span>
+<span class="sd">            collection_name: The SQL table name for the catalog.</span>
+<span class="sd">            content_hash_of: How to read a record&#39;s blob hash for the indexed</span>
+<span class="sd">                ``content_hash`` column. Defaults to ``asset_id`` (the canonical</span>
+<span class="sd">                Artifact field), then ``content_hash``. Pass a callable for a</span>
+<span class="sd">                record whose hash lives elsewhere; records without a hash store</span>
+<span class="sd">                an empty string.</span>
+<span class="sd">            **db_kwargs: Forwarded to ``sqldol.SQLAlchemyStore`` /</span>
+<span class="sd">                SQLAlchemy&#39;s ``create_engine`` (e.g. ``connect_args``,</span>
+<span class="sd">                ``pool_size``).</span>
+
+<span class="sd">        Requires ``sqldol`` (and ``SQLAlchemy``) — imported lazily so the</span>
+<span class="sd">        dependency is only needed when this constructor is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sqldol</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemyStore</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sqldol.sql_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemyPersister</span>
+
+        <span class="k">if</span> <span class="n">content_hash_of</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">content_hash_of</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
+                    <span class="n">record</span><span class="p">,</span> <span class="s2">&quot;content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span>
+                <span class="p">)</span>
+
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">SQLAlchemyStore</span><span class="p">(</span>
+            <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">,</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+            <span class="n">key_fields</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">},</span>
+            <span class="n">data_fields</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;record_json&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_TEXT</span><span class="p">,</span>
+                <span class="s2">&quot;content_hash&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="n">db_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_key_of_id</span><span class="p">(</span><span class="n">row_or_key</span><span class="p">):</span>
+            <span class="c1"># ``wrap_kvs`` hands this the key dict on writes and the ORM row on</span>
+            <span class="c1"># iteration (sqldol&#39;s ``__iter__`` yields rows, not keys).</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row_or_key</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">row_or_key</span><span class="p">[</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">row_or_key</span><span class="o">.</span><span class="n">artifact_id</span>
+
+        <span class="n">catalog</span> <span class="o">=</span> <span class="n">wrap_kvs</span><span class="p">(</span>
+            <span class="n">raw</span><span class="p">,</span>
+            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">:</span> <span class="n">artifact_id</span><span class="p">},</span>
+            <span class="n">key_of_id</span><span class="o">=</span><span class="n">_key_of_id</span><span class="p">,</span>
+            <span class="n">data_of_obj</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;record_json&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(),</span>
+                <span class="s2">&quot;content_hash&quot;</span><span class="p">:</span> <span class="n">content_hash_of</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">obj_of_data</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">record_type</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">record_json</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># Attach the GC reference-count capability so ``count_refs`` resolves it</span>
+        <span class="c1"># to a single indexed query (the probe pattern; see ``count_refs``).</span>
+        <span class="n">catalog</span><span class="o">.</span><span class="n">refcount_by_content_hash</span> <span class="o">=</span> <span class="n">_mk_sql_refcount</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.from_aws">
+<a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.from_aws">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_aws</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;artifact_catalog&quot;</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="s2">&quot;dict | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sql_kwargs</span><span class="p">:</span> <span class="s2">&quot;dict | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The production pairing: **S3-compatible blobs + SQL catalog**.</span>
+
+<span class="sd">        A thin convenience over :meth:`from_s3` (blobs) and :meth:`from_sql`</span>
+<span class="sd">        (catalog) so the common cloud deployment is one call. The blob store is</span>
+<span class="sd">        an ``S3Store`` (AWS S3 / Cloudflare R2 / MinIO / Supabase); the catalog</span>
+<span class="sd">        is the durable, queryable SQL table — Postgres in production, SQLite for</span>
+<span class="sd">        a smoke test. Vendor specifics live only in the two kwargs dicts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket_name: Object-store bucket for the content-addressed blobs.</span>
+<span class="sd">            uri: SQLAlchemy URI for the catalog (``postgresql://…`` in prod).</span>
+<span class="sd">            record_type: Pydantic model the catalog (de)serializes.</span>
+<span class="sd">            collection_name: SQL table name for the catalog.</span>
+<span class="sd">            prefix: Optional key prefix within the bucket.</span>
+<span class="sd">            s3_kwargs: Extra kwargs forwarded to :meth:`from_s3` (credentials,</span>
+<span class="sd">                ``endpoint_url`` for R2/MinIO/Supabase, ``region_name``, …).</span>
+<span class="sd">            sql_kwargs: Extra kwargs forwarded to :meth:`from_sql`</span>
+<span class="sd">                (``content_hash_of``, SQLAlchemy engine kwargs, …).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s3_store</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_s3</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">s3_kwargs</span> <span class="ow">or</span> <span class="p">{}))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span>
+            <span class="n">uri</span><span class="p">,</span>
+            <span class="n">blobs</span><span class="o">=</span><span class="n">s3_store</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span>
+            <span class="n">record_type</span><span class="o">=</span><span class="n">record_type</span><span class="p">,</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">(</span><span class="n">sql_kwargs</span> <span class="ow">or</span> <span class="p">{}),</span>
+        <span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -467,7 +750,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
