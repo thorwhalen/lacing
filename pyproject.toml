@@ -162,6 +162,14 @@ doctest_optionflags = [
 [tool.wads.ci]
 project_name = ""
 
+# Install the `dev` extra in CI. Without this, read-ci-config emits empty
+# install-extras and the reusable workflow runs `uv pip install -e .` (core
+# only) — so test-only deps (anyio for @pytest.mark.anyio, fastapi/httpx,
+# praatio/jams, moto, …) are absent and their tests fail/skip in CI while
+# passing locally.
+[tool.wads.ci.install]
+extras = "dev"
+
 [tool.wads.ci.commands]
 pre_test = []
 test = []
