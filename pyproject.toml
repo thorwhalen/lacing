@@ -10,6 +10,7 @@ version = "0.0.22"
 description = "Interval annotation system"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 keywords = []
 authors = [
     { name = "Thor Whalen" },
@@ -24,9 +25,6 @@ dependencies = [
 [project.scripts]
 lacing = "lacing.cli:main"
 
-[project.license]
-text = "mit"
-
 [project.urls]
 Homepage = "https://github.com/thorwhalen/lacing"
 Repository = "https://github.com/thorwhalen/lacing"
@@ -37,6 +35,11 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "ruff>=0.1.0",
+    # anyio provides the pytest plugin that handles @pytest.mark.anyio
+    # (tests/test_processors.py::test_run_async). It was only present locally
+    # (transitively) — CI's clean .[dev] install lacked it, so the async test
+    # errored "async def functions are not natively supported". Explicit now.
+    "anyio>=4.0",
     "praatio>=6.0",
     "pympi-ling>=1.7",
     "jams>=0.3",
