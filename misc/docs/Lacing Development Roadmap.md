@@ -61,6 +61,52 @@ Sources: ANN-DOC §C "Standoff annotation and the interval tree core";
 BACK-DOC §2.1, §4.1; FRONT-DOC §1.8 "Recommendation Matrix",
 §6.1 "Component tree"; OSS-DOC "Final Synthesis".
 
+### Externally validated (2026-08-03)
+
+An 18-deliverable survey of node-graph systems for generative media (the
+video_gen research programme — briefs A–G on the design space, H–O on
+ComfyUI at source; held in a private research repo, entry point
+`data/groups/video_gen/docs/reelee_comfyui_decisions_and_rationale.md`,
+evidence under `data/groups/video_gen/docs/research/`) checked this North
+Star against every comparable system it could read at source. **The core
+bet holds, and the survey sharpens it.**
+
+- **No generative canvas has time at all.** ComfyUI, ElevenLabs Flows,
+  Runway Workflows, Adobe Firefly Graph, Weave, Krea Nodes, Flora and
+  Higgsfield Canvas all evaluate the graph exactly once; a video is an
+  opaque blob emitted by one node; there is no `t`, and a parameter cannot
+  be animated. Confirmed without exception.
+- **DCC compositors have `f(t)`, not intervals.** Nuke propagates an
+  `OutputContext` (frame, view, proxy scale) *upstream* — "time belongs in
+  the demand, not in the graph." Houdini and Blender treat frame as global
+  scene state with explicit cache barriers. That is a **sampling** model.
+- **Fusion and Notch ship editable per-node time extents** — so "nobody has
+  intervals" would be too strong. They are *extents*, not *relations*.
+- **Nothing anywhere has an interval algebra.** No Allen relations, no
+  "this beat *meets* that beat", no alignment as a queryable predicate.
+
+**The sharpened claim: the differentiator is the RELATIONAL layer, not
+intervals as such.** `lacing/allen.py` plus the store surface declared at
+`lacing/store/base.py:66-98` — `intersects` / `during` / `contains` /
+`overlaps` / `meets` / `starts` / `finishes` / `equals` / `relate` — is the
+part no surveyed system has. A sampling model answers "what is the value at
+*t*"; it cannot answer "which beats overlap this scene", "does this
+voiceover finish before this cut", or "which annotations are contained in
+this shot" without a scan.
+
+Two consequences for how we build:
+
+1. Keep Phase 5's **first-class Allen's interval algebra** at the top of the
+   differentiator list, and treat the relational query surface — not the
+   `TimeInterval` type — as the thing to polish and document first.
+2. **Do not let the annotation tier and an execution tier borrow each
+   other's time model.** The annotation tier owns intervals and relations.
+   An execution tier (`nw`, `falaw`) should adopt Nuke's model: the interval
+   travels on the *demand* that materialises a work item, never baked into
+   the transform — so changing a time range does not edit the graph.
+
+*Source: brief G `GAP-TIME` (`data/groups/video_gen/docs/research/G_synthesis_and_gap_analysis.md`).*
+
 ---
 
 ## Non-negotiables (locked in by all four docs)
@@ -190,6 +236,21 @@ packages so users can adopt the data model without infra.
 > `-|-` operators. The project rate is stored in `meta` and enforced on
 > insert; opening with a different rate raises `PgSchemaMismatchError`.
 
+> **Correction — "forward migrations" above is body-schema-only.** The
+> `schema.py` ✓ covers `register_migration` / `migrate`
+> (`lacing/schema.py:231`, `:261`), whose registry is keyed
+> `(schema_name, from_version)` and whose callables are `dict -> dict` over
+> annotation **bodies** (`lacing/schema.py:224`). There is **no migration
+> path for the envelope or the on-disk store.** `Annotation`, `Provenance`
+> and `Artifact` carry no version field at all, and `SqliteStore` /
+> `PgStore` hold a `SCHEMA_VERSION` in `meta` that they *check and refuse
+> on mismatch* (`lacing/store/sqlite.py:62`, `:167-170`;
+> `lacing/store/postgres.py:89`, `:370-373`). `lacing/store/sqlite.py:22-23`
+> documents an upgrade-function registry that does not exist, and Postgres
+> is already at `SCHEMA_VERSION = 2` with no v1→v2 path in the tree — a v1
+> database, if any exists, is unopenable rather than upgradable. Any change
+> to the envelope (Phase 6) needs that ladder built first.
+
 ### Phase 2 — Server (2–3 weeks)
 *Sources: BACK-DOC §3, §4.6, §4.7, §6.*
 
@@ -259,6 +320,68 @@ tier + viseme tier + program monitor + inspector.** Build exactly that.
 - **Schema-versioned bodies with registered migrations** (BACK-DOC §4.5).
 - **MCP-native** — agents alongside humans, identical provenance treatment.
 
+### Phase 6 — Provenance completeness & content addressing (generative pipelines)
+*Sources: the video_gen research programme, held in a private research repo
+— brief B (`EVAL-CACHEKEY`, `EVAL-EARLY-CUTOFF`), brief C (`FMT-ONNX-2`,
+`FMT-F-KEEPALL`, §10.1), brief G (`GAP-PROVENANCE`, `GAP-EARLY-CUTOFF`,
+`GAP-CONTRACT-CACHE`, §4.4), brief O §4.6 and §5; decisions of record §6
+and §9. Unlike the companion docs listed at the top of this file, these are
+not in this folder; paths are
+`data/groups/video_gen/docs/research/<BRIEF>.md`.*
+
+lacing is the annotation SSOT for the video_gen federation (`nw`, `falaw`,
+`reelee`, `braidio`, `artful`). That survey found **provenance completeness
+is the strongest confirmed gap in the whole field** — and that one of its
+breakdown modes is structural and ours:
+
+> `Provenance.was_derived_from` is typed `list[UUID]`
+> (`lacing/model.py:86`), while a `lacing.Artifact` is identified by a
+> 64-char hex `asset_id` (`lacing/artifact.py:117-123`). **Artifact-to-
+> artifact lineage is unrepresentable and is always empty — at exactly the
+> tier where the expensive things live.**
+
+This phase is what lacing owes the rest of the federation. It gates
+downstream content-addressed early cutoff (`falaw`'s cache key,
+`nw.stale_after`), which the survey rates the single highest-value item in
+its whole build order: without it, a re-run producing byte-identical output
+still invalidates every downstream node, and a 200-shot fan-out is the
+difference between free and several hundred dollars.
+
+In dependency order:
+
+1. **A store-schema migration ladder** (`lacing/store/`). `SCHEMA_VERSION`
+   exists and *refuses* on mismatch; it does not upgrade, and no registry
+   exists. Prerequisite for (2).
+2. **Artifact-to-artifact lineage** — the `Provenance.was_derived_from`
+   design pass plus migration. This falls under the on-disk-format
+   exception to the federation's no-compat-shims rule: real data lives on
+   the live server, so it needs a genuine migration, not a rename.
+3. **`annotation_value_digest`** — a digest over an annotation's *value*
+   (`tier`, `reference`, `body`, `body_schema_uri`, `confidence`),
+   excluding `id` and `provenance`. Deliberately distinct from
+   `annotation_etag` (`lacing/server/etag.py:19`), which digests the whole
+   annotation and is correct for optimistic concurrency and wrong for this.
+   One function; unlocks early cutoff for every downstream consumer, and
+   depends on nothing else in this phase.
+4. **Provenance completions** — a `CacheResolution` activity (three briefs
+   independently concluded that a cache hit is a provenance event), a
+   `ParameterSet` / `parameters_digest`, port-name-as-`prov:Role` on
+   derivation edges, and a `provider_probe_digest` for silent model drift.
+   **Silent model drift is unsolved by every format, system and provider
+   surveyed** — shipping the canary-probe digest would make lacing the only
+   system in that survey able to detect a vendor swapping a model under a
+   stable name.
+5. **Registry identity discipline** — versioned adapter and body-schema
+   identity, an explicitly-settable default version (not `max()`), and no
+   silent replacement on re-registration. Copy InvokeAI's
+   `@invocation(type, …, version, …)` contract (Apache-2.0); ComfyUI has no
+   opset-style versioning at all and is the anti-pattern here.
+
+**Deliberately out of scope:** anything that makes lacing know an execution
+backend exists. lacing stays the annotation SSOT; the execution tier is
+`nw` + `falaw`, and the survey's central architectural ruling is that
+nothing above the execution façade may name a backend.
+
 ---
 
 ## Stack summary
@@ -269,7 +392,7 @@ tier + viseme tier + program monitor + inspector.** Build exactly that.
 | Core data | Pydantic v2, single envelope | BACK-DOC §2.1 |
 | In-memory index | `intervaltree` (Apache-2.0) | ANN-DOC §C |
 | Embedded DB | SQLite + R*Tree → `.annot` | BACK-DOC §3.1 |
-| Server DB | Postgres 15 + `tstzrange` + GiST | BACK-DOC §4.2 |
+| Server DB | Postgres 15 + `int8range` + GiST (see Phase 1 note) | BACK-DOC §4.2 |
 | Web framework | FastAPI | BACK-DOC §6 |
 | Workers | Arq (Redis) | BACK-DOC §6 |
 | Agent interface | `mcp[cli]` | BACK-DOC §3.3 |
