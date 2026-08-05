@@ -44,6 +44,7 @@ store = load("speech.TextGrid", rate=1000)
 
 # Query overlaps using Allen's relations
 from lacing.time import RationalTime, TimeInterval
+
 window = TimeInterval(RationalTime(500, 1000), RationalTime(1500, 1000))
 
 for ann in store.intersects(window):
@@ -72,22 +73,25 @@ from lacing.tracks.subtitle import SubtitleBuilder, SubtitleTrack
 
 store = MemoryStore()
 with SubtitleBuilder(store, asset_id="song/audio.mp3") as b:
-    b.section("intro",   0.0, 12.5)
+    b.section("intro", 0.0, 12.5)
     b.section("verse_1", 12.5, 35.0)
     b.line(
-        "I came down to the river", 12.5, 16.2,
-        section="verse_1", line_index=0,
+        "I came down to the river",
+        12.5,
+        16.2,
+        section="verse_1",
+        line_index=0,
         words=[
-            ("I",     12.5, 12.7),
-            ("came",  12.7, 13.0, 0.95),  # optional confidence
-            ("down",  13.0, 13.3),
+            ("I", 12.5, 12.7),
+            ("came", 12.7, 13.0, 0.95),  # optional confidence
+            ("down", 13.0, 13.3),
         ],
     )
 
 track = SubtitleTrack(store, asset_id="song/audio.mp3")
-track.lines_in(15.0, 17.0)        # lines overlapping the window
-track.words_in(12.5, 13.5)        # words overlapping the window
-track.sections_covering(20.0)     # sections containing this instant
+track.lines_in(15.0, 17.0)  # lines overlapping the window
+track.words_in(12.5, 13.5)  # words overlapping the window
+track.sections_covering(20.0)  # sections containing this instant
 ```
 
 The facade reuses `at_tier` / `by_tier` under the hood; anything you
@@ -149,28 +153,35 @@ and an OSS deep-dive of what to build on. The synthesized plan is in
 ```python
 from uuid import uuid4
 from lacing import (
-    Annotation, MediaRef, MemoryStore, Provenance,
-    RationalTime, TimeInterval, Tier,
+    Annotation,
+    MediaRef,
+    MemoryStore,
+    Provenance,
+    RationalTime,
+    TimeInterval,
+    Tier,
 )
 
 store = MemoryStore()
 store.add_tier(Tier("words"))
 
-store.add(Annotation(
-    id=uuid4(),
-    tier="words",
-    reference=MediaRef(
-        asset_id="blake3:abc123",
-        interval=TimeInterval.from_seconds("0.0", "0.5", rate=1000),
-    ),
-    body={"text": "hello"},
-    body_schema_uri="annot://schema/word/v1",
-    provenance=Provenance(
-        was_generated_by="user:thor",
-        was_attributed_to="thor",
-        generated_at_time=RationalTime.zero(1000),
-    ),
-))
+store.add(
+    Annotation(
+        id=uuid4(),
+        tier="words",
+        reference=MediaRef(
+            asset_id="blake3:abc123",
+            interval=TimeInterval.from_seconds("0.0", "0.5", rate=1000),
+        ),
+        body={"text": "hello"},
+        body_schema_uri="annot://schema/word/v1",
+        provenance=Provenance(
+            was_generated_by="user:thor",
+            was_attributed_to="thor",
+            generated_at_time=RationalTime.zero(1000),
+        ),
+    )
+)
 ```
 
 ### Query with Allen's relations
@@ -181,10 +192,10 @@ from lacing.time import RationalTime, TimeInterval
 
 w = TimeInterval(RationalTime(0, 1000), RationalTime(500, 1000))
 
-list(store.intersects(w))                       # any overlap
-list(store.during(w))                           # strictly inside w
-list(store.contains(w))                         # strictly contains w
-list(store.relate(w, [AllenRelation.MEETS]))   # ends at w.start
+list(store.intersects(w))  # any overlap
+list(store.during(w))  # strictly inside w
+list(store.contains(w))  # strictly contains w
+list(store.relate(w, [AllenRelation.MEETS]))  # ends at w.start
 ```
 
 ### Persist annotations
@@ -195,7 +206,7 @@ from lacing.store import SqliteStore
 # Open or create a .annot file (SQLite under the hood)
 store = SqliteStore("project.annot")
 store.add_tier(...)
-store.add(...)            # writes go straight to disk
+store.add(...)  # writes go straight to disk
 store.set_meta("project", "demo")
 
 # Same MutableMapping + Allen-relation interface as MemoryStore
@@ -246,25 +257,29 @@ your own with a Pydantic v2 model:
 from pydantic import BaseModel, Field
 from lacing.schema import register_body_schema, register_migration, validate, migrate
 
+
 class WordBodyV1(BaseModel):
     model_config = {"frozen": True, "extra": "forbid"}
     text: str = Field(...)
     speaker: str | None = None
+
 
 register_body_schema("annot://schema/word/v1", WordBodyV1)
 
 # Validate at runtime:
 validate({"text": "hello"}, "annot://schema/word/v1")
 
+
 # Register a forward migration v1 -> v2:
 @register_migration(schema_name="word", from_version=1, to_version=2)
 def _v1_to_v2(body: dict) -> dict:
     return {**body, "lemma": None}
 
+
 # Migrate stored data:
-migrated = migrate({"text": "ran"},
-                   from_uri="annot://schema/word/v1",
-                   to_uri="annot://schema/word/v2")
+migrated = migrate(
+    {"text": "ran"}, from_uri="annot://schema/word/v1", to_uri="annot://schema/word/v2"
+)
 ```
 
 Export every registered schema to JSON Schema (the upstream for downstream
@@ -272,6 +287,7 @@ Zod codegen):
 
 ```python
 from lacing.schema import export_json_schemas
+
 export_json_schemas("./schema/")  # writes <name>/v<N>.json + index.json
 ```
 
@@ -357,11 +373,13 @@ from lacing.quality import cohen_kappa, krippendorff_alpha, boundary_iou
 kappa = cohen_kappa(["A", "B", "A", "B"], ["A", "A", "A", "B"])
 
 # Three annotators with missing data
-alpha = krippendorff_alpha([
-    ["A", "B", None, "C"],
-    ["A", "B", "B",  "C"],
-    ["A", "A", "B",  "C"],
-])
+alpha = krippendorff_alpha(
+    [
+        ["A", "B", None, "C"],
+        ["A", "B", "B", "C"],
+        ["A", "A", "B", "C"],
+    ]
+)
 
 # Compare two segmentations
 score = boundary_iou(

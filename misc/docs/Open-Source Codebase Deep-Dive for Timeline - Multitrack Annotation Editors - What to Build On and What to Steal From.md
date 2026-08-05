@@ -261,6 +261,7 @@ flowchart LR
 ```python
 # Use lifted from OTIO's docs
 import opentimelineio as otio
+
 tl = otio.adapters.read_from_file("my_file.otio")
 for track in tl.tracks:
     for item in track:

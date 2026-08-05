@@ -23,6 +23,7 @@ from lacing.store import IntervalAnnotationStore, MemoryStore
 ADAPTER_NAME = "textgrid"
 BODY_SCHEMA_URI = "annot://schema/textgrid-label/v1"
 
+
 def load(
     source: str | bytes | os.PathLike,
     *,
@@ -34,6 +35,7 @@ def load(
     """Parse `source` into an in-memory store."""
     ...
 
+
 def dump(
     store: IntervalAnnotationStore,
     target: str | os.PathLike | None = None,
@@ -42,13 +44,14 @@ def dump(
     """Serialize `store`. If `target` is None, return bytes; else write to target."""
     ...
 
+
 register_adapter(
     name=ADAPTER_NAME,
     load=load,
     dump=dump,
-    extensions=(".TextGrid",),                 # tuple, lowercased on register
-    media_types=("text/x-praat-textgrid",),     # tuple
-    body_schema_uris=(BODY_SCHEMA_URI,),        # tuple — adapters may emit multiple
+    extensions=(".TextGrid",),  # tuple, lowercased on register
+    media_types=("text/x-praat-textgrid",),  # tuple
+    body_schema_uris=(BODY_SCHEMA_URI,),  # tuple — adapters may emit multiple
     description="...",
 )
 ```
@@ -148,7 +151,7 @@ Every imported annotation gets:
 Provenance(
     was_generated_by=f"adapter:{adapter_name}",
     was_attributed_to=kwargs.get("attribution", "anonymous"),
-    was_derived_from=[source_asset_id],   # content hash of the source file
+    was_derived_from=[source_asset_id],  # content hash of the source file
     generated_at_time=RationalTime.now(),
     activity="import",
 )

@@ -88,6 +88,7 @@ The **Mapping/MutableMapping interface** is the Pythonic API surface for interva
 
 ```python
 import portion as P
+
 store = P.IntervalDict()
 store[P.closed(0.0, 2.5)] = {"label": "speech", "speaker": "A"}
 store[1.5]  # → {"label": "speech", "speaker": "A"}

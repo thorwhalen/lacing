@@ -15,10 +15,11 @@ silently desync over long timelines.
 from fractions import Fraction
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True, slots=True)
 class RationalTime:
-    value: int      # numerator
-    rate: int = 24000   # denominator (ticks per second)
+    value: int  # numerator
+    rate: int = 24000  # denominator (ticks per second)
 
     def to_fraction(self) -> Fraction:
         return Fraction(self.value, self.rate)

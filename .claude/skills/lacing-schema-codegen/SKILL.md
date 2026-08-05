@@ -78,6 +78,7 @@ Every major bump ships a migration:
 # lacing/migrations/named_entity/v1_to_v2.py
 from lacing.schema import register_migration
 
+
 @register_migration(
     schema_name="named-entity",
     from_version=1,
@@ -100,11 +101,13 @@ def upgrade(body: dict) -> dict:
 ```python
 from pydantic import BaseModel, Field, model_validator
 
+
 class NamedEntityBody(BaseModel):
     """Body for named-entity annotations.
 
     body_schema_uri: annot://schema/named-entity/v1
     """
+
     model_config = {"frozen": True, "extra": "forbid"}
 
     entity_type: str = Field(..., description="ENTITY type (PER, ORG, LOC, ...)")

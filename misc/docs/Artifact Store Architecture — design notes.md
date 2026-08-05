@@ -144,9 +144,9 @@ never constructs them. This is what lets reelee ship the simple case first
 store, multi-tenant) **with no refactor of the facade or its callers**.
 
 ```python
-ArtifactStore(blobs=in_memory_store, catalog=in_memory_store)      # tests
-ArtifactStore(blobs=filesystem_blobs, catalog=sqlite_catalog)      # local v1
-ArtifactStore(blobs=s3_blobs, catalog=postgres_catalog)            # scaled
+ArtifactStore(blobs=in_memory_store, catalog=in_memory_store)  # tests
+ArtifactStore(blobs=filesystem_blobs, catalog=sqlite_catalog)  # local v1
+ArtifactStore(blobs=s3_blobs, catalog=postgres_catalog)  # scaled
 ```
 
 ---

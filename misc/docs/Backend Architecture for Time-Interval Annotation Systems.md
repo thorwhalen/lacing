@@ -49,47 +49,56 @@ from pydantic import BaseModel, Field
 from typing import Annotated, Literal, Union
 from uuid import UUID
 
+
 class RationalTime(BaseModel):
-    value: int       # numerator
+    value: int  # numerator
     rate: int = 24000  # denominator
+
 
 class TimeInterval(BaseModel):
     start: RationalTime
-    end: RationalTime    # zero-length when start == end (point annotation)
+    end: RationalTime  # zero-length when start == end (point annotation)
+
 
 class MediaRef(BaseModel):
     kind: Literal["media"] = "media"
-    asset_id: str        # content-addressed hash of the source media
+    asset_id: str  # content-addressed hash of the source media
     interval: TimeInterval
+
 
 class NodeRef(BaseModel):
     kind: Literal["node"] = "node"
     scene_path: str
     interval: TimeInterval
 
+
 class AnnotationRef(BaseModel):
     kind: Literal["annotation"] = "annotation"
     target_id: UUID
     interval: TimeInterval | None = None
+
 
 Reference = Annotated[
     Union[MediaRef, NodeRef, AnnotationRef],
     Field(discriminator="kind"),
 ]
 
+
 class Provenance(BaseModel):
     """W3C PROV-O subset, embedded inline."""
-    was_generated_by: str           # "user:thor" | "agent:gpt-4o@hash"
+
+    was_generated_by: str  # "user:thor" | "agent:gpt-4o@hash"
     was_derived_from: list[UUID] = []
     generated_at_time: RationalTime
-    activity: str                    # e.g. "forced-alignment-v3"
+    activity: str  # e.g. "forced-alignment-v3"
+
 
 class Annotation(BaseModel):
     id: UUID
     tier: str
     reference: Reference
     body: dict
-    body_schema_uri: str             # e.g. "annot://schema/word/v1"
+    body_schema_uri: str  # e.g. "annot://schema/word/v1"
     provenance: Provenance
     confidence: float | None = None
 ```
@@ -121,10 +130,11 @@ export const Annotation = z.object({
 ```python
 class IntervalAnnotationStore(MutableMapping[TimeInterval, list[Annotation]]):
     """A facade over the storage backend (SQLite/Postgres/Yjs)."""
+
     def __getitem__(self, key: TimeInterval) -> list[Annotation]: ...
-    def overlap(self, key: TimeInterval) -> list[Annotation]: ...    # Allen "overlaps"
-    def during(self, key: TimeInterval) -> list[Annotation]: ...     # Allen "during"
-    def meets(self, key: RationalTime) -> list[Annotation]: ...      # Allen "meets"
+    def overlap(self, key: TimeInterval) -> list[Annotation]: ...  # Allen "overlaps"
+    def during(self, key: TimeInterval) -> list[Annotation]: ...  # Allen "during"
+    def meets(self, key: RationalTime) -> list[Annotation]: ...  # Allen "meets"
 ```
 
 Among existing libraries:
@@ -262,8 +272,7 @@ Each layer has a single concern and a small interface. The plugin registry is wh
 def forced_alignment(
     transcript: Annotation,
     audio: MediaRef,
-) -> Iterable[Annotation]:
-    ...
+) -> Iterable[Annotation]: ...
 ```
 
 Same pattern as Apache UIMA's CAS pipelines [12] and Prefect's `@flow`/`@task`, but Pythonic decorators dual-usable from authoring code, the MCP server (LLM-callable), and the CLI.
@@ -477,6 +486,7 @@ import uuid
 app = FastAPI()
 engine = create_engine("postgresql://localhost/annot")
 
+
 class AnnotationIn(BaseModel):
     tier: str
     start_value: int
@@ -485,6 +495,7 @@ class AnnotationIn(BaseModel):
     body: dict
     body_schema_uri: str
 
+
 @app.post("/annotations")
 def create(a: AnnotationIn):
     aid = uuid.uuid4()
@@ -492,14 +503,19 @@ def create(a: AnnotationIn):
         conn.execute(...)  # INSERT ... using tstzrange
     return {"id": str(aid)}
 
+
 @app.get("/annotations")
 def query(tier: str, t1: int, t2: int):
     with engine.begin() as conn:
-        rows = conn.execute("""
+        rows = conn.execute(
+            """
             SELECT id, body FROM annotations
             WHERE tier = :t AND range && tstzrange(:t1, :t2)
-        """, {"t": tier, "t1": t1, "t2": t2})
+        """,
+            {"t": tier, "t1": t1, "t2": t2},
+        )
     return [dict(r) for r in rows]
+
 
 @app.websocket("/sync/{project_id}")
 async def sync(ws: WebSocket, project_id: str):
