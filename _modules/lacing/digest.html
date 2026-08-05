@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.digest &mdash; lacing 0.0.24 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f91d8841"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/digest.html">lacing.digest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lacing.digest</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lacing.digest</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Content digests over an annotation&#39;s *value* — the freshness primitive.</span>
+
+<span class="sd">lacing has **three** digests and they answer **three different questions**.</span>
+<span class="sd">Collapsing any two of them is a silent correctness bug, so the boundary is</span>
+<span class="sd">spelled out here and cross-referenced from the other two:</span>
+
+<span class="sd">- :func:`lacing.hash_bytes` / :func:`lacing.hash_file` — SHA-256 over an</span>
+<span class="sd">  **artifact&#39;s bytes**. Answers *&quot;are these two files the same file?&quot;*. This</span>
+<span class="sd">  is the ``Artifact.asset_id`` contract (:mod:`lacing.artifact`).</span>
+<span class="sd">- :func:`lacing.server.etag.annotation_etag` — BLAKE2b-128 over the **whole</span>
+<span class="sd">  annotation**, ``id`` and ``provenance`` included. Answers *&quot;has this record</span>
+<span class="sd">  been touched since I read it?&quot;*. This is the ``If-Match`` / HTTP 412</span>
+<span class="sd">  optimistic-concurrency primitive, and it is *deliberately* unstable across</span>
+<span class="sd">  regenerations.</span>
+<span class="sd">- :func:`annotation_value_digest` (this module) — SHA-256 over an annotation&#39;s</span>
+<span class="sd">  **value**, ``id`` and ``provenance`` excluded. Answers *&quot;did the answer</span>
+<span class="sd">  actually change?&quot;*. This is the freshness / early-cutoff primitive.</span>
+
+<span class="sd">A regeneration that produces byte-identical content mints a fresh ``uuid4``</span>
+<span class="sd">``id`` and a fresh ``provenance.generated_at_time``, so ``annotation_etag``</span>
+<span class="sd">changes while ``annotation_value_digest`` does not. That difference is the</span>
+<span class="sd">entire point: it lets a downstream freshness check key on *upstream output</span>
+<span class="sd">values* rather than on *upstream keys*, and stop propagating invalidation</span>
+<span class="sd">when nothing actually changed.</span>
+
+<span class="sd">Why this lives in core and not under ``lacing/server/``</span>
+<span class="sd">--------------------------------------------------------</span>
+<span class="sd">``annotation_etag`` sits at ``lacing/server/etag.py``. Its own imports are</span>
+<span class="sd">cheap, but importing any submodule of ``lacing.server`` executes</span>
+<span class="sd">``lacing/server/__init__.py``, which imports the FastAPI app. The value</span>
+<span class="sd">digest is consumed by the *execution* tier (``nw``, ``falaw``), which must</span>
+<span class="sd">not drag a web framework in. This module therefore has **no runtime imports</span>
+<span class="sd">beyond the standard library** — the :class:`~lacing.model.Annotation` import</span>
+<span class="sd">is type-checking only.</span>
+
+<span class="sd">The inclusion boundary — and why each call was made</span>
+<span class="sd">----------------------------------------------------</span>
+<span class="sd">Getting this boundary wrong is a silent wrong-cache-**hit**, not a miss, so</span>
+<span class="sd">each field is justified rather than assumed.</span>
+
+<span class="sd">**Included** (:data:`VALUE_FIELDS`):</span>
+
+<span class="sd">- ``body`` — it *is* the annotation&#39;s value. Trivially included.</span>
+<span class="sd">- ``body_schema_uri`` — the same ``dict`` means different things under</span>
+<span class="sd">  different schemas, and a schema-version bump is a semantic change even when</span>
+<span class="sd">  the payload bytes are unchanged. Excluding it would let a ``.../v1`` body</span>
+<span class="sd">  satisfy a ``.../v2`` consumer&#39;s cache lookup.</span>
+<span class="sd">- ``tier`` — the tier is part of what the annotation asserts (which layer of</span>
+<span class="sd">  the analysis this claim belongs to), and lacing&#39;s tier stereotypes impose</span>
+<span class="sd">  structural constraints. Two identical bodies on different tiers are</span>
+<span class="sd">  different claims.</span>
+<span class="sd">- ``reference`` — what the annotation is *about*: the asset and the interval.</span>
+<span class="sd">  Re-timing an annotation changes its value. This is the one genuinely</span>
+<span class="sd">  contested call (see below); it is included here and excluded from</span>
+<span class="sd">  :func:`annotation_body_digest`, so the consumer chooses rather than guesses.</span>
+<span class="sd">- ``confidence`` — a soft label whose confidence moved is a changed assertion.</span>
+<span class="sd">  Downstream thresholding consumes it directly.</span>
+
+<span class="sd">**Excluded**:</span>
+
+<span class="sd">- ``id`` — a fresh ``uuid4`` on every regeneration. Including it makes the</span>
+<span class="sd">  digest change unconditionally, which is exactly the ``annotation_etag``</span>
+<span class="sd">  behaviour this function exists to avoid.</span>
+<span class="sd">- ``provenance`` — ``generated_at_time`` changes on every run, and</span>
+<span class="sd">  ``was_generated_by`` / ``was_derived_from`` describe *how* the value was</span>
+<span class="sd">  reached, not *what* it is. Two byte-identical answers produced by different</span>
+<span class="sd">  activities are the same answer. (If a consumer needs to invalidate on a</span>
+<span class="sd">  changed producer, that belongs in its **cache key** — which is keyed on</span>
+<span class="sd">  inputs — not in the **value digest**, which addresses the output.)</span>
+
+<span class="sd">Rule of thumb, stated once: *key the cache on inputs; address the value by</span>
+<span class="sd">content; record both in the trace.* A system with only the first cannot cut</span>
+<span class="sd">off early.</span>
+
+<span class="sd">``reference``: two functions, not a boolean</span>
+<span class="sd">--------------------------------------------</span>
+<span class="sd">Whether ``reference`` belongs in a value digest is genuinely</span>
+<span class="sd">consumer-dependent. A :class:`~lacing.model.MediaRef` carries an</span>
+<span class="sd">``interval``, so re-timing busts every downstream digest — **correct** when</span>
+<span class="sd">downstream consumes the timing (an animatic, a cut list), **wasteful** when</span>
+<span class="sd">it consumes only the body (a caption translation). Rather than a boolean flag</span>
+<span class="sd">or a wrong guess that needs migrating later, this module ships both:</span>
+
+<span class="sd">- :func:`annotation_value_digest` — the full value, ``reference`` included.</span>
+<span class="sd">  **The default.** Use it unless you can state why the rest is irrelevant.</span>
+<span class="sd">- :func:`annotation_body_digest` — ``{body, body_schema_uri}`` only.</span>
+
+<span class="sd">**Be precise about what the narrow one drops, because &quot;re-timing&quot; undersells</span>
+<span class="sd">it.** ``annotation_body_digest`` drops the *entire* ``reference`` — the asset</span>
+<span class="sd">identity as well as the interval — plus ``tier`` and ``confidence``. Two</span>
+<span class="sd">annotations carrying the same body over **different assets** digest alike</span>
+<span class="sd">under it. Reach for it only when the consumer depends on nothing but what the</span>
+<span class="sd">annotation *says*.</span>
+
+<span class="sd">They are domain-separated (see :data:`VALUE_DIGEST_SCHEME`), so the two can</span>
+<span class="sd">never collide even on an annotation whose payloads coincide.</span>
+
+<span class="sd">Stability guarantees, and their limits</span>
+<span class="sd">---------------------------------------</span>
+<span class="sd">The digest is stable **across processes**, **across dict insertion order**</span>
+<span class="sd">(``sort_keys=True`` canonicalises recursively) and **across a store</span>
+<span class="sd">round-trip** (memory → ``.annot`` → memory).</span>
+
+<span class="sd">The safety claim, stated precisely</span>
+<span class="sd">-----------------------------------</span>
+<span class="sd">**For a body that honours the ``body`` contract — i.e. contains only JSON</span>
+<span class="sd">types, which is what validating against JSON Schema means — this digest never</span>
+<span class="sd">returns a wrong cache *hit*.** Two annotations with different values never</span>
+<span class="sd">digest alike. It can return a spurious *miss*; that only costs a recompute.</span>
+
+<span class="sd">That claim is bounded by the contract, and it is worth knowing exactly where</span>
+<span class="sd">the boundary is, because an unbounded version of it would be false:</span>
+
+<span class="sd">1. **Non-``str`` mapping keys raise** :class:`NonStringBodyKeyError`.</span>
+<span class="sd">   ``model_dump(mode=&quot;json&quot;)`` coerces keys to strings, so a body like</span>
+<span class="sd">   ``{1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}`` collapses to ``{&quot;1&quot;: &quot;b&quot;}`` — an entire entry is</span>
+<span class="sd">   annihilated, and two bodies differing only in the annihilated entry would</span>
+<span class="sd">   digest **alike**. That is a wrong hit, so it is refused rather than</span>
+<span class="sd">   documented. Such a body is already broken data: it does not survive a</span>
+<span class="sd">   round-trip through any lacing store either (JSON object keys are strings).</span>
+<span class="sd">2. **Python container types that JSON cannot distinguish digest alike** —</span>
+<span class="sd">   ``(1, 2)`` and ``[1, 2]`` both serialise to ``[1, 2]``. This is *not* a</span>
+<span class="sd">   wrong hit within the contract: as JSON they are the same value, and a</span>
+<span class="sd">   contract-honouring body cannot contain a tuple. A ``set`` additionally</span>
+<span class="sd">   serialises in an order not stable across processes (a spurious miss), and</span>
+<span class="sd">   a type pydantic cannot serialise at all raises</span>
+<span class="sd">   ``PydanticSerializationError`` rather than digesting a ``repr`` that embeds</span>
+<span class="sd">   a memory address.</span>
+<span class="sd">3. **Equal-but-differently-serialised rationals digest differently.**</span>
+<span class="sd">   :class:`~lacing.time.RationalTime` serialises as ``{&quot;v&quot;: …, &quot;r&quot;: …}``, so</span>
+<span class="sd">   ``RationalTime(1, 24)`` and ``RationalTime(2, 48)`` compare **equal** but</span>
+<span class="sd">   digest differently — a rate change moves the digest even when the instant</span>
+<span class="sd">   is unchanged. This is a spurious *miss*. (``annotation_etag`` has the same</span>
+<span class="sd">   property.)</span>
+
+<span class="sd">Changing :data:`VALUE_FIELDS` or the canonicalisation is a **breaking cache</span>
+<span class="sd">invalidation event** for every consumer: every digest changes at once. Bump</span>
+<span class="sd">the scheme string when you do it, so the change is legible in a trace.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover - typing only, keeps this module import-light</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;annotation_value_digest&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;annotation_body_digest&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NonStringBodyKeyError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;VALUE_FIELDS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BODY_FIELDS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;VALUE_DIGEST_SCHEME&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BODY_DIGEST_SCHEME&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="NonStringBodyKeyError">
+<a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.NonStringBodyKeyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NonStringBodyKeyError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An annotation ``body`` contains a mapping key that is not a ``str``.</span>
+
+<span class="sd">    JSON object keys are strings, so ``model_dump(mode=&quot;json&quot;)`` coerces</span>
+<span class="sd">    non-string keys — and two distinct keys can coerce to the *same* string,</span>
+<span class="sd">    silently annihilating an entry. ``{1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}`` dumps to</span>
+<span class="sd">    ``{&quot;1&quot;: &quot;b&quot;}``; a body differing only in the lost entry would digest</span>
+<span class="sd">    identically, which is a wrong cache **hit**.</span>
+
+<span class="sd">    The digest refuses rather than risks it. Such a body is already broken</span>
+<span class="sd">    data — it does not survive a round-trip through any lacing store either,</span>
+<span class="sd">    for exactly the same reason — so the correct fix is at the producer.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="n">VALUE_FIELDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;confidence&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;reference&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tier&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Annotation fields that constitute its *value*. See the module docstring for</span>
+<span class="sd">why each is in, and why ``id`` and ``provenance`` are out.&quot;&quot;&quot;</span>
+
+<span class="n">BODY_FIELDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;The narrower payload for :func:`annotation_body_digest`.</span>
+
+<span class="sd">Note what this drops, which is more than timing: the **entire** ``reference``</span>
+<span class="sd">(*which asset* / *which node* / *which annotation*, not just *when*), plus</span>
+<span class="sd">``tier`` and ``confidence``. Two annotations over different assets digest</span>
+<span class="sd">alike here.&quot;&quot;&quot;</span>
+
+<span class="n">VALUE_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">&quot;lacing/annotation-value-digest/v1&quot;</span>
+<span class="sd">&quot;&quot;&quot;Domain-separation tag mixed into :func:`annotation_value_digest`.&quot;&quot;&quot;</span>
+
+<span class="n">BODY_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">&quot;lacing/annotation-body-digest/v1&quot;</span>
+<span class="sd">&quot;&quot;&quot;Domain-separation tag mixed into :func:`annotation_body_digest`.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="annotation_value_digest">
+<a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.annotation_value_digest">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotation_value_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the SHA-256 hex digest of ``annotation``&#39;s value.</span>
+
+<span class="sd">    Covers ``body``, ``body_schema_uri``, ``tier``, ``reference`` and</span>
+<span class="sd">    ``confidence``. Excludes ``id`` and ``provenance``, so a regeneration that</span>
+<span class="sd">    produces identical content produces an identical digest.</span>
+
+<span class="sd">    Use this for freshness and early cutoff. For optimistic concurrency use</span>
+<span class="sd">    :func:`lacing.server.etag.annotation_etag` instead — two digests, two</span>
+<span class="sd">    jobs, and neither substitutes for the other.</span>
+
+<span class="sd">    &gt;&gt;&gt; from uuid import uuid4</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import Annotation, MediaRef, Provenance</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import RationalTime, TimeInterval</span>
+<span class="sd">    &gt;&gt;&gt; def make(**kw):</span>
+<span class="sd">    ...     base = dict(</span>
+<span class="sd">    ...         id=uuid4(),</span>
+<span class="sd">    ...         tier=&quot;words&quot;,</span>
+<span class="sd">    ...         reference=MediaRef(</span>
+<span class="sd">    ...             asset_id=&quot;sha256:abc&quot;,</span>
+<span class="sd">    ...             interval=TimeInterval(RationalTime(0), RationalTime(24000)),</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
+<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         provenance=Provenance(</span>
+<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
+<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             generated_at_time=RationalTime(0),</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...     base.update(kw)</span>
+<span class="sd">    ...     return Annotation(**base)</span>
+
+<span class="sd">    A regeneration — new ``id``, new timestamp, same content — digests the same:</span>
+
+<span class="sd">    &gt;&gt;&gt; a = make()</span>
+<span class="sd">    &gt;&gt;&gt; b = make(provenance=Provenance(</span>
+<span class="sd">    ...     was_generated_by=&quot;agent:m@1&quot;,</span>
+<span class="sd">    ...     was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...     generated_at_time=RationalTime(999),</span>
+<span class="sd">    ... ))</span>
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(a) == annotation_value_digest(b)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    A changed body does not:</span>
+
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(make(body={&quot;text&quot;: &quot;goodbye&quot;})) == (</span>
+<span class="sd">    ...     annotation_value_digest(a)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_digest</span><span class="p">(</span><span class="n">VALUE_DIGEST_SCHEME</span><span class="p">,</span> <span class="n">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">VALUE_FIELDS</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="annotation_body_digest">
+<a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.annotation_body_digest">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotation_body_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the SHA-256 hex digest of ``{body, body_schema_uri}`` only.</span>
+
+<span class="sd">    The narrow sibling of :func:`annotation_value_digest`. It drops the</span>
+<span class="sd">    **entire** ``reference`` — *which asset* / *which node* / *which</span>
+<span class="sd">    annotation*, not merely *when* — plus ``tier`` and ``confidence``. So the</span>
+<span class="sd">    same caption over two **different assets** digests identically here, as</span>
+<span class="sd">    does the same body asserted on two different tiers or at two different</span>
+<span class="sd">    confidences.</span>
+
+<span class="sd">    That is a correctness bug in any consumer that reads any of those. Reach</span>
+<span class="sd">    for it only when the consumer demonstrably depends on nothing but what the</span>
+<span class="sd">    annotation *says*; prefer :func:`annotation_value_digest` otherwise.</span>
+
+<span class="sd">    &gt;&gt;&gt; from uuid import uuid4</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import Annotation, MediaRef, Provenance</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import RationalTime, TimeInterval</span>
+<span class="sd">    &gt;&gt;&gt; def over(asset):</span>
+<span class="sd">    ...     return Annotation(</span>
+<span class="sd">    ...         id=uuid4(), tier=&quot;words&quot;,</span>
+<span class="sd">    ...         reference=MediaRef(</span>
+<span class="sd">    ...             asset_id=asset,</span>
+<span class="sd">    ...             interval=TimeInterval(RationalTime(0), RationalTime(24000)),</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
+<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         provenance=Provenance(</span>
+<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
+<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             generated_at_time=RationalTime(0),</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...     )</span>
+
+<span class="sd">    Different **assets**, identical body digest — this is the footgun:</span>
+
+<span class="sd">    &gt;&gt;&gt; annotation_body_digest(over(&quot;sha256:interview&quot;)) == (</span>
+<span class="sd">    ...     annotation_body_digest(over(&quot;sha256:broadcast&quot;))</span>
+<span class="sd">    ... )</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(over(&quot;sha256:interview&quot;)) == (</span>
+<span class="sd">    ...     annotation_value_digest(over(&quot;sha256:broadcast&quot;))</span>
+<span class="sd">    ... )</span>
+<span class="sd">    False</span>
+
+<span class="sd">    &gt;&gt;&gt; from uuid import uuid4</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import Annotation, MediaRef, Provenance</span>
+<span class="sd">    &gt;&gt;&gt; from lacing import RationalTime, TimeInterval</span>
+<span class="sd">    &gt;&gt;&gt; def make(interval):</span>
+<span class="sd">    ...     return Annotation(</span>
+<span class="sd">    ...         id=uuid4(),</span>
+<span class="sd">    ...         tier=&quot;words&quot;,</span>
+<span class="sd">    ...         reference=MediaRef(asset_id=&quot;sha256:abc&quot;, interval=interval),</span>
+<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
+<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         provenance=Provenance(</span>
+<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
+<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             generated_at_time=RationalTime(0),</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    &gt;&gt;&gt; early = make(TimeInterval(RationalTime(0), RationalTime(24000)))</span>
+<span class="sd">    &gt;&gt;&gt; late = make(TimeInterval(RationalTime(24000), RationalTime(48000)))</span>
+<span class="sd">    &gt;&gt;&gt; annotation_body_digest(early) == annotation_body_digest(late)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(early) == annotation_value_digest(late)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_digest</span><span class="p">(</span><span class="n">BODY_DIGEST_SCHEME</span><span class="p">,</span> <span class="n">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">BODY_FIELDS</span><span class="p">))</span></div>
+
+
+
+<span class="c1"># --- internals ---------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.</span>
+
+<span class="sd">    Walks nested mappings and sequences, because the key-collapse hazard is</span>
+<span class="sd">    just as real one level down: ``{&quot;k&quot;: {1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}}`` loses an entry</span>
+<span class="sd">    exactly the same way. ``path`` is threaded through so the error names the</span>
+<span class="sd">    offending location rather than just the annotation.</span>
+
+<span class="sd">    Only ``body`` needs this. Every other field in :data:`VALUE_FIELDS` is a</span>
+<span class="sd">    typed pydantic field (``str``, ``float | None``, or a ``Reference`` model),</span>
+<span class="sd">    none of which can carry a free-form mapping key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NonStringBodyKeyError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has a non-str key </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> of type &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. JSON object keys are strings, so &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;this key would be coerced — and a coercion collision &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;silently drops an entry, which would make two different &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;annotations digest alike. Fix the producer so the body &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;contains only JSON types.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2">]&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project ``annotation``&#39;s JSON-mode dump onto ``fields``.</span>
+
+<span class="sd">    Dumping the whole model once and projecting is deliberate: it routes every</span>
+<span class="sd">    field through pydantic&#39;s JSON serializer, so ``RationalTime`` reaches the</span>
+<span class="sd">    canonicaliser in its ``{v, r}`` wire form. Hand-assembling the payload from</span>
+<span class="sd">    raw attributes bypasses that.</span>
+
+<span class="sd">    The dump is preceded by :func:`_reject_non_string_keys` over the *raw*</span>
+<span class="sd">    body, because the check has to happen **before** the coercion it exists to</span>
+<span class="sd">    catch — once dumped, the annihilated entry is already gone.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span>
+    <span class="n">dumped</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">dumped</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_digest</span><span class="p">(</span><span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SHA-256 hex over ``scheme`` plus the canonical JSON of ``payload``.</span>
+
+<span class="sd">    ``sort_keys=True`` canonicalises dict ordering recursively, which is what</span>
+<span class="sd">    makes the digest independent of insertion order and stable across</span>
+<span class="sd">    processes. ``scheme`` is a domain-separation tag: without it, two digest</span>
+<span class="sd">    functions in this module whose payloads happened to coincide would return</span>
+<span class="sd">    the same hex for different questions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">canonical</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">canonical</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

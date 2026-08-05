@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lacing.digest &mdash; lacing 0.0.24 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f91d8841"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="lacing.exhibit" href="exhibit.html" />
+    <link rel="prev" title="lacing.cli" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lacing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../lacing.html">lacing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters.html">lacing.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapters/webvtt.html">lacing.adapters.webvtt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="allen.html">lacing.allen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artifact.html">lacing.artifact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies.html">lacing.bodies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">lacing.cli</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.digest</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-this-lives-in-core-and-not-under-lacing-server">Why this lives in core and not under <code class="docutils literal notranslate"><span class="pre">lacing/server/</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-inclusion-boundary-and-why-each-call-was-made">The inclusion boundary — and why each call was made</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-two-functions-not-a-boolean"><code class="docutils literal notranslate"><span class="pre">reference</span></code>: two functions, not a boolean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stability-guarantees-and-their-limits">Stability guarantees, and their limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-safety-claim-stated-precisely">The safety claim, stated precisely</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.BODY_DIGEST_SCHEME"><code class="docutils literal notranslate"><span class="pre">BODY_DIGEST_SCHEME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.BODY_FIELDS"><code class="docutils literal notranslate"><span class="pre">BODY_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.NonStringBodyKeyError"><code class="docutils literal notranslate"><span class="pre">NonStringBodyKeyError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.VALUE_DIGEST_SCHEME"><code class="docutils literal notranslate"><span class="pre">VALUE_DIGEST_SCHEME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.VALUE_FIELDS"><code class="docutils literal notranslate"><span class="pre">VALUE_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.annotation_body_digest"><code class="docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.digest.annotation_value_digest"><code class="docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">lacing.model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oplog.html">lacing.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otel.html">lacing.otel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processors.html">lacing.processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schema.html">lacing.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">lacing.server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/app.html">lacing.server.app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/awareness.html">lacing.server.awareness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/deps.html">lacing.server.deps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/etag.html">lacing.server.etag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/mcp.html">lacing.server.mcp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/operations.html">lacing.server.operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers.html">lacing.server.routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/adapters.html">lacing.server.routers.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/annotations.html">lacing.server.routers.annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/meta.html">lacing.server.routers.meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/oplog.html">lacing.server.routers.oplog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server/routers/tiers.html">lacing.server.routers.tiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time.html">lacing.time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks.html">lacing.tracks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracks/subtitle.html">lacing.tracks.subtitle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker.html">lacing.worker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lacing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lacing.digest</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/lacing/digest.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-lacing.digest">
+<span id="lacing-digest"></span><h1>lacing.digest<a class="headerlink" href="#module-lacing.digest" title="Link to this heading"></a></h1>
+<p>Content digests over an annotation’s <em>value</em> — the freshness primitive.</p>
+<p>lacing has <strong>three</strong> digests and they answer <strong>three different questions</strong>.
+Collapsing any two of them is a silent correctness bug, so the boundary is
+spelled out here and cross-referenced from the other two:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../lacing.html#lacing.hash_bytes" title="lacing.hash_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.hash_bytes()</span></code></a> / <a class="reference internal" href="../lacing.html#lacing.hash_file" title="lacing.hash_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.hash_file()</span></code></a> — SHA-256 over an
+<strong>artifact’s bytes</strong>. Answers <em>“are these two files the same file?”</em>. This
+is the <code class="docutils literal notranslate"><span class="pre">Artifact.asset_id</span></code> contract (<a class="reference internal" href="artifact.html#module-lacing.artifact" title="lacing.artifact"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.artifact</span></code></a>).</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.server.etag.annotation_etag()</span></code> — BLAKE2b-128 over the <strong>whole
+annotation</strong>, <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance</span></code> included. Answers <em>“has this record
+been touched since I read it?”</em>. This is the <code class="docutils literal notranslate"><span class="pre">If-Match</span></code> / HTTP 412
+optimistic-concurrency primitive, and it is <em>deliberately</em> unstable across
+regenerations.</p></li>
+<li><p><a class="reference internal" href="#lacing.digest.annotation_value_digest" title="lacing.digest.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a> (this module) — SHA-256 over an annotation’s
+<strong>value</strong>, <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance</span></code> excluded. Answers <em>“did the answer
+actually change?”</em>. This is the freshness / early-cutoff primitive.</p></li>
+</ul>
+<p>A regeneration that produces byte-identical content mints a fresh <code class="docutils literal notranslate"><span class="pre">uuid4</span></code>
+<code class="docutils literal notranslate"><span class="pre">id</span></code> and a fresh <code class="docutils literal notranslate"><span class="pre">provenance.generated_at_time</span></code>, so <code class="docutils literal notranslate"><span class="pre">annotation_etag</span></code>
+changes while <code class="docutils literal notranslate"><span class="pre">annotation_value_digest</span></code> does not. That difference is the
+entire point: it lets a downstream freshness check key on <em>upstream output
+values</em> rather than on <em>upstream keys</em>, and stop propagating invalidation
+when nothing actually changed.</p>
+<section id="why-this-lives-in-core-and-not-under-lacing-server">
+<h2>Why this lives in core and not under <code class="docutils literal notranslate"><span class="pre">lacing/server/</span></code><a class="headerlink" href="#why-this-lives-in-core-and-not-under-lacing-server" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">annotation_etag</span></code> sits at <code class="docutils literal notranslate"><span class="pre">lacing/server/etag.py</span></code>. Its own imports are
+cheap, but importing any submodule of <code class="docutils literal notranslate"><span class="pre">lacing.server</span></code> executes
+<code class="docutils literal notranslate"><span class="pre">lacing/server/__init__.py</span></code>, which imports the FastAPI app. The value
+digest is consumed by the <em>execution</em> tier (<code class="docutils literal notranslate"><span class="pre">nw</span></code>, <code class="docutils literal notranslate"><span class="pre">falaw</span></code>), which must
+not drag a web framework in. This module therefore has <strong>no runtime imports
+beyond the standard library</strong> — the <a class="reference internal" href="model.html#lacing.model.Annotation" title="lacing.model.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Annotation</span></code></a> import
+is type-checking only.</p>
+</section>
+<section id="the-inclusion-boundary-and-why-each-call-was-made">
+<h2>The inclusion boundary — and why each call was made<a class="headerlink" href="#the-inclusion-boundary-and-why-each-call-was-made" title="Link to this heading"></a></h2>
+<p>Getting this boundary wrong is a silent wrong-cache-<strong>hit</strong>, not a miss, so
+each field is justified rather than assumed.</p>
+<p><strong>Included</strong> (<a class="reference internal" href="#lacing.digest.VALUE_FIELDS" title="lacing.digest.VALUE_FIELDS"><code class="xref py py-data docutils literal notranslate"><span class="pre">VALUE_FIELDS</span></code></a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code> — it <em>is</em> the annotation’s value. Trivially included.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code> — the same <code class="docutils literal notranslate"><span class="pre">dict</span></code> means different things under
+different schemas, and a schema-version bump is a semantic change even when
+the payload bytes are unchanged. Excluding it would let a <code class="docutils literal notranslate"><span class="pre">.../v1</span></code> body
+satisfy a <code class="docutils literal notranslate"><span class="pre">.../v2</span></code> consumer’s cache lookup.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tier</span></code> — the tier is part of what the annotation asserts (which layer of
+the analysis this claim belongs to), and lacing’s tier stereotypes impose
+structural constraints. Two identical bodies on different tiers are
+different claims.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reference</span></code> — what the annotation is <em>about</em>: the asset and the interval.
+Re-timing an annotation changes its value. This is the one genuinely
+contested call (see below); it is included here and excluded from
+<a class="reference internal" href="#lacing.digest.annotation_body_digest" title="lacing.digest.annotation_body_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a>, so the consumer chooses rather than guesses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">confidence</span></code> — a soft label whose confidence moved is a changed assertion.
+Downstream thresholding consumes it directly.</p></li>
+</ul>
+<p><strong>Excluded</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code> — a fresh <code class="docutils literal notranslate"><span class="pre">uuid4</span></code> on every regeneration. Including it makes the
+digest change unconditionally, which is exactly the <code class="docutils literal notranslate"><span class="pre">annotation_etag</span></code>
+behaviour this function exists to avoid.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">provenance</span></code> — <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> changes on every run, and
+<code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code> / <code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code> describe <em>how</em> the value was
+reached, not <em>what</em> it is. Two byte-identical answers produced by different
+activities are the same answer. (If a consumer needs to invalidate on a
+changed producer, that belongs in its <strong>cache key</strong> — which is keyed on
+inputs — not in the <strong>value digest</strong>, which addresses the output.)</p></li>
+</ul>
+<p>Rule of thumb, stated once: <em>key the cache on inputs; address the value by
+content; record both in the trace.</em> A system with only the first cannot cut
+off early.</p>
+</section>
+<section id="reference-two-functions-not-a-boolean">
+<h2><code class="docutils literal notranslate"><span class="pre">reference</span></code>: two functions, not a boolean<a class="headerlink" href="#reference-two-functions-not-a-boolean" title="Link to this heading"></a></h2>
+<p>Whether <code class="docutils literal notranslate"><span class="pre">reference</span></code> belongs in a value digest is genuinely
+consumer-dependent. A <a class="reference internal" href="model.html#lacing.model.MediaRef" title="lacing.model.MediaRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">MediaRef</span></code></a> carries an
+<code class="docutils literal notranslate"><span class="pre">interval</span></code>, so re-timing busts every downstream digest — <strong>correct</strong> when
+downstream consumes the timing (an animatic, a cut list), <strong>wasteful</strong> when
+it consumes only the body (a caption translation). Rather than a boolean flag
+or a wrong guess that needs migrating later, this module ships both:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#lacing.digest.annotation_value_digest" title="lacing.digest.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a> — the full value, <code class="docutils literal notranslate"><span class="pre">reference</span></code> included.
+<strong>The default.</strong> Use it unless you can state why the rest is irrelevant.</p></li>
+<li><p><a class="reference internal" href="#lacing.digest.annotation_body_digest" title="lacing.digest.annotation_body_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a> — <code class="docutils literal notranslate"><span class="pre">{body,</span> <span class="pre">body_schema_uri}</span></code> only.</p></li>
+</ul>
+<p><strong>Be precise about what the narrow one drops, because “re-timing” undersells
+it.</strong> <code class="docutils literal notranslate"><span class="pre">annotation_body_digest</span></code> drops the <em>entire</em> <code class="docutils literal notranslate"><span class="pre">reference</span></code> — the asset
+identity as well as the interval — plus <code class="docutils literal notranslate"><span class="pre">tier</span></code> and <code class="docutils literal notranslate"><span class="pre">confidence</span></code>. Two
+annotations carrying the same body over <strong>different assets</strong> digest alike
+under it. Reach for it only when the consumer depends on nothing but what the
+annotation <em>says</em>.</p>
+<p>They are domain-separated (see <a class="reference internal" href="#lacing.digest.VALUE_DIGEST_SCHEME" title="lacing.digest.VALUE_DIGEST_SCHEME"><code class="xref py py-data docutils literal notranslate"><span class="pre">VALUE_DIGEST_SCHEME</span></code></a>), so the two can
+never collide even on an annotation whose payloads coincide.</p>
+</section>
+<section id="stability-guarantees-and-their-limits">
+<h2>Stability guarantees, and their limits<a class="headerlink" href="#stability-guarantees-and-their-limits" title="Link to this heading"></a></h2>
+<p>The digest is stable <strong>across processes</strong>, <strong>across dict insertion order</strong>
+(<code class="docutils literal notranslate"><span class="pre">sort_keys=True</span></code> canonicalises recursively) and <strong>across a store
+round-trip</strong> (memory → <code class="docutils literal notranslate"><span class="pre">.annot</span></code> → memory).</p>
+</section>
+<section id="the-safety-claim-stated-precisely">
+<h2>The safety claim, stated precisely<a class="headerlink" href="#the-safety-claim-stated-precisely" title="Link to this heading"></a></h2>
+<p><strong>For a body that honours the ``body`` contract — i.e. contains only JSON
+types, which is what validating against JSON Schema means — this digest never
+returns a wrong cache *hit*.</strong> Two annotations with different values never
+digest alike. It can return a spurious <em>miss</em>; that only costs a recompute.</p>
+<p>That claim is bounded by the contract, and it is worth knowing exactly where
+the boundary is, because an unbounded version of it would be false:</p>
+<ol class="arabic simple">
+<li><p><strong>Non-``str`` mapping keys raise</strong> <a class="reference internal" href="#lacing.digest.NonStringBodyKeyError" title="lacing.digest.NonStringBodyKeyError"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonStringBodyKeyError</span></code></a>.
+<code class="docutils literal notranslate"><span class="pre">model_dump(mode=&quot;json&quot;)</span></code> coerces keys to strings, so a body like
+<code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> collapses to <code class="docutils literal notranslate"><span class="pre">{&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> — an entire entry is
+annihilated, and two bodies differing only in the annihilated entry would
+digest <strong>alike</strong>. That is a wrong hit, so it is refused rather than
+documented. Such a body is already broken data: it does not survive a
+round-trip through any lacing store either (JSON object keys are strings).</p></li>
+<li><p><strong>Python container types that JSON cannot distinguish digest alike</strong> —
+<code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">2)</span></code> and <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2]</span></code> both serialise to <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2]</span></code>. This is <em>not</em> a
+wrong hit within the contract: as JSON they are the same value, and a
+contract-honouring body cannot contain a tuple. A <code class="docutils literal notranslate"><span class="pre">set</span></code> additionally
+serialises in an order not stable across processes (a spurious miss), and
+a type pydantic cannot serialise at all raises
+<code class="docutils literal notranslate"><span class="pre">PydanticSerializationError</span></code> rather than digesting a <code class="docutils literal notranslate"><span class="pre">repr</span></code> that embeds
+a memory address.</p></li>
+<li><p><strong>Equal-but-differently-serialised rationals digest differently.</strong>
+<a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">RationalTime</span></code></a> serialises as <code class="docutils literal notranslate"><span class="pre">{&quot;v&quot;:</span> <span class="pre">…,</span> <span class="pre">&quot;r&quot;:</span> <span class="pre">…}</span></code>, so
+<code class="docutils literal notranslate"><span class="pre">RationalTime(1,</span> <span class="pre">24)</span></code> and <code class="docutils literal notranslate"><span class="pre">RationalTime(2,</span> <span class="pre">48)</span></code> compare <strong>equal</strong> but
+digest differently — a rate change moves the digest even when the instant
+is unchanged. This is a spurious <em>miss</em>. (<code class="docutils literal notranslate"><span class="pre">annotation_etag</span></code> has the same
+property.)</p></li>
+</ol>
+<p>Changing <a class="reference internal" href="#lacing.digest.VALUE_FIELDS" title="lacing.digest.VALUE_FIELDS"><code class="xref py py-data docutils literal notranslate"><span class="pre">VALUE_FIELDS</span></code></a> or the canonicalisation is a <strong>breaking cache
+invalidation event</strong> for every consumer: every digest changes at once. Bump
+the scheme string when you do it, so the change is legible in a trace.</p>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.digest.BODY_DIGEST_SCHEME">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">BODY_DIGEST_SCHEME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lacing/annotation-body-digest/v1'</span></span><a class="headerlink" href="#lacing.digest.BODY_DIGEST_SCHEME" title="Link to this definition"></a></dt>
+<dd><p>Domain-separation tag mixed into <a class="reference internal" href="#lacing.digest.annotation_body_digest" title="lacing.digest.annotation_body_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.digest.BODY_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">BODY_FIELDS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('body',</span> <span class="pre">'body_schema_uri')</span></span><a class="headerlink" href="#lacing.digest.BODY_FIELDS" title="Link to this definition"></a></dt>
+<dd><p>The narrower payload for <a class="reference internal" href="#lacing.digest.annotation_body_digest" title="lacing.digest.annotation_body_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a>.</p>
+<p>Note what this drops, which is more than timing: the <strong>entire</strong> <code class="docutils literal notranslate"><span class="pre">reference</span></code>
+(<em>which asset</em> / <em>which node</em> / <em>which annotation</em>, not just <em>when</em>), plus
+<code class="docutils literal notranslate"><span class="pre">tier</span></code> and <code class="docutils literal notranslate"><span class="pre">confidence</span></code>. Two annotations over different assets digest
+alike here.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.digest.NonStringBodyKeyError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">NonStringBodyKeyError</span></span><a class="reference internal" href="../../_modules/lacing/digest.html#NonStringBodyKeyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.digest.NonStringBodyKeyError" title="Link to this definition"></a></dt>
+<dd><p>An annotation <code class="docutils literal notranslate"><span class="pre">body</span></code> contains a mapping key that is not a <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<p>JSON object keys are strings, so <code class="docutils literal notranslate"><span class="pre">model_dump(mode=&quot;json&quot;)</span></code> coerces
+non-string keys — and two distinct keys can coerce to the <em>same</em> string,
+silently annihilating an entry. <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> dumps to
+<code class="docutils literal notranslate"><span class="pre">{&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code>; a body differing only in the lost entry would digest
+identically, which is a wrong cache <strong>hit</strong>.</p>
+<p>The digest refuses rather than risks it. Such a body is already broken
+data — it does not survive a round-trip through any lacing store either,
+for exactly the same reason — so the correct fix is at the producer.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.digest.VALUE_DIGEST_SCHEME">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">VALUE_DIGEST_SCHEME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lacing/annotation-value-digest/v1'</span></span><a class="headerlink" href="#lacing.digest.VALUE_DIGEST_SCHEME" title="Link to this definition"></a></dt>
+<dd><p>Domain-separation tag mixed into <a class="reference internal" href="#lacing.digest.annotation_value_digest" title="lacing.digest.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.digest.VALUE_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">VALUE_FIELDS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('body',</span> <span class="pre">'body_schema_uri',</span> <span class="pre">'confidence',</span> <span class="pre">'reference',</span> <span class="pre">'tier')</span></span><a class="headerlink" href="#lacing.digest.VALUE_FIELDS" title="Link to this definition"></a></dt>
+<dd><p>Annotation fields that constitute its <em>value</em>. See the module docstring for
+why each is in, and why <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance</span></code> are out.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.digest.annotation_body_digest">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">annotation_body_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../lacing.html#lacing.Annotation" title="lacing.Annotation"><span class="pre">Annotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/digest.html#annotation_body_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.digest.annotation_body_digest" title="Link to this definition"></a></dt>
+<dd><p>Return the SHA-256 hex digest of <code class="docutils literal notranslate"><span class="pre">{body,</span> <span class="pre">body_schema_uri}</span></code> only.</p>
+<p>The narrow sibling of <a class="reference internal" href="#lacing.digest.annotation_value_digest" title="lacing.digest.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a>. It drops the
+<strong>entire</strong> <code class="docutils literal notranslate"><span class="pre">reference</span></code> — <em>which asset</em> / <em>which node</em> / <em>which
+annotation</em>, not merely <em>when</em> — plus <code class="docutils literal notranslate"><span class="pre">tier</span></code> and <code class="docutils literal notranslate"><span class="pre">confidence</span></code>. So the
+same caption over two <strong>different assets</strong> digests identically here, as
+does the same body asserted on two different tiers or at two different
+confidences.</p>
+<p>That is a correctness bug in any consumer that reads any of those. Reach
+for it only when the consumer demonstrably depends on nothing but what the
+annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.digest.annotation_value_digest" title="lacing.digest.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a> otherwise.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">over</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="n">asset</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Different <strong>assets</strong>, identical body digest — this is the footgun:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">early</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">late</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">48000</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">early</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">late</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">early</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">late</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.digest.annotation_value_digest">
+<span class="sig-prename descclassname"><span class="pre">lacing.digest.</span></span><span class="sig-name descname"><span class="pre">annotation_value_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../lacing.html#lacing.Annotation" title="lacing.Annotation"><span class="pre">Annotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/digest.html#annotation_value_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.digest.annotation_value_digest" title="Link to this definition"></a></dt>
+<dd><p>Return the SHA-256 hex digest of <code class="docutils literal notranslate"><span class="pre">annotation</span></code>’s value.</p>
+<p>Covers <code class="docutils literal notranslate"><span class="pre">body</span></code>, <code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code>, <code class="docutils literal notranslate"><span class="pre">tier</span></code>, <code class="docutils literal notranslate"><span class="pre">reference</span></code> and
+<code class="docutils literal notranslate"><span class="pre">confidence</span></code>. Excludes <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance</span></code>, so a regeneration that
+produces identical content produces an identical digest.</p>
+<p>Use this for freshness and early cutoff. For optimistic concurrency use
+<code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.server.etag.annotation_etag()</span></code> instead — two digests, two
+jobs, and neither substitutes for the other.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">base</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span><span class="o">**</span><span class="n">base</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A regeneration — new <code class="docutils literal notranslate"><span class="pre">id</span></code>, new timestamp, same content — digests the same:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">make</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">999</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>A changed body does not:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">make</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;goodbye&quot;</span><span class="p">}))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="lacing.cli" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exhibit.html" class="btn btn-neutral float-right" title="lacing.exhibit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

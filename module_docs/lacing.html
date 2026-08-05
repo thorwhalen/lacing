@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.23 documentation</title>
+  <title>lacing &mdash; lacing 0.0.24 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=3294188c"></script>
+      <script src="../_static/documentation_options.js?v=f91d8841"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -165,6 +165,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.annotation_body_digest"><code class="docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.annotation_value_digest"><code class="docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.export_json_schemas"><code class="docutils literal notranslate"><span class="pre">export_json_schemas()</span></code></a></li>
@@ -209,6 +211,7 @@
 <li class="toctree-l1"><a class="reference internal" href="lacing/bodies/review.html">lacing.bodies.review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/cli.html">lacing.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lacing/digest.html">lacing.digest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/exhibit.html">lacing.exhibit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/model.html">lacing.model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lacing/oplog.html">lacing.oplog</a></li>
@@ -1113,6 +1116,129 @@ Always <code class="docutils literal notranslate"><span class="pre">start</span>
 <dt class="sig sig-object py" id="lacing.UnknownBodySchemaError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">UnknownBodySchemaError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#UnknownBodySchemaError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.UnknownBodySchemaError" title="Link to this definition"></a></dt>
 <dd><p>Raised when an annotation’s body_schema_uri has no registered model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.annotation_body_digest">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">annotation_body_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.Annotation" title="lacing.Annotation"><span class="pre">Annotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/lacing/digest.html#annotation_body_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.annotation_body_digest" title="Link to this definition"></a></dt>
+<dd><p>Return the SHA-256 hex digest of <code class="docutils literal notranslate"><span class="pre">{body,</span> <span class="pre">body_schema_uri}</span></code> only.</p>
+<p>The narrow sibling of <a class="reference internal" href="#lacing.annotation_value_digest" title="lacing.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a>. It drops the
+<strong>entire</strong> <code class="docutils literal notranslate"><span class="pre">reference</span></code> — <em>which asset</em> / <em>which node</em> / <em>which
+annotation</em>, not merely <em>when</em> — plus <code class="docutils literal notranslate"><span class="pre">tier</span></code> and <code class="docutils literal notranslate"><span class="pre">confidence</span></code>. So the
+same caption over two <strong>different assets</strong> digests identically here, as
+does the same body asserted on two different tiers or at two different
+confidences.</p>
+<p>That is a correctness bug in any consumer that reads any of those. Reach
+for it only when the consumer demonstrably depends on nothing but what the
+annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.annotation_value_digest" title="lacing.annotation_value_digest"><code class="xref py py-func docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a> otherwise.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">over</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="n">asset</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Different <strong>assets</strong>, identical body digest — this is the footgun:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">early</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">late</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">48000</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">early</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">late</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">early</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">late</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.annotation_value_digest">
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">annotation_value_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#lacing.Annotation" title="lacing.Annotation"><span class="pre">Annotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/lacing/digest.html#annotation_value_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.annotation_value_digest" title="Link to this definition"></a></dt>
+<dd><p>Return the SHA-256 hex digest of <code class="docutils literal notranslate"><span class="pre">annotation</span></code>’s value.</p>
+<p>Covers <code class="docutils literal notranslate"><span class="pre">body</span></code>, <code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code>, <code class="docutils literal notranslate"><span class="pre">tier</span></code>, <code class="docutils literal notranslate"><span class="pre">reference</span></code> and
+<code class="docutils literal notranslate"><span class="pre">confidence</span></code>. Excludes <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">provenance</span></code>, so a regeneration that
+produces identical content produces an identical digest.</p>
+<p>Use this for freshness and early cutoff. For optimistic concurrency use
+<code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.server.etag.annotation_etag()</span></code> instead — two digests, two
+jobs, and neither substitutes for the other.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">,</span> <span class="n">Provenance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">base</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span><span class="o">**</span><span class="n">base</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A regeneration — new <code class="docutils literal notranslate"><span class="pre">id</span></code>, new timestamp, same content — digests the same:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">make</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">999</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>A changed body does not:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">make</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;goodbye&quot;</span><span class="p">}))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

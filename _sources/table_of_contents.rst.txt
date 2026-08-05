@@ -22,6 +22,7 @@
    module_docs/lacing/bodies/review
    module_docs/lacing/bodies/word
    module_docs/lacing/cli
+   module_docs/lacing/digest
    module_docs/lacing/exhibit
    module_docs/lacing/model
    module_docs/lacing/oplog

@@ -1,0 +1,4 @@
+lacing.digest
+=============
+.. automodule:: lacing.digest
+   :members:
