@@ -13,13 +13,19 @@ from uuid import uuid4
 
 import pytest
 
-pytest.importorskip("mcp")
+from lacing.oplog import InMemoryOpLog
+from lacing.server.mcp import _require_mcp, build_mcp_server
+from lacing.store import MemoryStore
+from lacing.tier import Tier
 
-
-from lacing.oplog import InMemoryOpLog  # noqa: E402
-from lacing.server.mcp import build_mcp_server  # noqa: E402
-from lacing.store import MemoryStore  # noqa: E402
-from lacing.tier import Tier  # noqa: E402
+# Skip on what these tests actually need -- a usable FastMCP -- not on whether
+# the `mcp` distribution is importable. Those came apart in mcp 2.0, which
+# dropped the FastMCP it used to vendor: `importorskip("mcp")` still passed, so
+# every test here errored at fixture setup instead of skipping.
+try:
+    _require_mcp()
+except ImportError as exc:  # pragma: no cover - depends on the environment
+    pytest.skip(f"no FastMCP implementation available: {exc}", allow_module_level=True)
 
 
 # ---------------------------------------------------------------------------
@@ -44,23 +50,46 @@ def server(store, oplog):
     return build_mcp_server(store, oplog)
 
 
+def _structured_of(result: Any) -> tuple[bool, Any]:
+    """Pull the structured payload out of a ``call_tool`` result.
+
+    Returns ``(found, payload)`` so that a legitimately ``None`` payload is not
+    confused with "this shape carries no structured content".
+
+    The shape depends on which SDK answered :func:`_require_mcp`:
+
+    - ``fastmcp`` (>=3) returns a ``ToolResult`` with ``.structured_content``
+    - the ``mcp`` SDK (<2) returns a ``(content_parts, structured_dict)`` tuple
+
+    Preferring structured content over the text parts matters: the text path is
+    lossy (everything arrives as ``str`` and has to be guessed back through
+    ``json.loads``), whereas structured content preserves the Python types the
+    tool actually returned.
+    """
+    if hasattr(result, "structured_content"):  # fastmcp >= 3
+        return True, result.structured_content
+    if isinstance(result, tuple) and len(result) == 2:  # mcp < 2
+        return True, result[1]
+    return False, None
+
+
 async def _call(server, name: str, args: dict | None = None) -> Any:
     """Call an MCP tool by name and return the parsed result.
 
-    FastMCP's ``call_tool`` returns ``(content_parts, structured_dict)``.
-    We use the structured-dict path: it preserves Python types directly
-    and wraps non-dict returns under a ``'result'`` key.
+    Both supported SDKs wrap a non-dict return under a ``'result'`` key, which
+    is unwrapped here so tests assert on what the tool returned rather than on
+    the transport's packaging.
     """
     result = await server.call_tool(name, args or {})
-    if isinstance(result, tuple) and len(result) == 2:
-        _parts, structured = result
-        if isinstance(structured, dict) and set(structured.keys()) == {"result"}:
+
+    found, structured = _structured_of(result)
+    if found:
+        if isinstance(structured, dict) and set(structured) == {"result"}:
             return structured["result"]
         return structured
-    # Fallback for older SDK shapes: parse the first text content part.
-    parts = result
-    if hasattr(parts, "content"):
-        parts = parts.content
+
+    # Last resort for an SDK shape we don't know: parse the first text part.
+    parts = getattr(result, "content", result)
     if not parts:
         return None
     text = parts[0].text if hasattr(parts[0], "text") else str(parts[0])

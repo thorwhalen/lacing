@@ -12,8 +12,10 @@ with::
     server = build_mcp_server(store, oplog)
     server.run()  # stdio transport by default
 
-For tests, use ``server._mcp_server.call_tool(name, args)`` (the FastMCP
-internal API) — see ``tests/test_mcp.py``.
+For tests, use ``server.call_tool(name, args)`` — see ``tests/test_mcp.py``.
+Note that its *return shape* differs between the two supported SDKs (a
+``(content, structured)`` tuple on mcp 1.x, a ``ToolResult`` on ``fastmcp``),
+so tests normalize it in one place rather than at each call site.
 
 Tools exposed (all call into ``lacing.server.operations``):
 
@@ -35,6 +37,8 @@ Optional dependency: install with ``pip install 'lacing[mcp]'``.
 
 from __future__ import annotations
 
+import importlib
+import importlib.util
 from typing import Any
 from uuid import UUID
 
@@ -51,15 +55,48 @@ from lacing.server.operations import (
 )
 
 
+#: Where ``FastMCP`` can live, in preference order, as
+#: ``(module path, pip requirement that provides it)``. The standalone
+#: ``fastmcp`` distribution is the maintained successor and is tried first; the
+#: copy the ``mcp`` SDK vendored at ``mcp.server.fastmcp`` was **removed in mcp
+#: 2.0**, so it is only a fallback for environments still on mcp 1.x.
+FASTMCP_SOURCES = (
+    ("fastmcp", "fastmcp>=3"),
+    ("mcp.server.fastmcp", "mcp<2"),
+)
+
+
 def _require_mcp():
-    try:
-        from mcp.server.fastmcp import FastMCP
-    except ImportError as exc:  # pragma: no cover  — the [mcp] extra
-        raise ImportError(
-            "MCP server requires the mcp SDK. Install with: "
-            "pip install 'lacing[mcp]'  (or directly: pip install mcp)"
-        ) from exc
-    return FastMCP
+    """Return the ``FastMCP`` class from whichever SDK is installed.
+
+    Both sources expose the same server-building surface lacing uses
+    (``FastMCP(name=..., instructions=...)``, ``@server.tool()``, ``.run()``),
+    so callers do not care which one answered.
+
+    Raises ``ImportError`` naming every source tried and why it failed, because
+    the two failure modes need different fixes and used to be reported
+    identically: "no FastMCP installed" wants an install, whereas "mcp 2.x is
+    installed but no longer vendors FastMCP" wants the ``fastmcp`` package.
+    """
+    attempts = []
+    for module_path, requirement in FASTMCP_SOURCES:
+        try:
+            return importlib.import_module(module_path).FastMCP
+        except ImportError as exc:
+            attempts.append(f"  - {module_path} (from {requirement}): {exc}")
+
+    detail = "\n".join(attempts)
+    if importlib.util.find_spec("mcp") is not None:
+        detail += (
+            "\n\nNote: the `mcp` SDK IS installed, but mcp >= 2.0 removed the "
+            "FastMCP it used to vendor at `mcp.server.fastmcp`. Installing "
+            "`fastmcp` is the fix -- downgrading `mcp` is not required."
+        )
+    raise ImportError(
+        "lacing's MCP server needs a FastMCP implementation and none was "
+        f"importable. Tried:\n{detail}\n\n"
+        "Install with: pip install 'lacing[mcp]'"
+    )
 
 
 def build_mcp_server(
