@@ -375,10 +375,19 @@ assert annotation_value_digest(original) == annotation_value_digest(regenerated)
 # Included in the value: body, body_schema_uri, tier, reference, confidence.
 # Excluded: id, provenance.
 
-# The narrow sibling — {body, body_schema_uri} only. Re-timing does NOT bust
-# it, so use it only when the consumer demonstrably ignores the interval.
-assert annotation_body_digest(early) == annotation_body_digest(retimed)
+# The narrow sibling — {body, body_schema_uri} only. It drops the ENTIRE
+# reference (which asset, not just when) plus tier and confidence, so the same
+# body over two DIFFERENT assets digests alike. Use it only when the consumer
+# depends on nothing but what the annotation says.
+assert annotation_body_digest(over_interview) == annotation_body_digest(over_broadcast)
 ```
+
+A `body` must contain only JSON types. A non-`str` mapping key raises
+`NonStringBodyKeyError` rather than digesting: JSON object keys are strings, so
+`{1: "a", "1": "b"}` would collapse to `{"1": "b"}` and silently lose an entry
+— two different annotations digesting alike. Within that contract the digest
+never returns a wrong cache *hit*; it can return a spurious miss, which only
+costs a recompute.
 
 `lacing/digest.py` justifies each inclusion/exclusion in its docstring; read it
 before changing the boundary, because changing it invalidates every consumer's

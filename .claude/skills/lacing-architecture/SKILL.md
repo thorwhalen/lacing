@@ -64,6 +64,16 @@ Rules:
   second named function (`annotation_body_digest`) on purpose: a boolean makes
   the choice invisible at the call site, and the two are domain-separated so
   they can never collide.
+- **`annotation_body_digest` drops the *whole* `reference`, not just the
+  interval** — asset identity included, plus `tier` and `confidence`. The same
+  body over two different assets digests alike under it. Do not describe it as
+  "ignores timing"; that undersells the footgun.
+- **Adding a field to `Annotation` is a `VALUE_FIELDS` decision.** A new field
+  that is part of the annotation's *value* and is not added to `VALUE_FIELDS`
+  is invisible to the digest — a silent wrong cache **hit**, not a miss.
+  `tests/test_digest.py` fails the build if the two ever drift: it asserts
+  `set(Annotation.model_fields) == set(VALUE_FIELDS) | {"id", "provenance"}`,
+  so a new field forces an explicit in-or-out ruling.
 
 ## Package layout
 

@@ -144,6 +144,25 @@ class TestValueSensitivity:
             "tier",
         }
 
+    def test_value_fields_and_the_exclusions_partition_the_envelope(self):
+        """The boundary must be exhaustive over `Annotation`, not just self-consistent.
+
+        The test above pins VALUE_FIELDS against a literal, so it catches an
+        edit to *digest.py*. It cannot catch an edit to *model.py* — and that
+        is the direction that produces a wrong cache **hit**: a new
+        value-bearing field on `Annotation` that nobody adds to VALUE_FIELDS is
+        simply absent from the digest, so two annotations differing only in it
+        digest alike and a downstream early cutoff never fires.
+
+        Asserting the partition makes a new envelope field fail the build until
+        someone rules it explicitly in (VALUE_FIELDS) or out (the exclusion
+        set), which is the only safe default.
+        """
+        excluded = {"id", "provenance"}
+        assert set(Annotation.model_fields) == (
+            set(digest_module.VALUE_FIELDS) | excluded
+        )
+
     def test_confidence_none_differs_from_zero(self):
         """None ('unscored') and 0.0 ('scored, and it is bad') are different claims."""
         assert annotation_value_digest(_ann(confidence=None)) != (
@@ -214,11 +233,43 @@ class TestDeterminism:
             _ann(body=backward)
         )
 
-    def test_non_string_body_keys_are_canonicalised(self):
-        """json.dumps(sort_keys=True) raises on mixed key types; the JSON dump
-        coerces to str first, so this must not blow up."""
-        d = annotation_value_digest(_ann(body={1: "a", "2": "b"}))
-        assert len(d) == 64
+    def test_non_string_body_keys_raise_rather_than_collapse(self):
+        """A non-str key is refused, because coercing it can LOSE an entry.
+
+        `model_dump(mode="json")` coerces keys to strings, and two distinct
+        keys can coerce to the same string: `{1: "a", "1": "b"}` dumps to
+        `{"1": "b"}`. Digesting that would let two annotations differing only
+        in the annihilated entry digest alike — a wrong cache HIT, which is the
+        exact hazard this module exists to prevent. Such a body is already
+        broken data: it does not survive a store round-trip either.
+        """
+        for body in ({1: "a", "2": "b"}, {1: "a", "1": "b"}, {None: "x"}):
+            with pytest.raises(digest_module.NonStringBodyKeyError):
+                annotation_value_digest(_ann(body=body))
+            with pytest.raises(digest_module.NonStringBodyKeyError):
+                annotation_body_digest(_ann(body=body))
+
+    def test_nested_non_string_keys_are_refused_too(self):
+        """The collapse hazard is identical one level down, and inside lists."""
+        for body in (
+            {"k": {1: "a", "1": "b"}},
+            {"k": [{"deep": {2: "v"}}]},
+        ):
+            with pytest.raises(digest_module.NonStringBodyKeyError):
+                annotation_value_digest(_ann(body=body))
+
+    def test_the_refusal_names_the_offending_path(self):
+        """An error that does not say WHERE sends the reader to the wrong producer."""
+        with pytest.raises(digest_module.NonStringBodyKeyError) as excinfo:
+            annotation_value_digest(_ann(body={"outer": {7: "v"}}))
+        assert "body['outer']" in str(excinfo.value)
+
+    def test_the_collapse_this_guard_prevents_is_real(self):
+        """Pin the underlying pydantic behaviour, so the guard's rationale is
+        checked rather than asserted. If pydantic ever stops collapsing, this
+        fails and the guard can be reconsidered on evidence."""
+        collapsed = _ann(body={1: "a", "1": "b"}).model_dump(mode="json")["body"]
+        assert collapsed == {"1": "b"}  # the {1: "a"} entry is gone
 
     def test_stable_across_processes(self, tmp_path: Path):
         """Fresh interpreters, hash randomisation on, must agree.
@@ -392,4 +443,7 @@ class TestShape:
 
     def test_doctests(self):
         results = doctest.testmod(digest_module, verbose=False)
+        # `failed == 0` alone passes vacuously on an example-free module, so
+        # deleting every doctest would leave this test green. Pin the floor.
+        assert results.attempted >= 10
         assert results.failed == 0

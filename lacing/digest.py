@@ -82,8 +82,15 @@ it consumes only the body (a caption translation). Rather than a boolean flag
 or a wrong guess that needs migrating later, this module ships both:
 
 - :func:`annotation_value_digest` — the full value, ``reference`` included.
-  **The default.** Use it unless you can state why timing is irrelevant.
+  **The default.** Use it unless you can state why the rest is irrelevant.
 - :func:`annotation_body_digest` — ``{body, body_schema_uri}`` only.
+
+**Be precise about what the narrow one drops, because "re-timing" undersells
+it.** ``annotation_body_digest`` drops the *entire* ``reference`` — the asset
+identity as well as the interval — plus ``tier`` and ``confidence``. Two
+annotations carrying the same body over **different assets** digest alike
+under it. Reach for it only when the consumer depends on nothing but what the
+annotation *says*.
 
 They are domain-separated (see :data:`VALUE_DIGEST_SCHEME`), so the two can
 never collide even on an annotation whose payloads coincide.
@@ -94,19 +101,37 @@ The digest is stable **across processes**, **across dict insertion order**
 (``sort_keys=True`` canonicalises recursively) and **across a store
 round-trip** (memory → ``.annot`` → memory).
 
-Two limits, both of which fail in the *conservative* direction — a spurious
-cache **miss**, never a wrong **hit**:
+The safety claim, stated precisely
+-----------------------------------
+**For a body that honours the ``body`` contract — i.e. contains only JSON
+types, which is what validating against JSON Schema means — this digest never
+returns a wrong cache *hit*.** Two annotations with different values never
+digest alike. It can return a spurious *miss*; that only costs a recompute.
 
-1. The digest is over the canonical JSON *serialisation*, and
-   :class:`~lacing.time.RationalTime` serialises as ``{"v": …, "r": …}``.
+That claim is bounded by the contract, and it is worth knowing exactly where
+the boundary is, because an unbounded version of it would be false:
+
+1. **Non-``str`` mapping keys raise** :class:`NonStringBodyKeyError`.
+   ``model_dump(mode="json")`` coerces keys to strings, so a body like
+   ``{1: "a", "1": "b"}`` collapses to ``{"1": "b"}`` — an entire entry is
+   annihilated, and two bodies differing only in the annihilated entry would
+   digest **alike**. That is a wrong hit, so it is refused rather than
+   documented. Such a body is already broken data: it does not survive a
+   round-trip through any lacing store either (JSON object keys are strings).
+2. **Python container types that JSON cannot distinguish digest alike** —
+   ``(1, 2)`` and ``[1, 2]`` both serialise to ``[1, 2]``. This is *not* a
+   wrong hit within the contract: as JSON they are the same value, and a
+   contract-honouring body cannot contain a tuple. A ``set`` additionally
+   serialises in an order not stable across processes (a spurious miss), and
+   a type pydantic cannot serialise at all raises
+   ``PydanticSerializationError`` rather than digesting a ``repr`` that embeds
+   a memory address.
+3. **Equal-but-differently-serialised rationals digest differently.**
+   :class:`~lacing.time.RationalTime` serialises as ``{"v": …, "r": …}``, so
    ``RationalTime(1, 24)`` and ``RationalTime(2, 48)`` compare **equal** but
-   serialise differently, so a rate change re-times the digest even when the
-   instant is unchanged. (``annotation_etag`` has the same property.)
-2. A ``body`` carrying a non-JSON Python value is outside the ``body``
-   contract (bodies are validated against JSON Schema). A ``set`` serialises
-   to a list in an order that is not stable across processes; a type pydantic
-   cannot serialise at all raises ``PydanticSerializationError`` rather than
-   digesting a ``repr`` that embeds a memory address.
+   digest differently — a rate change moves the digest even when the instant
+   is unchanged. This is a spurious *miss*. (``annotation_etag`` has the same
+   property.)
 
 Changing :data:`VALUE_FIELDS` or the canonicalisation is a **breaking cache
 invalidation event** for every consumer: every digest changes at once. Bump
@@ -126,11 +151,27 @@ if TYPE_CHECKING:  # pragma: no cover - typing only, keeps this module import-li
 __all__ = [
     "annotation_value_digest",
     "annotation_body_digest",
+    "NonStringBodyKeyError",
     "VALUE_FIELDS",
     "BODY_FIELDS",
     "VALUE_DIGEST_SCHEME",
     "BODY_DIGEST_SCHEME",
 ]
+
+
+class NonStringBodyKeyError(TypeError):
+    """An annotation ``body`` contains a mapping key that is not a ``str``.
+
+    JSON object keys are strings, so ``model_dump(mode="json")`` coerces
+    non-string keys — and two distinct keys can coerce to the *same* string,
+    silently annihilating an entry. ``{1: "a", "1": "b"}`` dumps to
+    ``{"1": "b"}``; a body differing only in the lost entry would digest
+    identically, which is a wrong cache **hit**.
+
+    The digest refuses rather than risks it. Such a body is already broken
+    data — it does not survive a round-trip through any lacing store either,
+    for exactly the same reason — so the correct fix is at the producer.
+    """
 
 
 VALUE_FIELDS: tuple[str, ...] = (
@@ -144,8 +185,12 @@ VALUE_FIELDS: tuple[str, ...] = (
 why each is in, and why ``id`` and ``provenance`` are out."""
 
 BODY_FIELDS: tuple[str, ...] = ("body", "body_schema_uri")
-"""The narrower payload for :func:`annotation_body_digest` — no ``reference``,
-so re-timing does not bust the digest."""
+"""The narrower payload for :func:`annotation_body_digest`.
+
+Note what this drops, which is more than timing: the **entire** ``reference``
+(*which asset* / *which node* / *which annotation*, not just *when*), plus
+``tier`` and ``confidence``. Two annotations over different assets digest
+alike here."""
 
 VALUE_DIGEST_SCHEME = "lacing/annotation-value-digest/v1"
 """Domain-separation tag mixed into :func:`annotation_value_digest`."""
@@ -211,12 +256,46 @@ def annotation_value_digest(annotation: "Annotation") -> str:
 def annotation_body_digest(annotation: "Annotation") -> str:
     """Return the SHA-256 hex digest of ``{body, body_schema_uri}`` only.
 
-    The narrow sibling of :func:`annotation_value_digest`, for consumers that
-    demonstrably do **not** depend on *when* or *what* the annotation points
-    at — only on what it says. Re-timing an annotation leaves this digest
-    unchanged, which is a correctness bug if the consumer actually reads the
-    interval. Prefer :func:`annotation_value_digest` unless you can state why
-    timing is irrelevant to the downstream computation.
+    The narrow sibling of :func:`annotation_value_digest`. It drops the
+    **entire** ``reference`` — *which asset* / *which node* / *which
+    annotation*, not merely *when* — plus ``tier`` and ``confidence``. So the
+    same caption over two **different assets** digests identically here, as
+    does the same body asserted on two different tiers or at two different
+    confidences.
+
+    That is a correctness bug in any consumer that reads any of those. Reach
+    for it only when the consumer demonstrably depends on nothing but what the
+    annotation *says*; prefer :func:`annotation_value_digest` otherwise.
+
+    >>> from uuid import uuid4
+    >>> from lacing import Annotation, MediaRef, Provenance
+    >>> from lacing import RationalTime, TimeInterval
+    >>> def over(asset):
+    ...     return Annotation(
+    ...         id=uuid4(), tier="words",
+    ...         reference=MediaRef(
+    ...             asset_id=asset,
+    ...             interval=TimeInterval(RationalTime(0), RationalTime(24000)),
+    ...         ),
+    ...         body={"text": "hello"},
+    ...         body_schema_uri="annot://schema/word/v1",
+    ...         provenance=Provenance(
+    ...             was_generated_by="agent:m@1",
+    ...             was_attributed_to="thor",
+    ...             generated_at_time=RationalTime(0),
+    ...         ),
+    ...     )
+
+    Different **assets**, identical body digest — this is the footgun:
+
+    >>> annotation_body_digest(over("sha256:interview")) == (
+    ...     annotation_body_digest(over("sha256:broadcast"))
+    ... )
+    True
+    >>> annotation_value_digest(over("sha256:interview")) == (
+    ...     annotation_value_digest(over("sha256:broadcast"))
+    ... )
+    False
 
     >>> from uuid import uuid4
     >>> from lacing import Annotation, MediaRef, Provenance
@@ -247,16 +326,48 @@ def annotation_body_digest(annotation: "Annotation") -> str:
 # --- internals ---------------------------------------------------------------
 
 
+def _reject_non_string_keys(value: Any, path: str) -> None:
+    """Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.
+
+    Walks nested mappings and sequences, because the key-collapse hazard is
+    just as real one level down: ``{"k": {1: "a", "1": "b"}}`` loses an entry
+    exactly the same way. ``path`` is threaded through so the error names the
+    offending location rather than just the annotation.
+
+    Only ``body`` needs this. Every other field in :data:`VALUE_FIELDS` is a
+    typed pydantic field (``str``, ``float | None``, or a ``Reference`` model),
+    none of which can carry a free-form mapping key.
+    """
+    if isinstance(value, dict):
+        for key, sub in value.items():
+            if not isinstance(key, str):
+                raise NonStringBodyKeyError(
+                    f"{path} has a non-str key {key!r} of type "
+                    f"{type(key).__name__}. JSON object keys are strings, so "
+                    f"this key would be coerced — and a coercion collision "
+                    f"silently drops an entry, which would make two different "
+                    f"annotations digest alike. Fix the producer so the body "
+                    f"contains only JSON types."
+                )
+            _reject_non_string_keys(sub, f"{path}[{key!r}]")
+    elif isinstance(value, (list, tuple)):
+        for index, sub in enumerate(value):
+            _reject_non_string_keys(sub, f"{path}[{index}]")
+
+
 def _payload(annotation: "Annotation", fields: Sequence[str]) -> dict[str, Any]:
     """Project ``annotation``'s JSON-mode dump onto ``fields``.
 
     Dumping the whole model once and projecting is deliberate: it routes every
     field through pydantic's JSON serializer, so ``RationalTime`` reaches the
-    canonicaliser in its ``{v, r}`` wire form and non-string ``body`` keys are
-    coerced to strings (``json.dumps(sort_keys=True)`` raises on mixed key
-    types). Hand-assembling the payload from raw attributes reintroduces both
-    hazards.
+    canonicaliser in its ``{v, r}`` wire form. Hand-assembling the payload from
+    raw attributes bypasses that.
+
+    The dump is preceded by :func:`_reject_non_string_keys` over the *raw*
+    body, because the check has to happen **before** the coercion it exists to
+    catch — once dumped, the annihilated entry is already gone.
     """
+    _reject_non_string_keys(annotation.body, "body")
     dumped = annotation.model_dump(mode="json")
     return {field: dumped[field] for field in fields}
 
