@@ -66,6 +66,10 @@ from lacing.artifact import (
     hash_file,
 )
 from lacing.artifact_store import ArtifactStore
+from lacing.digest import (
+    annotation_body_digest,
+    annotation_value_digest,
+)
 from lacing.store import (
     IntervalAnnotationStore,
     MemoryStore,
@@ -103,6 +107,12 @@ __all__ = [
     "ArtifactStore",
     "hash_bytes",
     "hash_file",
+    # digest — three digests, three jobs; see lacing/digest.py's docstring.
+    # (hash_bytes/hash_file address artifact BYTES; annotation_etag, under
+    # lacing.server, is the If-Match concurrency digest over the WHOLE
+    # annotation; these two address an annotation's VALUE, for freshness.)
+    "annotation_value_digest",
+    "annotation_body_digest",
     # allen
     "AllenRelation",
     # store

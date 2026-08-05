@@ -5,6 +5,16 @@ canonical JSON dump). On mutation, callers must send ``If-Match: "<etag>"``;
 mismatch yields HTTP 412 Precondition Failed.
 
 This is the optimistic-concurrency primitive recommended in BACK-DOC §3.3.
+
+**Not** the freshness digest — do not collapse the two. ``annotation_etag``
+covers the *whole* annotation including ``id`` (a fresh ``uuid4`` on every
+regeneration) and ``provenance.generated_at_time``, so it changes on every
+run even when the content is byte-identical. That is exactly right for
+``If-Match`` / HTTP 412 and exactly wrong for early cutoff. The freshness
+digest is :func:`lacing.annotation_value_digest` in :mod:`lacing.digest`,
+which lives in core precisely because importing anything under
+``lacing.server`` pulls in FastAPI. Two digests, two jobs; neither
+substitutes for the other.
 """
 
 from __future__ import annotations

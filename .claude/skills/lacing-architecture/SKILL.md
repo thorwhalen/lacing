@@ -36,6 +36,45 @@ If the roadmap and a design doc disagree, **the design doc wins** — fix the ro
 | 9 | **Pydantic v2 → JSON Schema → Zod codegen.** One SoT, two languages. Use `datamodel-code-generator` + `json-schema-to-zod`. | BACK-DOC §6 |
 | 10 | **License hygiene: MIT/BSD/Apache only.** No LGPL, GPL, AGPL, BSL. Banned: `portion`, `praat-parselmouth`, `aeneas`, Peaks.js, Etro, `@theatre/studio`, Remotion. | ANN-DOC §E; FRONT-DOC §1.8; OSS-DOC tier-3 |
 
+## Three digests, three jobs — never collapse them
+
+A recurring failure mode. lacing hashes three different things, and reaching
+for the nearest available digest is a silent wrong-cache-**hit**:
+
+| Digest | Over | Question | Lives in |
+|---|---|---|---|
+| `hash_bytes` / `hash_file` | an artifact's **bytes** | *same file?* (`Artifact.asset_id`) | `lacing/artifact.py` |
+| `annotation_etag` | the **whole** annotation, `id` + `provenance` included | *touched since I read it?* (`If-Match` / HTTP 412) | `lacing/server/etag.py` |
+| `annotation_value_digest` / `annotation_body_digest` | an annotation's **value**, `id` + `provenance` excluded | *did the answer actually change?* (freshness / early cutoff) | `lacing/digest.py` |
+
+Rules:
+
+- **`lacing/digest.py` must stay stdlib-only and must never move under
+  `lacing/server/`.** Importing anything under `lacing.server` executes
+  `lacing/server/__init__.py`, which imports FastAPI — and the value digest is
+  consumed by the *execution* tier (`nw`, `falaw`), which must not drag a web
+  framework in. `tests/test_digest.py` enforces both, by executing the module
+  in a fresh interpreter and asserting every module it newly imports is in
+  `sys.stdlib_module_names`.
+- **Changing `VALUE_FIELDS` or the canonicalisation invalidates every
+  consumer's cache at once.** Bump the scheme constant when you do, so the
+  change is legible in a trace. The module docstring justifies each field's
+  inclusion/exclusion — read it before editing the boundary.
+- **Do not add a `include_reference: bool` flag.** The narrow variant is a
+  second named function (`annotation_body_digest`) on purpose: a boolean makes
+  the choice invisible at the call site, and the two are domain-separated so
+  they can never collide.
+- **`annotation_body_digest` drops the *whole* `reference`, not just the
+  interval** — asset identity included, plus `tier` and `confidence`. The same
+  body over two different assets digests alike under it. Do not describe it as
+  "ignores timing"; that undersells the footgun.
+- **Adding a field to `Annotation` is a `VALUE_FIELDS` decision.** A new field
+  that is part of the annotation's *value* and is not added to `VALUE_FIELDS`
+  is invisible to the digest — a silent wrong cache **hit**, not a miss.
+  `tests/test_digest.py` fails the build if the two ever drift: it asserts
+  `set(Annotation.model_fields) == set(VALUE_FIELDS) | {"id", "provenance"}`,
+  so a new field forces an explicit in-or-out ruling.
+
 ## Package layout
 
 `lacing` (this repo) is the **core lib only** — no server, no UI, no infra.
@@ -48,6 +87,7 @@ lacing/                    ← THIS REPO: core library
 │   ├── model.py          Annotation, Reference, Provenance
 │   ├── tier.py           Tier + 5 ELAN stereotypes
 │   ├── allen.py          13 Allen relations + composition
+│   ├── digest.py         annotation value/body content digests (freshness)
 │   ├── store/
 │   │   ├── base.py       IntervalAnnotationStore facade
 │   │   ├── memory.py     intervaltree-backed (Phase 0, done)
