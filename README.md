@@ -104,6 +104,7 @@ lacing/
 ├── model.py         Annotation envelope + Reference union + Provenance (PROV-O subset)
 ├── tier.py          Tier + 5 ELAN tier stereotypes + constraint validator
 ├── allen.py         13 Allen relations + intersects + relate + composition
+├── digest.py        annotation_value_digest — content digest for freshness / early cutoff
 ├── store/
 │   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
 │   ├── memory.py    MemoryStore over `intervaltree`
@@ -347,6 +348,41 @@ wire dicts): `add_annotation`, `query_annotations`, `get_annotation`,
 same `store` + `oplog` as the FastAPI app, so a human edit via REST and
 an agent edit via MCP land in the same op-log with the same Lamport
 clock.
+
+### Freshness — "did the answer actually change?"
+
+lacing has **three** digests answering three different questions. Picking the
+wrong one is a silent correctness bug, so they are named apart:
+
+| Digest | Over | Question |
+|---|---|---|
+| `hash_bytes` / `hash_file` | an artifact's **bytes** | *are these two files the same file?* (`Artifact.asset_id`) |
+| `lacing.server.etag.annotation_etag` | the **whole** annotation | *has this record been touched since I read it?* (`If-Match` / 412) |
+| `annotation_value_digest` | an annotation's **value** | *did the answer actually change?* (freshness / early cutoff) |
+
+A regeneration mints a fresh `id` and a fresh `provenance.generated_at_time`,
+so `annotation_etag` changes even when the content is byte-identical. The value
+digest excludes both — which is what lets a downstream freshness check key on
+*upstream output values* rather than *upstream keys*, and stop propagating
+invalidation when nothing actually changed.
+
+```python
+from lacing import annotation_value_digest, annotation_body_digest
+
+# Same content, regenerated: same value digest, different id + timestamp.
+assert annotation_value_digest(original) == annotation_value_digest(regenerated)
+
+# Included in the value: body, body_schema_uri, tier, reference, confidence.
+# Excluded: id, provenance.
+
+# The narrow sibling — {body, body_schema_uri} only. Re-timing does NOT bust
+# it, so use it only when the consumer demonstrably ignores the interval.
+assert annotation_body_digest(early) == annotation_body_digest(retimed)
+```
+
+`lacing/digest.py` justifies each inclusion/exclusion in its docstring; read it
+before changing the boundary, because changing it invalidates every consumer's
+cache at once.
 
 ### Inter-annotator agreement
 
