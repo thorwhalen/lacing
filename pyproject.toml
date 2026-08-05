@@ -49,7 +49,8 @@ dev = [
     "fastapi>=0.100",
     "httpx>=0.24",
     "python-multipart>=0.0.6",
-    "mcp>=1.0",
+    # See the [mcp] extra: `fastmcp`, not `mcp`, is what provides FastMCP now.
+    "fastmcp>=3",
     "opentimelineio>=0.17",
     "opentelemetry-api>=1.20",
     "opentelemetry-sdk>=1.20",
@@ -89,7 +90,12 @@ server = [
     "uvicorn>=0.20",
 ]
 mcp = [
-    "mcp>=1.0",
+    # The standalone `fastmcp` distribution, NOT the `mcp` SDK: mcp 2.0 removed
+    # the FastMCP it used to vendor at `mcp.server.fastmcp`, so `mcp>=1.0`
+    # silently resolved to a version without the class this extra exists to
+    # provide. `lacing.server.mcp` still accepts an mcp 1.x install if that is
+    # what an environment already has.
+    "fastmcp>=3",
 ]
 arq = [
     "arq>=0.25",
