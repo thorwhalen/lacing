@@ -132,6 +132,7 @@ def _s3_kwargs_to_v1(s3_kwargs: dict) -> dict:
         )
     return kwargs
 
+
 __all__ = ["ArtifactStore"]
 
 
@@ -517,7 +518,9 @@ class ArtifactStore(MutableMapping):
         """
         from s3dol import s3_store
 
-        blobs = s3_store(bucket_name, prefix=prefix or "", **_s3_kwargs_to_v1(s3_kwargs))
+        blobs = s3_store(
+            bucket_name, prefix=prefix or "", **_s3_kwargs_to_v1(s3_kwargs)
+        )
         return cls(catalog={} if catalog is None else catalog, blobs=blobs)
 
     @classmethod
