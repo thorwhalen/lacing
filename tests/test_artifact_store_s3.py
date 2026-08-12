@@ -68,7 +68,25 @@ def test_from_s3_blob_location_returns_presigned_url():
 @mock_aws
 def test_from_s3_blob_location_none_for_missing():
     store = _store()
+    # Write once so the bucket exists. Needed since s3dol>=1: make_bucket=True
+    # maps to on_missing_bucket='create', which *recovers* (attempt -> create
+    # -> retry once) rather than probing-and-creating at construction — no I/O
+    # in a constructor. Reading from a not-yet-created bucket therefore raises
+    # BucketNotFound instead of quietly reporting the blob missing, which is
+    # the point: "your bucket does not exist" is a configuration error, not a
+    # cache miss. (s3dol v0 swallowed every listing/head error as "absent".)
+    store.put_blob(b"anything")
     assert store.blob_location("0" * 64) is None
+
+
+@mock_aws
+def test_from_s3_read_before_any_write_surfaces_the_missing_bucket():
+    """The flip side, pinned: a missing bucket is loud, not a silent miss."""
+    import s3dol
+
+    store = _store()
+    with pytest.raises(s3dol.BucketNotFound):
+        store.blob_location("0" * 64)
 
 
 @mock_aws
