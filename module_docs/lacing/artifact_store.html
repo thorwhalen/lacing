@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.25 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.26 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=5d650c58"></script>
+      <script src="../../_static/documentation_options.js?v=6a9d8632"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -357,15 +357,18 @@ Postgres-backed <code class="docutils literal notranslate"><span class="pre">Mut
 <li><p><strong>catalog</strong> – The <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">-&gt;</span> <span class="pre">record</span></code> catalog <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>. Defaults
 to <code class="docutils literal notranslate"><span class="pre">{}</span></code> (in-memory).</p></li>
 <li><p><strong>prefix</strong> – Optional key prefix within the bucket (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;blobs&quot;</span></code>).</p></li>
-<li><p><strong>**s3_kwargs</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">s3dol.store.S3Store</span></code> — credentials
-(<code class="docutils literal notranslate"><span class="pre">aws_access_key_id</span></code> / <code class="docutils literal notranslate"><span class="pre">aws_secret_access_key</span></code> /
-<code class="docutils literal notranslate"><span class="pre">profile_name</span></code>), <code class="docutils literal notranslate"><span class="pre">endpoint_url</span></code> (set for R2 / MinIO /
-Supabase), <code class="docutils literal notranslate"><span class="pre">region_name</span></code>, <code class="docutils literal notranslate"><span class="pre">make_bucket</span></code>, etc.</p></li>
+<li><p><strong>**s3_kwargs</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">s3dol.s3_store</span></code> — <code class="docutils literal notranslate"><span class="pre">endpoint_url</span></code>
+(set for R2 / MinIO / Supabase), <code class="docutils literal notranslate"><span class="pre">region_name</span></code>, <code class="docutils literal notranslate"><span class="pre">profile</span></code>,
+<code class="docutils literal notranslate"><span class="pre">credentials</span></code>, <code class="docutils literal notranslate"><span class="pre">preset</span></code>, <code class="docutils literal notranslate"><span class="pre">anon</span></code>, <code class="docutils literal notranslate"><span class="pre">on_missing_bucket</span></code>.
+The pre-v1 spellings (<code class="docutils literal notranslate"><span class="pre">aws_access_key_id</span></code> /
+<code class="docutils literal notranslate"><span class="pre">aws_secret_access_key</span></code> / <code class="docutils literal notranslate"><span class="pre">aws_session_token</span></code> /
+<code class="docutils literal notranslate"><span class="pre">profile_name</span></code> / <code class="docutils literal notranslate"><span class="pre">make_bucket</span></code>) are still accepted and
+translated, with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Requires <code class="docutils literal notranslate"><span class="pre">s3dol</span></code> (and <code class="docutils literal notranslate"><span class="pre">boto3</span></code>) — imported lazily so the dependency
-is only needed when this constructor is used.</p>
+<p>Requires <code class="docutils literal notranslate"><span class="pre">s3dol&gt;=1</span></code> (and <code class="docutils literal notranslate"><span class="pre">boto3</span></code>) — imported lazily so the
+dependency is only needed when this constructor is used.</p>
 </dd></dl>
 
 <dl class="py method">

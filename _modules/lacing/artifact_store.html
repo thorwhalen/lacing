@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.25 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.26 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=5d650c58"></script>
+      <script src="../../_static/documentation_options.js?v=6a9d8632"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -190,6 +190,73 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">Files</span><span class="p">,</span> <span class="n">filt_iter</span><span class="p">,</span> <span class="n">wrap_kvs</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">hash_bytes</span>
+
+
+<span class="c1">#: Pre-v1 ``s3dol.store.S3Store`` kwarg names -&gt; their ``s3dol.s3_store``</span>
+<span class="c1">#: equivalents. Kept so callers of :meth:`ArtifactStore.from_s3` that still</span>
+<span class="c1">#: spell credentials the old way keep working (with a DeprecationWarning)</span>
+<span class="c1">#: rather than getting an opaque TypeError from a signature they never saw.</span>
+<span class="n">_S3DOL_LEGACY_KWARGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;profile_name&quot;</span><span class="p">:</span> <span class="s2">&quot;profile&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_s3_kwargs_to_v1</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate pre-v1 s3dol kwargs to the v1 ``s3_store`` signature.</span>
+
+<span class="sd">    s3dol v1 takes credentials as one ``credentials=`` value (normalised to a</span>
+<span class="sd">    picklable spec, so the store survives a process hop) rather than three</span>
+<span class="sd">    loose ``aws_*`` kwargs, and replaces the ``make_bucket`` tri-state with</span>
+<span class="sd">    ``on_missing_bucket``.</span>
+
+<span class="sd">    &gt;&gt;&gt; _s3_kwargs_to_v1({&#39;endpoint_url&#39;: &#39;https://x&#39;, &#39;region_name&#39;: &#39;eu-west-1&#39;})</span>
+<span class="sd">    {&#39;endpoint_url&#39;: &#39;https://x&#39;, &#39;region_name&#39;: &#39;eu-west-1&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">)</span>
+    <span class="n">deprecated</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">access</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_access_key_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_secret_access_key&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_session_token&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">access</span> <span class="ow">or</span> <span class="n">secret</span> <span class="ow">or</span> <span class="n">token</span><span class="p">:</span>
+        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;aws_access_key_id/aws_secret_access_key/aws_session_token&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">access</span> <span class="ow">and</span> <span class="n">secret</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;from_s3 needs both aws_access_key_id and aws_secret_access_key &quot;</span>
+                <span class="s2">&quot;(a token alone is not a credential). Better: pass s3dol v1&#39;s &quot;</span>
+                <span class="s2">&quot;credentials=(key, secret) or credentials=&#39;&lt;profile-name&gt;&#39;.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;credentials&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">if</span> <span class="n">token</span> <span class="k">else</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;make_bucket&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;make_bucket&quot;</span><span class="p">)</span>
+        <span class="c1"># v0 tri-state -&gt; v1 policy. Note v1&#39;s default never probes and never</span>
+        <span class="c1"># creates, so a missing bucket surfaces on first use rather than being</span>
+        <span class="c1"># silently minted from a typo.</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;on_missing_bucket&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;raise&quot;</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;assume&quot;</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;make_bucket&quot;</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">_S3DOL_LEGACY_KWARGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">new</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">deprecated</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;from_s3 received pre-v1 s3dol kwarg(s): </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">deprecated</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;They were translated to the s3dol&gt;=1 signature &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(credentials=/profile=/prefix=/on_missing_bucket=); pass those &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;directly instead. Translation will be removed in a future lacing.&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">kwargs</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ArtifactStore&quot;</span><span class="p">]</span>
 
@@ -455,7 +522,25 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">url_for</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;url_for&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">url_for</span><span class="p">):</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="c1"># A backend may *refuse* to sign rather than sign wrongly —</span>
+                <span class="c1"># s3dol&gt;=1 does exactly that when its store has been wrapped</span>
+                <span class="c1"># by a key codec, because the URL could then address a</span>
+                <span class="c1"># different object. &quot;No safe URL&quot; is not an error here, it is</span>
+                <span class="c1"># the documented cue to stream; but it should not pass in</span>
+                <span class="c1"># silence, since streaming through the app is the expensive</span>
+                <span class="c1"># path this method exists to avoid.</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.url_for refused to sign &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">); falling back to &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;streaming. Serving stays correct, just slower.&quot;</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">url</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blob_path</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span></div>
@@ -585,17 +670,20 @@
 <span class="sd">            catalog: The ``id -&gt; record`` catalog ``MutableMapping``. Defaults</span>
 <span class="sd">                to ``{}`` (in-memory).</span>
 <span class="sd">            prefix: Optional key prefix within the bucket (e.g. ``&quot;blobs&quot;``).</span>
-<span class="sd">            **s3_kwargs: Forwarded to ``s3dol.store.S3Store`` — credentials</span>
-<span class="sd">                (``aws_access_key_id`` / ``aws_secret_access_key`` /</span>
-<span class="sd">                ``profile_name``), ``endpoint_url`` (set for R2 / MinIO /</span>
-<span class="sd">                Supabase), ``region_name``, ``make_bucket``, etc.</span>
+<span class="sd">            **s3_kwargs: Forwarded to ``s3dol.s3_store`` — ``endpoint_url``</span>
+<span class="sd">                (set for R2 / MinIO / Supabase), ``region_name``, ``profile``,</span>
+<span class="sd">                ``credentials``, ``preset``, ``anon``, ``on_missing_bucket``.</span>
+<span class="sd">                The pre-v1 spellings (``aws_access_key_id`` /</span>
+<span class="sd">                ``aws_secret_access_key`` / ``aws_session_token`` /</span>
+<span class="sd">                ``profile_name`` / ``make_bucket``) are still accepted and</span>
+<span class="sd">                translated, with a ``DeprecationWarning``.</span>
 
-<span class="sd">        Requires ``s3dol`` (and ``boto3``) — imported lazily so the dependency</span>
-<span class="sd">        is only needed when this constructor is used.</span>
+<span class="sd">        Requires ``s3dol&gt;=1`` (and ``boto3``) — imported lazily so the</span>
+<span class="sd">        dependency is only needed when this constructor is used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">s3dol.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">S3Store</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">s3dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">s3_store</span>
 
-        <span class="n">blobs</span> <span class="o">=</span> <span class="n">S3Store</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="n">s3_kwargs</span><span class="p">)</span>
+        <span class="n">blobs</span> <span class="o">=</span> <span class="n">s3_store</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_s3_kwargs_to_v1</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="p">{}</span> <span class="k">if</span> <span class="n">catalog</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
 
 
