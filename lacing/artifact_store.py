@@ -65,6 +65,73 @@ from dol import Files, filt_iter, wrap_kvs
 
 from lacing.artifact import Artifact, hash_bytes
 
+
+#: Pre-v1 ``s3dol.store.S3Store`` kwarg names -> their ``s3dol.s3_store``
+#: equivalents. Kept so callers of :meth:`ArtifactStore.from_s3` that still
+#: spell credentials the old way keep working (with a DeprecationWarning)
+#: rather than getting an opaque TypeError from a signature they never saw.
+_S3DOL_LEGACY_KWARGS = {
+    "profile_name": "profile",
+    "path": "prefix",
+}
+
+
+def _s3_kwargs_to_v1(s3_kwargs: dict) -> dict:
+    """Translate pre-v1 s3dol kwargs to the v1 ``s3_store`` signature.
+
+    s3dol v1 takes credentials as one ``credentials=`` value (normalised to a
+    picklable spec, so the store survives a process hop) rather than three
+    loose ``aws_*`` kwargs, and replaces the ``make_bucket`` tri-state with
+    ``on_missing_bucket``.
+
+    >>> _s3_kwargs_to_v1({'endpoint_url': 'https://x', 'region_name': 'eu-west-1'})
+    {'endpoint_url': 'https://x', 'region_name': 'eu-west-1'}
+    """
+    import warnings
+
+    kwargs = dict(s3_kwargs)
+    deprecated = []
+
+    access = kwargs.pop("aws_access_key_id", None)
+    secret = kwargs.pop("aws_secret_access_key", None)
+    token = kwargs.pop("aws_session_token", None)
+    if access or secret or token:
+        deprecated.append("aws_access_key_id/aws_secret_access_key/aws_session_token")
+        if not (access and secret):
+            raise TypeError(
+                "from_s3 needs both aws_access_key_id and aws_secret_access_key "
+                "(a token alone is not a credential). Better: pass s3dol v1's "
+                "credentials=(key, secret) or credentials='<profile-name>'."
+            )
+        kwargs["credentials"] = (access, secret, token) if token else (access, secret)
+
+    if "make_bucket" in kwargs:
+        deprecated.append("make_bucket")
+        # v0 tri-state -> v1 policy. Note v1's default never probes and never
+        # creates, so a missing bucket surfaces on first use rather than being
+        # silently minted from a typo.
+        kwargs["on_missing_bucket"] = {
+            True: "create",
+            False: "raise",
+            None: "assume",
+        }[kwargs.pop("make_bucket")]
+
+    for old, new in _S3DOL_LEGACY_KWARGS.items():
+        if old in kwargs:
+            deprecated.append(old)
+            kwargs[new] = kwargs.pop(old)
+
+    if deprecated:
+        warnings.warn(
+            f"from_s3 received pre-v1 s3dol kwarg(s): {', '.join(deprecated)}. "
+            f"They were translated to the s3dol>=1 signature "
+            f"(credentials=/profile=/prefix=/on_missing_bucket=); pass those "
+            f"directly instead. Translation will be removed in a future lacing.",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+    return kwargs
+
 __all__ = ["ArtifactStore"]
 
 
@@ -301,7 +368,25 @@ class ArtifactStore(MutableMapping):
             return None
         url_for = getattr(self.blobs, "url_for", None)
         if callable(url_for):
-            url = url_for(content_hash)
+            try:
+                url = url_for(content_hash)
+            except Exception as error:
+                # A backend may *refuse* to sign rather than sign wrongly —
+                # s3dol>=1 does exactly that when its store has been wrapped
+                # by a key codec, because the URL could then address a
+                # different object. "No safe URL" is not an error here, it is
+                # the documented cue to stream; but it should not pass in
+                # silence, since streaming through the app is the expensive
+                # path this method exists to avoid.
+                import warnings
+
+                warnings.warn(
+                    f"{type(self.blobs).__name__}.url_for refused to sign "
+                    f"({type(error).__name__}: {error}); falling back to "
+                    f"streaming. Serving stays correct, just slower.",
+                    stacklevel=2,
+                )
+                url = None
             if url:
                 return url
         return self.blob_path(content_hash)
@@ -419,17 +504,20 @@ class ArtifactStore(MutableMapping):
             catalog: The ``id -> record`` catalog ``MutableMapping``. Defaults
                 to ``{}`` (in-memory).
             prefix: Optional key prefix within the bucket (e.g. ``"blobs"``).
-            **s3_kwargs: Forwarded to ``s3dol.store.S3Store`` — credentials
-                (``aws_access_key_id`` / ``aws_secret_access_key`` /
-                ``profile_name``), ``endpoint_url`` (set for R2 / MinIO /
-                Supabase), ``region_name``, ``make_bucket``, etc.
+            **s3_kwargs: Forwarded to ``s3dol.s3_store`` — ``endpoint_url``
+                (set for R2 / MinIO / Supabase), ``region_name``, ``profile``,
+                ``credentials``, ``preset``, ``anon``, ``on_missing_bucket``.
+                The pre-v1 spellings (``aws_access_key_id`` /
+                ``aws_secret_access_key`` / ``aws_session_token`` /
+                ``profile_name`` / ``make_bucket``) are still accepted and
+                translated, with a ``DeprecationWarning``.
 
-        Requires ``s3dol`` (and ``boto3``) — imported lazily so the dependency
-        is only needed when this constructor is used.
+        Requires ``s3dol>=1`` (and ``boto3``) — imported lazily so the
+        dependency is only needed when this constructor is used.
         """
-        from s3dol.store import S3Store
+        from s3dol import s3_store
 
-        blobs = S3Store(bucket_name, path=prefix, **s3_kwargs)
+        blobs = s3_store(bucket_name, prefix=prefix or "", **_s3_kwargs_to_v1(s3_kwargs))
         return cls(catalog={} if catalog is None else catalog, blobs=blobs)
 
     @classmethod
