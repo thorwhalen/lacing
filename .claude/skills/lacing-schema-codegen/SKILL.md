@@ -1,6 +1,6 @@
 ---
 name: lacing-schema-codegen
-description: Use when modifying lacing's data model, body schemas, or the Pydantic→JSON-Schema→Zod codegen pipeline. Triggers on edits to lacing/model.py, lacing/schema.py, lacing/tier.py, body_schema_uri, schema migrations, schema versioning, or anything in lacing-ui/packages/core/ that mirrors a Python type. Encodes the single-source-of-truth rule (Pydantic v2 is SoT), the additive-by-default versioning rule, the migration-registration pattern, and the codegen wiring (`datamodel-code-generator` + `json-schema-to-zod`).
+description: Use when modifying lacing's data model, body schemas, or the Pydantic→JSON-Schema→Zod codegen pipeline. Triggers on edits to lacing/model.py, lacing/schema.py, lacing/tier.py, body_schema_uri, schema migrations, schema versioning, or anything in lacing-ui/src/types/generated/ or src/domain/envelope.ts that mirrors a Python type. Encodes the single-source-of-truth rule (Pydantic v2 is SoT), the additive-by-default versioning rule, the migration-registration pattern, and the codegen wiring (lacing-ui's `npm run codegen` via scripts/codegen.mjs, CI-freshness-gated).
 ---
 
 # Lacing — Schema Codegen and Versioning
@@ -21,7 +21,7 @@ lacing/schema/<name>/v<N>.json    (JSON Schema artifacts, committed)
         ├─►  Python validation: Pydantic at runtime (server boundary)
         │
         └─►  TypeScript codegen:
-                json-schema-to-zod  →  lacing-ui/packages/core/zod/<name>.ts
+                lacing-ui `npm run codegen`  →  lacing-ui/src/types/generated/<name>.ts
                                        (Zod schema, committed)
                                        │
                                        └─►  z.infer<typeof S>  for TS types
@@ -41,7 +41,7 @@ Why **commit the generated artifacts** in JSON Schema and Zod:
 | Body schemas (per-domain payloads — phoneme, viseme, named-entity, etc.) | `lacing/bodies/<name>.py` |
 | Body schema registry + migrations + JSON-Schema export | `lacing/schema.py` |
 | JSON Schema artifacts (generated, committed) | `lacing/schema/<name>/v<N>.json` (run `lacing.schema.export_json_schemas`) |
-| Zod artifacts (generated, committed) | `lacing-ui/packages/core/zod/<name>.ts` |
+| Zod artifacts (generated, committed) | `lacing-ui/src/types/generated/<name>.ts` (run `npm run codegen` in lacing-ui) |
 | Migrations | colocated with the body module via `@register_migration` |
 
 ## body_schema_uri convention
@@ -126,16 +126,20 @@ class NamedEntityBody(BaseModel):
 The exact tooling (per BACK-DOC §6):
 
 ```bash
-# Step 1: Pydantic → JSON Schema
+# Step 1: Pydantic → JSON Schema (in lacing)
 python -m lacing.schema.export --out lacing/schema/
 
-# Step 2: JSON Schema → Zod
-npx json-schema-to-zod -i lacing/schema/named-entity/v1.json -o lacing-ui/packages/core/zod/named-entity.ts
+# Step 2: JSON Schema → Zod (in lacing-ui; scripts/codegen.mjs reads the
+# sibling lacing checkout's lacing/schema/, or $LACING_SCHEMA_DIR)
+npm run codegen
 ```
 
-Wire this into a single `make codegen` (or equivalent) target. Both
-artifacts are committed. CI verifies they're up to date by re-running
-codegen and diffing.
+Both artifacts are committed. lacing-ui's CI enforces freshness (it checks
+out lacing, re-runs codegen, and fails on any diff), so a schema landed in
+lacing without a lacing-ui codegen commit turns lacing-ui's CI red — by
+design. The envelope (RationalTime/Reference/Provenance) is hand-written in
+lacing-ui `src/domain/envelope.ts`, NOT generated — it moves in lockstep
+with lacing/model.py by hand (see lacing#14's widening for the pattern).
 
 ## The boundary between envelope and body
 
@@ -180,7 +184,7 @@ hand-written TS type that drifts from Python is the #1 codegen failure mode.
 ## Source pointers
 
 - Pydantic v2 model definitions: BACK-DOC §2.1, §4.1.
-- JSON-Schema-to-Zod codegen tooling: BACK-DOC §6 (`datamodel-code-generator` + `json-schema-to-zod`).
+- JSON-Schema-to-Zod codegen tooling: BACK-DOC §6 designed it around `datamodel-code-generator` + `json-schema-to-zod`; the shipped implementation is lacing-ui's `scripts/codegen.mjs`.
 - Schema versioning + additive-only default: ANN-DOC §C "Schema versioning"; BACK-DOC §4.5.
 - Inspector form auto-generation: FRONT-DOC §6.3 `AnnotationLayerSpec<T>`.
 - Migration as a registered processor: BACK-DOC §4.5.

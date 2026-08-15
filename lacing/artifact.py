@@ -147,7 +147,13 @@ class Artifact(BaseModel):
     cost_usd: float | None = Field(
         None,
         ge=0,
-        description="Actual spend (not estimate) for producing this artifact, if known.",
+        description=(
+            "Spend attributed to producing this artifact, stamped by the "
+            "producer from the OBSERVED run outcome (falaw stamps 0.0 for a "
+            "cache hit — a known zero — and its rate-card estimate for a "
+            "billed call). An estimate of billing, not a vendor receipt; "
+            "None means unknown, never free."
+        ),
     )
     producer_call_id: str | None = Field(
         None,

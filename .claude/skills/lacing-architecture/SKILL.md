@@ -1,6 +1,6 @@
 ---
 name: lacing-architecture
-description: Use when starting any non-trivial work on the lacing package — adding modules, designing APIs, choosing dependencies, planning a new feature, or making architectural decisions. Triggers on tasks like "implement X in lacing", "design the Y component", "add support for Z format", "where should this code go", or any edit under lacing/, lacing-server/, or lacing-ui/. Loads the ten non-negotiables, the package decomposition, and pointers to the design docs.
+description: Use when starting any non-trivial work on the lacing package — adding modules, designing APIs, choosing dependencies, planning a new feature, or making architectural decisions. Triggers on tasks like "implement X in lacing", "design the Y component", "add support for Z format", "where should this code go", or any edit under lacing/ or lacing-ui/. Loads the ten non-negotiables, the package decomposition, and pointers to the design docs.
 ---
 
 # Lacing Architecture Primer
@@ -28,7 +28,7 @@ If the roadmap and a design doc disagree, **the design doc wins** — fix the ro
 | 1 | **Time is `RationalTime(value: int, rate: int)`.** Never floats anywhere — wire, storage, UI. Wire as `{v, r}`; Python `fractions.Fraction`; TS `bigint` pair. | OSS-DOC OTIO; BACK-DOC §2.1 |
 | 2 | **Standoff annotations only.** Source media immutable; annotations reference by `(asset_id, interval)`. | ANN-DOC §C |
 | 3 | **One `Annotation` envelope, typed body.** Single shape, `body: dict` validated by `body_schema_uri` (semver). No polymorphic class hierarchy. | BACK-DOC §2.1 |
-| 4 | **Indexes:** `intervaltree` in memory; PostgreSQL `tstzrange` + GiST when persistent; SQLite + R*Tree for `.annot` files. | ANN-DOC §C; BACK-DOC §3.1, §4.2 |
+| 4 | **Indexes:** `intervaltree` in memory; PostgreSQL `int8range` + GiST when persistent (integer endpoints, per rule 1); SQLite + R*Tree for `.annot` files. | ANN-DOC §C; BACK-DOC §3.1, §4.2 |
 | 5 | **Public API is a `MutableMapping[TimeInterval, list[Annotation]]` facade** with Allen-relation methods (`intersects`, `during`, `meets`, …). Implemented as a `Protocol` (Python 3.12 forbids `Protocol` inheriting from a non-Protocol ABC); concrete backends like `MemoryStore` implement the full mapping interface structurally. | ANN-DOC §C; BACK-DOC §4.1 |
 | 6 | **ELAN tier stereotypes verbatim:** `NONE`, `TIME_SUBDIVISION`, `INCLUDED_IN`, `SYMBOLIC_SUBDIVISION`, `SYMBOLIC_ASSOCIATION`. | ANN-DOC §C; OSS-DOC tier-2.4 |
 | 7 | **Adapter pattern for I/O.** Core never imports a format module. Every format is a registered plugin. | ANN-DOC §C ("non-negotiable") |
@@ -107,8 +107,11 @@ lacing/                    ← THIS REPO: core library
 │   └── server/           FastAPI HTTP server (Phase 2, partial — REST CRUD + ETag + import/export)
 └── misc/docs/            design docs + roadmap
 
-lacing-server/  ← sibling repo (FastAPI + Arq + MCP + Yjs bridge)
 lacing-ui/      ← sibling repo (React + zustand + wavesurfer + dnd-timeline)
+
+There is NO `lacing-server` sibling repo: the FastAPI + MCP server lives in
+`lacing/server/` inside this repo (the row above); the Arq/Yjs pieces are
+roadmap items, not a repository.
 ```
 
 ## Phase awareness
