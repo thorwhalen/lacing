@@ -14,6 +14,7 @@ from lacing.store.migrations import (
     StoreMigrationError,
     migrate_annot_file,
     reachable_versions,
+    rebuild_annotations_rtree,
     register_store_migration,
 )
 from lacing.store.sqlite import SchemaMismatchError, SqliteStore
@@ -43,6 +44,7 @@ __all__ = [
     "register_store_migration",
     "migrate_annot_file",
     "reachable_versions",
+    "rebuild_annotations_rtree",
     "StoreMigrationError",
     "SQLITE_KIND",
     "POSTGRES_KIND",

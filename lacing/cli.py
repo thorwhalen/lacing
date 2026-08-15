@@ -248,7 +248,11 @@ def migrate(
     from lacing.store.migrations import StoreMigrationError, migrate_annot_file
 
     try:
-        found, reached = migrate_annot_file(path, to_version=to_version)
+        found, reached = migrate_annot_file(
+            path,
+            # argh delivers option values as strings; coerce here.
+            to_version=None if to_version is None else int(to_version),
+        )
     except StoreMigrationError as exc:
         print(f"error: {exc}", file=sys.stderr)
         raise SystemExit(1)

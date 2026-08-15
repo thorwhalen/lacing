@@ -375,6 +375,13 @@ class PostgresStore:
             else:
                 got_version = int(row[0])
                 if got_version != SCHEMA_VERSION:
+                    if got_version > SCHEMA_VERSION:
+                        raise PgSchemaMismatchError(
+                            f"database has schema_version={got_version}, "
+                            f"this build expects {SCHEMA_VERSION}. The "
+                            "database is newer than this build — upgrade "
+                            "lacing (store migrations are forward-only)."
+                        )
                     from lacing.store.migrations import (
                         POSTGRES_KIND,
                         reachable_versions,

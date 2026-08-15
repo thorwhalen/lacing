@@ -136,6 +136,9 @@ class SqliteStore:
             ``schema_version`` on open, via the ladder in
             :mod:`lacing.store.migrations`. Off by default — silently
             rewriting someone's file on open is worse than refusing.
+            Every open-time schema failure — refusal *or* failed migration
+            — raises :class:`SchemaMismatchError`; a failed migration
+            chains the ladder's ``StoreMigrationError`` as its cause.
     """
 
     def __init__(
@@ -166,9 +169,27 @@ class SqliteStore:
             got = self._stamped_schema_version(cur)
             if got is not None and got != SCHEMA_VERSION:
                 if migrate and got < SCHEMA_VERSION:
-                    from lacing.store.migrations import migrate_sqlite_connection
+                    from lacing.store.migrations import (
+                        StoreMigrationError,
+                        migrate_sqlite_connection,
+                    )
 
-                    migrate_sqlite_connection(self._conn, to_version=SCHEMA_VERSION)
+                    try:
+                        migrate_sqlite_connection(
+                            self._conn, to_version=SCHEMA_VERSION
+                        )
+                    except StoreMigrationError as exc:
+                        # Open-time failures keep the documented type; the
+                        # ladder's diagnosis rides along as the cause.
+                        raise SchemaMismatchError(
+                            f"file has schema_version={got} and migrating it "
+                            f"to {SCHEMA_VERSION} failed: {exc}"
+                        ) from exc
+                    # A concurrent migrator (possibly a different build) may
+                    # have carried the file elsewhere — trust only a re-read.
+                    got = self._stamped_schema_version(cur)
+                    if got != SCHEMA_VERSION:
+                        raise SchemaMismatchError(_schema_mismatch_message(got))
                 else:
                     raise SchemaMismatchError(_schema_mismatch_message(got))
             cur.executescript(_DDL)

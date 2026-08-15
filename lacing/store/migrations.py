@@ -19,8 +19,33 @@ Contract (mirrors :func:`lacing.schema.register_migration`):
   entry — convenient in tests, intentional for hot-reload;
 - an upgrade function receives the open connection and must leave the store
   readable at ``to_version``, **including writing the new version into the
-  ``meta`` table** — the runner verifies the stamp and wraps the whole step
-  in one transaction, so a failed step leaves the store untouched.
+  ``meta`` table**.
+
+What the runner guarantees around each step (all verified *inside* the
+step's transaction, so any breach rolls the whole step back):
+
+- the version is re-read **under the write lock** before the step runs — a
+  concurrent migrator that already applied the step is detected and the
+  step skipped, never double-applied (multi-process servers open the same
+  ``.annot`` file);
+- the step stamped the version it claims to reach;
+- ``PRAGMA foreign_key_check`` is clean, and the ``annotations_rtree``
+  index agrees with the ``annotations`` table (see
+  :func:`rebuild_annotations_rtree`).
+
+Rules for step authors (sqlite):
+
+- **Never call ``conn.executescript``, ``COMMIT`` or ``ROLLBACK``** inside a
+  step — ``executescript`` implicitly commits the wrapper's transaction,
+  destroying atomicity. The runner detects a step that ended its
+  transaction and fails loudly.
+- Foreign-key enforcement is pinned **OFF** during migration (sqlite cannot
+  rebuild tables under FK enforcement); ``PRAGMA foreign_key_check`` before
+  commit is the compensating guarantee.
+- A table rebuild (``CREATE new`` → copy → ``DROP old`` → ``RENAME``) must
+  **preserve rowids** — ``INSERT INTO new (rowid, ...) SELECT rowid, ...
+  FROM old`` — because ``annotations_rtree`` keys on them; rebuild the
+  index with :func:`rebuild_annotations_rtree` afterwards.
 
 Backends own their runners (transaction idiom differs per driver):
 :func:`migrate_annot_file` here for SQLite ``.annot`` files; a Postgres
@@ -32,6 +57,8 @@ runner joins it with the first registered ``"postgres"`` step. Migration is
 
 from __future__ import annotations
 
+import contextlib
+import math
 import os
 import sqlite3
 from collections.abc import Callable
@@ -48,6 +75,13 @@ SQLITE_KIND = "sqlite"
 
 POSTGRES_KIND = "postgres"
 """``store_kind`` of the Postgres backend."""
+
+SQLITE_MIGRATION_BUSY_TIMEOUT_MS = 30_000
+"""How long a migrating connection waits on another writer's lock.
+
+Generous on purpose: when several workers race to open the same ``.annot``
+with ``migrate=True``, the losers should wait for the winner and then skip
+the already-applied steps, not fail at sqlite's 5s default."""
 
 
 class StoreMigrationError(RuntimeError):
@@ -66,6 +100,12 @@ def register_store_migration(
     perform every change of the step — DDL, row rewrites, and the
     ``meta.schema_version`` write. Steps must be one version at a time
     (``to_version == from_version + 1``); the runner chains them.
+
+    Step authors: read the module docstring's rules — no ``executescript``
+    / ``COMMIT`` / ``ROLLBACK`` inside a step, preserve rowids on table
+    rebuilds, and rebuild the interval index with
+    :func:`rebuild_annotations_rtree` if the ``annotations`` table was
+    rebuilt.
 
     Re-registering the same ``(store_kind, from_version)`` pair replaces the
     previous entry.
@@ -106,15 +146,16 @@ def _run_steps(
     store_kind: str,
     from_version: int,
     to_version: int,
-    read_version: Callable[[Any], int],
-    run_in_transaction: Callable[[Any, Callable[[Any], None]], None],
+    run_step: Callable[[Any, int, int, Callable[[Any], None]], int],
 ) -> int:
     """Chain registered steps from ``from_version`` up to ``to_version``.
 
-    Backend-neutral core shared by the per-backend runners: each step runs
-    under ``run_in_transaction`` (the backend's idiom), and its version stamp
-    is verified via ``read_version`` — a step that "succeeds" without
-    stamping is a defect this catches before it corrupts the chain.
+    Backend-neutral core: ``run_step(conn, from_v, to_v, func)`` owns the
+    backend's whole per-step discipline (lock, under-lock version re-check,
+    step execution, in-transaction verification, commit) and returns the
+    version the store is now at — ``to_v`` when it applied the step, or the
+    version it found under the lock when a concurrent migrator had already
+    advanced it (the loop then reassesses instead of double-applying).
     """
     if from_version > to_version:
         raise StoreMigrationError(
@@ -130,12 +171,8 @@ def _run_steps(
                 f"v{current} -> v{current + 1}"
             )
         next_version, func = step
-
-        def _step(connection, *, _func=func) -> None:
-            _func(connection)
-
         try:
-            run_in_transaction(conn, _step)
+            reached = run_step(conn, current, next_version, func)
         except StoreMigrationError:
             raise
         except Exception as exc:
@@ -143,14 +180,12 @@ def _run_steps(
                 f"store migration {store_kind} v{current} -> v{next_version} "
                 f"failed: {exc}"
             ) from exc
-        stamped = read_version(conn)
-        if stamped != next_version:
+        if reached == current:
             raise StoreMigrationError(
                 f"store migration {store_kind} v{current} -> v{next_version} "
-                f"completed without stamping meta.schema_version "
-                f"(found {stamped}); the step function must write it."
+                "made no progress."
             )
-        current = next_version
+        current = reached
     return current
 
 
@@ -160,7 +195,14 @@ def _run_steps(
 
 
 def _sqlite_read_version(conn: sqlite3.Connection) -> int:
-    row = conn.execute("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
+    try:
+        row = conn.execute(
+            "SELECT value FROM meta WHERE key = 'schema_version'"
+        ).fetchone()
+    except sqlite3.Error as exc:
+        raise StoreMigrationError(
+            f"cannot read meta.schema_version — not a lacing .annot file? ({exc})"
+        ) from exc
     if row is None:
         raise StoreMigrationError(
             "no schema_version row in meta — not a lacing .annot file?"
@@ -168,14 +210,138 @@ def _sqlite_read_version(conn: sqlite3.Connection) -> int:
     return int(row[0])
 
 
-def _sqlite_in_transaction(conn: sqlite3.Connection, func) -> None:
+def _sqlite_prepare(conn: sqlite3.Connection) -> None:
+    """Pin the migration connection's pragmas.
+
+    ``foreign_keys = OFF`` explicitly (sqlite's per-connection default, but
+    the ladder *relies* on it — table rebuilds are impossible under FK
+    enforcement — so it is pinned, not assumed; ``foreign_key_check`` before
+    each commit is the compensating guarantee). PRAGMA toggles inside a
+    step's transaction are no-ops, so this is the only place it can be set.
+    """
+    conn.execute(f"PRAGMA busy_timeout = {SQLITE_MIGRATION_BUSY_TIMEOUT_MS}")
+    conn.execute("PRAGMA foreign_keys = OFF")
+
+
+def _sqlite_run_step(
+    conn: sqlite3.Connection,
+    from_version: int,
+    to_version: int,
+    func: Callable[[sqlite3.Connection], None],
+) -> int:
+    """One step under ``BEGIN IMMEDIATE``, fully verified before COMMIT."""
     conn.execute("BEGIN IMMEDIATE")
     try:
+        found = _sqlite_read_version(conn)
+        if found != from_version:
+            # A concurrent migrator won the race while we waited for the
+            # lock; whatever it did is committed truth — reassess, don't
+            # re-apply.
+            conn.execute("ROLLBACK")
+            return found
         func(conn)
+        if not conn.in_transaction:
+            raise StoreMigrationError(
+                f"store migration {SQLITE_KIND} v{from_version} -> "
+                f"v{to_version}: the step ended its own transaction — "
+                "conn.executescript (which implicitly commits) and explicit "
+                "COMMIT/ROLLBACK are forbidden inside steps; whatever ran "
+                "before the break is already committed."
+            )
+        stamped = _sqlite_read_version(conn)
+        if stamped != to_version:
+            raise StoreMigrationError(
+                f"store migration {SQLITE_KIND} v{from_version} -> "
+                f"v{to_version} completed without stamping "
+                f"meta.schema_version (found {stamped}); the step function "
+                "must write it. Rolled back."
+            )
+        _sqlite_verify_integrity(conn, from_version=from_version, to_version=to_version)
+        conn.execute("COMMIT")
+        return to_version
     except BaseException:
-        conn.execute("ROLLBACK")
+        with contextlib.suppress(sqlite3.Error):
+            conn.execute("ROLLBACK")
         raise
-    conn.execute("COMMIT")
+
+
+def _sqlite_verify_integrity(
+    conn: sqlite3.Connection, *, from_version: int, to_version: int
+) -> None:
+    """In-transaction sanity gates a defective step cannot slip past.
+
+    Runs before the step's COMMIT so a violation rolls the step back.
+    """
+    head = f"store migration {SQLITE_KIND} v{from_version} -> v{to_version}"
+    violations = conn.execute("PRAGMA foreign_key_check").fetchall()
+    if violations:
+        sample = [tuple(v) for v in violations[:5]]
+        raise StoreMigrationError(
+            f"{head}: foreign_key_check found {len(violations)} violation(s), "
+            f"e.g. {sample}. Rolled back."
+        )
+    if _sqlite_has_table(conn, "annotations") and _sqlite_has_table(
+        conn, "annotations_rtree"
+    ):
+        orphaned = conn.execute(
+            "SELECT count(*) FROM annotations_rtree r WHERE NOT EXISTS "
+            "(SELECT 1 FROM annotations a WHERE a.rowid = r.rowid)"
+        ).fetchone()[0]
+        unindexed = conn.execute(
+            "SELECT count(*) FROM annotations a WHERE a.start_value IS NOT NULL "
+            "AND NOT EXISTS "
+            "(SELECT 1 FROM annotations_rtree r WHERE r.rowid = a.rowid)"
+        ).fetchone()[0]
+        if orphaned or unindexed:
+            raise StoreMigrationError(
+                f"{head}: annotations_rtree is out of sync ({orphaned} "
+                f"orphaned index row(s), {unindexed} unindexed "
+                "annotation(s)). Table rebuilds must preserve rowids "
+                "(INSERT INTO new (rowid, ...) SELECT rowid, ... FROM old) "
+                "and re-index via rebuild_annotations_rtree(conn). "
+                "Rolled back."
+            )
+
+
+def _sqlite_has_table(conn: sqlite3.Connection, name: str) -> bool:
+    return (
+        conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') "
+            "AND name = ?",
+            (name,),
+        ).fetchone()
+        is not None
+    )
+
+
+def rebuild_annotations_rtree(conn: sqlite3.Connection) -> int:
+    """Rebuild the interval index from the ``annotations`` table, in place.
+
+    For use *inside* a migration step after a table rebuild. Reproduces the
+    store's ULP-widening contract (bounds widened by one float ULP so
+    float→exact-bound comparisons never drop hits — see
+    :mod:`lacing.store.sqlite`). Returns the number of rows indexed.
+    """
+    conn.execute("DELETE FROM annotations_rtree")
+    indexed = 0
+    rows = conn.execute(
+        "SELECT rowid, start_value, start_rate, end_value, end_rate "
+        "FROM annotations WHERE start_value IS NOT NULL"
+    ).fetchall()
+    for rowid, start_value, start_rate, end_value, end_rate in rows:
+        start_s = start_value / start_rate
+        end_s = end_value / end_rate
+        conn.execute(
+            "INSERT INTO annotations_rtree (rowid, start_seconds, end_seconds) "
+            "VALUES (?, ?, ?)",
+            (
+                rowid,
+                math.nextafter(start_s, -math.inf),
+                math.nextafter(end_s, math.inf),
+            ),
+        )
+        indexed += 1
+    return indexed
 
 
 def migrate_annot_file(
@@ -188,25 +354,30 @@ def migrate_annot_file(
     ``to_version`` defaults to the current build's
     :data:`lacing.store.sqlite.SCHEMA_VERSION`. Already-current files are a
     no-op (``from == to``). Each step runs in its own ``BEGIN IMMEDIATE``
-    transaction, so an interrupted chain leaves the file at the last version
-    that completed — re-running resumes from there (idempotent).
+    transaction with the version re-checked under the lock, so concurrent
+    migrators converge and an interrupted chain resumes from the last
+    version that completed (idempotent).
 
-    Raises :class:`StoreMigrationError` when a step is missing, fails, or
-    forgets to stamp the version it claims to reach.
+    Raises :class:`StoreMigrationError` when the file does not exist, is
+    not a ``.annot`` file, a step is missing, fails, or breaks one of the
+    runner's in-transaction guarantees.
     """
     from lacing.store.sqlite import SCHEMA_VERSION
 
-    target = SCHEMA_VERSION if to_version is None else to_version
+    if not os.path.exists(path):
+        # Connecting would CREATE an empty junk database at the typo'd path.
+        raise StoreMigrationError(f"no such file: {os.fspath(path)}")
+    target = SCHEMA_VERSION if to_version is None else int(to_version)
     conn = sqlite3.connect(os.fspath(path), isolation_level=None)
     try:
+        _sqlite_prepare(conn)
         found = _sqlite_read_version(conn)
         reached = _run_steps(
             conn,
             store_kind=SQLITE_KIND,
             from_version=found,
             to_version=target,
-            read_version=_sqlite_read_version,
-            run_in_transaction=_sqlite_in_transaction,
+            run_step=_sqlite_run_step,
         )
         return found, reached
     finally:
@@ -220,11 +391,11 @@ def migrate_sqlite_connection(conn: sqlite3.Connection, *, to_version: int) -> i
     ``migrate=True`` opt-in; external callers with a file path want
     :func:`migrate_annot_file`.
     """
+    _sqlite_prepare(conn)
     return _run_steps(
         conn,
         store_kind=SQLITE_KIND,
         from_version=_sqlite_read_version(conn),
         to_version=to_version,
-        read_version=_sqlite_read_version,
-        run_in_transaction=_sqlite_in_transaction,
+        run_step=_sqlite_run_step,
     )
