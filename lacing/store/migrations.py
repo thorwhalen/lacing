@@ -306,8 +306,7 @@ def _sqlite_verify_integrity(
 def _sqlite_has_table(conn: sqlite3.Connection, name: str) -> bool:
     return (
         conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') "
-            "AND name = ?",
+            "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ?",
             (name,),
         ).fetchone()
         is not None

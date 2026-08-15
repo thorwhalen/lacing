@@ -175,9 +175,7 @@ class SqliteStore:
                     )
 
                     try:
-                        migrate_sqlite_connection(
-                            self._conn, to_version=SCHEMA_VERSION
-                        )
+                        migrate_sqlite_connection(self._conn, to_version=SCHEMA_VERSION)
                     except StoreMigrationError as exc:
                         # Open-time failures keep the documented type; the
                         # ladder's diagnosis rides along as the cause.
