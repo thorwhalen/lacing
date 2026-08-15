@@ -206,8 +206,6 @@ def reject_non_string_keys(value: Any, path: str = "body") -> None:
             reject_non_string_keys(sub, f"{path}[{index}]")
 
 
-
-
 VALUE_FIELDS: tuple[str, ...] = (
     "body",
     "body_schema_uri",
