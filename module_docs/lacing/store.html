@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.store &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -119,13 +119,19 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.StoreMigrationError"><code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.migrate_annot_file"><code class="docutils literal notranslate"><span class="pre">migrate_annot_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.reachable_versions"><code class="docutils literal notranslate"><span class="pre">reachable_versions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.rebuild_annotations_rtree"><code class="docutils literal notranslate"><span class="pre">rebuild_annotations_rtree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.store.register_store_migration"><code class="docutils literal notranslate"><span class="pre">register_store_migration()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
@@ -162,8 +168,10 @@
   <section id="module-lacing.store">
 <span id="lacing-store"></span><h1>lacing.store<a class="headerlink" href="#module-lacing.store" title="Link to this heading"></a></h1>
 <p>Interval-keyed annotation stores.</p>
-<p>Public surface: <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> (the facade) and the in-memory
-implementation <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>. SQLite and Postgres backends arrive in Phase 1.</p>
+<p>Public surface: <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> (the facade), <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> (the <code class="docutils literal notranslate"><span class="pre">.annot</span></code> on-disk format), the optional
+<code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code>, and the store-schema migration ladder
+(<a class="reference internal" href="store/migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.store.IntervalAnnotationStore">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">IntervalAnnotationStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/base.html#IntervalAnnotationStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.IntervalAnnotationStore" title="Link to this definition"></a></dt>
@@ -355,7 +363,7 @@ Cannot be toggled after the tier has annotations.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.store.SqliteStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.SqliteStore" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.SqliteStore" title="Link to this definition"></a></dt>
 <dd><p>SQLite-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -365,9 +373,22 @@ ephemeral in-memory database.</p></li>
 <li><p><strong>check_same_thread</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">sqlite3.connect</span></code>. We hold a
 single connection guarded by a lock; pass <code class="docutils literal notranslate"><span class="pre">False</span></code> when
 sharing across threads.</p></li>
+<li><p><strong>migrate</strong> – Opt-in to upgrading a file written at an older
+<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> on open, via the ladder in
+<a class="reference internal" href="store/migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>. Off by default — silently
+rewriting someone’s file on open is worse than refusing.
+Every open-time schema failure — refusal <em>or</em> failed migration
+— raises <a class="reference internal" href="#lacing.store.SchemaMismatchError" title="lacing.store.SchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a>; a failed migration
+chains the ladder’s <code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code> as its cause.</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.StoreMigrationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">StoreMigrationError</span></span><a class="reference internal" href="../../_modules/lacing/store/migrations.html#StoreMigrationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.StoreMigrationError" title="Link to this definition"></a></dt>
+<dd><p>Raised when a store migration step is missing or fails.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -402,6 +423,57 @@ first creation (e.g. <code class="docutils literal notranslate"><span class="pre
 <dd class="field-even"><p>The shared pool for this conninfo.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.migrate_annot_file">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">migrate_annot_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/migrations.html#migrate_annot_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.migrate_annot_file" title="Link to this definition"></a></dt>
+<dd><p>Migrate a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file in place, returning <code class="docutils literal notranslate"><span class="pre">(from,</span> <span class="pre">to)</span></code> versions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">to_version</span></code> defaults to the current build’s
+<a class="reference internal" href="store/sqlite.html#lacing.store.sqlite.SCHEMA_VERSION" title="lacing.store.sqlite.SCHEMA_VERSION"><code class="xref py py-data docutils literal notranslate"><span class="pre">lacing.store.sqlite.SCHEMA_VERSION</span></code></a>. Already-current files are a
+no-op (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">==</span> <span class="pre">to</span></code>). Each step runs in its own <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">IMMEDIATE</span></code>
+transaction with the version re-checked under the lock, so concurrent
+migrators converge and an interrupted chain resumes from the last
+version that completed (idempotent).</p>
+<p>Raises <a class="reference internal" href="#lacing.store.StoreMigrationError" title="lacing.store.StoreMigrationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoreMigrationError</span></code></a> when the file does not exist, is
+not a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file, a step is missing, fails, or breaks one of the
+runner’s in-transaction guarantees.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.reachable_versions">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">reachable_versions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/store/migrations.html#reachable_versions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.reachable_versions" title="Link to this definition"></a></dt>
+<dd><p>Versions reachable from <code class="docutils literal notranslate"><span class="pre">from_version</span></code> by chaining registered steps.</p>
+<p>Ascending, excluding <code class="docutils literal notranslate"><span class="pre">from_version</span></code> itself. Empty when no step leaves
+<code class="docutils literal notranslate"><span class="pre">from_version</span></code> — which is what a refusal message should say out loud
+instead of the bare “run a migration” it used to say.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.rebuild_annotations_rtree">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">rebuild_annotations_rtree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../_modules/lacing/store/migrations.html#rebuild_annotations_rtree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.rebuild_annotations_rtree" title="Link to this definition"></a></dt>
+<dd><p>Rebuild the interval index from the <code class="docutils literal notranslate"><span class="pre">annotations</span></code> table, in place.</p>
+<p>For use <em>inside</em> a migration step after a table rebuild. Reproduces the
+store’s ULP-widening contract (bounds widened by one float ULP so
+float→exact-bound comparisons never drop hits — see
+<a class="reference internal" href="store/sqlite.html#module-lacing.store.sqlite" title="lacing.store.sqlite"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.sqlite</span></code></a>). Returns the number of rows indexed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.register_store_migration">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.</span></span><span class="sig-name descname"><span class="pre">register_store_migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/store/migrations.html#register_store_migration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.register_store_migration" title="Link to this definition"></a></dt>
+<dd><p>Register a forward store migration from <code class="docutils literal notranslate"><span class="pre">from_version</span></code> to <code class="docutils literal notranslate"><span class="pre">to_version</span></code>.</p>
+<p>The decorated function takes the backend’s open connection and must
+perform every change of the step — DDL, row rewrites, and the
+<code class="docutils literal notranslate"><span class="pre">meta.schema_version</span></code> write. Steps must be one version at a time
+(<code class="docutils literal notranslate"><span class="pre">to_version</span> <span class="pre">==</span> <span class="pre">from_version</span> <span class="pre">+</span> <span class="pre">1</span></code>); the runner chains them.</p>
+<p>Step authors: read the module docstring’s rules — no <code class="docutils literal notranslate"><span class="pre">executescript</span></code>
+/ <code class="docutils literal notranslate"><span class="pre">COMMIT</span></code> / <code class="docutils literal notranslate"><span class="pre">ROLLBACK</span></code> inside a step, preserve rowids on table
+rebuilds, and rebuild the interval index with
+<a class="reference internal" href="#lacing.store.rebuild_annotations_rtree" title="lacing.store.rebuild_annotations_rtree"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebuild_annotations_rtree()</span></code></a> if the <code class="docutils literal notranslate"><span class="pre">annotations</span></code> table was
+rebuilt.</p>
+<p>Re-registering the same <code class="docutils literal notranslate"><span class="pre">(store_kind,</span> <span class="pre">from_version)</span></code> pair replaces the
+previous entry.</p>
 </dd></dl>
 
 </section>

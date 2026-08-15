@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.sqlite &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.store.sqlite &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/lacing/tier.html">lacing.tier</a></li>
@@ -146,7 +147,11 @@
 <span class="sd">- Tier hierarchy is enforced via FK; stereotype validation is the</span>
 <span class="sd">  application&#39;s job (see ``lacing.tier.validate_tier_constraint``).</span>
 <span class="sd">- ``schema_version`` lives in the ``meta`` table; migrations register</span>
-<span class="sd">  upgrade functions keyed on the from-version.</span>
+<span class="sd">  upgrade functions keyed on the from-version in</span>
+<span class="sd">  :mod:`lacing.store.migrations` (the store-level counterpart of the</span>
+<span class="sd">  body ladder in :mod:`lacing.schema`). Opening a stale file refuses</span>
+<span class="sd">  unless asked to migrate (``SqliteStore(path, migrate=True)`` or</span>
+<span class="sd">  ``lacing migrate &lt;path&gt;``), and refuses *before* touching the file.</span>
 
 <span class="sd">See ``lacing-architecture`` (Phase 1) and BACK-DOC §3.1 for the why.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -187,7 +192,9 @@
 
 <span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="sd">&quot;&quot;&quot;Current ``.annot`` schema version. Increment + register a migration</span>
-<span class="sd">when making a breaking change to the table layout.&quot;&quot;&quot;</span>
+<span class="sd">(:func:`lacing.store.migrations.register_store_migration`, with</span>
+<span class="sd">``store_kind=&quot;sqlite&quot;``) when making a breaking change to the table</span>
+<span class="sd">layout.&quot;&quot;&quot;</span>
 
 
 <span class="n">_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -254,6 +261,13 @@
 <span class="sd">        check_same_thread: Forwarded to ``sqlite3.connect``. We hold a</span>
 <span class="sd">            single connection guarded by a lock; pass ``False`` when</span>
 <span class="sd">            sharing across threads.</span>
+<span class="sd">        migrate: Opt-in to upgrading a file written at an older</span>
+<span class="sd">            ``schema_version`` on open, via the ladder in</span>
+<span class="sd">            :mod:`lacing.store.migrations`. Off by default — silently</span>
+<span class="sd">            rewriting someone&#39;s file on open is worse than refusing.</span>
+<span class="sd">            Every open-time schema failure — refusal *or* failed migration</span>
+<span class="sd">            — raises :class:`SchemaMismatchError`; a failed migration</span>
+<span class="sd">            chains the ladder&#39;s ``StoreMigrationError`` as its cause.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -261,6 +275,7 @@
         <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">check_same_thread</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">migrate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
@@ -270,18 +285,44 @@
             <span class="n">isolation_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># autocommit; we use explicit transactions</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">row_factory</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Row</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init_schema</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_schema</span><span class="p">(</span><span class="n">migrate</span><span class="o">=</span><span class="n">migrate</span><span class="p">)</span>
 
     <span class="c1"># --- low-level ------------------------------------------------------</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_init_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">migrate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="c1"># Version check FIRST: the current build&#39;s DDL must not touch a</span>
+            <span class="c1"># file stamped with another version — refusing after mutating</span>
+            <span class="c1"># would leave a v1 file with v2 tables in it.</span>
+            <span class="n">got</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stamped_schema_version</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">got</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">got</span> <span class="o">!=</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">migrate</span> <span class="ow">and</span> <span class="n">got</span> <span class="o">&lt;</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
+                    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+                        <span class="n">StoreMigrationError</span><span class="p">,</span>
+                        <span class="n">migrate_sqlite_connection</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">migrate_sqlite_connection</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="p">,</span> <span class="n">to_version</span><span class="o">=</span><span class="n">SCHEMA_VERSION</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="n">StoreMigrationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="c1"># Open-time failures keep the documented type; the</span>
+                        <span class="c1"># ladder&#39;s diagnosis rides along as the cause.</span>
+                        <span class="k">raise</span> <span class="n">SchemaMismatchError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;file has schema_version=</span><span class="si">{</span><span class="n">got</span><span class="si">}</span><span class="s2"> and migrating it &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;to </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+                    <span class="c1"># A concurrent migrator (possibly a different build) may</span>
+                    <span class="c1"># have carried the file elsewhere — trust only a re-read.</span>
+                    <span class="n">got</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stamped_schema_version</span><span class="p">(</span><span class="n">cur</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">got</span> <span class="o">!=</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">SchemaMismatchError</span><span class="p">(</span><span class="n">_schema_mismatch_message</span><span class="p">(</span><span class="n">got</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SchemaMismatchError</span><span class="p">(</span><span class="n">_schema_mismatch_message</span><span class="p">(</span><span class="n">got</span><span class="p">))</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">executescript</span><span class="p">(</span><span class="n">_DDL</span><span class="p">)</span>
-            <span class="n">existing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">existing</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">got</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                     <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (?, ?)&quot;</span><span class="p">,</span>
                     <span class="p">(</span><span class="s2">&quot;schema_version&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SCHEMA_VERSION</span><span class="p">)),</span>
@@ -290,13 +331,23 @@
                     <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (?, ?)&quot;</span><span class="p">,</span>
                     <span class="p">(</span><span class="s2">&quot;created_at&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_time</span><span class="o">.</span><span class="n">time</span><span class="p">()))),</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">got</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">existing</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">got</span> <span class="o">!=</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">SchemaMismatchError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;file has schema_version=</span><span class="si">{</span><span class="n">got</span><span class="si">}</span><span class="s2">, this build expects &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">. Run a migration.&quot;</span>
-                    <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stamped_schema_version</span><span class="p">(</span><span class="n">cur</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The file&#39;s recorded ``schema_version``, or ``None`` for a fresh file.</span>
+
+<span class="sd">        Read without running any DDL: a missing ``meta`` table (fresh or</span>
+<span class="sd">        pre-lacing file) reads as ``None`` and gets the current schema.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">has_meta</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT name FROM sqlite_master WHERE type = &#39;table&#39; AND name = &#39;meta&#39;&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">has_meta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
@@ -810,6 +861,39 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">SchemaMismatchError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when opening a ``.annot`` file with an incompatible schema.&quot;&quot;&quot;</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_schema_mismatch_message</span><span class="p">(</span><span class="n">got</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The actionable half of a schema refusal: what to do about it.</span>
+
+<span class="sd">    Names the versions actually reachable from the one found on disk, so</span>
+<span class="sd">    &quot;run a migration&quot; stops being an instruction with no referent</span>
+<span class="sd">    (lacing#15).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLITE_KIND</span><span class="p">,</span> <span class="n">reachable_versions</span>
+
+    <span class="n">head</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;file has schema_version=</span><span class="si">{</span><span class="n">got</span><span class="si">}</span><span class="s2">, this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="k">if</span> <span class="n">got</span> <span class="o">&gt;</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2"> The file is newer than this build — upgrade lacing to &quot;</span>
+            <span class="s2">&quot;open it (store migrations are forward-only).&quot;</span>
+        <span class="p">)</span>
+    <span class="n">reachable</span> <span class="o">=</span> <span class="n">reachable_versions</span><span class="p">(</span><span class="n">SQLITE_KIND</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">SCHEMA_VERSION</span> <span class="ow">in</span> <span class="n">reachable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2"> A migration path exists (v</span><span class="si">{</span><span class="n">got</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">): &quot;</span>
+            <span class="s2">&quot;reopen with SqliteStore(path, migrate=True), or run &quot;</span>
+            <span class="s2">&quot;`lacing migrate &lt;path&gt;`.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">reachable_note</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot; (registered steps only reach: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;v</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">reachable</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">if</span> <span class="n">reachable</span>
+        <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2"> No registered migration reaches v</span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2"> from &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">got</span><span class="si">}{</span><span class="n">reachable_note</span><span class="si">}</span><span class="s2"> — this build cannot upgrade the file.&quot;</span>
+    <span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_RowDecodeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>

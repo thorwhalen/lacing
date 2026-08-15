@@ -46,6 +46,7 @@
    module_docs/lacing/store
    module_docs/lacing/store/base
    module_docs/lacing/store/memory
+   module_docs/lacing/store/migrations
    module_docs/lacing/store/postgres
    module_docs/lacing/store/sqlite
    module_docs/lacing/tier

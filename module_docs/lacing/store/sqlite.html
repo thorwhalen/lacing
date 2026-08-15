@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.sqlite &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.store.sqlite &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="postgres.html">lacing.store.postgres</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.store.sqlite</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.store.sqlite.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
@@ -156,14 +157,20 @@ filtered correctly because we widen the R*Tree query by one ULP.</p></li>
 <li><p>Tier hierarchy is enforced via FK; stereotype validation is the
 application’s job (see <code class="docutils literal notranslate"><span class="pre">lacing.tier.validate_tier_constraint</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">schema_version</span></code> lives in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table; migrations register
-upgrade functions keyed on the from-version.</p></li>
+upgrade functions keyed on the from-version in
+<a class="reference internal" href="migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a> (the store-level counterpart of the
+body ladder in <a class="reference internal" href="../schema.html#module-lacing.schema" title="lacing.schema"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.schema</span></code></a>). Opening a stale file refuses
+unless asked to migrate (<code class="docutils literal notranslate"><span class="pre">SqliteStore(path,</span> <span class="pre">migrate=True)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">lacing</span> <span class="pre">migrate</span> <span class="pre">&lt;path&gt;</span></code>), and refuses <em>before</em> touching the file.</p></li>
 </ul>
 <p>See <code class="docutils literal notranslate"><span class="pre">lacing-architecture</span></code> (Phase 1) and BACK-DOC §3.1 for the why.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="lacing.store.sqlite.SCHEMA_VERSION">
 <span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#lacing.store.sqlite.SCHEMA_VERSION" title="Link to this definition"></a></dt>
 <dd><p>Current <code class="docutils literal notranslate"><span class="pre">.annot</span></code> schema version. Increment + register a migration
-when making a breaking change to the table layout.</p>
+(<a class="reference internal" href="migrations.html#lacing.store.migrations.register_store_migration" title="lacing.store.migrations.register_store_migration"><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.store.migrations.register_store_migration()</span></code></a>, with
+<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;sqlite&quot;</span></code>) when making a breaking change to the table
+layout.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -174,7 +181,7 @@ when making a breaking change to the table layout.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.store.sqlite.SqliteStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.SqliteStore" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.SqliteStore" title="Link to this definition"></a></dt>
 <dd><p>SQLite-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -184,6 +191,13 @@ ephemeral in-memory database.</p></li>
 <li><p><strong>check_same_thread</strong> – Forwarded to <code class="docutils literal notranslate"><span class="pre">sqlite3.connect</span></code>. We hold a
 single connection guarded by a lock; pass <code class="docutils literal notranslate"><span class="pre">False</span></code> when
 sharing across threads.</p></li>
+<li><p><strong>migrate</strong> – Opt-in to upgrading a file written at an older
+<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> on open, via the ladder in
+<a class="reference internal" href="migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>. Off by default — silently
+rewriting someone’s file on open is worse than refusing.
+Every open-time schema failure — refusal <em>or</em> failed migration
+— raises <a class="reference internal" href="#lacing.store.sqlite.SchemaMismatchError" title="lacing.store.sqlite.SchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a>; a failed migration
+chains the ladder’s <code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code> as its cause.</p></li>
 </ul>
 </dd>
 </dl>

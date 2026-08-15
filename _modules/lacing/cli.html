@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.cli &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.cli &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/lacing/tier.html">lacing.tier</a></li>
@@ -142,6 +143,11 @@
 <span class="sd">    lacing validate &lt;path&gt; [--rate]</span>
 <span class="sd">        Load + re-dump round-trip; print a summary. Useful for sanity</span>
 <span class="sd">        checking files before adopting them.</span>
+
+<span class="sd">    lacing migrate &lt;path&gt; [--to-version N]</span>
+<span class="sd">        Upgrade a ``.annot`` file to the current store schema, in place,</span>
+<span class="sd">        via the registered store-migration ladder. Explicit by design:</span>
+<span class="sd">        opening a stale file never rewrites it.</span>
 
 <span class="sd">    lacing list-formats</span>
 <span class="sd">        Print every registered format adapter.</span>
@@ -360,6 +366,42 @@
 
 
 <span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># migrate</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="migrate">
+<a class="viewcode-back" href="../../module_docs/lacing/cli.html#lacing.cli.migrate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">migrate</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">to_version</span><span class="p">:</span> <span class="s2">&quot;int | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upgrade PATH (a ``.annot`` file) to the current store schema, in place.</span>
+
+<span class="sd">    Migration is explicit — opening a stale file never rewrites it — so this</span>
+<span class="sd">    verb is the ladder&#39;s front door. Already-current files are a no-op.</span>
+<span class="sd">    ``--to-version`` upgrades part-way (mainly useful in tests).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoreMigrationError</span><span class="p">,</span> <span class="n">migrate_annot_file</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">found</span><span class="p">,</span> <span class="n">reached</span> <span class="o">=</span> <span class="n">migrate_annot_file</span><span class="p">(</span>
+            <span class="n">path</span><span class="p">,</span>
+            <span class="c1"># argh delivers option values as strings; coerce here.</span>
+            <span class="n">to_version</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">to_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_version</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">StoreMigrationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="n">reached</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: already at schema_version=</span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2">, nothing to do&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: migrated schema_version </span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">reached</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
 <span class="c1"># list-formats</span>
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
@@ -386,7 +428,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="s2">&quot;list[str] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argh</span><span class="o">.</span><span class="n">ArghParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;lacing&quot;</span><span class="p">)</span>
-    <span class="n">argh</span><span class="o">.</span><span class="n">add_commands</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="p">[</span><span class="n">convert</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">list_formats</span><span class="p">])</span>
+    <span class="n">argh</span><span class="o">.</span><span class="n">add_commands</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="p">[</span><span class="n">convert</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">migrate</span><span class="p">,</span> <span class="n">list_formats</span><span class="p">])</span>
     <span class="n">argh</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">argv</span><span class="o">=</span><span class="n">argv</span><span class="p">)</span>
 
 

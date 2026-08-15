@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.postgres &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.store.postgres &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="lacing.store.sqlite" href="sqlite.html" />
-    <link rel="prev" title="lacing.store.memory" href="memory.html" /> 
+    <link rel="prev" title="lacing.store.migrations" href="migrations.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.store.postgres</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#multi-tenancy-phase-4-reelee-177">Multi-tenancy (Phase 4, reelee#177)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#connection-pooling-phase-4">Connection pooling (Phase 4)</a></li>
@@ -301,6 +302,13 @@ Cannot be toggled after the tier has annotations.</p></li>
 <p>v2 (Phase 4, reelee#177) added tenant columns (<code class="docutils literal notranslate"><span class="pre">owner_id</span></code> / <code class="docutils literal notranslate"><span class="pre">project_id</span></code>)
 to <code class="docutils literal notranslate"><span class="pre">tiers</span></code> and <code class="docutils literal notranslate"><span class="pre">annotations</span></code>, and a per-<code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code> <code class="docutils literal notranslate"><span class="pre">projects</span></code>
 table holding the rate (was a single <code class="docutils literal notranslate"><span class="pre">meta</span></code> row in v1).</p>
+<p>The migration ladder (<a class="reference internal" href="migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;postgres&quot;</span></code>) deliberately <strong>starts at 2</strong>: no v1 Postgres
+database ever held real data — the backend is config-selectable and was
+never enabled in any environment; production has always been the per-caller
+sqlite <code class="docutils literal notranslate"><span class="pre">.annot</span></code> layout — so a v1→v2 step would migrate nothing. Register
+steps from v2 forward when the layout next changes (verified 2026-08-15,
+lacing#15).</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -355,7 +363,7 @@ first creation (e.g. <code class="docutils literal notranslate"><span class="pre
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="memory.html" class="btn btn-neutral float-left" title="lacing.store.memory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="migrations.html" class="btn btn-neutral float-left" title="lacing.store.migrations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="sqlite.html" class="btn btn-neutral float-right" title="lacing.store.sqlite" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

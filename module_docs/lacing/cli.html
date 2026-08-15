@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.cli &mdash; lacing 0.0.26 documentation</title>
+  <title>lacing.cli &mdash; lacing 0.0.27 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6a9d8632"></script>
+      <script src="../../_static/documentation_options.js?v=cee5022b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -71,6 +71,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.cli</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.convert"><code class="docutils literal notranslate"><span class="pre">convert()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.list_formats"><code class="docutils literal notranslate"><span class="pre">list_formats()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.cli.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.query"><code class="docutils literal notranslate"><span class="pre">query()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
 </ul>
@@ -99,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="store.html">lacing.store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/base.html">lacing.store.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store/migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/postgres.html">lacing.store.postgres</a></li>
 <li class="toctree-l1"><a class="reference internal" href="store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tier.html">lacing.tier</a></li>
@@ -149,6 +151,10 @@ Output is JSON-lines on stdout.</p>
 <dt>lacing validate &lt;path&gt; [–rate]</dt><dd><p>Load + re-dump round-trip; print a summary. Useful for sanity
 checking files before adopting them.</p>
 </dd>
+<dt>lacing migrate &lt;path&gt; [–to-version N]</dt><dd><p>Upgrade a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file to the current store schema, in place,
+via the registered store-migration ladder. Explicit by design:
+opening a stale file never rewrites it.</p>
+</dd>
 <dt>lacing list-formats</dt><dd><p>Print every registered format adapter.</p>
 </dd>
 </dl>
@@ -168,6 +174,15 @@ with –src-format / –dst-format.</p>
 <dt class="sig sig-object py" id="lacing.cli.list_formats">
 <span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">list_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#list_formats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.list_formats" title="Link to this definition"></a></dt>
 <dd><p>Print every registered format adapter.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.cli.migrate">
+<span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.migrate" title="Link to this definition"></a></dt>
+<dd><p>Upgrade PATH (a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file) to the current store schema, in place.</p>
+<p>Migration is explicit — opening a stale file never rewrites it — so this
+verb is the ladder’s front door. Already-current files are a no-op.
+<code class="docutils literal notranslate"><span class="pre">--to-version</span></code> upgrades part-way (mainly useful in tests).</p>
 </dd></dl>
 
 <dl class="py function">

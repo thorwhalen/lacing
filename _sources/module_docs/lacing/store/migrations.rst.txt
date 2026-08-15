@@ -1,0 +1,4 @@
+lacing.store.migrations
+=======================
+.. automodule:: lacing.store.migrations
+   :members:
