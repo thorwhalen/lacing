@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.31 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c5dbc6bb"></script>
+      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -467,7 +467,9 @@ be swapped for a true streaming reader without changing this API.</p>
 <span class="sig-name descname"><span class="pre">put_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact_store.html#ArtifactStore.put_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.put_blob" title="Link to this definition"></a></dt>
 <dd><p>Store <code class="docutils literal notranslate"><span class="pre">data</span></code> content-addressed; return its content hash.</p>
 <p>Idempotent: identical bytes always map to the same hash and overwrite
-an identical blob.</p>
+an identical blob. Delegates to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob_stream" title="lacing.artifact_store.ArtifactStore.put_blob_stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">put_blob_stream()</span></code></a> so there is
+exactly one write path — and therefore one atomicity story
+(lacing#25).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>RuntimeError</strong> – no blob store is configured.</p>
@@ -482,11 +484,25 @@ an identical blob.</p>
 <p>The streaming-friendly counterpart to <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob" title="lacing.artifact_store.ArtifactStore.put_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">put_blob()</span></code></a> — callers hand
 in an iterable (e.g. <code class="docutils literal notranslate"><span class="pre">requests.Response.iter_content</span></code>) instead of
 materializing the whole bytestring upfront. The hash is computed on
-the fly. The default implementation still buffers the bytes in the
-store’s own memory before writing; that is adequate for files up to a
-few hundred megabytes. A future filesystem-aware optimization
-(write-to-tempfile + atomic rename) is an internal change that does
-not touch this API.</p>
+the fly.</p>
+<p>When the blob store is filesystem-backed (exposes <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>, as the
+default directory store does), the bytes spool straight to a
+same-directory tempfile and are renamed into place with
+<code class="docutils literal notranslate"><span class="pre">os.replace</span></code> once the hash is known (lacing#25). Consequences a
+caller may rely on:</p>
+<ul class="simple">
+<li><p><strong>peak memory is one chunk</strong>, not 2× the payload — 100 MB videos
+flow through without a 200 MB spike;</p></li>
+<li><p><strong>a partial blob is never observable under its content address</strong> —
+the name a reader could find only exists after the rename, which is
+atomic on POSIX and on Windows for same-directory renames — so
+<code class="docutils literal notranslate"><span class="pre">has_blob(h)</span> <span class="pre">==</span> <span class="pre">True</span></code> really does mean the full bytes are there;</p></li>
+<li><p>a failed or abandoned stream leaves nothing behind (the tempfile is
+unlinked).</p></li>
+</ul>
+<p>Backends without a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> (plain <code class="docutils literal notranslate"><span class="pre">dict</span></code>, object-store
+mappings) fall back to buffering the payload and assigning it whole —
+their <code class="docutils literal notranslate"><span class="pre">__setitem__</span></code> is the atomicity story there.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>RuntimeError</strong> – no blob store is configured.</p>

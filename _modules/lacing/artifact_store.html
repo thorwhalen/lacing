@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.31 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c5dbc6bb"></script>
+      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -388,16 +388,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store ``data`` content-addressed; return its content hash.</span>
 
 <span class="sd">        Idempotent: identical bytes always map to the same hash and overwrite</span>
-<span class="sd">        an identical blob.</span>
+<span class="sd">        an identical blob. Delegates to :meth:`put_blob_stream` so there is</span>
+<span class="sd">        exactly one write path — and therefore one atomicity story</span>
+<span class="sd">        (lacing#25).</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: no blob store is configured.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ArtifactStore has no blob store configured.&quot;</span><span class="p">)</span>
-        <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hash_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="k">return</span> <span class="n">content_hash</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_blob_stream</span><span class="p">((</span><span class="n">data</span><span class="p">,))</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.put_blob_stream">
@@ -408,17 +406,35 @@
 <span class="sd">        The streaming-friendly counterpart to :meth:`put_blob` — callers hand</span>
 <span class="sd">        in an iterable (e.g. ``requests.Response.iter_content``) instead of</span>
 <span class="sd">        materializing the whole bytestring upfront. The hash is computed on</span>
-<span class="sd">        the fly. The default implementation still buffers the bytes in the</span>
-<span class="sd">        store&#39;s own memory before writing; that is adequate for files up to a</span>
-<span class="sd">        few hundred megabytes. A future filesystem-aware optimization</span>
-<span class="sd">        (write-to-tempfile + atomic rename) is an internal change that does</span>
-<span class="sd">        not touch this API.</span>
+<span class="sd">        the fly.</span>
+
+<span class="sd">        When the blob store is filesystem-backed (exposes ``rootdir``, as the</span>
+<span class="sd">        default directory store does), the bytes spool straight to a</span>
+<span class="sd">        same-directory tempfile and are renamed into place with</span>
+<span class="sd">        ``os.replace`` once the hash is known (lacing#25). Consequences a</span>
+<span class="sd">        caller may rely on:</span>
+
+<span class="sd">        - **peak memory is one chunk**, not 2× the payload — 100 MB videos</span>
+<span class="sd">          flow through without a 200 MB spike;</span>
+<span class="sd">        - **a partial blob is never observable under its content address** —</span>
+<span class="sd">          the name a reader could find only exists after the rename, which is</span>
+<span class="sd">          atomic on POSIX and on Windows for same-directory renames — so</span>
+<span class="sd">          ``has_blob(h) == True`` really does mean the full bytes are there;</span>
+<span class="sd">        - a failed or abandoned stream leaves nothing behind (the tempfile is</span>
+<span class="sd">          unlinked).</span>
+
+<span class="sd">        Backends without a ``rootdir`` (plain ``dict``, object-store</span>
+<span class="sd">        mappings) fall back to buffering the payload and assigning it whole —</span>
+<span class="sd">        their ``__setitem__`` is the atomicity story there.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: no blob store is configured.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ArtifactStore has no blob store configured.&quot;</span><span class="p">)</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">))</span>
         <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
         <span class="n">buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
@@ -834,6 +850,36 @@
         <span class="p">)</span></div>
 </div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash-while-spooling to a same-directory tempfile, then atomic rename.</span>
+
+<span class="sd">    The same-directory part is load-bearing twice: ``os.replace`` is only</span>
+<span class="sd">    atomic within a filesystem, and a content-addressed name must not exist</span>
+<span class="sd">    until the content behind it is complete — a reader that finds the hash</span>
+<span class="sd">    finds the whole blob, never a prefix of it (lacing#25).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+
+    <span class="n">rootdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">fd</span><span class="p">,</span> <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;.blob-&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.part&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">spool</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="n">spool</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">rootdir</span> <span class="o">/</span> <span class="n">content_hash</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">content_hash</span>
 </pre></div>
 
            </div>
