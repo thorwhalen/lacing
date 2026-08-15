@@ -1,6 +1,6 @@
 ---
 name: lacing-schema-codegen
-description: Use when modifying lacing's data model, body schemas, or the Pydantic→JSON-Schema→Zod codegen pipeline. Triggers on edits to lacing/model.py, lacing/schema.py, lacing/tier.py, body_schema_uri, schema migrations, schema versioning, or anything in lacing-ui/packages/core/ that mirrors a Python type. Encodes the single-source-of-truth rule (Pydantic v2 is SoT), the additive-by-default versioning rule, the migration-registration pattern, and the codegen wiring (`datamodel-code-generator` + `json-schema-to-zod`).
+description: Use when modifying lacing's data model, body schemas, or the Pydantic→JSON-Schema→Zod codegen pipeline. Triggers on edits to lacing/model.py, lacing/schema.py, lacing/tier.py, body_schema_uri, schema migrations, schema versioning, or anything in lacing-ui/src/types/generated/ or src/domain/envelope.ts that mirrors a Python type. Encodes the single-source-of-truth rule (Pydantic v2 is SoT), the additive-by-default versioning rule, the migration-registration pattern, and the codegen wiring (lacing-ui's `npm run codegen` via scripts/codegen.mjs, CI-freshness-gated).
 ---
 
 # Lacing — Schema Codegen and Versioning
@@ -184,7 +184,7 @@ hand-written TS type that drifts from Python is the #1 codegen failure mode.
 ## Source pointers
 
 - Pydantic v2 model definitions: BACK-DOC §2.1, §4.1.
-- JSON-Schema-to-Zod codegen tooling: BACK-DOC §6 (`datamodel-code-generator` + `json-schema-to-zod`).
+- JSON-Schema-to-Zod codegen tooling: BACK-DOC §6 designed it around `datamodel-code-generator` + `json-schema-to-zod`; the shipped implementation is lacing-ui's `scripts/codegen.mjs`.
 - Schema versioning + additive-only default: ANN-DOC §C "Schema versioning"; BACK-DOC §4.5.
 - Inspector form auto-generation: FRONT-DOC §6.3 `AnnotationLayerSpec<T>`.
 - Migration as a registered processor: BACK-DOC §4.5.
