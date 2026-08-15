@@ -69,9 +69,7 @@ Reference = Annotated[MediaRef | NodeRef | AnnotationRef, Field(discriminator="k
 # Inline on every annotation. Subset of W3C PROV-O. See ANN-DOC §C, BACK-DOC §4.5.
 
 
-AssetId = Annotated[
-    str, Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
-]
+AssetId = Annotated[str, Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")]
 """A content-addressed artifact identity — the SHA-256 of the artifact's
 bytes, as :class:`lacing.Artifact` enforces: **bare 64-hex only**.
 ``MediaRef.asset_id``-style prefixed identifiers (``blake3:…``,
