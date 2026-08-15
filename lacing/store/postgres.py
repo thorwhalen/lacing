@@ -92,7 +92,14 @@ SCHEMA_VERSION = 2
 v2 (Phase 4, reelee#177) added tenant columns (``owner_id`` / ``project_id``)
 to ``tiers`` and ``annotations``, and a per-``(owner, project)`` ``projects``
 table holding the rate (was a single ``meta`` row in v1).
-"""
+
+The migration ladder (:mod:`lacing.store.migrations`,
+``store_kind="postgres"``) deliberately **starts at 2**: no v1 Postgres
+database ever held real data — the backend is config-selectable and was
+never enabled in any environment; production has always been the per-caller
+sqlite ``.annot`` layout — so a v1→v2 step would migrate nothing. Register
+steps from v2 forward when the layout next changes (verified 2026-08-15,
+lacing#15)."""
 
 DEFAULT_OWNER_ID = "default"
 """Owner placeholder until the multi-tenant access layer (reelee#174) lands.
@@ -368,9 +375,28 @@ class PostgresStore:
             else:
                 got_version = int(row[0])
                 if got_version != SCHEMA_VERSION:
+                    if got_version > SCHEMA_VERSION:
+                        raise PgSchemaMismatchError(
+                            f"database has schema_version={got_version}, "
+                            f"this build expects {SCHEMA_VERSION}. The "
+                            "database is newer than this build — upgrade "
+                            "lacing (store migrations are forward-only)."
+                        )
+                    from lacing.store.migrations import (
+                        POSTGRES_KIND,
+                        reachable_versions,
+                    )
+
+                    reachable = reachable_versions(POSTGRES_KIND, got_version)
+                    hint = (
+                        f" Registered migrations reach: "
+                        f"{', '.join(f'v{v}' for v in reachable)}."
+                        if reachable
+                        else " No registered migration leaves that version."
+                    )
                     raise PgSchemaMismatchError(
                         f"database has schema_version={got_version}, "
-                        f"this build expects {SCHEMA_VERSION}."
+                        f"this build expects {SCHEMA_VERSION}.{hint}"
                     )
 
             # Per-(owner, project) rate.

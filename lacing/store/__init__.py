@@ -1,11 +1,22 @@
 """Interval-keyed annotation stores.
 
-Public surface: ``IntervalAnnotationStore`` (the facade) and the in-memory
-implementation ``MemoryStore``. SQLite and Postgres backends arrive in Phase 1.
+Public surface: ``IntervalAnnotationStore`` (the facade), ``MemoryStore``,
+``SqliteStore`` (the ``.annot`` on-disk format), the optional
+``PostgresStore``, and the store-schema migration ladder
+(:mod:`lacing.store.migrations`).
 """
 
 from lacing.store.base import IntervalAnnotationStore
 from lacing.store.memory import MemoryStore
+from lacing.store.migrations import (
+    POSTGRES_KIND,
+    SQLITE_KIND,
+    StoreMigrationError,
+    migrate_annot_file,
+    reachable_versions,
+    rebuild_annotations_rtree,
+    register_store_migration,
+)
 from lacing.store.sqlite import SchemaMismatchError, SqliteStore
 
 # Postgres backend is optional — psycopg may not be installed.
@@ -30,6 +41,13 @@ __all__ = [
     "MemoryStore",
     "SqliteStore",
     "SchemaMismatchError",
+    "register_store_migration",
+    "migrate_annot_file",
+    "reachable_versions",
+    "rebuild_annotations_rtree",
+    "StoreMigrationError",
+    "SQLITE_KIND",
+    "POSTGRES_KIND",
 ]
 if _HAS_POSTGRES:
     __all__.extend(

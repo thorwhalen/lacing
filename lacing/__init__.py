@@ -75,6 +75,9 @@ from lacing.store import (
     MemoryStore,
     SchemaMismatchError,
     SqliteStore,
+    StoreMigrationError,
+    migrate_annot_file,
+    register_store_migration,
 )
 from lacing.exhibit import render_artifact_exhibit
 from lacing.tier import Tier, TierStereotype
@@ -120,6 +123,10 @@ __all__ = [
     "MemoryStore",
     "SqliteStore",
     "SchemaMismatchError",
+    # store migrations (the on-disk ladder; body ladder is under "schema")
+    "register_store_migration",
+    "migrate_annot_file",
+    "StoreMigrationError",
     # oplog
     "OpLog",
     "OpLogEntry",

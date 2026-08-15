@@ -17,6 +17,11 @@ Subcommands:
         Load + re-dump round-trip; print a summary. Useful for sanity
         checking files before adopting them.
 
+    lacing migrate <path> [--to-version N]
+        Upgrade a ``.annot`` file to the current store schema, in place,
+        via the registered store-migration ladder. Explicit by design:
+        opening a stale file never rewrites it.
+
     lacing list-formats
         Print every registered format adapter.
 
@@ -225,6 +230,39 @@ def validate(
 
 
 # ---------------------------------------------------------------------------
+# migrate
+# ---------------------------------------------------------------------------
+
+
+def migrate(
+    path: str,
+    *,
+    to_version: "int | None" = None,
+) -> None:
+    """Upgrade PATH (a ``.annot`` file) to the current store schema, in place.
+
+    Migration is explicit — opening a stale file never rewrites it — so this
+    verb is the ladder's front door. Already-current files are a no-op.
+    ``--to-version`` upgrades part-way (mainly useful in tests).
+    """
+    from lacing.store.migrations import StoreMigrationError, migrate_annot_file
+
+    try:
+        found, reached = migrate_annot_file(
+            path,
+            # argh delivers option values as strings; coerce here.
+            to_version=None if to_version is None else int(to_version),
+        )
+    except StoreMigrationError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+    if found == reached:
+        print(f"{path}: already at schema_version={found}, nothing to do")
+    else:
+        print(f"{path}: migrated schema_version {found} -> {reached}")
+
+
+# ---------------------------------------------------------------------------
 # list-formats
 # ---------------------------------------------------------------------------
 
@@ -248,7 +286,7 @@ def list_formats() -> None:
 
 def main(argv: "list[str] | None" = None) -> None:
     parser = argh.ArghParser(prog="lacing")
-    argh.add_commands(parser, [convert, query, validate, list_formats])
+    argh.add_commands(parser, [convert, query, validate, migrate, list_formats])
     argh.dispatch(parser, argv=argv)
 
 
