@@ -21,7 +21,7 @@ lacing/schema/<name>/v<N>.json    (JSON Schema artifacts, committed)
         ├─►  Python validation: Pydantic at runtime (server boundary)
         │
         └─►  TypeScript codegen:
-                json-schema-to-zod  →  lacing-ui/packages/core/zod/<name>.ts
+                lacing-ui `npm run codegen`  →  lacing-ui/src/types/generated/<name>.ts
                                        (Zod schema, committed)
                                        │
                                        └─►  z.infer<typeof S>  for TS types
@@ -41,7 +41,7 @@ Why **commit the generated artifacts** in JSON Schema and Zod:
 | Body schemas (per-domain payloads — phoneme, viseme, named-entity, etc.) | `lacing/bodies/<name>.py` |
 | Body schema registry + migrations + JSON-Schema export | `lacing/schema.py` |
 | JSON Schema artifacts (generated, committed) | `lacing/schema/<name>/v<N>.json` (run `lacing.schema.export_json_schemas`) |
-| Zod artifacts (generated, committed) | `lacing-ui/packages/core/zod/<name>.ts` |
+| Zod artifacts (generated, committed) | `lacing-ui/src/types/generated/<name>.ts` (run `npm run codegen` in lacing-ui) |
 | Migrations | colocated with the body module via `@register_migration` |
 
 ## body_schema_uri convention
@@ -126,16 +126,20 @@ class NamedEntityBody(BaseModel):
 The exact tooling (per BACK-DOC §6):
 
 ```bash
-# Step 1: Pydantic → JSON Schema
+# Step 1: Pydantic → JSON Schema (in lacing)
 python -m lacing.schema.export --out lacing/schema/
 
-# Step 2: JSON Schema → Zod
-npx json-schema-to-zod -i lacing/schema/named-entity/v1.json -o lacing-ui/packages/core/zod/named-entity.ts
+# Step 2: JSON Schema → Zod (in lacing-ui; scripts/codegen.mjs reads the
+# sibling lacing checkout's lacing/schema/, or $LACING_SCHEMA_DIR)
+npm run codegen
 ```
 
-Wire this into a single `make codegen` (or equivalent) target. Both
-artifacts are committed. CI verifies they're up to date by re-running
-codegen and diffing.
+Both artifacts are committed. lacing-ui's CI enforces freshness (it checks
+out lacing, re-runs codegen, and fails on any diff), so a schema landed in
+lacing without a lacing-ui codegen commit turns lacing-ui's CI red — by
+design. The envelope (RationalTime/Reference/Provenance) is hand-written in
+lacing-ui `src/domain/envelope.ts`, NOT generated — it moves in lockstep
+with lacing/model.py by hand (see lacing#14's widening for the pattern).
 
 ## The boundary between envelope and body
 

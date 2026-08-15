@@ -24,7 +24,7 @@ trigger conditions match — they encode rules that are easy to violate:
 1. Time is `RationalTime(value: int, rate: int)`. **Never floats.**
 2. Standoff annotations only. Source media is immutable.
 3. One `Annotation` envelope, typed `body: dict` validated by `body_schema_uri`.
-4. `intervaltree` in memory; PostgreSQL `tstzrange` + GiST when persistent.
+4. `intervaltree` in memory; PostgreSQL `int8range` + GiST when persistent (integer rational-time endpoints — `tstzrange` would reintroduce floats through timestamps).
 5. Public API is a `MutableMapping[TimeInterval, list[Annotation]]` facade exposing Allen's relations.
 6. Tier stereotypes from ELAN, verbatim: `NONE`, `TIME_SUBDIVISION`, `INCLUDED_IN`, `SYMBOLIC_SUBDIVISION`, `SYMBOLIC_ASSOCIATION`.
 7. I/O is plugin adapters. Core never imports a format.
