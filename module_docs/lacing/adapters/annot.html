@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.annot &mdash; lacing 0.0.29 documentation</title>
+  <title>lacing.adapters.annot &mdash; lacing 0.0.30 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=828725f0"></script>
+      <script src="../../../_static/documentation_options.js?v=61a342a2"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -166,7 +166,7 @@ If False and the file exists, raise <code class="docutils literal notranslate"><
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lacing.adapters.annot.load">
-<span class="sig-prename descclassname"><span class="pre">lacing.adapters.annot.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">persistent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/annot.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.annot.load" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.annot.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">persistent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../store/base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><span class="pre">IntervalAnnotationStore</span></a></span></span><a class="reference internal" href="../../../_modules/lacing/adapters/annot.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.annot.load" title="Link to this definition"></a></dt>
 <dd><p>Open an <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -175,6 +175,14 @@ If False and the file exists, raise <code class="docutils literal notranslate"><
 writing to a temp file first.</p></li>
 <li><p><strong>persistent</strong> – If True, return an open <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> (writes go to
 the file). If False (default), return a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code> snapshot.</p></li>
+<li><p><strong>migrate</strong> – Opt-in to upgrading a file written at an older store
+<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> on open (see <a class="reference internal" href="../store/migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>).
+A stale file otherwise refuses with
+<a class="reference internal" href="../store/sqlite.html#lacing.store.sqlite.SchemaMismatchError" title="lacing.store.sqlite.SchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a> — same
+contract as <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code>. For <strong>bytes</strong> input the copy in
+the temp file is migrated regardless: it is not the caller’s
+file, and refusing to read bytes that cannot be re-pointed at
+the migration CLI would be a dead end.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.sqlite &mdash; lacing 0.0.29 documentation</title>
+  <title>lacing.store.sqlite &mdash; lacing 0.0.30 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=828725f0"></script>
+      <script src="../../../_static/documentation_options.js?v=61a342a2"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -190,11 +190,25 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
 
 
-<span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="sd">&quot;&quot;&quot;Current ``.annot`` schema version. Increment + register a migration</span>
 <span class="sd">(:func:`lacing.store.migrations.register_store_migration`, with</span>
 <span class="sd">``store_kind=&quot;sqlite&quot;``) when making a breaking change to the table</span>
-<span class="sd">layout.&quot;&quot;&quot;</span>
+<span class="sd">layout.</span>
+
+<span class="sd">v2 (lacing#14, defect D5): ``prov_was_derived_from`` may contain 64-hex</span>
+<span class="sd">artifact ``asset_id`` strings alongside annotation UUIDs. The table layout</span>
+<span class="sd">and every existing row are unchanged — the bump exists because **pre-v2</span>
+<span class="sd">builds eagerly ``UUID()``-parse the column on read** and crash on the</span>
+<span class="sd">first asset id, so they must refuse v2 files instead of opening them and</span>
+<span class="sd">failing row-by-row. The v1→v2 migration step is accordingly stamp-only</span>
+<span class="sd">(see :mod:`lacing.store.migrations`).</span>
+
+<span class="sd">Operational caveat: the version gate runs at **open**. A pre-v2 build&#39;s</span>
+<span class="sd">already-open connection survives the stamp and keeps reading — safe until</span>
+<span class="sd">some v2 writer mints an asset-id ref, at which point it fails as a raw</span>
+<span class="sd">``ValueError`` mid-read rather than a refusal. Restart long-lived</span>
+<span class="sd">pre-v2 services after migrating a file they serve.&quot;&quot;&quot;</span>
 
 
 <span class="n">_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -822,7 +836,10 @@
     <span class="n">provenance</span> <span class="o">=</span> <span class="n">Provenance</span><span class="p">(</span>
         <span class="n">was_generated_by</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_generated_by&quot;</span><span class="p">],</span>
         <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_attributed_to&quot;</span><span class="p">],</span>
-        <span class="n">was_derived_from</span><span class="o">=</span><span class="p">[</span><span class="n">UUID</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">])],</span>
+        <span class="c1"># Raw strings: the Provenance union (UUID | AssetId) discriminates.</span>
+        <span class="c1"># An eager UUID() here is exactly what pre-v2 builds did — and why</span>
+        <span class="c1"># v2 exists (they crash on the first asset id; see SCHEMA_VERSION).</span>
+        <span class="n">was_derived_from</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">]),</span>
         <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span>
             <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_value&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_rate&quot;</span><span class="p">]</span>
         <span class="p">),</span>

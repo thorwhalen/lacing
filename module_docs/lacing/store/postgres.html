@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.postgres &mdash; lacing 0.0.29 documentation</title>
+  <title>lacing.store.postgres &mdash; lacing 0.0.30 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=828725f0"></script>
+      <script src="../../../_static/documentation_options.js?v=61a342a2"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -297,18 +297,22 @@ Cannot be toggled after the tier has annotations.</p></li>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="lacing.store.postgres.SCHEMA_VERSION">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#lacing.store.postgres.SCHEMA_VERSION" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#lacing.store.postgres.SCHEMA_VERSION" title="Link to this definition"></a></dt>
 <dd><p>Current schema version stored in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table.</p>
 <p>v2 (Phase 4, reelee#177) added tenant columns (<code class="docutils literal notranslate"><span class="pre">owner_id</span></code> / <code class="docutils literal notranslate"><span class="pre">project_id</span></code>)
 to <code class="docutils literal notranslate"><span class="pre">tiers</span></code> and <code class="docutils literal notranslate"><span class="pre">annotations</span></code>, and a per-<code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code> <code class="docutils literal notranslate"><span class="pre">projects</span></code>
 table holding the rate (was a single <code class="docutils literal notranslate"><span class="pre">meta</span></code> row in v1).</p>
+<p>v3 (lacing#14, defect D5): <code class="docutils literal notranslate"><span class="pre">prov_was_derived_from</span></code> may contain 64-hex
+artifact <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> strings alongside annotation UUIDs. Layout and rows
+unchanged — the bump makes pre-v3 builds (whose read path eagerly
+<code class="docutils literal notranslate"><span class="pre">UUID()</span></code>-parses the column) refuse rather than crash mid-read.</p>
 <p>The migration ladder (<a class="reference internal" href="migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>,
-<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;postgres&quot;</span></code>) deliberately <strong>starts at 2</strong>: no v1 Postgres
-database ever held real data — the backend is config-selectable and was
-never enabled in any environment; production has always been the per-caller
-sqlite <code class="docutils literal notranslate"><span class="pre">.annot</span></code> layout — so a v1→v2 step would migrate nothing. Register
-steps from v2 forward when the layout next changes (verified 2026-08-15,
-lacing#15).</p>
+<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;postgres&quot;</span></code>) is deliberately <strong>empty</strong>: no Postgres database
+at any version ever held real data — the backend is config-selectable and
+was never enabled in any environment; production has always been the
+per-caller sqlite <code class="docutils literal notranslate"><span class="pre">.annot</span></code> layout (verified 2026-08-15, lacing#15).
+Dev databases at v1/v2 are recreated, not migrated. Register steps from
+v3 forward once a deployed Postgres exists.</p>
 </dd></dl>
 
 <dl class="py exception">

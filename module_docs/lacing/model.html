@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.29 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.30 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=828725f0"></script>
+      <script src="../../_static/documentation_options.js?v=61a342a2"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -81,6 +81,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.model.AnnotationRef.model_config"><code class="docutils literal notranslate"><span class="pre">AnnotationRef.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.model.AssetId"><code class="docutils literal notranslate"><span class="pre">AssetId</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.MediaRef"><code class="docutils literal notranslate"><span class="pre">MediaRef</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.model.MediaRef.model_config"><code class="docutils literal notranslate"><span class="pre">MediaRef.model_config</span></code></a></li>
 </ul>
@@ -93,7 +94,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.model.Provenance.model_config"><code class="docutils literal notranslate"><span class="pre">Provenance.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.model.ProvenanceRef"><code class="docutils literal notranslate"><span class="pre">ProvenanceRef</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.Reference"><code class="docutils literal notranslate"><span class="pre">Reference</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.model.partition_provenance_refs"><code class="docutils literal notranslate"><span class="pre">partition_provenance_refs()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="oplog.html">lacing.oplog</a></li>
@@ -192,6 +195,19 @@ and <code class="docutils literal notranslate"><span class="pre">.claude/skills/
 
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.model.AssetId">
+<span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">AssetId</span></span><a class="headerlink" href="#lacing.model.AssetId" title="Link to this definition"></a></dt>
+<dd><p>A content-addressed artifact identity — the SHA-256 of the artifact’s
+bytes, as <a class="reference internal" href="../lacing.html#lacing.Artifact" title="lacing.Artifact"><code class="xref py py-class docutils literal notranslate"><span class="pre">lacing.Artifact</span></code></a> enforces: <strong>bare 64-hex only</strong>.
+<code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code>-style prefixed identifiers (<code class="docutils literal notranslate"><span class="pre">blake3:…</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sha256:…</span></code>) are a different, free-form vocabulary and are NOT
+provenance refs — copying one in here is a loud <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>, by
+design. Format-disjoint from a UUID string (36 hyphenated chars), so the
+<a class="reference internal" href="#lacing.model.ProvenanceRef" title="lacing.model.ProvenanceRef"><code class="xref py py-data docutils literal notranslate"><span class="pre">ProvenanceRef</span></code></a> union is unambiguous.</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, FieldInfo(annotation=NoneType, required=True, metadata=[MinLen(min_length=64), MaxLen(max_length=64), _PydanticGeneralMetadata(pattern=’^[0-9a-f]{64}$’)])]</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.model.MediaRef">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">MediaRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'media'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'media'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/model.html#MediaRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.model.MediaRef" title="Link to this definition"></a></dt>
@@ -218,7 +234,7 @@ and <code class="docutils literal notranslate"><span class="pre">.claude/skills/
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.model.Provenance">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">UUID</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.model.Provenance" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list[~uuid.UUID</span> <span class="pre">|</span> <span class="pre">~typing.Annotated[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FieldInfo(annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NoneType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[MinLen(min_length=64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MaxLen(max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_PydanticGeneralMetadata(pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^[0-9a-f]{64}$')])]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.model.Provenance" title="Link to this definition"></a></dt>
 <dd><p>W3C PROV-O subset, embedded inline on every annotation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.model.Provenance.model_config">
@@ -229,10 +245,40 @@ and <code class="docutils literal notranslate"><span class="pre">.claude/skills/
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="lacing.model.ProvenanceRef">
+<span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">ProvenanceRef</span></span><a class="headerlink" href="#lacing.model.ProvenanceRef" title="Link to this definition"></a></dt>
+<dd><p>an annotation <code class="docutils literal notranslate"><span class="pre">id</span></code>
+(UUID) or an artifact <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (64-hex SHA-256). Widened from bare
+<code class="docutils literal notranslate"><span class="pre">list[UUID]</span></code> by lacing#14 (defect D5) so artifact-to-artifact lineage —
+the tier where the expensive things live — is representable at all.
+Consumers that walk lineage discriminate with
+<a class="reference internal" href="#lacing.model.partition_provenance_refs" title="lacing.model.partition_provenance_refs"><code class="xref py py-func docutils literal notranslate"><span class="pre">partition_provenance_refs()</span></code></a>. Derivation <em>roles</em> (lacing#17) will
+arrive as a separate additive qualification field, PROV-O-style — this
+list stays the simple edge walk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One upstream reference in <code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code></p>
+</dd>
+</dl>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, FieldInfo(annotation=NoneType, required=True, metadata=[MinLen(min_length=64), MaxLen(max_length=64), _PydanticGeneralMetadata(pattern=’^[0-9a-f]{64}$’)])]</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="lacing.model.Reference">
 <span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">Reference</span></span><a class="headerlink" href="#lacing.model.Reference" title="Link to this definition"></a></dt>
 <dd><p>Discriminated union on <code class="docutils literal notranslate"><span class="pre">kind</span></code>.</p>
 <p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code>[<a class="reference internal" href="#lacing.model.MediaRef" title="lacing.model.MediaRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">MediaRef</span></code></a> | <a class="reference internal" href="#lacing.model.NodeRef" title="lacing.model.NodeRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeRef</span></code></a> | <a class="reference internal" href="#lacing.model.AnnotationRef" title="lacing.model.AnnotationRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotationRef</span></code></a>, FieldInfo(annotation=NoneType, required=True, discriminator=’kind’)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.model.partition_provenance_refs">
+<span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">partition_provenance_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">UUID</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="pre">NoneType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">[</span></span><span class="pre">MinLen</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">64</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">MaxLen</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">64</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">_PydanticGeneralMetadata</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'^[0-9a-f]{64}$'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">UUID</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/model.html#partition_provenance_refs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.model.partition_provenance_refs" title="Link to this definition"></a></dt>
+<dd><p>Split <code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code> into <code class="docutils literal notranslate"><span class="pre">(annotation_ids,</span> <span class="pre">asset_ids)</span></code>.</p>
+<p>The one discriminator every lineage walker needs, provided centrally so
+no consumer re-derives (or half-derives) the union rule.</p>
+<p><code class="docutils literal notranslate"><span class="pre">refs</span></code> must come from a <strong>validated</strong> <a class="reference internal" href="#lacing.model.Provenance" title="lacing.model.Provenance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code></a> — the split
+is by runtime type (<code class="docutils literal notranslate"><span class="pre">UUID</span></code> vs <code class="docutils literal notranslate"><span class="pre">str</span></code>), so a raw wire list that never
+passed validation would land every UUID <em>string</em> in the asset bucket.</p>
 </dd></dl>
 
 </section>

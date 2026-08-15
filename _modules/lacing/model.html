@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.29 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.30 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=828725f0"></script>
+      <script src="../../_static/documentation_options.js?v=61a342a2"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -205,6 +205,53 @@
 <span class="c1"># Inline on every annotation. Subset of W3C PROV-O. See ANN-DOC §C, BACK-DOC §4.5.</span>
 
 
+<span class="n">AssetId</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;A content-addressed artifact identity — the SHA-256 of the artifact&#39;s</span>
+<span class="sd">bytes, as :class:`lacing.Artifact` enforces: **bare 64-hex only**.</span>
+<span class="sd">``MediaRef.asset_id``-style prefixed identifiers (``blake3:…``,</span>
+<span class="sd">``sha256:…``) are a different, free-form vocabulary and are NOT</span>
+<span class="sd">provenance refs — copying one in here is a loud ``ValidationError``, by</span>
+<span class="sd">design. Format-disjoint from a UUID string (36 hyphenated chars), so the</span>
+<span class="sd">:data:`ProvenanceRef` union is unambiguous.&quot;&quot;&quot;</span>
+
+<span class="n">ProvenanceRef</span> <span class="o">=</span> <span class="n">UUID</span> <span class="o">|</span> <span class="n">AssetId</span>
+<span class="sd">&quot;&quot;&quot;One upstream reference in ``was_derived_from``: an annotation ``id``</span>
+<span class="sd">(UUID) or an artifact ``asset_id`` (64-hex SHA-256). Widened from bare</span>
+<span class="sd">``list[UUID]`` by lacing#14 (defect D5) so artifact-to-artifact lineage —</span>
+<span class="sd">the tier where the expensive things live — is representable at all.</span>
+<span class="sd">Consumers that walk lineage discriminate with</span>
+<span class="sd">:func:`partition_provenance_refs`. Derivation *roles* (lacing#17) will</span>
+<span class="sd">arrive as a separate additive qualification field, PROV-O-style — this</span>
+<span class="sd">list stays the simple edge walk.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="partition_provenance_refs">
+<a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.partition_provenance_refs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">partition_provenance_refs</span><span class="p">(</span>
+    <span class="n">refs</span><span class="p">:</span> <span class="s2">&quot;list[ProvenanceRef]&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split ``was_derived_from`` into ``(annotation_ids, asset_ids)``.</span>
+
+<span class="sd">    The one discriminator every lineage walker needs, provided centrally so</span>
+<span class="sd">    no consumer re-derives (or half-derives) the union rule.</span>
+
+<span class="sd">    ``refs`` must come from a **validated** :class:`Provenance` — the split</span>
+<span class="sd">    is by runtime type (``UUID`` vs ``str``), so a raw wire list that never</span>
+<span class="sd">    passed validation would land every UUID *string* in the asset bucket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">annotation_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">asset_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">UUID</span><span class="p">):</span>
+            <span class="n">annotation_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">asset_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">annotation_ids</span><span class="p">,</span> <span class="n">asset_ids</span></div>
+
+
+
 <div class="viewcode-block" id="Provenance">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.Provenance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Provenance</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -222,9 +269,12 @@
     <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Responsible party (user, org, or agent).&quot;</span>
     <span class="p">)</span>
-    <span class="n">was_derived_from</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">was_derived_from</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ProvenanceRef</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Upstream annotation IDs this one is derived from.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Upstream references this one is derived from: annotation IDs &quot;</span>
+            <span class="s2">&quot;(UUID) and/or artifact asset_ids (64-hex SHA-256).&quot;</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">generated_at_time</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;When the annotation was generated.&quot;</span>
