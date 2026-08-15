@@ -63,11 +63,19 @@ from lacing.tier import Tier, TierStereotype
 from lacing.time import RationalTime, TimeInterval
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 """Current ``.annot`` schema version. Increment + register a migration
 (:func:`lacing.store.migrations.register_store_migration`, with
 ``store_kind="sqlite"``) when making a breaking change to the table
-layout."""
+layout.
+
+v2 (lacing#14, defect D5): ``prov_was_derived_from`` may contain 64-hex
+artifact ``asset_id`` strings alongside annotation UUIDs. The table layout
+and every existing row are unchanged — the bump exists because **pre-v2
+builds eagerly ``UUID()``-parse the column on read** and crash on the
+first asset id, so they must refuse v2 files instead of opening them and
+failing row-by-row. The v1→v2 migration step is accordingly stamp-only
+(see :mod:`lacing.store.migrations`)."""
 
 
 _DDL = """
@@ -692,7 +700,10 @@ def _row_to_annotation(row: sqlite3.Row) -> Annotation:
     provenance = Provenance(
         was_generated_by=row["prov_was_generated_by"],
         was_attributed_to=row["prov_was_attributed_to"],
-        was_derived_from=[UUID(u) for u in json.loads(row["prov_was_derived_from"])],
+        # Raw strings: the Provenance union (UUID | AssetId) discriminates.
+        # An eager UUID() here is exactly what pre-v2 builds did — and why
+        # v2 exists (they crash on the first asset id; see SCHEMA_VERSION).
+        was_derived_from=json.loads(row["prov_was_derived_from"]),
         generated_at_time=RationalTime(
             row["prov_generated_at_value"], row["prov_generated_at_rate"]
         ),

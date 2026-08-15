@@ -34,7 +34,7 @@ from lacing.store import (  # noqa: E402
     RateMismatchError,
     TierOverlapError,
 )
-from lacing.store.postgres import from_memory  # noqa: E402
+from lacing.store.postgres import SCHEMA_VERSION, from_memory  # noqa: E402
 from lacing.tier import Tier, TierStereotype  # noqa: E402
 from lacing.time import RationalTime, TimeInterval  # noqa: E402
 
@@ -101,8 +101,8 @@ def postgres_store(postgresql):
 
 class TestSchema:
     def test_initial_schema_version(self, postgres_store):
-        assert postgres_store.schema_version == 2
-        assert postgres_store.get_meta("schema_version") == "2"
+        assert postgres_store.schema_version == SCHEMA_VERSION
+        assert postgres_store.get_meta("schema_version") == str(SCHEMA_VERSION)
 
     def test_rate_persisted(self, postgres_store):
         assert postgres_store.rate == 24000

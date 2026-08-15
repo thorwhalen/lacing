@@ -62,7 +62,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from lacing.model import Provenance
+from lacing.model import Provenance, ProvenanceRef
 from lacing.time import RationalTime
 
 
@@ -167,7 +167,7 @@ class Artifact(BaseModel):
         kind: ArtifactKind,
         was_generated_by: str,
         was_attributed_to: str,
-        was_derived_from: tuple = (),
+        was_derived_from: "tuple[ProvenanceRef, ...]" = (),
         activity: str = "create",
         generated_at_time: RationalTime | None = None,
         duration_s: float | None = None,
@@ -209,7 +209,7 @@ class Artifact(BaseModel):
         was_attributed_to: str,
         path: Path | str | None = None,
         url: str | None = None,
-        was_derived_from: tuple = (),
+        was_derived_from: "tuple[ProvenanceRef, ...]" = (),
         activity: str = "create",
         generated_at_time: RationalTime | None = None,
         duration_s: float | None = None,

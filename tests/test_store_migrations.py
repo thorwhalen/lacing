@@ -1,9 +1,10 @@
 """Tests for the store-schema migration ladder (lacing#15).
 
-The current build has exactly one sqlite schema version, so every test that
-exercises an upgrade registers a *synthetic* v1 -> v2 step and pretends the
-build is newer by monkeypatching ``lacing.store.sqlite.SCHEMA_VERSION`` — the
-same situation the first real envelope change will create, minus the DDL.
+Most upgrade tests register a *synthetic* v1 -> v2 step (replacing the real
+stamp-only D5 step — re-registration is the registry's documented test
+affordance; the autouse fixture restores it) against a restamped-to-v1 file,
+optionally pretending the build is newer by monkeypatching
+``lacing.store.sqlite.SCHEMA_VERSION``.
 """
 
 from __future__ import annotations
@@ -59,13 +60,32 @@ def _ann(start: int, end: int, *, text: str) -> Annotation:
     )
 
 
-def _write_v1_file(path) -> list[Annotation]:
-    """Create a genuine current-version (v1) ``.annot`` file with content."""
+def _write_current_file(path) -> list[Annotation]:
+    """Create a current-version ``.annot`` file with content."""
     anns = [_ann(0, 100, text="hello"), _ann(100, 200, text="world")]
     with SqliteStore(path) as store:
         store.add_tier(Tier("words"))
         store.extend(anns)
     return anns
+
+
+def _write_v1_file(path) -> list[Annotation]:
+    """A genuine v1 ``.annot`` file with content.
+
+    v1 and v2 share a byte-identical layout (the D5 bump is stamp-only), so
+    a v1 file is a current file restamped."""
+    anns = _write_current_file(path)
+    with sqlite3.connect(path) as conn:
+        conn.execute("UPDATE meta SET value = '1' WHERE key = 'schema_version'")
+    return anns
+
+
+def _pop_real_steps() -> None:
+    """Remove the real registered sqlite steps (the registry fixture restores
+    them) for tests that need 'no migration path exists'."""
+    store_migrations._STORE_MIGRATION_REGISTRY.pop(
+        (SQLITE_KIND, 1), None
+    )
 
 
 def _register_v1_to_v2():
@@ -75,6 +95,12 @@ def _register_v1_to_v2():
         conn.execute("UPDATE meta SET value = '2' WHERE key = 'schema_version'")
 
     return _to_v2
+
+
+def _register_stamp_only_v1_to_v2():
+    @register_store_migration(store_kind=SQLITE_KIND, from_version=1, to_version=2)
+    def _stamp(conn):
+        conn.execute("UPDATE meta SET value = '2' WHERE key = 'schema_version'")
 
 
 def _pretend_build_expects(monkeypatch, version: int) -> None:
@@ -117,16 +143,17 @@ class TestUpgradeOnOpen:
         path = tmp_path / "a.annot"
         original = _write_v1_file(path)
         tables_before = _table_names(path)
-        _pretend_build_expects(monkeypatch, 2)  # note: no step registered
+        _pop_real_steps()  # note: no step registered
 
         with pytest.raises(SchemaMismatchError) as exc:
             SqliteStore(path)
         assert "No registered migration reaches v2" in str(exc.value)
 
-        monkeypatch.undo()  # back to the v1 build: the file must be intact
         assert _table_names(path) == tables_before
-        with SqliteStore(path) as store:
-            assert store.schema_version == 1
+        assert _stamped_version(path) == 1
+        _register_stamp_only_v1_to_v2()
+        with SqliteStore(path, migrate=True) as store:
+            assert store.schema_version == 2
             assert sorted(store.all(), key=lambda a: str(a.id)) == sorted(
                 original, key=lambda a: str(a.id)
             )
@@ -145,9 +172,10 @@ class TestUpgradeOnOpen:
 class TestLadderMechanics:
     def test_already_current_store_is_a_noop(self, tmp_path):
         path = tmp_path / "a.annot"
-        _write_v1_file(path)
+        _write_current_file(path)
 
-        assert migrate_annot_file(path) == (1, 1)
+        current = sqlite_module.SCHEMA_VERSION
+        assert migrate_annot_file(path) == (current, current)
 
     def test_migration_is_idempotent(self, tmp_path, monkeypatch):
         path = tmp_path / "a.annot"
@@ -291,7 +319,7 @@ class TestLadderMechanics:
         schema failure; the ladder's error rides along as the cause."""
         path = tmp_path / "a.annot"
         _write_v1_file(path)
-        _pretend_build_expects(monkeypatch, 2)  # no step registered
+        _pop_real_steps()  # no step registered
 
         with pytest.raises(SchemaMismatchError) as exc:
             SqliteStore(path, migrate=True)
@@ -312,9 +340,10 @@ class TestLadderMechanics:
         with pytest.raises(StoreMigrationError, match="boom mid-step"):
             migrate_annot_file(path)
 
+        assert _stamped_version(path) == 1  # the failed step rolled back
+        _register_stamp_only_v1_to_v2()  # the corrected step
         monkeypatch.undo()
-        with SqliteStore(path) as store:  # opens clean at v1
-            assert store.schema_version == 1
+        with SqliteStore(path, migrate=True) as store:
             assert sorted(store.all(), key=lambda a: str(a.id)) == sorted(
                 original, key=lambda a: str(a.id)
             )
@@ -351,7 +380,7 @@ class TestCli:
 
     def test_cli_reports_the_noop(self, tmp_path, capsys):
         path = tmp_path / "a.annot"
-        _write_v1_file(path)
+        _write_current_file(path)
 
         cli_main(["migrate", str(path)])
 
@@ -362,7 +391,7 @@ class TestCli:
     ):
         path = tmp_path / "a.annot"
         _write_v1_file(path)
-        _pretend_build_expects(monkeypatch, 2)  # no step registered
+        _pop_real_steps()  # no step registered
 
         with pytest.raises(SystemExit):
             cli_main(["migrate", str(path)])
@@ -412,3 +441,56 @@ def _stamped_version(path) -> int:
             "SELECT value FROM meta WHERE key = 'schema_version'"
         ).fetchone()
     return int(row[0])
+
+
+class TestD5Migration:
+    """The real v1→v2 step (lacing#14): stamp-only, data untouched."""
+
+    def test_a_v1_file_upgrades_stamp_only_and_round_trips_every_annotation(
+        self, tmp_path
+    ):
+        """The lacing#14 acceptance: a genuine v1 file (UUID-only provenance)
+        opens, upgrades, and round-trips at v2 with every annotation equal.
+        v1 and v2 share a byte-identical layout — only the stamp differs —
+        so the file is built normally and restamped to 1."""
+        path = tmp_path / "a.annot"
+        original = _write_v1_file(path)
+        with sqlite3.connect(path) as conn:
+            conn.execute("UPDATE meta SET value = '1' WHERE key = 'schema_version'")
+
+        assert migrate_annot_file(path) == (1, 2)
+
+        with SqliteStore(path) as store:
+            assert store.schema_version == 2
+            assert sorted(store.all(), key=lambda a: str(a.id)) == sorted(
+                original, key=lambda a: str(a.id)
+            )
+
+    def test_a_v2_store_round_trips_mixed_provenance_refs(self, tmp_path):
+        """The point of v2: an annotation deriving from an artifact asset_id
+        AND an annotation UUID persists and reads back losslessly."""
+        from lacing.model import partition_provenance_refs
+
+        path = tmp_path / "a.annot"
+        parent = _ann(0, 100, text="parent")
+        asset = "e" * 64
+        child = parent.model_copy(
+            update={
+                "id": uuid4(),
+                "provenance": parent.provenance.model_copy(
+                    update={"was_derived_from": [parent.id, asset]}
+                )
+            }
+        )
+        with SqliteStore(path) as store:
+            store.add_tier(Tier("words"))
+            store.extend([parent, child])
+
+        with SqliteStore(path) as store:
+            got = {a.id: a for a in store.all()}[child.id]
+
+        annotation_ids, asset_ids = partition_provenance_refs(
+            got.provenance.was_derived_from
+        )
+        assert annotation_ids == [parent.id]
+        assert asset_ids == [asset]

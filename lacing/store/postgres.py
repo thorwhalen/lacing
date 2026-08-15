@@ -86,20 +86,25 @@ from lacing.tier import Tier, TierStereotype
 from lacing.time import LossyTimeConversionError, RationalTime, TimeInterval
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 """Current schema version stored in the ``meta`` table.
 
 v2 (Phase 4, reelee#177) added tenant columns (``owner_id`` / ``project_id``)
 to ``tiers`` and ``annotations``, and a per-``(owner, project)`` ``projects``
 table holding the rate (was a single ``meta`` row in v1).
 
+v3 (lacing#14, defect D5): ``prov_was_derived_from`` may contain 64-hex
+artifact ``asset_id`` strings alongside annotation UUIDs. Layout and rows
+unchanged — the bump makes pre-v3 builds (whose read path eagerly
+``UUID()``-parses the column) refuse rather than crash mid-read.
+
 The migration ladder (:mod:`lacing.store.migrations`,
-``store_kind="postgres"``) deliberately **starts at 2**: no v1 Postgres
-database ever held real data — the backend is config-selectable and was
-never enabled in any environment; production has always been the per-caller
-sqlite ``.annot`` layout — so a v1→v2 step would migrate nothing. Register
-steps from v2 forward when the layout next changes (verified 2026-08-15,
-lacing#15)."""
+``store_kind="postgres"``) is deliberately **empty**: no Postgres database
+at any version ever held real data — the backend is config-selectable and
+was never enabled in any environment; production has always been the
+per-caller sqlite ``.annot`` layout (verified 2026-08-15, lacing#15).
+Dev databases at v1/v2 are recreated, not migrated. Register steps from
+v3 forward once a deployed Postgres exists."""
 
 DEFAULT_OWNER_ID = "default"
 """Owner placeholder until the multi-tenant access layer (reelee#174) lands.
@@ -1024,7 +1029,8 @@ class PostgresStore:
         provenance = Provenance(
             was_generated_by=row["prov_was_generated_by"],
             was_attributed_to=row["prov_was_attributed_to"],
-            was_derived_from=[UUID(u) for u in row["prov_was_derived_from"]],
+            # Raw strings: the Provenance union (UUID | AssetId) discriminates.
+            was_derived_from=list(row["prov_was_derived_from"]),
             generated_at_time=RationalTime(
                 row["prov_generated_at_value"], row["prov_generated_at_rate"]
             ),

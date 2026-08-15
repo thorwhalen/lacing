@@ -69,6 +69,43 @@ Reference = Annotated[MediaRef | NodeRef | AnnotationRef, Field(discriminator="k
 # Inline on every annotation. Subset of W3C PROV-O. See ANN-DOC §C, BACK-DOC §4.5.
 
 
+AssetId = Annotated[
+    str, Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
+]
+"""A content-addressed artifact identity — the SHA-256 of the artifact's
+bytes, as :class:`lacing.Artifact` enforces. Format-disjoint from a UUID
+string (36 hyphenated chars), so the :data:`ProvenanceRef` union is
+unambiguous."""
+
+ProvenanceRef = UUID | AssetId
+"""One upstream reference in ``was_derived_from``: an annotation ``id``
+(UUID) or an artifact ``asset_id`` (64-hex SHA-256). Widened from bare
+``list[UUID]`` by lacing#14 (defect D5) so artifact-to-artifact lineage —
+the tier where the expensive things live — is representable at all.
+Consumers that walk lineage discriminate with
+:func:`partition_provenance_refs`. Derivation *roles* (lacing#17) will
+arrive as a separate additive qualification field, PROV-O-style — this
+list stays the simple edge walk."""
+
+
+def partition_provenance_refs(
+    refs: "list[ProvenanceRef]",
+) -> tuple[list[UUID], list[str]]:
+    """Split ``was_derived_from`` into ``(annotation_ids, asset_ids)``.
+
+    The one discriminator every lineage walker needs, provided centrally so
+    no consumer re-derives (or half-derives) the union rule.
+    """
+    annotation_ids: list[UUID] = []
+    asset_ids: list[str] = []
+    for ref in refs:
+        if isinstance(ref, UUID):
+            annotation_ids.append(ref)
+        else:
+            asset_ids.append(ref)
+    return annotation_ids, asset_ids
+
+
 class Provenance(BaseModel):
     """W3C PROV-O subset, embedded inline on every annotation."""
 
@@ -84,9 +121,12 @@ class Provenance(BaseModel):
     was_attributed_to: str = Field(
         ..., description="Responsible party (user, org, or agent)."
     )
-    was_derived_from: list[UUID] = Field(
+    was_derived_from: list[ProvenanceRef] = Field(
         default_factory=list,
-        description="Upstream annotation IDs this one is derived from.",
+        description=(
+            "Upstream references this one is derived from: annotation IDs "
+            "(UUID) and/or artifact asset_ids (64-hex SHA-256)."
+        ),
     )
     generated_at_time: RationalTime = Field(
         ..., description="When the annotation was generated."
