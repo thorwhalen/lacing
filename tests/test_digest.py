@@ -44,6 +44,23 @@ def _prov(*, at: int = 0, by: str = "agent:m@1", derived=()) -> Provenance:
     )
 
 
+def _ann_unvalidated(**overrides) -> Annotation:
+    """Build an Annotation BYPASSING validation (model_construct) — the only
+    way a non-str-key body can exist since the envelope refuses them
+    (lacing#24), and precisely the path the digest's own guard covers."""
+    kwargs = dict(
+        id=uuid4(),
+        tier="words",
+        reference=MediaRef(asset_id="sha256:abc", interval=_ti()),
+        body={"text": "hello"},
+        body_schema_uri="annot://schema/word/v1",
+        provenance=_prov(),
+        confidence=None,
+    )
+    kwargs.update(overrides)
+    return Annotation.model_construct(**kwargs)
+
+
 def _ann(**overrides) -> Annotation:
     kwargs = dict(
         id=uuid4(),
@@ -244,10 +261,13 @@ class TestDeterminism:
         broken data: it does not survive a store round-trip either.
         """
         for body in ({1: "a", "2": "b"}, {1: "a", "1": "b"}, {None: "x"}):
+            # model_construct: the envelope validator refuses these at normal
+            # construction (lacing#24) — the digest guard exists for exactly
+            # the bypass paths (model_construct / model_copy).
             with pytest.raises(digest_module.NonStringBodyKeyError):
-                annotation_value_digest(_ann(body=body))
+                annotation_value_digest(_ann_unvalidated(body=body))
             with pytest.raises(digest_module.NonStringBodyKeyError):
-                annotation_body_digest(_ann(body=body))
+                annotation_body_digest(_ann_unvalidated(body=body))
 
     def test_nested_non_string_keys_are_refused_too(self):
         """The collapse hazard is identical one level down, and inside lists."""
@@ -256,19 +276,21 @@ class TestDeterminism:
             {"k": [{"deep": {2: "v"}}]},
         ):
             with pytest.raises(digest_module.NonStringBodyKeyError):
-                annotation_value_digest(_ann(body=body))
+                annotation_value_digest(_ann_unvalidated(body=body))
 
     def test_the_refusal_names_the_offending_path(self):
         """An error that does not say WHERE sends the reader to the wrong producer."""
         with pytest.raises(digest_module.NonStringBodyKeyError) as excinfo:
-            annotation_value_digest(_ann(body={"outer": {7: "v"}}))
+            annotation_value_digest(_ann_unvalidated(body={"outer": {7: "v"}}))
         assert "body['outer']" in str(excinfo.value)
 
     def test_the_collapse_this_guard_prevents_is_real(self):
         """Pin the underlying pydantic behaviour, so the guard's rationale is
         checked rather than asserted. If pydantic ever stops collapsing, this
         fails and the guard can be reconsidered on evidence."""
-        collapsed = _ann(body={1: "a", "1": "b"}).model_dump(mode="json")["body"]
+        collapsed = _ann_unvalidated(body={1: "a", "1": "b"}).model_dump(mode="json")[
+            "body"
+        ]
         assert collapsed == {"1": "b"}  # the {1: "a"} entry is gone
 
     def test_stable_across_processes(self, tmp_path: Path):
