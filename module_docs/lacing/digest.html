@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.digest &mdash; lacing 0.0.28 documentation</title>
+  <title>lacing.digest &mdash; lacing 0.0.29 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=26ffa1e9"></script>
+      <script src="../../_static/documentation_options.js?v=828725f0"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -302,9 +302,10 @@ non-string keys — and two distinct keys can coerce to the <em>same</em> string
 silently annihilating an entry. <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> dumps to
 <code class="docutils literal notranslate"><span class="pre">{&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code>; a body differing only in the lost entry would digest
 identically, which is a wrong cache <strong>hit</strong>.</p>
-<p>The digest refuses rather than risks it. Such a body is already broken
-data — it does not survive a round-trip through any lacing store either,
-for exactly the same reason — so the correct fix is at the producer.</p>
+<p>Since lacing#24 the <em>envelope</em> refuses such a body at validation — the
+producer-side fix. This error lives here rather than in <code class="docutils literal notranslate"><span class="pre">lacing.model</span></code>
+because this module is deliberately import-light (stdlib only, pinned by
+test) and the model can import from it, not vice versa.</p>
 </dd></dl>
 
 <dl class="py data">

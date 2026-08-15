@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.digest &mdash; lacing 0.0.28 documentation</title>
+  <title>lacing.digest &mdash; lacing 0.0.29 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=26ffa1e9"></script>
+      <script src="../../_static/documentation_options.js?v=828725f0"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -297,10 +297,44 @@
 <span class="sd">    ``{&quot;1&quot;: &quot;b&quot;}``; a body differing only in the lost entry would digest</span>
 <span class="sd">    identically, which is a wrong cache **hit**.</span>
 
-<span class="sd">    The digest refuses rather than risks it. Such a body is already broken</span>
-<span class="sd">    data — it does not survive a round-trip through any lacing store either,</span>
-<span class="sd">    for exactly the same reason — so the correct fix is at the producer.</span>
+<span class="sd">    Since lacing#24 the *envelope* refuses such a body at validation — the</span>
+<span class="sd">    producer-side fix. This error lives here rather than in ``lacing.model``</span>
+<span class="sd">    because this module is deliberately import-light (stdlib only, pinned by</span>
+<span class="sd">    test) and the model can import from it, not vice versa.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.</span>
+
+<span class="sd">    Walks nested mappings and sequences, because the key-collapse hazard is</span>
+<span class="sd">    just as real one level down: ``{&quot;k&quot;: {1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}}`` loses an entry</span>
+<span class="sd">    exactly the same way. ``path`` is threaded through so the error names the</span>
+<span class="sd">    offending location rather than just the annotation.</span>
+
+<span class="sd">    The single implementation behind two enforcement points: the</span>
+<span class="sd">    ``Annotation.body`` validator (the primary gate, lacing#24) and this</span>
+<span class="sd">    module&#39;s pre-digest re-check (defense-in-depth — ``model_copy`` /</span>
+<span class="sd">    ``model_construct`` bypass validators, and a wrong digest is a wrong</span>
+<span class="sd">    cache *hit*).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NonStringBodyKeyError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has a non-str key </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> of type &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. JSON object keys are strings, so &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;this key would be coerced — and a coercion collision &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;silently drops an entry, which would make two different &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;annotations digest alike. Fix the producer so the body &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;contains only JSON types.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2">]&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
 
 
 
@@ -462,35 +496,6 @@
 <span class="c1"># --- internals ---------------------------------------------------------------</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.</span>
-
-<span class="sd">    Walks nested mappings and sequences, because the key-collapse hazard is</span>
-<span class="sd">    just as real one level down: ``{&quot;k&quot;: {1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}}`` loses an entry</span>
-<span class="sd">    exactly the same way. ``path`` is threaded through so the error names the</span>
-<span class="sd">    offending location rather than just the annotation.</span>
-
-<span class="sd">    Only ``body`` needs this. Every other field in :data:`VALUE_FIELDS` is a</span>
-<span class="sd">    typed pydantic field (``str``, ``float | None``, or a ``Reference`` model),</span>
-<span class="sd">    none of which can carry a free-form mapping key.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">NonStringBodyKeyError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has a non-str key </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> of type &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. JSON object keys are strings, so &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;this key would be coerced — and a coercion collision &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;silently drops an entry, which would make two different &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;annotations digest alike. Fix the producer so the body &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;contains only JSON types.&quot;</span>
-                <span class="p">)</span>
-            <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2">]&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-            <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-
-
 <span class="k">def</span><span class="w"> </span><span class="nf">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Project ``annotation``&#39;s JSON-mode dump onto ``fields``.</span>
 
@@ -499,11 +504,14 @@
 <span class="sd">    canonicaliser in its ``{v, r}`` wire form. Hand-assembling the payload from</span>
 <span class="sd">    raw attributes bypasses that.</span>
 
-<span class="sd">    The dump is preceded by :func:`_reject_non_string_keys` over the *raw*</span>
+<span class="sd">    The dump is preceded by :func:`reject_non_string_keys` over the *raw*</span>
 <span class="sd">    body, because the check has to happen **before** the coercion it exists to</span>
 <span class="sd">    catch — once dumped, the annihilated entry is already gone.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_reject_non_string_keys</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span>
+    <span class="c1"># Defense-in-depth, not the primary gate: the envelope validator refuses</span>
+    <span class="c1"># these at construction (lacing#24), but model_copy/model_construct</span>
+    <span class="c1"># bypass validators, and a wrong digest here is a wrong cache HIT.</span>
+    <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span>
     <span class="n">dumped</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">dumped</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
 
