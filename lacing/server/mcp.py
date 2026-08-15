@@ -239,9 +239,12 @@ def build_mcp_server(
     ) -> dict[str, Any] | None:
         """Mark an AI-generated annotation as reviewed (accepted or rejected).
 
-        Sets confidence to 1.0 / 0.0 and rewrites provenance to
-        ``user:<actor>`` while preserving the original AI provenance via
-        ``was_derived_from``.
+        Sets confidence to 1.0 / 0.0 and rewrites provenance in place:
+        ``was_generated_by`` becomes ``user:<actor>`` and the review time is
+        recorded. The original AI provenance (generating agent, attribution)
+        is OVERWRITTEN and unrecoverable afterwards — if the audit trail
+        matters, read the annotation before accepting and keep your own
+        record (representable preservation is tracked in lacing#14/#18).
         """
         updated = _accept_ai_suggestion(
             store,

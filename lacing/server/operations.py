@@ -93,10 +93,14 @@ def _build_reference(payload: dict[str, Any]) -> Reference:
 
 
 def _default_provenance(creator: str = "anonymous") -> Provenance:
+    # now(), not zero(): generated_at_time is *when this was generated* —
+    # consumers (nw freshness, verdict ordering) read it as wall-clock, and
+    # tick 0 made every server-created annotation look older than everything
+    # (same bug family as lacing#18's Bug B).
     return Provenance(
         was_generated_by="server:lacing",
         was_attributed_to=creator,
-        generated_at_time=RationalTime.zero(),
+        generated_at_time=RationalTime.now(),
         activity="create",
     )
 
@@ -290,9 +294,16 @@ def accept_ai_suggestion(
     """Mark an AI-generated annotation as reviewed.
 
     Sets confidence to 1.0 (accepted) or 0.0 (rejected) and rewrites the
-    provenance ``was_generated_by`` to ``user:<actor>``. The original
-    AI provenance is preserved by appending it to ``was_derived_from``
-    so the audit chain stays intact.
+    provenance in place: ``was_generated_by`` becomes ``user:<actor>``,
+    ``was_attributed_to`` becomes ``actor``, and ``generated_at_time``
+    records the review time. ``was_derived_from`` passes through unchanged.
+
+    **The original AI provenance is overwritten, not preserved** — the
+    generating agent and its attribution are unrecoverable after this call.
+    Preserving them is structurally impossible today: the thing to keep is a
+    provenance *token* string, and ``was_derived_from`` holds only UUIDs
+    (lacing#14). When that issue settles how a non-annotation reference is
+    represented, this operation is its first consumer (lacing#18, Bug A).
     """
     current = get_annotation(store, annotation_id)
     if current is None:
@@ -304,7 +315,7 @@ def accept_ai_suggestion(
         was_generated_by=f"user:{actor}",
         was_attributed_to=actor,
         was_derived_from=derived,
-        generated_at_time=RationalTime.zero(),
+        generated_at_time=RationalTime.now(),
         activity="derive",
     )
     updated = current.model_copy(
