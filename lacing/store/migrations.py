@@ -398,3 +398,22 @@ def migrate_sqlite_connection(conn: sqlite3.Connection, *, to_version: int) -> i
         to_version=to_version,
         run_step=_sqlite_run_step,
     )
+
+
+# ---------------------------------------------------------------------------
+# Registered steps
+# ---------------------------------------------------------------------------
+
+
+@register_store_migration(store_kind=SQLITE_KIND, from_version=1, to_version=2)
+def _sqlite_v1_to_v2(conn: sqlite3.Connection) -> None:
+    """v2 (lacing#14 / defect D5): ``prov_was_derived_from`` may hold 64-hex
+    artifact ``asset_id`` strings alongside annotation UUIDs.
+
+    Stamp-only, by design: every v1 row is already valid v2 data — the
+    version bump exists to make **pre-v2 builds** (whose read path eagerly
+    ``UUID()``-parses the column) refuse the file instead of crashing on
+    the first asset id. The step's whole job is the version write; the
+    runner's in-transaction verification covers the rest.
+    """
+    conn.execute("UPDATE meta SET value = '2' WHERE key = 'schema_version'")

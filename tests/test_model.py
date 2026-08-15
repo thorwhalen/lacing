@@ -1,6 +1,6 @@
 """Tests for lacing.model — Annotation envelope, references, provenance."""
 
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from pydantic import ValidationError
@@ -180,7 +180,7 @@ class TestBodyKeyRefusal:
     """The envelope refuses bodies it cannot durably store (lacing#24)."""
 
     def _kwargs(self, body):
-        from uuid import uuid4
+        from uuid import UUID, uuid4
 
         return dict(
             id=uuid4(),
@@ -222,3 +222,59 @@ class TestBodyKeyRefusal:
     def test_string_keyed_bodies_pass_untouched(self):
         ann = Annotation(**self._kwargs({"text": "hello", "nested": {"ok": [1, 2]}}))
         assert ann.body == {"text": "hello", "nested": {"ok": [1, 2]}}
+
+
+class TestProvenanceRefUnion:
+    """was_derived_from holds annotation UUIDs and artifact asset_ids
+    (lacing#14, defect D5) — the union is format-disjoint and lossless."""
+
+    def _prov(self, refs):
+        return Provenance(
+            was_generated_by="x",
+            was_attributed_to="y",
+            was_derived_from=refs,
+            generated_at_time=RationalTime(0),
+        )
+
+    def test_uuids_stay_uuids_and_asset_ids_stay_strings(self):
+        from uuid import UUID, uuid4
+
+        u, h = uuid4(), "a" * 64
+        prov = self._prov([str(u), h])
+
+        assert prov.was_derived_from[0] == u
+        assert isinstance(prov.was_derived_from[0], UUID)
+        assert prov.was_derived_from[1] == h
+        assert isinstance(prov.was_derived_from[1], str)
+
+    def test_the_wire_form_round_trips(self):
+        from uuid import UUID, uuid4
+
+        prov = self._prov([str(uuid4()), "b" * 64])
+        wire = prov.model_dump(mode="json")["was_derived_from"]
+
+        again = self._prov(wire)
+
+        assert again.was_derived_from == prov.was_derived_from
+
+    @pytest.mark.parametrize(
+        "bad", ["not-a-ref", "A" * 64, "c" * 63, "c" * 65, ""]
+    )
+    def test_anything_else_is_refused(self, bad):
+        with pytest.raises(ValidationError):
+            self._prov([bad])
+
+    def test_partition_provenance_refs_is_the_one_discriminator(self):
+        from uuid import UUID, uuid4
+
+        from lacing.model import partition_provenance_refs
+
+        u1, u2, h = uuid4(), uuid4(), "d" * 64
+        prov = self._prov([str(u1), h, str(u2)])
+
+        annotation_ids, asset_ids = partition_provenance_refs(
+            prov.was_derived_from
+        )
+
+        assert annotation_ids == [u1, u2]
+        assert asset_ids == [h]

@@ -301,9 +301,10 @@ def accept_ai_suggestion(
     **The original AI provenance is overwritten, not preserved** — the
     generating agent and its attribution are unrecoverable after this call.
     Preserving them is structurally impossible today: the thing to keep is a
-    provenance *token* string, and ``was_derived_from`` holds only UUIDs
-    (lacing#14). When that issue settles how a non-annotation reference is
-    represented, this operation is its first consumer (lacing#18, Bug A).
+    provenance *token* string (``agent:<model>@…``), and
+    ``was_derived_from`` holds annotation UUIDs and artifact asset_ids
+    (lacing#14) — not tokens. The representable fix is supersession or a
+    qualified derivation record (lacing#18 Bug A, lacing#17).
     """
     current = get_annotation(store, annotation_id)
     if current is None:

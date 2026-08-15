@@ -34,7 +34,7 @@ from lacing.store import (  # noqa: E402
     RateMismatchError,
     TierOverlapError,
 )
-from lacing.store.postgres import from_memory  # noqa: E402
+from lacing.store.postgres import SCHEMA_VERSION, from_memory  # noqa: E402
 from lacing.tier import Tier, TierStereotype  # noqa: E402
 from lacing.time import RationalTime, TimeInterval  # noqa: E402
 
@@ -101,8 +101,8 @@ def postgres_store(postgresql):
 
 class TestSchema:
     def test_initial_schema_version(self, postgres_store):
-        assert postgres_store.schema_version == 2
-        assert postgres_store.get_meta("schema_version") == "2"
+        assert postgres_store.schema_version == SCHEMA_VERSION
+        assert postgres_store.get_meta("schema_version") == str(SCHEMA_VERSION)
 
     def test_rate_persisted(self, postgres_store):
         assert postgres_store.rate == 24000
@@ -694,3 +694,48 @@ class TestPooling:
             assert len(list(s.all())) == 1
         finally:
             s.close()
+
+
+class TestD5MixedRefs:
+    def test_mixed_provenance_refs_round_trip_through_jsonb(self, postgres_store):
+        """The pg counterpart of the sqlite D5 pin: an annotation deriving
+        from an artifact asset_id AND an annotation UUID reads back
+        losslessly through the JSONB path (lacing#14)."""
+        from lacing.model import partition_provenance_refs
+        from lacing.time import RationalTime, TimeInterval
+
+        parent = Annotation(
+            id=uuid4(),
+            tier="words",
+            reference=MediaRef(
+                asset_id="sha256:abc",
+                interval=TimeInterval(RationalTime(0), RationalTime(10)),
+            ),
+            body={"text": "p"},
+            body_schema_uri="annot://schema/word/v1",
+            provenance=Provenance(
+                was_generated_by="user:test",
+                was_attributed_to="test",
+                generated_at_time=RationalTime(0),
+            ),
+        )
+        asset = "f" * 64
+        child = parent.model_copy(
+            update={
+                "id": uuid4(),
+                "provenance": parent.provenance.model_copy(
+                    update={"was_derived_from": [parent.id, asset]}
+                ),
+            }
+        )
+        postgres_store.add_tier(Tier("words"))
+        postgres_store.add(parent)
+        postgres_store.add(child)
+
+        got = {a.id: a for a in postgres_store.all()}[child.id]
+
+        annotation_ids, asset_ids = partition_provenance_refs(
+            got.provenance.was_derived_from
+        )
+        assert annotation_ids == [parent.id]
+        assert asset_ids == [asset]

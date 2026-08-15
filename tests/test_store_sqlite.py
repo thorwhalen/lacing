@@ -19,7 +19,7 @@ from lacing.store import (
     SchemaMismatchError,
     SqliteStore,
 )
-from lacing.store.sqlite import from_memory, to_memory
+from lacing.store.sqlite import SCHEMA_VERSION, from_memory, to_memory
 from lacing.tier import Tier, TierStereotype
 from lacing.time import RationalTime, TimeInterval
 
@@ -64,8 +64,8 @@ class TestSchema:
     def test_schema_version(self, tmp_path):
         s = SqliteStore(tmp_path / "v.annot")
         try:
-            assert s.schema_version == 1
-            assert s.get_meta("schema_version") == "1"
+            assert s.schema_version == SCHEMA_VERSION
+            assert s.get_meta("schema_version") == str(SCHEMA_VERSION)
             assert s.get_meta("created_at") is not None
         finally:
             s.close()
@@ -83,7 +83,7 @@ class TestSchema:
     def test_in_memory(self):
         s = SqliteStore(":memory:")
         try:
-            assert s.schema_version == 1
+            assert s.schema_version == SCHEMA_VERSION
         finally:
             s.close()
 

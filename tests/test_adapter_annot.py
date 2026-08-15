@@ -184,3 +184,42 @@ class TestSqliteSourceFastPath:
         assert dst_path.exists()
         loaded = adapter_module.load(dst_path)
         assert len(list(loaded.all())) == 1
+
+
+class TestV1FileHandling:
+    """The adapter honors the store's migration contract (lacing#14 review)."""
+
+    def _v1_file(self, tmp_path):
+        import sqlite3
+
+        path = tmp_path / "old.annot"
+        store = SqliteStore(path)
+        store.add_tier(Tier("words"))
+        store.add(_ann(_ti(0, 10), tier="words", text="hi"))
+        store.close()
+        with sqlite3.connect(path) as conn:
+            conn.execute("UPDATE meta SET value = '1' WHERE key = 'schema_version'")
+        return path
+
+    def test_a_v1_path_refuses_without_the_opt_in_and_loads_with_it(self, tmp_path):
+        from lacing.store import SchemaMismatchError
+
+        path = self._v1_file(tmp_path)
+        adapter = get_adapter("annot")
+
+        with pytest.raises(SchemaMismatchError):
+            adapter.load(str(path))
+
+        loaded = adapter.load(str(path), migrate=True)
+        assert len(list(loaded.all())) == 1
+
+    def test_v1_bytes_load_migrates_the_temp_copy(self, tmp_path):
+        """Bytes are not the caller's file: refusing them would be a dead
+        end (no path to point `lacing migrate` at), so the temp copy is
+        migrated unconditionally."""
+        path = self._v1_file(tmp_path)
+        payload = path.read_bytes()
+
+        loaded = get_adapter("annot").load(payload)
+
+        assert len(list(loaded.all())) == 1
