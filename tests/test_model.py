@@ -12,6 +12,7 @@ from lacing.model import (
     NodeRef,
     Provenance,
 )
+from lacing.digest import NonStringBodyKeyError
 from lacing.time import RationalTime, TimeInterval
 
 
@@ -173,3 +174,51 @@ class TestAnnotation:
         }
         a = Annotation.model_validate(d)
         assert isinstance(a.reference, MediaRef)
+
+
+class TestBodyKeyRefusal:
+    """The envelope refuses bodies it cannot durably store (lacing#24)."""
+
+    def _kwargs(self, body):
+        from uuid import uuid4
+
+        return dict(
+            id=uuid4(),
+            tier="words",
+            reference=MediaRef(
+                asset_id="sha256:abc",
+                interval=TimeInterval(RationalTime(0), RationalTime(10)),
+            ),
+            body=body,
+            body_schema_uri="annot://schema/word/v1",
+            provenance=Provenance(
+                was_generated_by="user:test",
+                was_attributed_to="test",
+                generated_at_time=RationalTime(0),
+            ),
+        )
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            {1: "a", "1": "b"},  # the issue's two-line repro: silent data loss
+            {None: "x"},
+            {"k": {1: "a", "1": "b"}},  # nested — same collapse one level down
+            {"k": [{"deep": {2: "v"}}]},
+        ],
+    )
+    def test_a_body_that_cannot_round_trip_is_refused_at_construction(self, body):
+        # NonStringBodyKeyError (a TypeError) propagates unwrapped from the
+        # validator on purpose: the only producers who can trip it are
+        # in-process Python callers (JSON object keys are strings, so wire
+        # paths cannot), and they get the precise, actionable type.
+        with pytest.raises(NonStringBodyKeyError, match="non-str key"):
+            Annotation(**self._kwargs(body))
+
+    def test_the_refusal_names_the_offending_path(self):
+        with pytest.raises(NonStringBodyKeyError, match=r"body\['outer'\]"):
+            Annotation(**self._kwargs({"outer": {7: "v"}}))
+
+    def test_string_keyed_bodies_pass_untouched(self):
+        ann = Annotation(**self._kwargs({"text": "hello", "nested": {"ok": [1, 2]}}))
+        assert ann.body == {"text": "hello", "nested": {"ok": [1, 2]}}

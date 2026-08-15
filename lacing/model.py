@@ -10,8 +10,9 @@ from __future__ import annotations
 from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
+from lacing.digest import reject_non_string_keys
 from lacing.time import RationalTime, TimeInterval
 
 
@@ -124,6 +125,16 @@ class Annotation(BaseModel):
         le=1.0,
         description="Optional [0,1] confidence — for soft labels and AI-generated annotations.",
     )
+
+    @field_validator("body")
+    @classmethod
+    def _body_keys_must_be_strings(cls, value: dict) -> dict:
+        # The contract already exists on paper — body is "validated by
+        # body_schema_uri" and JSON Schema object keys are strings — this
+        # enforces it where the data enters, before a store round-trip can
+        # silently annihilate an entry (lacing#24).
+        reject_non_string_keys(value)
+        return value
 
     @property
     def interval(self) -> TimeInterval | None:

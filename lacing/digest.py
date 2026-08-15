@@ -168,10 +168,44 @@ class NonStringBodyKeyError(TypeError):
     ``{"1": "b"}``; a body differing only in the lost entry would digest
     identically, which is a wrong cache **hit**.
 
-    The digest refuses rather than risks it. Such a body is already broken
-    data — it does not survive a round-trip through any lacing store either,
-    for exactly the same reason — so the correct fix is at the producer.
+    Since lacing#24 the *envelope* refuses such a body at validation — the
+    producer-side fix. This error lives here rather than in ``lacing.model``
+    because this module is deliberately import-light (stdlib only, pinned by
+    test) and the model can import from it, not vice versa.
     """
+
+
+def reject_non_string_keys(value: Any, path: str = "body") -> None:
+    """Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.
+
+    Walks nested mappings and sequences, because the key-collapse hazard is
+    just as real one level down: ``{"k": {1: "a", "1": "b"}}`` loses an entry
+    exactly the same way. ``path`` is threaded through so the error names the
+    offending location rather than just the annotation.
+
+    The single implementation behind two enforcement points: the
+    ``Annotation.body`` validator (the primary gate, lacing#24) and this
+    module's pre-digest re-check (defense-in-depth — ``model_copy`` /
+    ``model_construct`` bypass validators, and a wrong digest is a wrong
+    cache *hit*).
+    """
+    if isinstance(value, dict):
+        for key, sub in value.items():
+            if not isinstance(key, str):
+                raise NonStringBodyKeyError(
+                    f"{path} has a non-str key {key!r} of type "
+                    f"{type(key).__name__}. JSON object keys are strings, so "
+                    f"this key would be coerced — and a coercion collision "
+                    f"silently drops an entry, which would make two different "
+                    f"annotations digest alike. Fix the producer so the body "
+                    f"contains only JSON types."
+                )
+            reject_non_string_keys(sub, f"{path}[{key!r}]")
+    elif isinstance(value, (list, tuple)):
+        for index, sub in enumerate(value):
+            reject_non_string_keys(sub, f"{path}[{index}]")
+
+
 
 
 VALUE_FIELDS: tuple[str, ...] = (
@@ -326,35 +360,6 @@ def annotation_body_digest(annotation: "Annotation") -> str:
 # --- internals ---------------------------------------------------------------
 
 
-def _reject_non_string_keys(value: Any, path: str) -> None:
-    """Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.
-
-    Walks nested mappings and sequences, because the key-collapse hazard is
-    just as real one level down: ``{"k": {1: "a", "1": "b"}}`` loses an entry
-    exactly the same way. ``path`` is threaded through so the error names the
-    offending location rather than just the annotation.
-
-    Only ``body`` needs this. Every other field in :data:`VALUE_FIELDS` is a
-    typed pydantic field (``str``, ``float | None``, or a ``Reference`` model),
-    none of which can carry a free-form mapping key.
-    """
-    if isinstance(value, dict):
-        for key, sub in value.items():
-            if not isinstance(key, str):
-                raise NonStringBodyKeyError(
-                    f"{path} has a non-str key {key!r} of type "
-                    f"{type(key).__name__}. JSON object keys are strings, so "
-                    f"this key would be coerced — and a coercion collision "
-                    f"silently drops an entry, which would make two different "
-                    f"annotations digest alike. Fix the producer so the body "
-                    f"contains only JSON types."
-                )
-            _reject_non_string_keys(sub, f"{path}[{key!r}]")
-    elif isinstance(value, (list, tuple)):
-        for index, sub in enumerate(value):
-            _reject_non_string_keys(sub, f"{path}[{index}]")
-
-
 def _payload(annotation: "Annotation", fields: Sequence[str]) -> dict[str, Any]:
     """Project ``annotation``'s JSON-mode dump onto ``fields``.
 
@@ -363,11 +368,14 @@ def _payload(annotation: "Annotation", fields: Sequence[str]) -> dict[str, Any]:
     canonicaliser in its ``{v, r}`` wire form. Hand-assembling the payload from
     raw attributes bypasses that.
 
-    The dump is preceded by :func:`_reject_non_string_keys` over the *raw*
+    The dump is preceded by :func:`reject_non_string_keys` over the *raw*
     body, because the check has to happen **before** the coercion it exists to
     catch — once dumped, the annihilated entry is already gone.
     """
-    _reject_non_string_keys(annotation.body, "body")
+    # Defense-in-depth, not the primary gate: the envelope validator refuses
+    # these at construction (lacing#24), but model_copy/model_construct
+    # bypass validators, and a wrong digest here is a wrong cache HIT.
+    reject_non_string_keys(annotation.body, "body")
     dumped = annotation.model_dump(mode="json")
     return {field: dumped[field] for field in fields}
 

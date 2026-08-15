@@ -67,6 +67,7 @@ from lacing.artifact import (
 )
 from lacing.artifact_store import ArtifactStore
 from lacing.digest import (
+    NonStringBodyKeyError,
     annotation_body_digest,
     annotation_value_digest,
 )
@@ -116,6 +117,7 @@ __all__ = [
     # annotation; these two address an annotation's VALUE, for freshness.)
     "annotation_value_digest",
     "annotation_body_digest",
+    "NonStringBodyKeyError",
     # allen
     "AllenRelation",
     # store
