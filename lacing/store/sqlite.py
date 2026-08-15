@@ -20,7 +20,11 @@ Design notes:
 - Tier hierarchy is enforced via FK; stereotype validation is the
   application's job (see ``lacing.tier.validate_tier_constraint``).
 - ``schema_version`` lives in the ``meta`` table; migrations register
-  upgrade functions keyed on the from-version.
+  upgrade functions keyed on the from-version in
+  :mod:`lacing.store.migrations` (the store-level counterpart of the
+  body ladder in :mod:`lacing.schema`). Opening a stale file refuses
+  unless asked to migrate (``SqliteStore(path, migrate=True)`` or
+  ``lacing migrate <path>``), and refuses *before* touching the file.
 
 See ``lacing-architecture`` (Phase 1) and BACK-DOC §3.1 for the why.
 """
@@ -61,7 +65,9 @@ from lacing.time import RationalTime, TimeInterval
 
 SCHEMA_VERSION = 1
 """Current ``.annot`` schema version. Increment + register a migration
-when making a breaking change to the table layout."""
+(:func:`lacing.store.migrations.register_store_migration`, with
+``store_kind="sqlite"``) when making a breaking change to the table
+layout."""
 
 
 _DDL = """
@@ -126,6 +132,10 @@ class SqliteStore:
         check_same_thread: Forwarded to ``sqlite3.connect``. We hold a
             single connection guarded by a lock; pass ``False`` when
             sharing across threads.
+        migrate: Opt-in to upgrading a file written at an older
+            ``schema_version`` on open, via the ladder in
+            :mod:`lacing.store.migrations`. Off by default — silently
+            rewriting someone's file on open is worse than refusing.
     """
 
     def __init__(
@@ -133,6 +143,7 @@ class SqliteStore:
         path: str | os.PathLike,
         *,
         check_same_thread: bool = True,
+        migrate: bool = False,
     ) -> None:
         self._path = path
         self._lock = threading.RLock()
@@ -142,18 +153,26 @@ class SqliteStore:
             isolation_level=None,  # autocommit; we use explicit transactions
         )
         self._conn.row_factory = sqlite3.Row
-        self._init_schema()
+        self._init_schema(migrate=migrate)
 
     # --- low-level ------------------------------------------------------
 
-    def _init_schema(self) -> None:
+    def _init_schema(self, *, migrate: bool = False) -> None:
         with self._lock:
             cur = self._conn.cursor()
+            # Version check FIRST: the current build's DDL must not touch a
+            # file stamped with another version — refusing after mutating
+            # would leave a v1 file with v2 tables in it.
+            got = self._stamped_schema_version(cur)
+            if got is not None and got != SCHEMA_VERSION:
+                if migrate and got < SCHEMA_VERSION:
+                    from lacing.store.migrations import migrate_sqlite_connection
+
+                    migrate_sqlite_connection(self._conn, to_version=SCHEMA_VERSION)
+                else:
+                    raise SchemaMismatchError(_schema_mismatch_message(got))
             cur.executescript(_DDL)
-            existing = cur.execute(
-                "SELECT value FROM meta WHERE key = 'schema_version'"
-            ).fetchone()
-            if existing is None:
+            if got is None:
                 cur.execute(
                     "INSERT INTO meta (key, value) VALUES (?, ?)",
                     ("schema_version", str(SCHEMA_VERSION)),
@@ -162,13 +181,23 @@ class SqliteStore:
                     "INSERT INTO meta (key, value) VALUES (?, ?)",
                     ("created_at", str(int(_time.time()))),
                 )
-            else:
-                got = int(existing["value"])
-                if got != SCHEMA_VERSION:
-                    raise SchemaMismatchError(
-                        f"file has schema_version={got}, this build expects "
-                        f"{SCHEMA_VERSION}. Run a migration."
-                    )
+
+    @staticmethod
+    def _stamped_schema_version(cur: sqlite3.Cursor) -> int | None:
+        """The file's recorded ``schema_version``, or ``None`` for a fresh file.
+
+        Read without running any DDL: a missing ``meta`` table (fresh or
+        pre-lacing file) reads as ``None`` and gets the current schema.
+        """
+        has_meta = cur.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'meta'"
+        ).fetchone()
+        if has_meta is None:
+            return None
+        row = cur.execute(
+            "SELECT value FROM meta WHERE key = 'schema_version'"
+        ).fetchone()
+        return None if row is None else int(row["value"])
 
     def close(self) -> None:
         with self._lock:
@@ -678,6 +707,39 @@ def _row_to_tier(row: sqlite3.Row) -> Tier:
 
 class SchemaMismatchError(RuntimeError):
     """Raised when opening a ``.annot`` file with an incompatible schema."""
+
+
+def _schema_mismatch_message(got: int) -> str:
+    """The actionable half of a schema refusal: what to do about it.
+
+    Names the versions actually reachable from the one found on disk, so
+    "run a migration" stops being an instruction with no referent
+    (lacing#15).
+    """
+    from lacing.store.migrations import SQLITE_KIND, reachable_versions
+
+    head = f"file has schema_version={got}, this build expects {SCHEMA_VERSION}."
+    if got > SCHEMA_VERSION:
+        return (
+            f"{head} The file is newer than this build — upgrade lacing to "
+            "open it (store migrations are forward-only)."
+        )
+    reachable = reachable_versions(SQLITE_KIND, got)
+    if SCHEMA_VERSION in reachable:
+        return (
+            f"{head} A migration path exists (v{got} -> v{SCHEMA_VERSION}): "
+            "reopen with SqliteStore(path, migrate=True), or run "
+            "`lacing migrate <path>`."
+        )
+    reachable_note = (
+        f" (registered steps only reach: {', '.join(f'v{v}' for v in reachable)})"
+        if reachable
+        else ""
+    )
+    return (
+        f"{head} No registered migration reaches v{SCHEMA_VERSION} from "
+        f"v{got}{reachable_note} — this build cannot upgrade the file."
+    )
 
 
 class _RowDecodeError(RuntimeError):
