@@ -43,6 +43,7 @@ def load(
     source: str | bytes | os.PathLike,
     *,
     persistent: bool = False,
+    migrate: bool = False,
     **_kwargs: Any,
 ) -> IntervalAnnotationStore:
     """Open an ``.annot`` file.
@@ -52,6 +53,14 @@ def load(
             writing to a temp file first.
         persistent: If True, return an open ``SqliteStore`` (writes go to
             the file). If False (default), return a ``MemoryStore`` snapshot.
+        migrate: Opt-in to upgrading a file written at an older store
+            ``schema_version`` on open (see :mod:`lacing.store.migrations`).
+            A stale file otherwise refuses with
+            :class:`~lacing.store.sqlite.SchemaMismatchError` — same
+            contract as ``SqliteStore``. For **bytes** input the copy in
+            the temp file is migrated regardless: it is not the caller's
+            file, and refusing to read bytes that cannot be re-pointed at
+            the migration CLI would be a dead end.
 
     Returns:
         ``MemoryStore`` (default) or ``SqliteStore`` (if ``persistent=True``).
@@ -61,7 +70,7 @@ def load(
             f.write(source)
             tmp_path = f.name
         try:
-            sqlite_store = SqliteStore(tmp_path)
+            sqlite_store = SqliteStore(tmp_path, migrate=True)
             mem = to_memory(sqlite_store)
             sqlite_store.close()
             return mem
@@ -71,9 +80,9 @@ def load(
 
     path = os.fspath(source)
     if persistent:
-        return SqliteStore(path)
+        return SqliteStore(path, migrate=migrate)
 
-    sqlite_store = SqliteStore(path)
+    sqlite_store = SqliteStore(path, migrate=migrate)
     try:
         return to_memory(sqlite_store)
     finally:

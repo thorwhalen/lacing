@@ -75,7 +75,13 @@ and every existing row are unchanged — the bump exists because **pre-v2
 builds eagerly ``UUID()``-parse the column on read** and crash on the
 first asset id, so they must refuse v2 files instead of opening them and
 failing row-by-row. The v1→v2 migration step is accordingly stamp-only
-(see :mod:`lacing.store.migrations`)."""
+(see :mod:`lacing.store.migrations`).
+
+Operational caveat: the version gate runs at **open**. A pre-v2 build's
+already-open connection survives the stamp and keeps reading — safe until
+some v2 writer mints an asset-id ref, at which point it fails as a raw
+``ValueError`` mid-read rather than a refusal. Restart long-lived
+pre-v2 services after migrating a file they serve."""
 
 
 _DDL = """

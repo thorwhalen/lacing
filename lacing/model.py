@@ -73,9 +73,12 @@ AssetId = Annotated[
     str, Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
 ]
 """A content-addressed artifact identity — the SHA-256 of the artifact's
-bytes, as :class:`lacing.Artifact` enforces. Format-disjoint from a UUID
-string (36 hyphenated chars), so the :data:`ProvenanceRef` union is
-unambiguous."""
+bytes, as :class:`lacing.Artifact` enforces: **bare 64-hex only**.
+``MediaRef.asset_id``-style prefixed identifiers (``blake3:…``,
+``sha256:…``) are a different, free-form vocabulary and are NOT
+provenance refs — copying one in here is a loud ``ValidationError``, by
+design. Format-disjoint from a UUID string (36 hyphenated chars), so the
+:data:`ProvenanceRef` union is unambiguous."""
 
 ProvenanceRef = UUID | AssetId
 """One upstream reference in ``was_derived_from``: an annotation ``id``
@@ -95,6 +98,10 @@ def partition_provenance_refs(
 
     The one discriminator every lineage walker needs, provided centrally so
     no consumer re-derives (or half-derives) the union rule.
+
+    ``refs`` must come from a **validated** :class:`Provenance` — the split
+    is by runtime type (``UUID`` vs ``str``), so a raw wire list that never
+    passed validation would land every UUID *string* in the asset bucket.
     """
     annotation_ids: list[UUID] = []
     asset_ids: list[str] = []

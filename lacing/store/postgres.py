@@ -397,7 +397,11 @@ class PostgresStore:
                         f" Registered migrations reach: "
                         f"{', '.join(f'v{v}' for v in reachable)}."
                         if reachable
-                        else " No registered migration leaves that version."
+                        else (
+                            " No registered migration leaves that version — "
+                            "no Postgres deployment holds real data (see "
+                            "SCHEMA_VERSION); drop and recreate the database."
+                        )
                     )
                     raise PgSchemaMismatchError(
                         f"database has schema_version={got_version}, "
