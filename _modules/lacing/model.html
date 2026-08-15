@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.30 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.31 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=61a342a2"></script>
+      <script src="../../_static/documentation_options.js?v=c5dbc6bb"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -205,9 +205,7 @@
 <span class="c1"># Inline on every annotation. Subset of W3C PROV-O. See ANN-DOC §C, BACK-DOC §4.5.</span>
 
 
-<span class="n">AssetId</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span>
-    <span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="p">]</span>
+<span class="n">AssetId</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$&quot;</span><span class="p">)]</span>
 <span class="sd">&quot;&quot;&quot;A content-addressed artifact identity — the SHA-256 of the artifact&#39;s</span>
 <span class="sd">bytes, as :class:`lacing.Artifact` enforces: **bare 64-hex only**.</span>
 <span class="sd">``MediaRef.asset_id``-style prefixed identifiers (``blake3:…``,</span>
