@@ -251,16 +251,14 @@ class ArtifactStore(MutableMapping):
         """Store ``data`` content-addressed; return its content hash.
 
         Idempotent: identical bytes always map to the same hash and overwrite
-        an identical blob.
+        an identical blob. Delegates to :meth:`put_blob_stream` so there is
+        exactly one write path — and therefore one atomicity story
+        (lacing#25).
 
         Raises:
             RuntimeError: no blob store is configured.
         """
-        if self.blobs is None:
-            raise RuntimeError("ArtifactStore has no blob store configured.")
-        content_hash = hash_bytes(data)
-        self.blobs[content_hash] = data
-        return content_hash
+        return self.put_blob_stream((data,))
 
     def put_blob_stream(self, chunks: Iterable[bytes]) -> str:
         """Stream ``chunks`` content-addressed; return their SHA-256 hash.
@@ -268,17 +266,35 @@ class ArtifactStore(MutableMapping):
         The streaming-friendly counterpart to :meth:`put_blob` — callers hand
         in an iterable (e.g. ``requests.Response.iter_content``) instead of
         materializing the whole bytestring upfront. The hash is computed on
-        the fly. The default implementation still buffers the bytes in the
-        store's own memory before writing; that is adequate for files up to a
-        few hundred megabytes. A future filesystem-aware optimization
-        (write-to-tempfile + atomic rename) is an internal change that does
-        not touch this API.
+        the fly.
+
+        When the blob store is filesystem-backed (exposes ``rootdir``, as the
+        default directory store does), the bytes spool straight to a
+        same-directory tempfile and are renamed into place with
+        ``os.replace`` once the hash is known (lacing#25). Consequences a
+        caller may rely on:
+
+        - **peak memory is one chunk**, not 2× the payload — 100 MB videos
+          flow through without a 200 MB spike;
+        - **a partial blob is never observable under its content address** —
+          the name a reader could find only exists after the rename, which is
+          atomic on POSIX and on Windows for same-directory renames — so
+          ``has_blob(h) == True`` really does mean the full bytes are there;
+        - a failed or abandoned stream leaves nothing behind (the tempfile is
+          unlinked).
+
+        Backends without a ``rootdir`` (plain ``dict``, object-store
+        mappings) fall back to buffering the payload and assigning it whole —
+        their ``__setitem__`` is the atomicity story there.
 
         Raises:
             RuntimeError: no blob store is configured.
         """
         if self.blobs is None:
             raise RuntimeError("ArtifactStore has no blob store configured.")
+        rootdir = getattr(self.blobs, "rootdir", None)
+        if rootdir is not None:
+            return _spool_chunks_to_dir(chunks, Path(rootdir))
         hasher = hashlib.sha256()
         buf = bytearray()
         for chunk in chunks:
@@ -659,3 +675,33 @@ class ArtifactStore(MutableMapping):
             collection_name=collection_name,
             **(sql_kwargs or {}),
         )
+
+
+def _spool_chunks_to_dir(chunks: Iterable[bytes], rootdir: Path) -> str:
+    """Hash-while-spooling to a same-directory tempfile, then atomic rename.
+
+    The same-directory part is load-bearing twice: ``os.replace`` is only
+    atomic within a filesystem, and a content-addressed name must not exist
+    until the content behind it is complete — a reader that finds the hash
+    finds the whole blob, never a prefix of it (lacing#25).
+    """
+    import os
+    import tempfile
+
+    rootdir.mkdir(parents=True, exist_ok=True)
+    hasher = hashlib.sha256()
+    fd, tmp_path = tempfile.mkstemp(dir=rootdir, prefix=".blob-", suffix=".part")
+    try:
+        with os.fdopen(fd, "wb") as spool:
+            for chunk in chunks:
+                hasher.update(chunk)
+                spool.write(chunk)
+        content_hash = hasher.hexdigest()
+        os.replace(tmp_path, rootdir / content_hash)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+    return content_hash

@@ -321,3 +321,82 @@ def test_store_is_generic_over_record_type(tmp_path: Path):
     assert isinstance(got, _CustomRecord)
     assert got == rec
     assert got.content_hash is None
+
+
+class TestStreamingBlobWrites:
+    """lacing#25: spool + hash-while-streaming + atomic rename."""
+
+    def test_streaming_peaks_at_chunk_size_not_twice_the_payload(self, tmp_path):
+        import tracemalloc
+
+        store = ArtifactStore.from_directory(tmp_path / "store")
+        payload_mb = 8
+        chunk = b"x" * 1024
+
+        tracemalloc.start()
+        content_hash = store.put_blob_stream(
+            chunk for _ in range(payload_mb * 1024)
+        )
+        _, peak = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+
+        assert store.get_blob(content_hash) is not None
+        # The buffered implementation peaked at ~2x payload (16 MB here);
+        # spooling must stay well under half the payload.
+        assert peak < payload_mb * 1024 * 1024 / 2
+
+    def test_no_partial_blob_is_ever_observable_under_a_content_address(
+        self, tmp_path
+    ):
+        import re
+
+        blob_dir = tmp_path / "store" / "blobs"
+        store = ArtifactStore.from_directory(tmp_path / "store")
+        observed: list[list[str]] = []
+
+        def chunks():
+            for i in range(3):
+                yield f"part-{i}".encode()
+                if blob_dir.exists():
+                    observed.append(
+                        [
+                            p.name
+                            for p in blob_dir.iterdir()
+                            if re.fullmatch(r"[0-9a-f]{64}", p.name)
+                        ]
+                    )
+
+        content_hash = store.put_blob_stream(chunks())
+
+        assert all(names == [] for names in observed)  # nothing mid-write
+        assert store.has_blob(content_hash)
+        leftovers = [p for p in blob_dir.iterdir() if p.name.endswith(".part")]
+        assert leftovers == []
+
+    def test_a_failed_stream_leaves_nothing_behind(self, tmp_path):
+        blob_dir = tmp_path / "store" / "blobs"
+        store = ArtifactStore.from_directory(tmp_path / "store")
+
+        def explodes():
+            yield b"some bytes"
+            raise RuntimeError("upstream died mid-download")
+
+        with pytest.raises(RuntimeError, match="mid-download"):
+            store.put_blob_stream(explodes())
+
+        assert list(blob_dir.iterdir()) == [] if blob_dir.exists() else True
+
+    def test_put_blob_rides_the_same_atomic_path(self, tmp_path):
+        store = ArtifactStore.from_directory(tmp_path / "store")
+
+        content_hash = store.put_blob(b"tiny")
+
+        assert store.get_blob(content_hash) == b"tiny"
+        assert store.blob_path(content_hash).exists()
+
+    def test_the_in_memory_fallback_still_round_trips(self):
+        store = ArtifactStore.in_memory()
+
+        content_hash = store.put_blob_stream((b"a", b"b", b"c"))
+
+        assert store.get_blob(content_hash) == b"abc"
