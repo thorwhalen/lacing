@@ -293,6 +293,47 @@ class TestAiSuggestion:
         )
         assert result["confidence"] == 0.0
 
+    async def test_accept_records_the_review_time_not_tick_zero(self, server):
+        """lacing#18 Bug B: ``generated_at_time`` must be when the review
+        happened. It used to be ``RationalTime.zero()`` — every review at
+        tick 0, and older-than-everything to any consumer ordering by it."""
+        from lacing.time import RationalTime
+
+        before = RationalTime.now().to_seconds()
+        created = await _call(server, "add_annotation", _add_args())
+
+        result = await _call(
+            server,
+            "accept_ai_suggestion",
+            {"annotation_id": created["id"], "accept": True, "actor": "thor"},
+        )
+
+        wire = result["provenance"]["generated_at_time"]
+        reviewed_at = wire["v"] / wire["r"]
+        assert reviewed_at >= before > 0
+
+    async def test_accept_overwrites_provenance_exactly_as_documented(self, server):
+        """The docstring stopped claiming preservation (lacing#18): the
+        review rewrites the generator and attribution in place, keeps
+        ``was_derived_from`` and the id, and that is all. This pins the
+        documented behaviour until lacing#14 makes preservation
+        representable."""
+        created = await _call(server, "add_annotation", _add_args())
+
+        result = await _call(
+            server,
+            "accept_ai_suggestion",
+            {"annotation_id": created["id"], "accept": True, "actor": "thor"},
+        )
+
+        assert result["id"] == created["id"]
+        assert result["provenance"]["was_generated_by"] == "user:thor"
+        assert result["provenance"]["was_attributed_to"] == "thor"
+        assert (
+            result["provenance"]["was_derived_from"]
+            == created["provenance"]["was_derived_from"]
+        )
+
 
 # ---------------------------------------------------------------------------
 # time-travel tools
