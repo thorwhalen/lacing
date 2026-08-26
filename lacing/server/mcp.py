@@ -25,7 +25,8 @@ Tools exposed (all call into ``lacing.server.operations``):
                       rate, limit)         -> list of annotations
     get_annotation(annotation_id)          -> one or None
     delete_annotation(annotation_id)       -> bool
-    accept_ai_suggestion(annotation_id, accept)  -> updated annotation
+    accept_ai_suggestion(annotation_id, accept, actor, review_tier)
+                                           -> {annotation, review}
     add_tier(name, stereotype, parent, metadata)  -> the new tier
     list_tiers()                           -> list of tier dicts
     list_formats()                         -> registered adapters

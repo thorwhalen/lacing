@@ -21,6 +21,15 @@ accepts or rejects an AI suggestion, so that the human's edit is
 attributed to the human without overwriting the agent's provenance on the
 annotation being judged (lacing#18).
 
+.. note::
+
+   ``decision`` is **additive and optional**, so stored bodies validate
+   unchanged and lacing owes no migration. Downstream mirrors of this
+   schema are a different matter: reelee-web's generated Zod type is
+   ``.strict()`` and its JSON Schema is ``additionalProperties: false``,
+   so an additive field here is a *breaking* change there until the
+   mirror is regenerated — tracked as thorwhalen/reelee-web#234.
+
 References:
 - ``reelee/docs/Narrative to Storyboard.md`` §6.5–6.6.
 - ``reelee/docs/reelee 03 -- Human-AI Collaboration UX Patterns…`` §10

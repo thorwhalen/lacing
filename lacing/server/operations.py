@@ -33,8 +33,35 @@ from lacing.time import RationalTime, TimeInterval
 
 DFLT_REVIEW_TIER = "review"
 """Tier the review annotations minted by :func:`accept_ai_suggestion` land
-on. Separate from the content tiers so a review verdict never shows up in
-a query for the thing it is about."""
+on.
+
+Two separations, and only one of them is the tier's doing:
+
+- **Tier queries.** ``query_annotations(store, tier="words")`` never
+  returns a verdict about a ``words`` annotation, because the verdict is
+  not on that tier.
+- **Interval queries and every interval-driven adapter.** These are
+  separated by the review's *reference*, not by its tier: a review of a
+  whole annotation carries ``AnnotationRef(target_id=...)`` with **no**
+  interval, so it has no position on the media timeline at all. Give it
+  one and it leaks -- an untiered
+  ``query_annotations(store, start_seconds=..., end_seconds=...)``
+  returns it alongside the content it judges, and WebVTT / TextGrid /
+  Web-Annotation exports each gain a blank record at the reviewed
+  annotation's exact timestamps. ``AnnotationRef.interval`` is for
+  reviewing *part* of an annotation; a whole-annotation verdict leaves
+  it ``None``.
+
+Not to be confused with :func:`lacing.processors.low_confidence_review`,
+which mirrors low-confidence annotations onto a **different** tier
+(``"for-review"``) as timed ``MediaRef`` copies whose body is
+``{"reason", "source_id", "source_confidence", "source_tier"}``. That
+body is stamped ``annot://schema/review/v1`` but does **not** validate
+against :class:`~lacing.bodies.review.ReviewBodyV1` (no ``review_kind``,
+and ``extra="forbid"`` rejects all four of its keys) -- a pre-existing
+divergence tracked in lacing#37, not a shape to copy. The two are
+different features that share the word "review": one flags candidates
+*for* review, the other records the verdict *of* one."""
 
 
 # ---------------------------------------------------------------------------
@@ -327,9 +354,20 @@ def accept_ai_suggestion(
     2. **The review itself becomes a standoff annotation** on
        ``review_tier`` (created if missing) — an ``approval``
        :class:`~lacing.bodies.review.ReviewBodyV1` whose reference is an
-       ``AnnotationRef`` at the reviewed annotation, whose provenance is
-       ``user:<actor>`` at ``RationalTime.now()``, and whose
-       ``was_derived_from`` names the reviewed annotation's ``id``.
+       ``AnnotationRef`` at the reviewed annotation **and no interval**,
+       whose provenance is ``user:<actor>`` at ``RationalTime.now()``,
+       and whose ``was_derived_from`` names the reviewed annotation's
+       ``id``. The missing interval is load-bearing rather than an
+       omission: it is what keeps the verdict off the media timeline, so
+       untiered interval queries and the timeline exports are unchanged
+       by a review. See :data:`DFLT_REVIEW_TIER`.
+
+    Both records are **persisted and op-logged** before returning: the
+    reviewed annotation as ``update_annotation``, the review as
+    ``add_annotation``, plus an ``add_tier`` the first time
+    ``review_tier`` is used. The returned :class:`ReviewOutcome` is a
+    convenience view of what is already in the store — ``replay()`` of
+    the op-log reconstructs both.
 
     So the audit chain is intact by construction: the AI provenance is
     never written over, and the human edit is attributed on its own
@@ -370,7 +408,12 @@ def accept_ai_suggestion(
     review = Annotation(
         id=uuid4(),
         tier=review_tier,
-        reference=AnnotationRef(target_id=current.id, interval=current.interval),
+        # No interval: a verdict on the whole annotation has no position of
+        # its own on the media timeline. `AnnotationRef.interval` means
+        # "a sub-interval of the target" -- passing the target's own
+        # interval puts a blank record at the reviewed annotation's exact
+        # timestamps in every interval query and every timeline export.
+        reference=AnnotationRef(target_id=current.id),
         body=body.model_dump(mode="json"),
         body_schema_uri=REVIEW_BODY_SCHEMA_URI,
         provenance=Provenance(
