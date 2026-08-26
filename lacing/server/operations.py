@@ -13,10 +13,12 @@ running server.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 from uuid import UUID, uuid4
 
 from lacing.allen import AllenRelation
+from lacing.bodies.review import REVIEW_BODY_SCHEMA_URI, ReviewBodyV1
 from lacing.model import (
     Annotation,
     AnnotationRef,
@@ -27,6 +29,12 @@ from lacing.model import (
 )
 from lacing.tier import Tier, TierStereotype
 from lacing.time import RationalTime, TimeInterval
+
+
+DFLT_REVIEW_TIER = "review"
+"""Tier the review annotations minted by :func:`accept_ai_suggestion` land
+on. Separate from the content tiers so a review verdict never shows up in
+a query for the thing it is about."""
 
 
 # ---------------------------------------------------------------------------
@@ -283,6 +291,20 @@ def query_annotations(
 # ---------------------------------------------------------------------------
 
 
+@dataclass(frozen=True)
+class ReviewOutcome:
+    """What :func:`accept_ai_suggestion` produced: two records, not one.
+
+    ``reviewed`` is the annotation that was reviewed — same ``id``, same
+    body, same provenance, with ``confidence`` moved to 1.0 / 0.0.
+    ``review`` is the new standoff annotation that records *who* reviewed
+    it, *when*, and *what they decided*.
+    """
+
+    reviewed: Annotation
+    review: Annotation
+
+
 def accept_ai_suggestion(
     store: Any,
     oplog: Any,
@@ -290,44 +312,80 @@ def accept_ai_suggestion(
     *,
     accept: bool = True,
     actor: str = "anonymous",
-) -> Annotation | None:
-    """Mark an AI-generated annotation as reviewed.
+    review_tier: str = DFLT_REVIEW_TIER,
+) -> ReviewOutcome | None:
+    """Record a human review of an AI-generated annotation.
 
-    Sets confidence to 1.0 (accepted) or 0.0 (rejected) and rewrites the
-    provenance in place: ``was_generated_by`` becomes ``user:<actor>``,
-    ``was_attributed_to`` becomes ``actor``, and ``generated_at_time``
-    records the review time. ``was_derived_from`` passes through unchanged.
+    Two records come out of one call, and the split is the point:
 
-    **The original AI provenance is overwritten, not preserved** — the
-    generating agent and its attribution are unrecoverable after this call.
-    Preserving them is structurally impossible today: the thing to keep is a
-    provenance *token* string (``agent:<model>@…``), and
-    ``was_derived_from`` holds annotation UUIDs and artifact asset_ids
-    (lacing#14) — not tokens. The representable fix is supersession or a
-    qualified derivation record (lacing#18 Bug A, lacing#17).
+    1. **The reviewed annotation keeps its identity and its provenance.**
+       Only ``confidence`` moves — 1.0 for accept, 0.0 for reject. Its
+       ``was_generated_by`` / ``was_attributed_to`` still name the agent
+       that produced it, because reviewing an annotation does not make the
+       reviewer its author. (BACK-DOC §4.8 Q42: agent output stays tagged
+       ``agent:<model>@<hash>`` in the AI layer, not the human layer.)
+    2. **The review itself becomes a standoff annotation** on
+       ``review_tier`` (created if missing) — an ``approval``
+       :class:`~lacing.bodies.review.ReviewBodyV1` whose reference is an
+       ``AnnotationRef`` at the reviewed annotation, whose provenance is
+       ``user:<actor>`` at ``RationalTime.now()``, and whose
+       ``was_derived_from`` names the reviewed annotation's ``id``.
+
+    So the audit chain is intact by construction: the AI provenance is
+    never written over, and the human edit is attributed on its own
+    record rather than smuggled onto someone else's. This replaces the
+    old in-place provenance rewrite, which silently turned an
+    AI-generated annotation into a human one (lacing#18).
+
+    Reviews are **not** deduplicated: reviewing twice records two review
+    annotations, which is what an audit trail is for. Returns ``None``
+    when ``annotation_id`` is not in the store.
     """
     current = get_annotation(store, annotation_id)
     if current is None:
         return None
 
-    new_confidence = 1.0 if accept else 0.0
-    derived = list(current.provenance.was_derived_from)
-    new_provenance = Provenance(
-        was_generated_by=f"user:{actor}",
-        was_attributed_to=actor,
-        was_derived_from=derived,
-        generated_at_time=RationalTime.now(),
-        activity="derive",
-    )
-    updated = current.model_copy(
-        update={"confidence": new_confidence, "provenance": new_provenance}
-    )
+    reviewed = current.model_copy(update={"confidence": 1.0 if accept else 0.0})
     store.remove(current.id)
-    store.add(updated)
+    store.add(reviewed)
     oplog.append(
         "update_annotation",
-        target_id=str(updated.id),
-        payload={"annotation": updated.model_dump(mode="json")},
+        target_id=str(reviewed.id),
+        payload={"annotation": reviewed.model_dump(mode="json")},
         actor=actor,
     )
-    return updated
+
+    if store.get_tier(review_tier) is None:
+        add_tier(store, oplog, name=review_tier, actor=actor)
+
+    decision = "accepted" if accept else "rejected"
+    body = ReviewBodyV1(
+        review_kind="approval",
+        target_annotation_ids=(str(current.id),),
+        message=f"AI suggestion {decision} by {actor}.",
+        status="addressed",
+        author="human",
+        decision=decision,
+    )
+    review = Annotation(
+        id=uuid4(),
+        tier=review_tier,
+        reference=AnnotationRef(target_id=current.id, interval=current.interval),
+        body=body.model_dump(mode="json"),
+        body_schema_uri=REVIEW_BODY_SCHEMA_URI,
+        provenance=Provenance(
+            was_generated_by=f"user:{actor}",
+            was_attributed_to=actor,
+            was_derived_from=[current.id],
+            generated_at_time=RationalTime.now(),
+            activity="derive",
+        ),
+    )
+    store.add(review)
+    oplog.append(
+        "add_annotation",
+        target_id=str(review.id),
+        payload={"annotation": review.model_dump(mode="json")},
+        actor=actor,
+    )
+    return ReviewOutcome(reviewed=reviewed, review=review)
