@@ -25,7 +25,8 @@ Tools exposed (all call into ``lacing.server.operations``):
                       rate, limit)         -> list of annotations
     get_annotation(annotation_id)          -> one or None
     delete_annotation(annotation_id)       -> bool
-    accept_ai_suggestion(annotation_id, accept)  -> updated annotation
+    accept_ai_suggestion(annotation_id, accept, actor, review_tier)
+                                           -> {annotation, review}
     add_tier(name, stereotype, parent, metadata)  -> the new tier
     list_tiers()                           -> list of tier dicts
     list_formats()                         -> registered adapters
@@ -45,6 +46,7 @@ from uuid import UUID
 from lacing.adapters import registered as registered_adapters
 from lacing.oplog import replay
 from lacing.server.operations import (
+    DFLT_REVIEW_TIER,
     accept_ai_suggestion as _accept_ai_suggestion,
     add_annotation_from_seconds,
     add_tier as _add_tier,
@@ -236,24 +238,36 @@ def build_mcp_server(
         annotation_id: str,
         accept: bool = True,
         actor: str = "anonymous",
+        review_tier: str = DFLT_REVIEW_TIER,
     ) -> dict[str, Any] | None:
-        """Mark an AI-generated annotation as reviewed (accepted or rejected).
+        """Record a human review of an AI-generated annotation.
 
-        Sets confidence to 1.0 / 0.0 and rewrites provenance in place:
-        ``was_generated_by`` becomes ``user:<actor>`` and the review time is
-        recorded. The original AI provenance (generating agent, attribution)
-        is OVERWRITTEN and unrecoverable afterwards — if the audit trail
-        matters, read the annotation before accepting and keep your own
-        record (representable preservation is tracked in lacing#14/#18).
+        Sets the reviewed annotation's confidence to 1.0 (accept) or 0.0
+        (reject) and changes NOTHING else about it — its ``id`` and its
+        provenance are untouched, so the generating agent and its
+        attribution stay recoverable. The review itself is written as a
+        separate ``approval`` review annotation on ``review_tier``,
+        referencing the reviewed annotation and carrying the reviewer, the
+        review time, and the decision.
+
+        Returns ``{"annotation": <reviewed>, "review": <review record>}``,
+        or None if ``annotation_id`` is unknown. Reviewing twice records
+        two reviews — that is the audit trail, not a bug.
         """
-        updated = _accept_ai_suggestion(
+        outcome = _accept_ai_suggestion(
             store,
             oplog,
             UUID(annotation_id),
             accept=accept,
             actor=actor,
+            review_tier=review_tier,
         )
-        return None if updated is None else updated.model_dump(mode="json")
+        if outcome is None:
+            return None
+        return {
+            "annotation": outcome.reviewed.model_dump(mode="json"),
+            "review": outcome.review.model_dump(mode="json"),
+        }
 
     # ------ adapters / introspection ----------------------------------
 

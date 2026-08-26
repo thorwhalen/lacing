@@ -365,6 +365,25 @@ same `store` + `oplog` as the FastAPI app, so a human edit via REST and
 an agent edit via MCP land in the same op-log with the same Lamport
 clock.
 
+`accept_ai_suggestion` returns **two** records — `{"annotation": …,
+"review": …}` — because a review is two facts, not one. The reviewed
+annotation keeps its `id` *and its provenance*: it was still generated
+by the agent, so `was_generated_by` / `was_attributed_to` are left
+alone and only `confidence` moves to 1.0 / 0.0. The human's decision
+becomes its own standoff `approval` review annotation on the `review`
+tier, pointing at what it judged (`AnnotationRef`, **no interval**),
+attributed to the reviewer and stamped with the review time. Rewriting
+the agent's provenance in place — which is what this used to do — erased
+the one record proving the annotation was ever AI-generated (lacing#18).
+
+The review carries no interval on purpose: a verdict about a whole
+annotation has no position of its own on the media timeline, so it stays
+out of untiered interval queries and out of every timeline export.
+Giving it the reviewed annotation's interval would put a blank cue at
+that annotation's exact timestamps in WebVTT, an empty interval in a
+TextGrid tier, and an asset-less item in a Web Annotation collection —
+one per accept.
+
 ### Freshness — "did the answer actually change?"
 
 lacing has **three** digests answering three different questions. Picking the

@@ -15,6 +15,21 @@ optionally pointing at a typed payload like a
 The body is intentionally minimal. The kind (``review_kind``) routes
 the FE renderer; the payload is opaque to lacing.
 
+An ``approval`` review carries a ``decision`` — this is the record
+:func:`lacing.server.operations.accept_ai_suggestion` writes when a human
+accepts or rejects an AI suggestion, so that the human's edit is
+attributed to the human without overwriting the agent's provenance on the
+annotation being judged (lacing#18).
+
+.. note::
+
+   ``decision`` is **additive and optional**, so stored bodies validate
+   unchanged and lacing owes no migration. Downstream mirrors of this
+   schema are a different matter: reelee-web's generated Zod type is
+   ``.strict()`` and its JSON Schema is ``additionalProperties: false``,
+   so an additive field here is a *breaking* change there until the
+   mirror is regenerated — tracked as thorwhalen/reelee-web#234.
+
 References:
 - ``reelee/docs/Narrative to Storyboard.md`` §6.5–6.6.
 - ``reelee/docs/reelee 03 -- Human-AI Collaboration UX Patterns…`` §10
@@ -62,6 +77,18 @@ Author = Literal["human", "agent", "system"]
 quick chip for the FE."""
 
 
+ReviewDecision = Literal["accepted", "rejected"]
+"""The verdict an ``approval`` review carries. Only ``review_kind =
+"approval"`` reviews have one — a continuity or grammar note is an
+observation, not a ruling, so ``decision`` stays ``None`` there.
+
+Why this is a field rather than something to read off the reviewed
+annotation's ``confidence``: the verdict is a fact about *the review
+event*, and ``confidence`` is a mutable field on a different record that
+the next write can move. Recovering "was this accepted?" by dereferencing
+a live value is exactly the coupling that made lacing#18 possible."""
+
+
 class ReviewBodyV1(BaseModel):
     """Body of a review annotation."""
 
@@ -82,6 +109,14 @@ class ReviewBodyV1(BaseModel):
     status: ReviewStatus = Field("open", description="Lifecycle state.")
     author: Author = Field(
         "human", description="Coarse author chip — human / agent / system."
+    )
+    decision: Optional[ReviewDecision] = Field(
+        None,
+        description=(
+            "Verdict of an ``approval`` review — ``accepted`` / "
+            "``rejected``. ``None`` for review kinds that observe rather "
+            "than rule."
+        ),
     )
     violation_ref: Optional[str] = Field(
         None,
