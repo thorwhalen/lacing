@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.digest &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.digest &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -339,28 +339,28 @@ annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.dig
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">over</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
-<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span> <span class="n">tier</span><span class="o">=</span><span class="s2">"words"</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
 <span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="n">asset</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
 <span class="gp">... </span>        <span class="p">),</span>
-<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
 </pre></div>
 </div>
 <p>Different <strong>assets</strong>, identical body digest — this is the footgun:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
-<span class="gp">... </span>    <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">"sha256:interview"</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">"sha256:broadcast"</span><span class="p">))</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:interview&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
-<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;sha256:broadcast&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">"sha256:interview"</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">over</span><span class="p">(</span><span class="s2">"sha256:broadcast"</span><span class="p">))</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">False</span>
 </pre></div>
@@ -371,13 +371,13 @@ annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.dig
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
 <span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
-<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
-<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">"words"</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="s2">"sha256:abc"</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
@@ -407,16 +407,16 @@ jobs, and neither substitutes for the other.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">base</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
 <span class="gp">... </span>        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
-<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;words&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">tier</span><span class="o">=</span><span class="s2">"words"</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;sha256:abc&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">asset_id</span><span class="o">=</span><span class="s2">"sha256:abc"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)),</span>
 <span class="gp">... </span>        <span class="p">),</span>
-<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
@@ -427,8 +427,8 @@ jobs, and neither substitutes for the other.</p>
 <p>A regeneration — new <code class="docutils literal notranslate"><span class="pre">id</span></code>, new timestamp, same content — digests the same:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">make</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:m@1&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">999</span><span class="p">),</span>
 <span class="gp">... </span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
@@ -436,7 +436,7 @@ jobs, and neither substitutes for the other.</p>
 </pre></div>
 </div>
 <p>A changed body does not:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">make</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;goodbye&quot;</span><span class="p">}))</span> <span class="o">==</span> <span class="p">(</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">make</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"goodbye"</span><span class="p">}))</span> <span class="o">==</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">False</span>

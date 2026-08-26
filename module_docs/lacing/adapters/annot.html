@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.annot &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.adapters.annot &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -145,7 +145,7 @@ provenance, and confidence all round-trip exactly.</p>
 the rest of the adapter API. To open an <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file as a <em>persistent</em>
 store you can mutate, use <code class="docutils literal notranslate"><span class="pre">SqliteStore(path)</span></code> directly:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteStore</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">store</span> <span class="o">=</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">&quot;project.annot&quot;</span><span class="p">)</span>  <span class="c1"># writes go straight to disk</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">store</span> <span class="o">=</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">"project.annot"</span><span class="p">)</span>  <span class="c1"># writes go straight to disk</span>
 </pre></div>
 </div>
 <dl class="py function">

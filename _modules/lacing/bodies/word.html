@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.word &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.bodies.word &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,10 +125,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.bodies.word</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Body schema for word-level annotations (e.g., transcription, forced alignment).</span>
+<span></span><span class="sd">"""Body schema for word-level annotations (e.g., transcription, forced alignment).</span>
 
 <span class="sd">URI: ``annot://schema/word/v1``</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -140,19 +140,19 @@
 <div class="viewcode-block" id="WordBodyV1">
 <a class="viewcode-back" href="../../../module_docs/lacing/bodies/word.html#lacing.bodies.word.WordBodyV1">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WordBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A single word annotation.</span>
+<span class="w">    </span><span class="sd">"""A single word annotation.</span>
 
 <span class="sd">    The ``text`` is the surface form as it appears in the source media.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Surface form of the word.&quot;</span><span class="p">)</span>
-    <span class="n">speaker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional speaker identifier.&quot;</span><span class="p">)</span></div>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Surface form of the word."</span><span class="p">)</span>
+    <span class="n">speaker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Optional speaker identifier."</span><span class="p">)</span></div>
 
 
 
-<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">&quot;annot://schema/word/v1&quot;</span><span class="p">,</span> <span class="n">WordBodyV1</span><span class="p">)</span>
+<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span> <span class="n">WordBodyV1</span><span class="p">)</span>
 </pre></div>
 
            </div>

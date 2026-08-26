@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.allen &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.allen &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.allen</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Allen&#39;s 13 interval relations as pure predicates.</span>
+<span></span><span class="sd">"""Allen's 13 interval relations as pure predicates.</span>
 
 <span class="sd">Public predicate API — never write ad-hoc overlap checks elsewhere in lacing.</span>
 <span class="sd">See ANN-DOC §A and ``.claude/skills/lacing-time-and-intervals/SKILL.md``.</span>
@@ -135,7 +135,7 @@
 <span class="sd">intervals share zero measure at a boundary, so ``meets`` is NOT an</span>
 <span class="sd">intersection — see :func:`intersects`.</span>
 
-<span class="sd">Relation table (a R b means: a&#39;s relation to b is R):</span>
+<span class="sd">Relation table (a R b means: a's relation to b is R):</span>
 
 <span class="sd">================  ====  =====================================</span>
 <span class="sd">Relation          Sym.  Predicate (with intervals a, b)</span>
@@ -154,7 +154,7 @@
 <span class="sd">finished_by       fi    a.start &lt; b.start and a.end == b.end</span>
 <span class="sd">equals            =     a.start == b.start and a.end == b.end</span>
 <span class="sd">================  ====  =====================================</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -167,29 +167,29 @@
 <div class="viewcode-block" id="AllenRelation">
 <a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.AllenRelation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AllenRelation</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The thirteen Allen relations.</span>
+<span class="w">    </span><span class="sd">"""The thirteen Allen relations.</span>
 
 <span class="sd">    Symbols match Allen (1983); inverse pairs end in ``i``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">BEFORE</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
-    <span class="n">AFTER</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
-    <span class="n">MEETS</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
-    <span class="n">MET_BY</span> <span class="o">=</span> <span class="s2">&quot;mi&quot;</span>
-    <span class="n">OVERLAPS</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
-    <span class="n">OVERLAPPED_BY</span> <span class="o">=</span> <span class="s2">&quot;oi&quot;</span>
-    <span class="n">STARTS</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
-    <span class="n">STARTED_BY</span> <span class="o">=</span> <span class="s2">&quot;si&quot;</span>
-    <span class="n">DURING</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span>
-    <span class="n">CONTAINS</span> <span class="o">=</span> <span class="s2">&quot;di&quot;</span>
-    <span class="n">FINISHES</span> <span class="o">=</span> <span class="s2">&quot;f&quot;</span>
-    <span class="n">FINISHED_BY</span> <span class="o">=</span> <span class="s2">&quot;fi&quot;</span>
-    <span class="n">EQUALS</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span>
+    <span class="n">BEFORE</span> <span class="o">=</span> <span class="s2">"&lt;"</span>
+    <span class="n">AFTER</span> <span class="o">=</span> <span class="s2">"&gt;"</span>
+    <span class="n">MEETS</span> <span class="o">=</span> <span class="s2">"m"</span>
+    <span class="n">MET_BY</span> <span class="o">=</span> <span class="s2">"mi"</span>
+    <span class="n">OVERLAPS</span> <span class="o">=</span> <span class="s2">"o"</span>
+    <span class="n">OVERLAPPED_BY</span> <span class="o">=</span> <span class="s2">"oi"</span>
+    <span class="n">STARTS</span> <span class="o">=</span> <span class="s2">"s"</span>
+    <span class="n">STARTED_BY</span> <span class="o">=</span> <span class="s2">"si"</span>
+    <span class="n">DURING</span> <span class="o">=</span> <span class="s2">"d"</span>
+    <span class="n">CONTAINS</span> <span class="o">=</span> <span class="s2">"di"</span>
+    <span class="n">FINISHES</span> <span class="o">=</span> <span class="s2">"f"</span>
+    <span class="n">FINISHED_BY</span> <span class="o">=</span> <span class="s2">"fi"</span>
+    <span class="n">EQUALS</span> <span class="o">=</span> <span class="s2">"="</span>
 
 <div class="viewcode-block" id="AllenRelation.inverse">
 <a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.AllenRelation.inverse">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AllenRelation&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The inverse relation.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"AllenRelation"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The inverse relation."""</span>
         <span class="k">return</span> <span class="n">_INVERSE</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
 </div>
 
@@ -273,12 +273,12 @@
 <div class="viewcode-block" id="intersects">
 <a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.intersects">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">intersects</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;True iff ``a`` and ``b`` share any positive measure of time.</span>
+<span class="w">    </span><span class="sd">"""True iff ``a`` and ``b`` share any positive measure of time.</span>
 
 <span class="sd">    ``meets``/``met_by`` are NOT intersections (half-open boundaries share</span>
 <span class="sd">    zero measure). Two zero-length point intervals at the same instant DO</span>
-<span class="sd">    intersect (they&#39;re equal).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    intersect (they're equal).</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_point</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">start</span>
     <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_point</span><span class="p">:</span>
@@ -306,13 +306,13 @@
     <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHED_BY</span><span class="p">:</span> <span class="n">finished_by</span><span class="p">,</span>
     <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span> <span class="n">equals</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Lookup table — used by ``IntervalAnnotationStore`` to dispatch by relation.&quot;&quot;&quot;</span>
+<span class="sd">"""Lookup table — used by ``IntervalAnnotationStore`` to dispatch by relation."""</span>
 
 
 <div class="viewcode-block" id="relate">
 <a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.relate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">relate</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AllenRelation</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the unique Allen relation between two well-formed intervals.</span>
+<span class="w">    </span><span class="sd">"""Return the unique Allen relation between two well-formed intervals.</span>
 
 <span class="sd">    Exactly one of the 13 relations holds for any pair of well-formed</span>
 <span class="sd">    (``start &lt;= end``) intervals.</span>
@@ -321,20 +321,20 @@
 <span class="sd">    ``meets`` and ``met_by`` would both technically apply alongside ``equals``.</span>
 <span class="sd">    We resolve that by preferring ``equals`` for identical intervals; the</span>
 <span class="sd">    ``meets``/``met_by`` predicates exclude ``a == b`` accordingly.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">rel</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">PREDICATE_BY_RELATION</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">pred</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">rel</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>  <span class="c1"># pragma: no cover  — unreachable for well-formed intervals</span>
-        <span class="sa">f</span><span class="s2">&quot;no Allen relation matched for a=</span><span class="si">{</span><span class="n">a</span><span class="si">!r}</span><span class="s2">, b=</span><span class="si">{</span><span class="n">b</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"no Allen relation matched for a=</span><span class="si">{</span><span class="n">a</span><span class="si">!r}</span><span class="s2">, b=</span><span class="si">{</span><span class="n">b</span><span class="si">!r}</span><span class="s2">"</span>
     <span class="p">)</span></div>
 
 
 
 <span class="c1"># --- Composition table -------------------------------------------------------</span>
 <span class="c1">#</span>
-<span class="c1"># Allen&#39;s composition: given (a R1 b) and (b R2 c), what set of relations is</span>
-<span class="c1"># possible between a and c?  We don&#39;t ship the full 13×13 table in Phase 0 —</span>
+<span class="c1"># Allen's composition: given (a R1 b) and (b R2 c), what set of relations is</span>
+<span class="c1"># possible between a and c?  We don't ship the full 13×13 table in Phase 0 —</span>
 <span class="c1"># the doc only requires Phase 5 to expose the algebra fully (ANN-DOC §A,</span>
 <span class="c1"># ORD-Horn tractable subalgebra). The function exists with a stub-but-correct</span>
 <span class="c1"># fallback (the universal set) so callers can be written today.</span>
@@ -346,13 +346,13 @@
 <div class="viewcode-block" id="compose">
 <a class="viewcode-back" href="../../module_docs/lacing/allen.html#lacing.compose">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="n">r1</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="p">,</span> <span class="n">r2</span><span class="p">:</span> <span class="n">AllenRelation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allen&#39;s composition. See module docstring.</span>
+<span class="w">    </span><span class="sd">"""Allen's composition. See module docstring.</span>
 
 <span class="sd">    Phase 0 returns the universal set (all 13 relations) for any pair where</span>
 <span class="sd">    a unique answer is not encoded — correct but uninformative. The full</span>
 <span class="sd">    table lands in Phase 5; this function is a stable surface for callers</span>
 <span class="sd">    written against it now.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># A few obvious singletons cost nothing and demo the API:</span>
     <span class="k">if</span> <span class="n">r1</span> <span class="o">==</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">EQUALS</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">r2</span><span class="p">}</span>

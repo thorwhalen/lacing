@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.otel &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.otel &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -155,9 +155,9 @@ Otherwise everything is a no-op and there’s no perf cost.</p></li>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.otel</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tracer</span><span class="p">,</span> <span class="n">traced</span>
 
-<span class="n">tracer</span> <span class="o">=</span> <span class="n">get_tracer</span><span class="p">(</span><span class="s2">&quot;lacing.server&quot;</span><span class="p">)</span>
+<span class="n">tracer</span> <span class="o">=</span> <span class="n">get_tracer</span><span class="p">(</span><span class="s2">"lacing.server"</span><span class="p">)</span>
 
-<span class="nd">@traced</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="s2">&quot;my_operation&quot;</span><span class="p">,</span> <span class="n">record_args</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@traced</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="s2">"my_operation"</span><span class="p">,</span> <span class="n">record_args</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">my_op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 </pre></div>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.otel &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.otel &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,9 +125,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.otel</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Optional OpenTelemetry instrumentation for the lacing server.</span>
+<span></span><span class="sd">"""Optional OpenTelemetry instrumentation for the lacing server.</span>
 
-<span class="sd">OTel is the &quot;cherry on top&quot; of the op-log architecture (BACK-DOC §4.7).</span>
+<span class="sd">OTel is the "cherry on top" of the op-log architecture (BACK-DOC §4.7).</span>
 <span class="sd">The op-log captures *what* happened; OTel publishes spans so downstream</span>
 <span class="sd">distributed-tracing infra (Jaeger, Tempo, Honeycomb, ...) can correlate</span>
 <span class="sd">those mutations with calls from upstream services.</span>
@@ -136,30 +136,30 @@
 
 <span class="sd">- **Optional.** ``opentelemetry-*`` packages are heavy. This module</span>
 <span class="sd">  imports cleanly without them — every helper falls back to a no-op</span>
-<span class="sd">  when OTel isn&#39;t installed.</span>
+<span class="sd">  when OTel isn't installed.</span>
 <span class="sd">- **Auto-detect.** If ``opentelemetry.api`` is importable AND a</span>
 <span class="sd">  ``TracerProvider`` has been configured (via the standard env vars</span>
 <span class="sd">  ``OTEL_EXPORTER_*`` or programmatic setup), spans are emitted.</span>
-<span class="sd">  Otherwise everything is a no-op and there&#39;s no perf cost.</span>
+<span class="sd">  Otherwise everything is a no-op and there's no perf cost.</span>
 <span class="sd">- **No globals.** Callers pass tracers around explicitly.</span>
 
 <span class="sd">Usage::</span>
 
 <span class="sd">    from lacing.otel import get_tracer, traced</span>
 
-<span class="sd">    tracer = get_tracer(&quot;lacing.server&quot;)</span>
+<span class="sd">    tracer = get_tracer("lacing.server")</span>
 
-<span class="sd">    @traced(tracer, &quot;my_operation&quot;, record_args=True)</span>
+<span class="sd">    @traced(tracer, "my_operation", record_args=True)</span>
 <span class="sd">    def my_op(x, y):</span>
 <span class="sd">        return x + y</span>
 
 <span class="sd">In Phase 2.0+, the FastAPI middleware (``lacing.server.otel_middleware``,</span>
 <span class="sd">opt-in) wraps every request in a span and tags it with the Lamport clock</span>
 <span class="sd">returned by the op-log. The ASGI middleware is added to the app via</span>
-<span class="sd">:func:`instrument_app` only when explicitly called — we don&#39;t auto-mount</span>
+<span class="sd">:func:`instrument_app` only when explicitly called — we don't auto-mount</span>
 <span class="sd">it because that would change behavior depending on whether opentelemetry</span>
 <span class="sd">happened to be installed.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -169,7 +169,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_otel_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -182,19 +182,19 @@
 
 <div class="viewcode-block" id="get_tracer">
 <a class="viewcode-back" href="../../module_docs/lacing/otel.html#lacing.get_tracer">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_tracer</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a tracer or a no-op fallback.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tracer</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lacing"</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a tracer or a no-op fallback.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name: Instrumentation name (typically ``__name__`` of the caller&#39;s</span>
-<span class="sd">            module or a logical name like ``&quot;lacing.server&quot;``).</span>
+<span class="sd">        name: Instrumentation name (typically ``__name__`` of the caller's</span>
+<span class="sd">            module or a logical name like ``"lacing.server"``).</span>
 <span class="sd">        version: Optional package version string.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ``opentelemetry.trace.Tracer`` if OTel is installed, else a no-op</span>
 <span class="sd">        object whose ``start_as_current_span()`` is a context manager</span>
 <span class="sd">        yielding a no-op span.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_otel_available</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">_NoOpTracer</span><span class="p">()</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">opentelemetry.trace</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
@@ -207,14 +207,14 @@
 <a class="viewcode-back" href="../../module_docs/lacing/otel.html#lacing.maybe_span">[docs]</a>
 <span class="nd">@contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">maybe_span</span><span class="p">(</span><span class="n">tracer</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">attributes</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open a span on ``tracer``, attaching ``attributes`` if supported.</span>
+<span class="w">    </span><span class="sd">"""Open a span on ``tracer``, attaching ``attributes`` if supported.</span>
 
 <span class="sd">    Works with both real OTel tracers and the no-op fallback.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">span_ctx</span> <span class="o">=</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">span</span> <span class="o">=</span> <span class="n">span_ctx</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">attributes</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">&quot;set_attribute&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attributes</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">"set_attribute"</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">continue</span>
@@ -227,12 +227,12 @@
                     <span class="k">pass</span>
         <span class="k">yield</span> <span class="n">span</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">&quot;record_exception&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">"record_exception"</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">span</span><span class="o">.</span><span class="n">record_exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                 <span class="k">pass</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">&quot;set_status&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">"set_status"</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.trace</span><span class="w"> </span><span class="kn">import</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StatusCode</span>
 
@@ -246,10 +246,10 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_attr_key</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Namespace lacing-specific attribute keys to ``lacing.&lt;key&gt;``.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Namespace lacing-specific attribute keys to ``lacing.&lt;key&gt;``."""</span>
+    <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">key</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;lacing.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"lacing.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span>
 
 
 <div class="viewcode-block" id="traced">
@@ -260,7 +260,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">record_args</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator: wrap a function in a span on ``tracer``.</span>
+<span class="w">    </span><span class="sd">"""Decorator: wrap a function in a span on ``tracer``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tracer: From :func:`get_tracer`.</span>
@@ -268,7 +268,7 @@
 <span class="sd">        record_args: If True, attach (str-coerced) positional + keyword</span>
 <span class="sd">            args as span attributes ``arg.&lt;n&gt;`` / ``kwarg.&lt;name&gt;``. Off</span>
 <span class="sd">            by default — args may contain large or sensitive data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">span_name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span>
@@ -278,9 +278,9 @@
             <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="n">record_args</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-                    <span class="n">extra</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;arg.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">extra</span><span class="p">[</span><span class="sa">f</span><span class="s2">"arg.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">extra</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;kwarg.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">extra</span><span class="p">[</span><span class="sa">f</span><span class="s2">"kwarg.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
             <span class="k">with</span> <span class="n">maybe_span</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -293,18 +293,18 @@
 <div class="viewcode-block" id="is_otel_active">
 <a class="viewcode-back" href="../../module_docs/lacing/otel.html#lacing.is_otel_active">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_otel_active</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quick check: is OTel installed AND a TracerProvider configured?&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Quick check: is OTel installed AND a TracerProvider configured?"""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_otel_available</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">opentelemetry.trace</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 
         <span class="n">provider</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">get_tracer_provider</span><span class="p">()</span>
-        <span class="c1"># Default no-op provider has class name &#39;ProxyTracerProvider&#39; or</span>
-        <span class="c1"># &#39;NoOpTracerProvider&#39; depending on SDK version. If the user</span>
+        <span class="c1"># Default no-op provider has class name 'ProxyTracerProvider' or</span>
+        <span class="c1"># 'NoOpTracerProvider' depending on SDK version. If the user</span>
         <span class="c1"># configured a real provider, the class will be different.</span>
         <span class="n">provider_cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="k">return</span> <span class="n">provider_cls</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;ProxyTracerProvider&quot;</span><span class="p">,</span> <span class="s2">&quot;NoOpTracerProvider&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">provider_cls</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"ProxyTracerProvider"</span><span class="p">,</span> <span class="s2">"NoOpTracerProvider"</span><span class="p">}</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -316,7 +316,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_NoOpSpan</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop-in replacement for ``opentelemetry.trace.Span`` when OTel is off.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Drop-in replacement for ``opentelemetry.trace.Span`` when OTel is off."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -329,7 +329,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_NoOpSpanContext</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop-in for the context manager returned by ``start_as_current_span``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Drop-in for the context manager returned by ``start_as_current_span``."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -342,11 +342,11 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_NoOpTracer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tracer fallback for when OTel isn&#39;t installed.</span>
+<span class="w">    </span><span class="sd">"""Tracer fallback for when OTel isn't installed.</span>
 
 <span class="sd">    Mimics enough of ``opentelemetry.trace.Tracer`` for ``maybe_span``</span>
 <span class="sd">    and ``traced`` to work without conditionals at every call site.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">start_as_current_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_NoOpSpanContext</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_NoOpSpanContext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -359,13 +359,13 @@
 
 <div class="viewcode-block" id="instrument_app">
 <a class="viewcode-back" href="../../module_docs/lacing/otel.html#lacing.instrument_app">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">instrument_app</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tracer_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing.server&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add OpenTelemetry instrumentation to a FastAPI app.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">instrument_app</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tracer_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lacing.server"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Add OpenTelemetry instrumentation to a FastAPI app.</span>
 
-<span class="sd">    Wraps every request in a span; tags the span with the response&#39;s</span>
+<span class="sd">    Wraps every request in a span; tags the span with the response's</span>
 <span class="sd">    ``X-Lacing-Clock`` header value (when present) as ``lacing.clock``.</span>
 
-<span class="sd">    No-op when OTel isn&#39;t installed — the app is returned unchanged.</span>
+<span class="sd">    No-op when OTel isn't installed — the app is returned unchanged.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        app: The FastAPI app (from :func:`lacing.server.create_app`).</span>
@@ -373,35 +373,35 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The same app, with middleware installed if OTel is available.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_otel_available</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">app</span>
 
     <span class="n">tracer</span> <span class="o">=</span> <span class="n">get_tracer</span><span class="p">(</span><span class="n">tracer_name</span><span class="p">)</span>
 
-    <span class="nd">@app</span><span class="o">.</span><span class="n">middleware</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span>
+    <span class="nd">@app</span><span class="o">.</span><span class="n">middleware</span><span class="p">(</span><span class="s2">"http"</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_otel_middleware</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">call_next</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">path</span>
         <span class="n">method</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span>
-        <span class="n">span_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">span_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">with</span> <span class="n">maybe_span</span><span class="p">(</span>
             <span class="n">tracer</span><span class="p">,</span>
             <span class="n">span_name</span><span class="p">,</span>
             <span class="o">**</span><span class="p">{</span>
-                <span class="s2">&quot;http.method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
-                <span class="s2">&quot;http.target&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+                <span class="s2">"http.method"</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+                <span class="s2">"http.target"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_next</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">&quot;set_attribute&quot;</span><span class="p">):</span>
-                <span class="n">clock_header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X-Lacing-Clock&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="s2">"set_attribute"</span><span class="p">):</span>
+                <span class="n">clock_header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"X-Lacing-Clock"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">clock_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;lacing.clock&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">clock_header</span><span class="p">))</span>
+                        <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"lacing.clock"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">clock_header</span><span class="p">))</span>
                     <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
                         <span class="k">pass</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;http.status_code&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+                    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"http.status_code"</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                     <span class="k">pass</span>
             <span class="k">return</span> <span class="n">response</span>

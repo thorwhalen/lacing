@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.tracks.subtitle &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.tracks.subtitle &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -172,16 +172,16 @@ is just a dict.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tracks.subtitle</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubtitleBuilder</span><span class="p">,</span> <span class="n">SubtitleTrack</span>
 
 <span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
-<span class="k">with</span> <span class="n">SubtitleBuilder</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;song/audio.mp3&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
-    <span class="n">b</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">)</span>
-    <span class="n">b</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s2">&quot;I came down to the river&quot;</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">16.2</span><span class="p">,</span>
-           <span class="n">section</span><span class="o">=</span><span class="s2">&quot;verse_1&quot;</span><span class="p">,</span> <span class="n">words</span><span class="o">=</span><span class="p">[</span>
-               <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span>     <span class="mf">12.5</span><span class="p">,</span> <span class="mf">12.7</span><span class="p">),</span>
-               <span class="p">(</span><span class="s2">&quot;came&quot;</span><span class="p">,</span>  <span class="mf">12.7</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">),</span>
-               <span class="p">(</span><span class="s2">&quot;down&quot;</span><span class="p">,</span>  <span class="mf">13.0</span><span class="p">,</span> <span class="mf">13.3</span><span class="p">),</span>
+<span class="k">with</span> <span class="n">SubtitleBuilder</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">"song/audio.mp3"</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"intro"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s2">"I came down to the river"</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">16.2</span><span class="p">,</span>
+           <span class="n">section</span><span class="o">=</span><span class="s2">"verse_1"</span><span class="p">,</span> <span class="n">words</span><span class="o">=</span><span class="p">[</span>
+               <span class="p">(</span><span class="s2">"I"</span><span class="p">,</span>     <span class="mf">12.5</span><span class="p">,</span> <span class="mf">12.7</span><span class="p">),</span>
+               <span class="p">(</span><span class="s2">"came"</span><span class="p">,</span>  <span class="mf">12.7</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">),</span>
+               <span class="p">(</span><span class="s2">"down"</span><span class="p">,</span>  <span class="mf">13.0</span><span class="p">,</span> <span class="mf">13.3</span><span class="p">),</span>
            <span class="p">])</span>
 
-<span class="n">track</span> <span class="o">=</span> <span class="n">SubtitleTrack</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">&quot;song/audio.mp3&quot;</span><span class="p">)</span>
+<span class="n">track</span> <span class="o">=</span> <span class="n">SubtitleTrack</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">"song/audio.mp3"</span><span class="p">)</span>
 <span class="n">chorus_lines</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">lines_in</span><span class="p">(</span><span class="mf">35.0</span><span class="p">,</span> <span class="mf">55.0</span><span class="p">)</span>
 <span class="n">section_at_42</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">sections_covering</span><span class="p">(</span><span class="mf">42.0</span><span class="p">)</span>
 </pre></div>

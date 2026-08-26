@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.review &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.bodies.review &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -72,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.review.ReviewBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">ReviewBodyV1.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewDecision"><code class="docutils literal notranslate"><span class="pre">ReviewDecision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewKind"><code class="docutils literal notranslate"><span class="pre">ReviewKind</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review.ReviewStatus"><code class="docutils literal notranslate"><span class="pre">ReviewStatus</span></code></a></li>
 </ul>
@@ -152,6 +153,20 @@ optionally pointing at a typed payload like a
 </ul>
 <p>The body is intentionally minimal. The kind (<code class="docutils literal notranslate"><span class="pre">review_kind</span></code>) routes
 the FE renderer; the payload is opaque to lacing.</p>
+<p>An <code class="docutils literal notranslate"><span class="pre">approval</span></code> review carries a <code class="docutils literal notranslate"><span class="pre">decision</span></code> — this is the record
+<code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.server.operations.accept_ai_suggestion()</span></code> writes when a human
+accepts or rejects an AI suggestion, so that the human’s edit is
+attributed to the human without overwriting the agent’s provenance on the
+annotation being judged (lacing#18).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">decision</span></code> is <strong>additive and optional</strong>, so stored bodies validate
+unchanged and lacing owes no migration. Downstream mirrors of this
+schema are a different matter: reelee-web’s generated Zod type is
+<code class="docutils literal notranslate"><span class="pre">.strict()</span></code> and its JSON Schema is <code class="docutils literal notranslate"><span class="pre">additionalProperties:</span> <span class="pre">false</span></code>,
+so an additive field here is a <em>breaking</em> change there until the
+mirror is regenerated — tracked as thorwhalen/reelee-web#234.</p>
+</div>
 <p>References:
 - <code class="docutils literal notranslate"><span class="pre">reelee/docs/Narrative</span> <span class="pre">to</span> <span class="pre">Storyboard.md</span></code> §6.5–6.6.
 - <code class="docutils literal notranslate"><span class="pre">reelee/docs/reelee</span> <span class="pre">03</span> <span class="pre">--</span> <span class="pre">Human-AI</span> <span class="pre">Collaboration</span> <span class="pre">UX</span> <span class="pre">Patterns…</span></code> §10</p>
@@ -169,7 +184,7 @@ quick chip for the FE.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.bodies.review.ReviewBodyV1">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*,</span> <span class="pre">review_kind:</span> <span class="pre">~typing.Literal['continuity',</span> <span class="pre">'segmentation',</span> <span class="pre">'prompt',</span> <span class="pre">'grammar',</span> <span class="pre">'timing',</span> <span class="pre">'iconic_moment',</span> <span class="pre">'manual',</span> <span class="pre">'approval'],</span> <span class="pre">target_annotation_ids:</span> <span class="pre">tuple[str,</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">message:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">status:</span> <span class="pre">~typing.Literal['open',</span> <span class="pre">'addressed',</span> <span class="pre">'wont_fix',</span> <span class="pre">'deferred']</span> <span class="pre">=</span> <span class="pre">'open',</span> <span class="pre">author:</span> <span class="pre">~typing.Literal['human',</span> <span class="pre">'agent',</span> <span class="pre">'system']</span> <span class="pre">=</span> <span class="pre">'human',</span> <span class="pre">violation_ref:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">suggested_action_slug:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/review.html#ReviewBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.review.ReviewBodyV1" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*,</span> <span class="pre">review_kind:</span> <span class="pre">~typing.Literal['continuity',</span> <span class="pre">'segmentation',</span> <span class="pre">'prompt',</span> <span class="pre">'grammar',</span> <span class="pre">'timing',</span> <span class="pre">'iconic_moment',</span> <span class="pre">'manual',</span> <span class="pre">'approval'],</span> <span class="pre">target_annotation_ids:</span> <span class="pre">tuple[str,</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">message:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">status:</span> <span class="pre">~typing.Literal['open',</span> <span class="pre">'addressed',</span> <span class="pre">'wont_fix',</span> <span class="pre">'deferred']</span> <span class="pre">=</span> <span class="pre">'open',</span> <span class="pre">author:</span> <span class="pre">~typing.Literal['human',</span> <span class="pre">'agent',</span> <span class="pre">'system']</span> <span class="pre">=</span> <span class="pre">'human',</span> <span class="pre">decision:</span> <span class="pre">~typing.Literal['accepted',</span> <span class="pre">'rejected']</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">violation_ref:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">suggested_action_slug:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/review.html#ReviewBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.review.ReviewBodyV1" title="Link to this definition"></a></dt>
 <dd><p>Body of a review annotation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.bodies.review.ReviewBodyV1.model_config">
@@ -177,6 +192,20 @@ quick chip for the FE.</p>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.bodies.review.ReviewDecision">
+<span class="sig-prename descclassname"><span class="pre">lacing.bodies.review.</span></span><span class="sig-name descname"><span class="pre">ReviewDecision</span></span><a class="headerlink" href="#lacing.bodies.review.ReviewDecision" title="Link to this definition"></a></dt>
+<dd><p>The verdict an <code class="docutils literal notranslate"><span class="pre">approval</span></code> review carries. Only <code class="docutils literal notranslate"><span class="pre">review_kind</span> <span class="pre">=</span>
+<span class="pre">&quot;approval&quot;</span></code> reviews have one — a continuity or grammar note is an
+observation, not a ruling, so <code class="docutils literal notranslate"><span class="pre">decision</span></code> stays <code class="docutils literal notranslate"><span class="pre">None</span></code> there.</p>
+<p>Why this is a field rather than something to read off the reviewed
+annotation’s <code class="docutils literal notranslate"><span class="pre">confidence</span></code>: the verdict is a fact about <em>the review
+event</em>, and <code class="docutils literal notranslate"><span class="pre">confidence</span></code> is a mutable field on a different record that
+the next write can move. Recovering “was this accepted?” by dereferencing
+a live value is exactly the coupling that made lacing#18 possible.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code>[‘accepted’, ‘rejected’]</p>
 </dd></dl>
 
 <dl class="py data">

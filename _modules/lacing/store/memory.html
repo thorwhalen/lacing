@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.memory &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.store.memory &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,13 +125,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.store.memory</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;In-memory annotation store backed by an interval tree.</span>
+<span></span><span class="sd">"""In-memory annotation store backed by an interval tree.</span>
 
 <span class="sd">Uses ``intervaltree`` (Apache-2.0). Annotations whose reference is not a</span>
 <span class="sd">``MediaRef`` (i.e., they have no time interval) are kept in a separate</span>
 <span class="sd">list — they can still be enumerated via ``all()`` / ``by_tier`` but</span>
-<span class="sd">won&#39;t appear in interval queries.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">won't appear in interval queries.</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -148,19 +148,19 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_key</span><span class="p">(</span><span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">Fraction</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a ``TimeInterval`` to fraction-pair keys for the interval tree.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Convert a ``TimeInterval`` to fraction-pair keys for the interval tree."""</span>
     <span class="k">return</span> <span class="n">interval</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">(),</span> <span class="n">interval</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="MemoryStore">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/memory.html#lacing.MemoryStore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MemoryStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;``IntervalAnnotationStore`` implementation over ``intervaltree``.</span>
+<span class="w">    </span><span class="sd">"""``IntervalAnnotationStore`` implementation over ``intervaltree``.</span>
 
-<span class="sd">    Conforms to the protocol in ``lacing.store.base``. We don&#39;t formally</span>
-<span class="sd">    inherit from ``IntervalAnnotationStore`` because it&#39;s a ``Protocol``</span>
+<span class="sd">    Conforms to the protocol in ``lacing.store.base``. We don't formally</span>
+<span class="sd">    inherit from ``IntervalAnnotationStore`` because it's a ``Protocol``</span>
 <span class="sd">    with method bodies — structural typing is enough.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="p">:</span> <span class="n">IntervalTree</span> <span class="o">=</span> <span class="n">IntervalTree</span><span class="p">()</span>
@@ -342,7 +342,7 @@
     <span class="c1"># --- misc ---------------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MemoryStore(&lt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> keys, </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> annotations&gt;)&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"MemoryStore(&lt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> keys, </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> annotations&gt;)"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">TimeInterval</span><span class="p">):</span>

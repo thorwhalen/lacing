@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.textgrid &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.adapters.textgrid &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -126,19 +126,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.adapters.textgrid</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Praat TextGrid adapter.</span>
+<span></span><span class="sd">"""Praat TextGrid adapter.</span>
 
 <span class="sd">Praat TextGrids have two tier types: ``IntervalTier`` (ranges) and</span>
-<span class="sd">``PointTier`` (instants — Praat&#39;s own ``TextTier``). lacing maps both to a</span>
+<span class="sd">``PointTier`` (instants — Praat's own ``TextTier``). lacing maps both to a</span>
 <span class="sd">single ``Annotation`` envelope; point annotations use a zero-length</span>
 <span class="sd">``TimeInterval`` (``start == end``). See ANN-DOC §B and the</span>
 <span class="sd">``lacing-adapter-authoring`` skill.</span>
 
 <span class="sd">Lossy fields:</span>
 <span class="sd">    Praat has no provenance, no schema URIs, and no confidence. On load we</span>
-<span class="sd">    synthesize provenance with ``was_generated_by=&quot;adapter:textgrid&quot;``.</span>
+<span class="sd">    synthesize provenance with ``was_generated_by="adapter:textgrid"``.</span>
 <span class="sd">    On dump we drop everything but ``tier``, ``interval`` (or point), and</span>
-<span class="sd">    ``body[&#39;text&#39;]`` (or the raw ``body`` repr if no ``text`` key).</span>
+<span class="sd">    ``body['text']`` (or the raw ``body`` repr if no ``text`` key).</span>
 
 <span class="sd">Time discipline:</span>
 <span class="sd">    Praat stores times as ASCII decimal strings — these can be exact at</span>
@@ -149,7 +149,7 @@
 <span class="sd">Tier stereotype mapping:</span>
 <span class="sd">    ELAN tier stereotypes have no Praat equivalent. Every loaded tier gets</span>
 <span class="sd">    stereotype ``NONE``. On dump, only the ``tier`` *name* is preserved.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -169,13 +169,13 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">praatio.data_classes.textgrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Textgrid</span>
 
 
-<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">&quot;textgrid&quot;</span>
-<span class="n">BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/textgrid-label/v1&quot;</span>
-<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">&quot;textgrid:unspecified&quot;</span>
+<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">"textgrid"</span>
+<span class="n">BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/textgrid-label/v1"</span>
+<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">"textgrid:unspecified"</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_MissingPraatio</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when the praatio backend isn&#39;t installed.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Raised when the praatio backend isn't installed."""</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_require_praatio</span><span class="p">():</span>
@@ -187,25 +187,25 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">praatio.utilities.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interval</span><span class="p">,</span> <span class="n">Point</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">_MissingPraatio</span><span class="p">(</span>
-            <span class="s2">&quot;The &#39;textgrid&#39; adapter requires praatio. Install with: &quot;</span>
-            <span class="s2">&quot;pip install &#39;lacing[textgrid]&#39;  (or directly: pip install praatio)&quot;</span>
+            <span class="s2">"The 'textgrid' adapter requires praatio. Install with: "</span>
+            <span class="s2">"pip install 'lacing[textgrid]'  (or directly: pip install praatio)"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;Textgrid&quot;</span><span class="p">:</span> <span class="n">Textgrid</span><span class="p">,</span>
-        <span class="s2">&quot;IntervalTier&quot;</span><span class="p">:</span> <span class="n">IntervalTier</span><span class="p">,</span>
-        <span class="s2">&quot;PointTier&quot;</span><span class="p">:</span> <span class="n">PointTier</span><span class="p">,</span>
-        <span class="s2">&quot;Interval&quot;</span><span class="p">:</span> <span class="n">Interval</span><span class="p">,</span>
-        <span class="s2">&quot;Point&quot;</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
+        <span class="s2">"Textgrid"</span><span class="p">:</span> <span class="n">Textgrid</span><span class="p">,</span>
+        <span class="s2">"IntervalTier"</span><span class="p">:</span> <span class="n">IntervalTier</span><span class="p">,</span>
+        <span class="s2">"PointTier"</span><span class="p">:</span> <span class="n">PointTier</span><span class="p">,</span>
+        <span class="s2">"Interval"</span><span class="p">:</span> <span class="n">Interval</span><span class="p">,</span>
+        <span class="s2">"Point"</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
     <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_rational</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RationalTime</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary conversion: Praat&#39;s float seconds → exact RationalTime.</span>
+<span class="w">    </span><span class="sd">"""Boundary conversion: Praat's float seconds → exact RationalTime.</span>
 
-<span class="sd">    Always goes through string→Fraction so float artifacts don&#39;t sneak in.</span>
+<span class="sd">    Always goes through string→Fraction so float artifacts don't sneak in.</span>
 <span class="sd">    Quantizes to ``rate``; raises ``LossyTimeConversionError`` if exact</span>
 <span class="sd">    representation is impossible.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -227,11 +227,11 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
     <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_ASSET_ID</span><span class="p">,</span>
-    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span><span class="p">,</span>
     <span class="n">include_empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a TextGrid file or bytes into a ``MemoryStore``.</span>
+<span class="w">    </span><span class="sd">"""Load a TextGrid file or bytes into a ``MemoryStore``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source: Path or bytes containing TextGrid content.</span>
@@ -239,11 +239,11 @@
 <span class="sd">        asset_id: ``MediaRef.asset_id`` to attach to every annotation.</span>
 <span class="sd">        attribution: ``Provenance.was_attributed_to`` value.</span>
 <span class="sd">        include_empty: If False, drop intervals/points with empty labels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">deps</span> <span class="o">=</span> <span class="n">_require_praatio</span><span class="p">()</span>
-    <span class="n">Textgrid</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;Textgrid&quot;</span><span class="p">]</span>
-    <span class="n">IntervalTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;IntervalTier&quot;</span><span class="p">]</span>
-    <span class="n">PointTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;PointTier&quot;</span><span class="p">]</span>
+    <span class="n">Textgrid</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"Textgrid"</span><span class="p">]</span>
+    <span class="n">IntervalTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"IntervalTier"</span><span class="p">]</span>
+    <span class="n">PointTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"PointTier"</span><span class="p">]</span>
 
     <span class="n">grid</span> <span class="o">=</span> <span class="n">_open_textgrid</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Textgrid</span><span class="p">,</span> <span class="n">include_empty</span><span class="o">=</span><span class="n">include_empty</span><span class="p">)</span>
 
@@ -275,7 +275,7 @@
                     <span class="n">store</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">attribution</span><span class="p">,</span> <span class="n">now</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — praatio has only the two tier types today</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown tier type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown tier type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">store</span></div>
 
@@ -283,18 +283,18 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_open_textgrid</span><span class="p">(</span>
     <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
-    <span class="n">Textgrid_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="s2">&quot;Textgrid&quot;</span><span class="p">],</span>
+    <span class="n">Textgrid_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="s2">"Textgrid"</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">include_empty</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Textgrid&quot;</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Textgrid"</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">praatio</span><span class="w"> </span><span class="kn">import</span> <span class="n">textgrid</span> <span class="k">as</span> <span class="n">_tg</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="c1"># praatio doesn&#39;t read bytes directly; round-trip through a temp file</span>
+        <span class="c1"># praatio doesn't read bytes directly; round-trip through a temp file</span>
         <span class="c1"># for now. Phase 1 can replace with a string-based parser.</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".TextGrid"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
@@ -319,13 +319,13 @@
             <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
             <span class="n">tier</span><span class="o">=</span><span class="n">tier_name</span><span class="p">,</span>
             <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
-            <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">},</span>
+            <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">label</span><span class="p">},</span>
             <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,</span>
             <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-                <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">"adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">attribution</span><span class="p">,</span>
                 <span class="n">generated_at_time</span><span class="o">=</span><span class="n">generated_at</span><span class="p">,</span>
-                <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;import&quot;</span><span class="p">,</span>
+                <span class="n">activity</span><span class="o">=</span><span class="s2">"import"</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="p">)</span>
@@ -342,32 +342,32 @@
     <span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span>
     <span class="n">target</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;long_textgrid&quot;</span><span class="p">,</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"long_textgrid"</span><span class="p">,</span>
     <span class="n">include_empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a ``IntervalAnnotationStore`` as a Praat TextGrid.</span>
+<span class="w">    </span><span class="sd">"""Write a ``IntervalAnnotationStore`` as a Praat TextGrid.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        store: Source store. Only annotations with a ``MediaRef`` interval</span>
 <span class="sd">            are exported; timeless (``AnnotationRef`` without sub-interval)</span>
 <span class="sd">            annotations are silently dropped.</span>
 <span class="sd">        target: Output path. If None, returns bytes.</span>
-<span class="sd">        format: One of praatio&#39;s formats: ``&quot;long_textgrid&quot;``,</span>
-<span class="sd">            ``&quot;short_textgrid&quot;``, ``&quot;json&quot;``.</span>
+<span class="sd">        format: One of praatio's formats: ``"long_textgrid"``,</span>
+<span class="sd">            ``"short_textgrid"``, ``"json"``.</span>
 <span class="sd">        include_empty: Whether to emit empty-label intervals on point tiers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">deps</span> <span class="o">=</span> <span class="n">_require_praatio</span><span class="p">()</span>
-    <span class="n">Textgrid</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;Textgrid&quot;</span><span class="p">]</span>
-    <span class="n">IntervalTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;IntervalTier&quot;</span><span class="p">]</span>
-    <span class="n">PointTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;PointTier&quot;</span><span class="p">]</span>
-    <span class="n">Interval</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;Interval&quot;</span><span class="p">]</span>
-    <span class="n">Point</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">]</span>
+    <span class="n">Textgrid</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"Textgrid"</span><span class="p">]</span>
+    <span class="n">IntervalTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"IntervalTier"</span><span class="p">]</span>
+    <span class="n">PointTier</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"PointTier"</span><span class="p">]</span>
+    <span class="n">Interval</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"Interval"</span><span class="p">]</span>
+    <span class="n">Point</span> <span class="o">=</span> <span class="n">deps</span><span class="p">[</span><span class="s2">"Point"</span><span class="p">]</span>
 
     <span class="n">by_tier_intervals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">by_tier_points</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">min_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
-    <span class="n">max_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
+    <span class="n">min_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
+    <span class="n">max_t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"-inf"</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
         <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
@@ -388,7 +388,7 @@
             <span class="n">min_t</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_t</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
             <span class="n">max_t</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_t</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">min_t</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">min_t</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">):</span>
         <span class="c1"># Empty store — produce a minimal valid TextGrid spanning [0, 0].</span>
         <span class="n">min_t</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">max_t</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -419,7 +419,7 @@
     <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".TextGrid"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">grid</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">includeBlankSpaces</span><span class="o">=</span><span class="n">include_empty</span><span class="p">)</span>
@@ -433,9 +433,9 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate annotations with a non-None ``MediaRef`` interval.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Iterate annotations with a non-None ``MediaRef`` interval."""</span>
     <span class="c1"># Backends provide either .all() or are MutableMapping-shaped.</span>
-    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -449,9 +449,9 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_label_of</span><span class="p">(</span><span class="n">ann</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">body</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"text"</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="s2">"text"</span><span class="p">])</span>
+    <span class="k">return</span> <span class="s2">""</span>
 
 
 <span class="c1"># ---------------------------------------------------------------------------</span>
@@ -463,10 +463,10 @@
     <span class="n">name</span><span class="o">=</span><span class="n">ADAPTER_NAME</span><span class="p">,</span>
     <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
     <span class="n">dump</span><span class="o">=</span><span class="n">dump</span><span class="p">,</span>
-    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.TextGrid&quot;</span><span class="p">,),</span>
-    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;text/x-praat-textgrid&quot;</span><span class="p">,),</span>
+    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">".TextGrid"</span><span class="p">,),</span>
+    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">"text/x-praat-textgrid"</span><span class="p">,),</span>
     <span class="n">body_schema_uris</span><span class="o">=</span><span class="p">(</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,),</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Praat TextGrid (interval and point tiers). Lossy: drops provenance, confidence, schema URIs.&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Praat TextGrid (interval and point tiers). Lossy: drops provenance, confidence, schema URIs."</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 

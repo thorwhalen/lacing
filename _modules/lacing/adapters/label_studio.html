@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.label_studio &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.adapters.label_studio &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -126,7 +126,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.adapters.label_studio</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Label Studio JSON adapter.</span>
+<span></span><span class="sd">"""Label Studio JSON adapter.</span>
 
 <span class="sd">Label Studio is a popular labeling tool whose canonical export shape is</span>
 <span class="sd">a JSON array of *tasks*, each with one or more *annotations* containing</span>
@@ -140,26 +140,26 @@
 <span class="sd">``data.audio`` / ``data.video`` / ``data.url`` ↔ ``MediaRef.asset_id``</span>
 <span class="sd">``result.from_name``                        ↔ ``Tier.name``</span>
 <span class="sd">``result.value.{start, end}`` (seconds)     ↔ ``MediaRef.interval``</span>
-<span class="sd">``result.value.labels`` (list of strings)   ↔ ``body[&#39;labels&#39;]``</span>
+<span class="sd">``result.value.labels`` (list of strings)   ↔ ``body['labels']``</span>
 <span class="sd">``annotation.completed_by`` (or ``user``)   ↔ ``Provenance.was_attributed_to``</span>
-<span class="sd">``result.origin`` (&quot;prediction&quot;/...)        → ``confidence`` heuristic</span>
+<span class="sd">``result.origin`` ("prediction"/...)        → ``confidence`` heuristic</span>
 <span class="sd">``result.id``                               → preserved in body</span>
 <span class="sd">``result.type``                             → preserved in body</span>
 
 <span class="sd">Lossy on dump</span>
 <span class="sd">-------------</span>
 <span class="sd">- Per-result Label Studio metadata (``image_rotation``,</span>
-<span class="sd">  ``original_width``, etc.) is dropped — they&#39;re irrelevant for time</span>
+<span class="sd">  ``original_width``, etc.) is dropped — they're irrelevant for time</span>
 <span class="sd">  intervals.</span>
 <span class="sd">- Predictions vs annotations distinction is collapsed: lacing tracks</span>
 <span class="sd">  AI vs human via ``confidence`` and ``provenance.was_generated_by``,</span>
-<span class="sd">  and we set Label Studio&#39;s ``origin`` to ``manual`` on dump.</span>
+<span class="sd">  and we set Label Studio's ``origin`` to ``manual`` on dump.</span>
 <span class="sd">- Multi-annotator support: only one annotation per task is emitted on</span>
-<span class="sd">  dump (the first), since lacing&#39;s per-annotation provenance fits</span>
-<span class="sd">  Label Studio&#39;s per-task ``annotations`` list awkwardly.</span>
+<span class="sd">  dump (the first), since lacing's per-annotation provenance fits</span>
+<span class="sd">  Label Studio's per-task ``annotations`` list awkwardly.</span>
 
 <span class="sd">Spec: https://labelstud.io/guide/export.html</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -177,13 +177,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
 
 
-<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">&quot;label_studio&quot;</span>
-<span class="n">BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/label-studio-region/v1&quot;</span>
-<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">&quot;label-studio:unspecified&quot;</span>
+<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">"label_studio"</span>
+<span class="n">BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/label-studio-region/v1"</span>
+<span class="n">DEFAULT_ASSET_ID</span> <span class="o">=</span> <span class="s2">"label-studio:unspecified"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_rational</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RationalTime</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary conversion: float/int/str seconds → exact RationalTime.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Boundary conversion: float/int/str seconds → exact RationalTime."""</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -196,25 +196,25 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_asset_id</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">override</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">override</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">override</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="s2">&quot;video&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"audio"</span><span class="p">,</span> <span class="s2">"video"</span><span class="p">,</span> <span class="s2">"url"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
-    <span class="n">task_id</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+    <span class="n">task_id</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">task_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;label-studio:task:</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"label-studio:task:</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">return</span> <span class="n">DEFAULT_ASSET_ID</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_attribution</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;completed_by&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_attribution</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"completed_by"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">email</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">email</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">default</span>
@@ -223,10 +223,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_time_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-        <span class="ow">and</span> <span class="s2">&quot;start&quot;</span> <span class="ow">in</span> <span class="n">value</span>
-        <span class="ow">and</span> <span class="s2">&quot;end&quot;</span> <span class="ow">in</span> <span class="n">value</span>
-        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
-        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+        <span class="ow">and</span> <span class="s2">"start"</span> <span class="ow">in</span> <span class="n">value</span>
+        <span class="ow">and</span> <span class="s2">"end"</span> <span class="ow">in</span> <span class="n">value</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"start"</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"end"</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
     <span class="p">)</span>
 
 
@@ -245,7 +245,7 @@
     <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a Label Studio JSON export into a ``MemoryStore``.</span>
+<span class="w">    </span><span class="sd">"""Load a Label Studio JSON export into a ``MemoryStore``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source: Path, bytes, or JSON string. Accepts both an array of</span>
@@ -253,7 +253,7 @@
 <span class="sd">        rate: Quantization rate.</span>
 <span class="sd">        asset_id: Override the resolved asset for every annotation.</span>
 <span class="sd">        attribution: Override per-annotation attribution.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">_load_json</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -262,7 +262,7 @@
         <span class="n">tasks</span> <span class="o">=</span> <span class="n">data</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;unsupported Label Studio document shape: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"unsupported Label Studio document shape: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
@@ -274,56 +274,56 @@
             <span class="k">continue</span>
         <span class="n">resolved_asset</span> <span class="o">=</span> <span class="n">_resolve_asset_id</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">ls_ann</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">for</span> <span class="n">ls_ann</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"annotations"</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ls_ann</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="n">ann_attribution</span> <span class="o">=</span> <span class="n">attribution</span> <span class="ow">or</span> <span class="n">_attribution</span><span class="p">(</span><span class="n">ls_ann</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">ls_ann</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">ls_ann</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"result"</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                     <span class="k">continue</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_time_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                     <span class="k">continue</span>
 
                 <span class="n">tier_name</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from_name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;label-studio&quot;</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from_name"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"label-studio"</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">tier_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_tiers</span><span class="p">:</span>
                     <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">))</span>
                     <span class="n">seen_tiers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
 
-                <span class="n">start</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"start"</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"end"</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
                 <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
-                <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"labels"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>  <span class="c1"># for textareas</span>
+                    <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span>  <span class="c1"># for textareas</span>
 
                 <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">labels</span><span class="p">,</span>
-                    <span class="s2">&quot;ls_id&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;ls_type&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;from_name&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from_name&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;to_name&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to_name&quot;</span><span class="p">),</span>
+                    <span class="s2">"labels"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">labels</span><span class="p">,</span>
+                    <span class="s2">"ls_id"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
+                    <span class="s2">"ls_type"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">),</span>
+                    <span class="s2">"from_name"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from_name"</span><span class="p">),</span>
+                    <span class="s2">"to_name"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"to_name"</span><span class="p">),</span>
                 <span class="p">}</span>
                 <span class="c1"># Preserve any extra fields under a value passthrough.</span>
                 <span class="n">extra_value</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">,</span> <span class="s2">"labels"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">)</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="n">extra_value</span><span class="p">:</span>
-                    <span class="n">body</span><span class="p">[</span><span class="s2">&quot;extra_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_value</span>
+                    <span class="n">body</span><span class="p">[</span><span class="s2">"extra_value"</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_value</span>
 
                 <span class="c1"># AI predictions land in `predictions` (not `annotations`)</span>
-                <span class="c1"># but if present here with origin &quot;prediction&quot; we treat</span>
+                <span class="c1"># but if present here with origin "prediction" we treat</span>
                 <span class="c1"># confidence default as 0.5 (uncertain) — best-effort.</span>
-                <span class="n">origin</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;origin&quot;</span><span class="p">)</span>
+                <span class="n">origin</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"origin"</span><span class="p">)</span>
                 <span class="n">confidence</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="s2">&quot;prediction&quot;</span><span class="p">:</span>
-                    <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="s2">"prediction"</span><span class="p">:</span>
+                    <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">score</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="n">confidence</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -337,70 +337,70 @@
                         <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
                         <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,</span>
                         <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-                            <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">was_generated_by</span><span class="o">=</span><span class="sa">f</span><span class="s2">"adapter:</span><span class="si">{</span><span class="n">ADAPTER_NAME</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                             <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">ann_attribution</span><span class="p">,</span>
                             <span class="n">generated_at_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-                            <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;import&quot;</span><span class="p">,</span>
+                            <span class="n">activity</span><span class="o">=</span><span class="s2">"import"</span><span class="p">,</span>
                         <span class="p">),</span>
                         <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="c1"># Predictions live in a sibling list with same shape.</span>
-        <span class="k">for</span> <span class="n">prediction</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">for</span> <span class="n">prediction</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"predictions"</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="n">ann_attribution</span> <span class="o">=</span> <span class="n">attribution</span> <span class="ow">or</span> <span class="n">_attribution</span><span class="p">(</span>
-                <span class="n">prediction</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;agent:label-studio&quot;</span>
+                <span class="n">prediction</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"agent:label-studio"</span>
             <span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prediction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prediction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"result"</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                     <span class="k">continue</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_time_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                     <span class="k">continue</span>
 
                 <span class="n">tier_name</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from_name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;label-studio&quot;</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from_name"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"label-studio"</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">tier_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_tiers</span><span class="p">:</span>
                     <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="n">tier_name</span><span class="p">))</span>
                     <span class="n">seen_tiers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span>
 
-                <span class="n">start</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"start"</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">_to_rational</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">"end"</span><span class="p">],</span> <span class="n">rate</span><span class="p">)</span>
                 <span class="n">interval</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
-                <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span>
                 <span class="n">confidence</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">score</span> <span class="o">&lt;=</span> <span class="mi">1</span>
                     <span class="k">else</span> <span class="mf">0.5</span>
                 <span class="p">)</span>
 
-                <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"labels"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span>
                 <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
                     <span class="n">Annotation</span><span class="p">(</span>
                         <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
                         <span class="n">tier</span><span class="o">=</span><span class="n">tier_name</span><span class="p">,</span>
                         <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">resolved_asset</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">),</span>
                         <span class="n">body</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+                            <span class="s2">"labels"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
                             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
                             <span class="k">else</span> <span class="n">labels</span><span class="p">,</span>
-                            <span class="s2">&quot;ls_id&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
-                            <span class="s2">&quot;ls_type&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span>
-                            <span class="s2">&quot;from_name&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from_name&quot;</span><span class="p">),</span>
-                            <span class="s2">&quot;to_name&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to_name&quot;</span><span class="p">),</span>
-                            <span class="s2">&quot;is_prediction&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="s2">"ls_id"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
+                            <span class="s2">"ls_type"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">),</span>
+                            <span class="s2">"from_name"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from_name"</span><span class="p">),</span>
+                            <span class="s2">"to_name"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"to_name"</span><span class="p">),</span>
+                            <span class="s2">"is_prediction"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                         <span class="p">},</span>
                         <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,</span>
                         <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
-                            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:label-studio&quot;</span><span class="p">,</span>
+                            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:label-studio"</span><span class="p">,</span>
                             <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">ann_attribution</span><span class="p">,</span>
                             <span class="n">generated_at_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-                            <span class="n">activity</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">,</span>
+                            <span class="n">activity</span><span class="o">=</span><span class="s2">"infer"</span><span class="p">,</span>
                         <span class="p">),</span>
                         <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -412,16 +412,16 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_load_json</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">))</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">))</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
     <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="n">stripped</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"{"</span><span class="p">,</span> <span class="s2">"["</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
 
@@ -439,13 +439,13 @@
     <span class="n">pretty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize ``store`` as a Label Studio JSON export.</span>
+<span class="w">    </span><span class="sd">"""Serialize ``store`` as a Label Studio JSON export.</span>
 
 <span class="sd">    Annotations are grouped by ``MediaRef.asset_id`` — each asset becomes</span>
 <span class="sd">    one task with a single ``annotations[0]`` entry collecting every</span>
-<span class="sd">    region. ``confidence &lt; 0.5`` flips the result into Label Studio&#39;s</span>
+<span class="sd">    region. ``confidence &lt; 0.5`` flips the result into Label Studio's</span>
 <span class="sd">    ``predictions`` slot rather than ``annotations``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">by_asset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
@@ -456,7 +456,7 @@
     <span class="k">for</span> <span class="n">task_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">asset</span><span class="p">,</span> <span class="n">anns</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">by_asset</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">annotation_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">prediction_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">attribution</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span>
+        <span class="n">attribution</span> <span class="o">=</span> <span class="s2">"anonymous"</span>
 
         <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">anns</span><span class="p">:</span>
             <span class="n">iv</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">interval</span>
@@ -464,62 +464,62 @@
             <span class="n">body</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
             <span class="n">attribution</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_attributed_to</span>
 
-            <span class="n">labels</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"labels"</span><span class="p">)</span>
             <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()),</span>
-                <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()),</span>
+                <span class="s2">"start"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()),</span>
+                <span class="s2">"end"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">()),</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">value</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
+                <span class="n">value</span><span class="p">[</span><span class="s2">"labels"</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">value</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+                <span class="n">value</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span>
 
-            <span class="n">extra</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extra_value&quot;</span><span class="p">)</span>
+            <span class="n">extra</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra_value"</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extra</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">value</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
 
             <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ls_id&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ls_type&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
-                <span class="s2">&quot;from_name&quot;</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from_name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
-                <span class="s2">&quot;to_name&quot;</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to_name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;audio&quot;</span><span class="p">,</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ls_id"</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ls_type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"labels"</span><span class="p">,</span>
+                <span class="s2">"value"</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                <span class="s2">"from_name"</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from_name"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
+                <span class="s2">"to_name"</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"to_name"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"audio"</span><span class="p">,</span>
             <span class="p">}</span>
 
-            <span class="n">is_prediction</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_prediction&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">is_prediction</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"is_prediction"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="p">(</span>
                 <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">is_prediction</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s2">"score"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span>
                 <span class="n">prediction_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">annotation_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
         <span class="n">task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;audio&quot;</span><span class="p">:</span> <span class="n">asset</span><span class="p">},</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"audio"</span><span class="p">:</span> <span class="n">asset</span><span class="p">},</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">annotation_results</span><span class="p">:</span>
-            <span class="n">task</span><span class="p">[</span><span class="s2">&quot;annotations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">task</span><span class="p">[</span><span class="s2">"annotations"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
-                    <span class="s2">&quot;completed_by&quot;</span><span class="p">:</span> <span class="n">attribution</span><span class="p">,</span>
-                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">annotation_results</span><span class="p">,</span>
+                    <span class="s2">"id"</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
+                    <span class="s2">"completed_by"</span><span class="p">:</span> <span class="n">attribution</span><span class="p">,</span>
+                    <span class="s2">"result"</span><span class="p">:</span> <span class="n">annotation_results</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">]</span>
         <span class="k">if</span> <span class="n">prediction_results</span><span class="p">:</span>
-            <span class="n">task</span><span class="p">[</span><span class="s2">&quot;predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">task</span><span class="p">[</span><span class="s2">"predictions"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
-                    <span class="s2">&quot;model_version&quot;</span><span class="p">:</span> <span class="s2">&quot;lacing&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">prediction_results</span><span class="p">,</span>
+                    <span class="s2">"id"</span><span class="p">:</span> <span class="n">task_idx</span><span class="p">,</span>
+                    <span class="s2">"model_version"</span><span class="p">:</span> <span class="s2">"lacing"</span><span class="p">,</span>
+                    <span class="s2">"result"</span><span class="p">:</span> <span class="n">prediction_results</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">]</span>
         <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
     <span class="n">indent</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">pretty</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">blob</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="n">blob</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">blob</span>
@@ -529,7 +529,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_all_with_intervals</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">):</span>
-    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">iter_all</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
@@ -550,13 +550,13 @@
     <span class="n">name</span><span class="o">=</span><span class="n">ADAPTER_NAME</span><span class="p">,</span>
     <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
     <span class="n">dump</span><span class="o">=</span><span class="n">dump</span><span class="p">,</span>
-    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.labelstudio.json&quot;</span><span class="p">,),</span>
-    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;application/x-label-studio+json&quot;</span><span class="p">,),</span>
+    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">".labelstudio.json"</span><span class="p">,),</span>
+    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">"application/x-label-studio+json"</span><span class="p">,),</span>
     <span class="n">body_schema_uris</span><span class="o">=</span><span class="p">(</span><span class="n">BODY_SCHEMA_URI</span><span class="p">,),</span>
     <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;Label Studio JSON export (audio/video/timeseries time regions). &quot;</span>
-        <span class="s2">&quot;Maps from_name to tier; preserves labels, ls_id, ls_type, &quot;</span>
-        <span class="s2">&quot;from_name, to_name. Predictions land with confidence &lt; 0.5.&quot;</span>
+        <span class="s2">"Label Studio JSON export (audio/video/timeseries time regions). "</span>
+        <span class="s2">"Maps from_name to tier; preserves labels, ls_id, ls_type, "</span>
+        <span class="s2">"from_name, to_name. Predictions land with confidence &lt; 0.5."</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </pre></div>

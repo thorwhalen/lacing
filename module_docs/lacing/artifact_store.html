@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -185,12 +185,12 @@ bytes.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">store</span> <span class="o">=</span> <span class="n">ArtifactStore</span><span class="o">.</span><span class="n">in_memory</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">art</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="sa">b</span><span class="s2">&quot;fake-png-bytes&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;image&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;agent:flux&quot;</span><span class="p">,</span> <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;user:thor&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="sa">b</span><span class="s2">"fake-png-bytes"</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"image"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:flux"</span><span class="p">,</span> <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"user:thor"</span><span class="p">,</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">art</span><span class="o">.</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">art</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">store</span><span class="p">[</span><span class="n">art</span><span class="o">.</span><span class="n">asset_id</span><span class="p">]</span><span class="o">.</span><span class="n">kind</span>
-<span class="go">&#39;image&#39;</span>
+<span class="go">'image'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">art</span><span class="o">.</span><span class="n">asset_id</span> <span class="ow">in</span> <span class="n">store</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
@@ -386,8 +386,8 @@ column carries the record’s blob hash so the GC reference count
 <p>Because the connection is just a SQLAlchemy URI, the <em>same</em> code runs
 on SQLite for tests and on Postgres in production — that is the whole
 point of the facade. Pick the backend with the <code class="docutils literal notranslate"><span class="pre">uri</span></code> alone:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">&quot;sqlite:///artifacts.db&quot;</span><span class="p">)</span>          <span class="c1"># local / tests</span>
-<span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">&quot;postgresql://u:p@host:5432/db&quot;</span><span class="p">)</span>   <span class="c1"># production</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">"sqlite:///artifacts.db"</span><span class="p">)</span>          <span class="c1"># local / tests</span>
+<span class="n">ArtifactStore</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span><span class="s2">"postgresql://u:p@host:5432/db"</span><span class="p">)</span>   <span class="c1"># production</span>
 </pre></div>
 </div>
 <p>The catalog and blob backends are independent: pass <code class="docutils literal notranslate"><span class="pre">blobs</span></code> to pair a

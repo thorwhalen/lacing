@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.review &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.bodies.review &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.bodies.review</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Body schema for review notes — the edit-loop&#39;s communication channel.</span>
+<span></span><span class="sd">"""Body schema for review notes — the edit-loop's communication channel.</span>
 
 <span class="sd">URI: ``annot://schema/review/v1``</span>
 
@@ -135,18 +135,33 @@
 <span class="sd">:class:`ContinuityViolationBodyV1`. Reviews are produced by:</span>
 
 <span class="sd">- automated checkers (continuity, grammar, timing, segmentation rules)</span>
-<span class="sd">- the edit-loop (&quot;this caption needs a revision&quot;)</span>
-<span class="sd">- the orchestrator (&quot;the user declined the cost gate at panel 12&quot;)</span>
-<span class="sd">- the user (&quot;approve&quot; / &quot;needs revision&quot; notes)</span>
+<span class="sd">- the edit-loop ("this caption needs a revision")</span>
+<span class="sd">- the orchestrator ("the user declined the cost gate at panel 12")</span>
+<span class="sd">- the user ("approve" / "needs revision" notes)</span>
 
 <span class="sd">The body is intentionally minimal. The kind (``review_kind``) routes</span>
 <span class="sd">the FE renderer; the payload is opaque to lacing.</span>
+
+<span class="sd">An ``approval`` review carries a ``decision`` — this is the record</span>
+<span class="sd">:func:`lacing.server.operations.accept_ai_suggestion` writes when a human</span>
+<span class="sd">accepts or rejects an AI suggestion, so that the human's edit is</span>
+<span class="sd">attributed to the human without overwriting the agent's provenance on the</span>
+<span class="sd">annotation being judged (lacing#18).</span>
+
+<span class="sd">.. note::</span>
+
+<span class="sd">   ``decision`` is **additive and optional**, so stored bodies validate</span>
+<span class="sd">   unchanged and lacing owes no migration. Downstream mirrors of this</span>
+<span class="sd">   schema are a different matter: reelee-web's generated Zod type is</span>
+<span class="sd">   ``.strict()`` and its JSON Schema is ``additionalProperties: false``,</span>
+<span class="sd">   so an additive field here is a *breaking* change there until the</span>
+<span class="sd">   mirror is regenerated — tracked as thorwhalen/reelee-web#234.</span>
 
 <span class="sd">References:</span>
 <span class="sd">- ``reelee/docs/Narrative to Storyboard.md`` §6.5–6.6.</span>
 <span class="sd">- ``reelee/docs/reelee 03 -- Human-AI Collaboration UX Patterns…`` §10</span>
 <span class="sd">  (annotation overlays).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -157,74 +172,94 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<span class="n">REVIEW_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/review/v1&quot;</span>
+<span class="n">REVIEW_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/review/v1"</span>
 
 
 <span class="n">ReviewKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
-    <span class="s2">&quot;continuity&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;segmentation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;prompt&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;grammar&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;timing&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;iconic_moment&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;manual&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;approval&quot;</span><span class="p">,</span>
+    <span class="s2">"continuity"</span><span class="p">,</span>
+    <span class="s2">"segmentation"</span><span class="p">,</span>
+    <span class="s2">"prompt"</span><span class="p">,</span>
+    <span class="s2">"grammar"</span><span class="p">,</span>
+    <span class="s2">"timing"</span><span class="p">,</span>
+    <span class="s2">"iconic_moment"</span><span class="p">,</span>
+    <span class="s2">"manual"</span><span class="p">,</span>
+    <span class="s2">"approval"</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;What flavor of review this is. Drives the FE&#39;s renderer choice and</span>
-<span class="sd">the producing-Transform&#39;s routing logic.&quot;&quot;&quot;</span>
+<span class="sd">"""What flavor of review this is. Drives the FE's renderer choice and</span>
+<span class="sd">the producing-Transform's routing logic."""</span>
 
 
 <span class="n">ReviewStatus</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
-    <span class="s2">&quot;open&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;addressed&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wont_fix&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;deferred&quot;</span><span class="p">,</span>
+    <span class="s2">"open"</span><span class="p">,</span>
+    <span class="s2">"addressed"</span><span class="p">,</span>
+    <span class="s2">"wont_fix"</span><span class="p">,</span>
+    <span class="s2">"deferred"</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;Open is the initial state; the others are user / agent resolutions.&quot;&quot;&quot;</span>
+<span class="sd">"""Open is the initial state; the others are user / agent resolutions."""</span>
 
 
-<span class="n">Author</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;Coarse author classification. The annotation envelope&#39;s</span>
+<span class="n">Author</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"human"</span><span class="p">,</span> <span class="s2">"agent"</span><span class="p">,</span> <span class="s2">"system"</span><span class="p">]</span>
+<span class="sd">"""Coarse author classification. The annotation envelope's</span>
 <span class="sd">``was_attributed_to`` carries the specific identity; this field is the</span>
-<span class="sd">quick chip for the FE.&quot;&quot;&quot;</span>
+<span class="sd">quick chip for the FE."""</span>
+
+
+<span class="n">ReviewDecision</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"accepted"</span><span class="p">,</span> <span class="s2">"rejected"</span><span class="p">]</span>
+<span class="sd">"""The verdict an ``approval`` review carries. Only ``review_kind =</span>
+<span class="sd">"approval"`` reviews have one — a continuity or grammar note is an</span>
+<span class="sd">observation, not a ruling, so ``decision`` stays ``None`` there.</span>
+
+<span class="sd">Why this is a field rather than something to read off the reviewed</span>
+<span class="sd">annotation's ``confidence``: the verdict is a fact about *the review</span>
+<span class="sd">event*, and ``confidence`` is a mutable field on a different record that</span>
+<span class="sd">the next write can move. Recovering "was this accepted?" by dereferencing</span>
+<span class="sd">a live value is exactly the coupling that made lacing#18 possible."""</span>
 
 
 <div class="viewcode-block" id="ReviewBodyV1">
 <a class="viewcode-back" href="../../../module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReviewBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Body of a review annotation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Body of a review annotation."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">review_kind</span><span class="p">:</span> <span class="n">ReviewKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What flavor of review this is.&quot;</span><span class="p">)</span>
+    <span class="n">review_kind</span><span class="p">:</span> <span class="n">ReviewKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"What flavor of review this is."</span><span class="p">)</span>
     <span class="n">target_annotation_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">tuple</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Annotation ids this review targets. Typically one, but &quot;</span>
-            <span class="s2">&quot;continuity reviews carry the same ids as the underlying &quot;</span>
-            <span class="s2">&quot;ContinuityViolationBodyV1.&quot;</span>
+            <span class="s2">"Annotation ids this review targets. Typically one, but "</span>
+            <span class="s2">"continuity reviews carry the same ids as the underlying "</span>
+            <span class="s2">"ContinuityViolationBodyV1."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Human-readable note shown in the review panel.&quot;</span>
+        <span class="s2">""</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Human-readable note shown in the review panel."</span>
     <span class="p">)</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">ReviewStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lifecycle state.&quot;</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">ReviewStatus</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">"open"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Lifecycle state."</span><span class="p">)</span>
     <span class="n">author</span><span class="p">:</span> <span class="n">Author</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Coarse author chip — human / agent / system.&quot;</span>
+        <span class="s2">"human"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Coarse author chip — human / agent / system."</span>
+    <span class="p">)</span>
+    <span class="n">decision</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReviewDecision</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Verdict of an ``approval`` review — ``accepted`` / "</span>
+            <span class="s2">"``rejected``. ``None`` for review kinds that observe rather "</span>
+            <span class="s2">"than rule."</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">violation_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Optional id of a ``continuity-violation/v1`` (or other typed &quot;</span>
-            <span class="s2">&quot;payload) backing this review. The FE inspector follows this &quot;</span>
-            <span class="s2">&quot;ref to render rule-specific evidence.&quot;</span>
+            <span class="s2">"Optional id of a ``continuity-violation/v1`` (or other typed "</span>
+            <span class="s2">"payload) backing this review. The FE inspector follows this "</span>
+            <span class="s2">"ref to render rule-specific evidence."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">suggested_action_slug</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">""</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Optional acture command slug the FE should highlight as the &quot;</span>
-            <span class="s2">&quot;default action (e.g. &#39;panel.regen&#39;, &#39;panel.editPrompt&#39;).&quot;</span>
+            <span class="s2">"Optional acture command slug the FE should highlight as the "</span>
+            <span class="s2">"default action (e.g. 'panel.regen', 'panel.editPrompt')."</span>
         <span class="p">),</span>
     <span class="p">)</span></div>
 

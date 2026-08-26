@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters.annot &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.adapters.annot &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -126,11 +126,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.adapters.annot</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;``.annot`` portable file format adapter.</span>
+<span></span><span class="sd">"""``.annot`` portable file format adapter.</span>
 
 <span class="sd">The ``.annot`` file is a SQLite database with the schema defined in</span>
-<span class="sd">``lacing.store.sqlite``. It&#39;s the recommended portable handoff and archive</span>
-<span class="sd">format (BACK-DOC §3.1: &quot;SQLite-as-app-format&quot; — Git-trackable,</span>
+<span class="sd">``lacing.store.sqlite``. It's the recommended portable handoff and archive</span>
+<span class="sd">format (BACK-DOC §3.1: "SQLite-as-app-format" — Git-trackable,</span>
 <span class="sd">email-attachable, single-file).</span>
 
 <span class="sd">Unlike text-based adapters (TextGrid, WebVTT, JSON-LD), this one is</span>
@@ -142,8 +142,8 @@
 <span class="sd">store you can mutate, use ``SqliteStore(path)`` directly:</span>
 
 <span class="sd">    &gt;&gt;&gt; from lacing.store import SqliteStore</span>
-<span class="sd">    &gt;&gt;&gt; store = SqliteStore(&quot;project.annot&quot;)  # writes go straight to disk</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; store = SqliteStore("project.annot")  # writes go straight to disk</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -158,7 +158,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.sqlite</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_memory</span><span class="p">,</span> <span class="n">to_memory</span>
 
 
-<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">&quot;annot&quot;</span>
+<span class="n">ADAPTER_NAME</span> <span class="o">=</span> <span class="s2">"annot"</span>
 <span class="n">DEFAULT_BODY_SCHEMA_URIS</span> <span class="o">=</span> <span class="p">()</span>  <span class="c1"># the .annot format preserves whatever URIs are in the data</span>
 
 
@@ -176,7 +176,7 @@
     <span class="n">migrate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open an ``.annot`` file.</span>
+<span class="w">    </span><span class="sd">"""Open an ``.annot`` file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source: Path to an ``.annot`` file. Bytes input is supported by</span>
@@ -188,15 +188,15 @@
 <span class="sd">            A stale file otherwise refuses with</span>
 <span class="sd">            :class:`~lacing.store.sqlite.SchemaMismatchError` — same</span>
 <span class="sd">            contract as ``SqliteStore``. For **bytes** input the copy in</span>
-<span class="sd">            the temp file is migrated regardless: it is not the caller&#39;s</span>
+<span class="sd">            the temp file is migrated regardless: it is not the caller's</span>
 <span class="sd">            file, and refusing to read bytes that cannot be re-pointed at</span>
 <span class="sd">            the migration CLI would be a dead end.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ``MemoryStore`` (default) or ``SqliteStore`` (if ``persistent=True``).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.annot&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".annot"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
@@ -234,16 +234,16 @@
     <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write ``store`` as an ``.annot`` SQLite file.</span>
+<span class="w">    </span><span class="sd">"""Write ``store`` as an ``.annot`` SQLite file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        store: Source store. Can be any IntervalAnnotationStore.</span>
 <span class="sd">        target: Output path. None = return bytes.</span>
 <span class="sd">        overwrite: If True (default), replace any existing file at ``target``.</span>
 <span class="sd">            If False and the file exists, raise ``FileExistsError``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.annot&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">".annot"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sqlite_store</span> <span class="o">=</span> <span class="n">_build_at</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
@@ -264,15 +264,15 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_at</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SqliteStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Materialize ``store`` as a fresh SqliteStore at ``path``.</span>
+<span class="w">    </span><span class="sd">"""Materialize ``store`` as a fresh SqliteStore at ``path``.</span>
 
 <span class="sd">    If ``store`` is already a ``SqliteStore``, copy the underlying file</span>
 <span class="sd">    instead of re-inserting row by row — same content, faster and bit-exact.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">SqliteStore</span><span class="p">):</span>
         <span class="c1"># Copy the file to the target location.</span>
         <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">src</span> <span class="o">==</span> <span class="s2">&quot;:memory:&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">src</span> <span class="o">==</span> <span class="s2">":memory:"</span><span class="p">:</span>
             <span class="c1"># In-memory source — fall through to row-by-row.</span>
             <span class="k">return</span> <span class="n">from_memory</span><span class="p">(</span><span class="n">_to_memory_like</span><span class="p">(</span><span class="n">store</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
@@ -281,16 +281,16 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_memory_like</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">IntervalAnnotationStore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce any store to something with ``.tiers()`` and ``.all()``.</span>
+<span class="w">    </span><span class="sd">"""Coerce any store to something with ``.tiers()`` and ``.all()``.</span>
 
 <span class="sd">    ``MemoryStore`` and ``SqliteStore`` both already have these. This is a</span>
-<span class="sd">    forward-compatibility shim for backends that don&#39;t expose ``all`` directly.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;tiers&quot;</span><span class="p">):</span>
+<span class="sd">    forward-compatibility shim for backends that don't expose ``all`` directly.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"tiers"</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">store</span>
     <span class="c1"># Fallback: build a transient MemoryStore.</span>
     <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;tiers&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"tiers"</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">tiers</span><span class="p">():</span>  <span class="c1"># type: ignore[attr-defined]</span>
             <span class="n">mem</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined]</span>
@@ -308,12 +308,12 @@
     <span class="n">name</span><span class="o">=</span><span class="n">ADAPTER_NAME</span><span class="p">,</span>
     <span class="n">load</span><span class="o">=</span><span class="n">load</span><span class="p">,</span>
     <span class="n">dump</span><span class="o">=</span><span class="n">dump</span><span class="p">,</span>
-    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.annot&quot;</span><span class="p">,),</span>
-    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;application/x-lacing-annot&quot;</span><span class="p">,),</span>
+    <span class="n">extensions</span><span class="o">=</span><span class="p">(</span><span class="s2">".annot"</span><span class="p">,),</span>
+    <span class="n">media_types</span><span class="o">=</span><span class="p">(</span><span class="s2">"application/x-lacing-annot"</span><span class="p">,),</span>
     <span class="n">body_schema_uris</span><span class="o">=</span><span class="n">DEFAULT_BODY_SCHEMA_URIS</span><span class="p">,</span>
     <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;Lacing&#39;s portable .annot SQLite file format. Lossless round-trip; &quot;</span>
-        <span class="s2">&quot;preserves the full annotation envelope, provenance, and tier hierarchy.&quot;</span>
+        <span class="s2">"Lacing's portable .annot SQLite file format. Lossless round-trip; "</span>
+        <span class="s2">"preserves the full annotation envelope, provenance, and tier hierarchy."</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </pre></div>

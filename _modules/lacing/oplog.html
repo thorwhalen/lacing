@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.oplog &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.oplog &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.oplog</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Operation log for time-travel debug + audit.</span>
+<span></span><span class="sd">"""Operation log for time-travel debug + audit.</span>
 
 <span class="sd">The op-log is an append-only sequence of mutations applied to a store.</span>
 <span class="sd">Each entry carries a monotonically increasing **Lamport clock**, the</span>
@@ -134,8 +134,8 @@
 <span class="sd">operation against a fresh store, plus actor / timestamp metadata.</span>
 
 <span class="sd">Together with a fresh empty store, the op-log is enough to reconstruct</span>
-<span class="sd">the state of the system at any past clock value — the &quot;killer debug</span>
-<span class="sd">feature&quot; called out in BACK-DOC §4.7.</span>
+<span class="sd">the state of the system at any past clock value — the "killer debug</span>
+<span class="sd">feature" called out in BACK-DOC §4.7.</span>
 
 <span class="sd">Two implementations ship with Phase 2:</span>
 
@@ -144,7 +144,7 @@
 <span class="sd">  (intended to live in the same ``.annot`` file as the store).</span>
 
 <span class="sd">Use :func:`replay` to rebuild a store at a given clock.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -166,46 +166,46 @@
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.OpLogEntry">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">OpLogEntry</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One row of the op-log.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""One row of the op-log."""</span>
 
     <span class="n">clock</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Monotonic Lamport clock starting at 1. Strictly increasing per log.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Monotonic Lamport clock starting at 1. Strictly increasing per log."""</span>
 
     <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One of: ``add_annotation``, ``remove_annotation``, ``update_annotation``,</span>
-<span class="sd">    ``add_tier``, ``set_meta``, ``import_batch``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""One of: ``add_annotation``, ``remove_annotation``, ``update_annotation``,</span>
+<span class="sd">    ``add_tier``, ``set_meta``, ``import_batch``."""</span>
 
     <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Annotation id, tier name, meta key, or None for batch ops.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Annotation id, tier name, meta key, or None for batch ops."""</span>
 
     <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;JSON-serializable payload sufficient to replay the operation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""JSON-serializable payload sufficient to replay the operation."""</span>
 
-    <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;``user:&lt;handle&gt;`` or ``agent:&lt;model&gt;@&lt;hash&gt;`` or ``adapter:&lt;format&gt;``.&quot;&quot;&quot;</span>
+    <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span>
+<span class="w">    </span><span class="sd">"""``user:&lt;handle&gt;`` or ``agent:&lt;model&gt;@&lt;hash&gt;`` or ``adapter:&lt;format&gt;``."""</span>
 
     <span class="n">received_at</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">_time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wall-clock time the operation was received (seconds since epoch).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Wall-clock time the operation was received (seconds since epoch)."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;clock&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span>
-            <span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="p">,</span>
-            <span class="s2">&quot;target_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_id</span><span class="p">,</span>
-            <span class="s2">&quot;payload&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span>
-            <span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">,</span>
-            <span class="s2">&quot;received_at&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_at</span><span class="p">,</span>
+            <span class="s2">"clock"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span>
+            <span class="s2">"operation"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="p">,</span>
+            <span class="s2">"target_id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_id</span><span class="p">,</span>
+            <span class="s2">"payload"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span>
+            <span class="s2">"actor"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">,</span>
+            <span class="s2">"received_at"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_at</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;OpLogEntry&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"OpLogEntry"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">clock</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;clock&quot;</span><span class="p">]),</span>
-            <span class="n">operation</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;operation&quot;</span><span class="p">]),</span>
-            <span class="n">target_id</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_id&quot;</span><span class="p">),</span>
-            <span class="n">payload</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;payload&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{},</span>
-            <span class="n">actor</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">)),</span>
-            <span class="n">received_at</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;received_at&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+            <span class="n">clock</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"clock"</span><span class="p">]),</span>
+            <span class="n">operation</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"operation"</span><span class="p">]),</span>
+            <span class="n">target_id</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"target_id"</span><span class="p">),</span>
+            <span class="n">payload</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{},</span>
+            <span class="n">actor</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"actor"</span><span class="p">,</span> <span class="s2">"anonymous"</span><span class="p">)),</span>
+            <span class="n">received_at</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"received_at"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
         <span class="p">)</span></div>
 
 
@@ -218,12 +218,12 @@
 <div class="viewcode-block" id="OpLog">
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.OpLog">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OpLog</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append-only log of mutations.</span>
+<span class="w">    </span><span class="sd">"""Append-only log of mutations.</span>
 
 <span class="sd">    Implementations must guarantee that the clock returned by</span>
 <span class="sd">    :meth:`append` is strictly greater than every previously-returned</span>
 <span class="sd">    clock value across the lifetime of the log.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="OpLog.append">
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.OpLog.append">[docs]</a>
@@ -233,9 +233,9 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append an entry; return its assigned clock.&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Append an entry; return its assigned clock."""</span></div>
 
 
 <div class="viewcode-block" id="OpLog.entries">
@@ -246,13 +246,13 @@
         <span class="n">until_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">from_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">OpLogEntry</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate entries, optionally bounded by clock range (inclusive).&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Iterate entries, optionally bounded by clock range (inclusive)."""</span></div>
 
 
 <div class="viewcode-block" id="OpLog.latest_clock">
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.OpLog.latest_clock">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">latest_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Highest clock currently in the log; 0 if empty.&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Highest clock currently in the log; 0 if empty."""</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span></div>
@@ -267,7 +267,7 @@
 <div class="viewcode-block" id="InMemoryOpLog">
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.InMemoryOpLog">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InMemoryOpLog</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple list-backed op-log. Thread-safe via an RLock.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Simple list-backed op-log. Thread-safe via an RLock."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">OpLogEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -279,7 +279,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="n">clock</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
@@ -323,28 +323,28 @@
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
 
-<span class="n">_OPLOG_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">_OPLOG_DDL</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">CREATE TABLE IF NOT EXISTS oplog (</span>
 <span class="s2">    clock        INTEGER PRIMARY KEY AUTOINCREMENT,</span>
 <span class="s2">    operation    TEXT NOT NULL,</span>
 <span class="s2">    target_id    TEXT,</span>
-<span class="s2">    payload      TEXT NOT NULL DEFAULT &#39;</span><span class="si">{}</span><span class="s2">&#39;,</span>
-<span class="s2">    actor        TEXT NOT NULL DEFAULT &#39;anonymous&#39;,</span>
+<span class="s2">    payload      TEXT NOT NULL DEFAULT '</span><span class="si">{}</span><span class="s2">',</span>
+<span class="s2">    actor        TEXT NOT NULL DEFAULT 'anonymous',</span>
 <span class="s2">    received_at  REAL NOT NULL</span>
 <span class="s2">);</span>
 <span class="s2">CREATE INDEX IF NOT EXISTS idx_oplog_target ON oplog(target_id);</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 
 <div class="viewcode-block" id="SqliteOpLog">
 <a class="viewcode-back" href="../../module_docs/lacing/oplog.html#lacing.SqliteOpLog">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SqliteOpLog</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Op-log backed by a SQLite table.</span>
+<span class="w">    </span><span class="sd">"""Op-log backed by a SQLite table.</span>
 
 <span class="sd">    Designed to share a database file with ``SqliteStore`` so the store</span>
 <span class="sd">    snapshot + the op-log live together and survive a single</span>
 <span class="sd">    ``cp project.annot project.backup`` step.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -375,13 +375,13 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span><span class="p">,</span>
+        <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"anonymous"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;INSERT INTO oplog (operation, target_id, payload, actor, received_at) &quot;</span>
-                <span class="s2">&quot;VALUES (?, ?, ?, ?, ?)&quot;</span><span class="p">,</span>
+                <span class="s2">"INSERT INTO oplog (operation, target_id, payload, actor, received_at) "</span>
+                <span class="s2">"VALUES (?, ?, ?, ?, ?)"</span><span class="p">,</span>
                 <span class="p">(</span>
                     <span class="n">operation</span><span class="p">,</span>
                     <span class="n">target_id</span><span class="p">,</span>
@@ -398,40 +398,40 @@
         <span class="n">until_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">from_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">OpLogEntry</span><span class="p">]:</span>
-        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM oplog&quot;</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">"SELECT * FROM oplog"</span>
         <span class="n">clauses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">from_clock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;clock &gt;= ?&quot;</span><span class="p">)</span>
+            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"clock &gt;= ?"</span><span class="p">)</span>
             <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">from_clock</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">until_clock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;clock &lt;= ?&quot;</span><span class="p">)</span>
+            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"clock &lt;= ?"</span><span class="p">)</span>
             <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">until_clock</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">clauses</span><span class="p">:</span>
-            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; WHERE &quot;</span> <span class="o">+</span> <span class="s2">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
-        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">&quot; ORDER BY clock&quot;</span>
+            <span class="n">sql</span> <span class="o">+=</span> <span class="s2">" WHERE "</span> <span class="o">+</span> <span class="s2">" AND "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">+=</span> <span class="s2">" ORDER BY clock"</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">OpLogEntry</span><span class="p">(</span>
-                <span class="n">clock</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;clock&quot;</span><span class="p">]),</span>
-                <span class="n">operation</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;operation&quot;</span><span class="p">]),</span>
-                <span class="n">target_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;target_id&quot;</span><span class="p">],</span>
-                <span class="n">payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">]),</span>
-                <span class="n">actor</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">]),</span>
-                <span class="n">received_at</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;received_at&quot;</span><span class="p">]),</span>
+                <span class="n">clock</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"clock"</span><span class="p">]),</span>
+                <span class="n">operation</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"operation"</span><span class="p">]),</span>
+                <span class="n">target_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"target_id"</span><span class="p">],</span>
+                <span class="n">payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"payload"</span><span class="p">]),</span>
+                <span class="n">actor</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"actor"</span><span class="p">]),</span>
+                <span class="n">received_at</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"received_at"</span><span class="p">]),</span>
             <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">latest_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT MAX(clock) AS c FROM oplog&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT MAX(clock) AS c FROM oplog"</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"c"</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">"c"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT COUNT(*) AS n FROM oplog&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">])</span></div>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT COUNT(*) AS n FROM oplog"</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"n"</span><span class="p">])</span></div>
 
 
 
@@ -448,7 +448,7 @@
     <span class="n">until_clock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">target_factory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rebuild a store by replaying ``log`` up to (and including) ``until_clock``.</span>
+<span class="w">    </span><span class="sd">"""Rebuild a store by replaying ``log`` up to (and including) ``until_clock``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        log: Source op-log.</span>
@@ -461,7 +461,7 @@
 <span class="sd">        The rebuilt store. Operations whose payload references unknown</span>
 <span class="sd">        body schemas or tier parents are still applied; the caller is</span>
 <span class="sd">        responsible for any post-replay validation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">target_factory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryStore</span>
 
@@ -476,48 +476,48 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_apply</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">OpLogEntry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply one entry to ``store``. Best-effort: unknown ops are skipped.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Apply one entry to ``store``. Best-effort: unknown ops are skipped."""</span>
     <span class="n">op</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">operation</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">payload</span>
 
-    <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;add_tier&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"add_tier"</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span><span class="p">,</span> <span class="n">TierStereotype</span>
 
         <span class="n">tier</span> <span class="o">=</span> <span class="n">Tier</span><span class="p">(</span>
-            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stereotype&quot;</span><span class="p">,</span> <span class="s2">&quot;NONE&quot;</span><span class="p">)),</span>
-            <span class="n">parent</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">),</span>
-            <span class="n">metadata</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{},</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="n">stereotype</span><span class="o">=</span><span class="n">TierStereotype</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"stereotype"</span><span class="p">,</span> <span class="s2">"NONE"</span><span class="p">)),</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parent"</span><span class="p">),</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{},</span>
         <span class="p">)</span>
         <span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">tier</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;add_annotation&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"add_annotation"</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span>
 
-        <span class="n">annotation</span> <span class="o">=</span> <span class="n">Annotation</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;annotation&quot;</span><span class="p">])</span>
+        <span class="n">annotation</span> <span class="o">=</span> <span class="n">Annotation</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">"annotation"</span><span class="p">])</span>
         <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;remove_annotation&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"remove_annotation"</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
 
         <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">target_id</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">store</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">UUID</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
 
-    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;update_annotation&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"update_annotation"</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotation</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
 
         <span class="n">ann_id</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">target_id</span>
         <span class="k">if</span> <span class="n">ann_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">store</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">UUID</span><span class="p">(</span><span class="n">ann_id</span><span class="p">))</span>
-        <span class="n">annotation</span> <span class="o">=</span> <span class="n">Annotation</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;annotation&quot;</span><span class="p">])</span>
+        <span class="n">annotation</span> <span class="o">=</span> <span class="n">Annotation</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">"annotation"</span><span class="p">])</span>
         <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">&quot;set_meta&quot;</span><span class="p">:</span>
-        <span class="n">set_fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;set_meta&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s2">"set_meta"</span><span class="p">:</span>
+        <span class="n">set_fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"set_meta"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">set_fn</span><span class="p">):</span>
-            <span class="n">set_fn</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">target_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+            <span class="n">set_fn</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">target_id</span><span class="p">,</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"value"</span><span class="p">])</span>
 
     <span class="c1"># Unknown ops are ignored by replay; the entry is still in the log.</span>
 

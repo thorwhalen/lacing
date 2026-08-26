@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.adapters &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.adapters &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.adapters</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;I/O adapter registry.</span>
+<span></span><span class="sd">"""I/O adapter registry.</span>
 
 <span class="sd">The core never imports a format module. Each adapter registers itself by</span>
 <span class="sd">calling :func:`register_adapter` at import time. Users opt in by importing</span>
@@ -135,7 +135,7 @@
 
 <span class="sd">Or by using the convenience top-level loaders that look up by extension or</span>
 <span class="sd">``media_type``.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -155,7 +155,7 @@
 <a class="viewcode-back" href="../../module_docs/lacing/adapters.html#lacing.adapters.AdapterSpec">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AdapterSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Registered adapter for one format.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Registered adapter for one format."""</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">extensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
@@ -163,7 +163,7 @@
     <span class="n">load</span><span class="p">:</span> <span class="n">LoadFn</span>
     <span class="n">dump</span><span class="p">:</span> <span class="n">DumpFn</span>
     <span class="n">body_schema_uris</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
-    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span></div>
 
 
 
@@ -180,9 +180,9 @@
     <span class="n">extensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">media_types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">body_schema_uris</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
-    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AdapterSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register an adapter. Idempotent: re-registering the same name replaces.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Register an adapter. Idempotent: re-registering the same name replaces."""</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">AdapterSpec</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">extensions</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">),</span>
@@ -200,7 +200,7 @@
 <div class="viewcode-block" id="get_adapter">
 <a class="viewcode-back" href="../../module_docs/lacing/adapters.html#lacing.adapters.get_adapter">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_adapter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AdapterSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up an adapter by name. Raises ``KeyError`` if missing.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Look up an adapter by name. Raises ``KeyError`` if missing."""</span>
     <span class="k">return</span> <span class="n">_REGISTRY</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
@@ -210,11 +210,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">find_adapter</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span> <span class="n">extension</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">media_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AdapterSpec</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find an adapter by extension (case-insensitive) or media type.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Find an adapter by extension (case-insensitive) or media type."""</span>
     <span class="k">if</span> <span class="n">extension</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="n">extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
-            <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">ext</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="s2">"."</span> <span class="o">+</span> <span class="n">ext</span>
         <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">_REGISTRY</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">spec</span>
@@ -229,7 +229,7 @@
 <div class="viewcode-block" id="registered">
 <a class="viewcode-back" href="../../module_docs/lacing/adapters.html#lacing.adapters.registered">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">registered</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AdapterSpec</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;All currently registered adapters (in registration order).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""All currently registered adapters (in registration order)."""</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_REGISTRY</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
 
@@ -242,11 +242,11 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IntervalAnnotationStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience: dispatch ``source`` to the right adapter.</span>
+<span class="w">    </span><span class="sd">"""Convenience: dispatch ``source`` to the right adapter.</span>
 
 <span class="sd">    If ``format`` is given, looks up by name. Otherwise, if ``source`` is a</span>
-<span class="sd">    path, infers from extension. Raises ``ValueError`` if it can&#39;t pick.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    path, infers from extension. Raises ``ValueError`` if it can't pick.</span>
+<span class="sd">    """</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">_resolve_adapter</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -261,7 +261,7 @@
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience: serialize ``store`` via the named adapter.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Convenience: serialize ``store`` via the named adapter."""</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">get_adapter</span><span class="p">(</span><span class="nb">format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -277,7 +277,7 @@
             <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">spec</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-        <span class="s2">&quot;Cannot infer adapter: pass `format=&lt;name&gt;` or use a recognized extension.&quot;</span>
+        <span class="s2">"Cannot infer adapter: pass `format=&lt;name&gt;` or use a recognized extension."</span>
     <span class="p">)</span>
 </pre></div>
 

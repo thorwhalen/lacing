@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.migrations &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.store.migrations &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.store.migrations</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Store-level schema migrations — the on-disk counterpart of the body ladder.</span>
+<span></span><span class="sd">"""Store-level schema migrations — the on-disk counterpart of the body ladder.</span>
 
 <span class="sd">:mod:`lacing.schema` migrates annotation *bodies* (``dict -&gt; dict``, keyed</span>
 <span class="sd">``(schema_name, from_version)``). This module is the same mental model one</span>
@@ -134,7 +134,7 @@
 
 <span class="sd">The split matters because the two ladders move different things:</span>
 
-<span class="sd">- a body migration rewrites one annotation&#39;s payload and can run anywhere;</span>
+<span class="sd">- a body migration rewrites one annotation's payload and can run anywhere;</span>
 <span class="sd">- a store migration receives an **open connection** and performs DDL, row</span>
 <span class="sd">  rewrites, and the version stamp for a whole database, atomically.</span>
 
@@ -149,7 +149,7 @@
 <span class="sd">  ``meta`` table**.</span>
 
 <span class="sd">What the runner guarantees around each step (all verified *inside* the</span>
-<span class="sd">step&#39;s transaction, so any breach rolls the whole step back):</span>
+<span class="sd">step's transaction, so any breach rolls the whole step back):</span>
 
 <span class="sd">- the version is re-read **under the write lock** before the step runs — a</span>
 <span class="sd">  concurrent migrator that already applied the step is detected and the</span>
@@ -163,7 +163,7 @@
 <span class="sd">Rules for step authors (sqlite):</span>
 
 <span class="sd">- **Never call ``conn.executescript``, ``COMMIT`` or ``ROLLBACK``** inside a</span>
-<span class="sd">  step — ``executescript`` implicitly commits the wrapper&#39;s transaction,</span>
+<span class="sd">  step — ``executescript`` implicitly commits the wrapper's transaction,</span>
 <span class="sd">  destroying atomicity. The runner detects a step that ended its</span>
 <span class="sd">  transaction and fails loudly.</span>
 <span class="sd">- Foreign-key enforcement is pinned **OFF** during migration (sqlite cannot</span>
@@ -176,11 +176,11 @@
 
 <span class="sd">Backends own their runners (transaction idiom differs per driver):</span>
 <span class="sd">:func:`migrate_annot_file` here for SQLite ``.annot`` files; a Postgres</span>
-<span class="sd">runner joins it with the first registered ``&quot;postgres&quot;`` step. Migration is</span>
+<span class="sd">runner joins it with the first registered ``"postgres"`` step. Migration is</span>
 <span class="sd">**opt-in** — ``SqliteStore(path, migrate=True)`` or ``lacing migrate &lt;path&gt;``</span>
 <span class="sd">— because silently rewriting a file on open is worse than refusing</span>
 <span class="sd">(lacing#15).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -197,24 +197,24 @@
 <span class="c1"># contract of lacing.schema._MIGRATION_REGISTRY, one level down.</span>
 <span class="n">_STORE_MIGRATION_REGISTRY</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="n">SQLITE_KIND</span> <span class="o">=</span> <span class="s2">&quot;sqlite&quot;</span>
-<span class="sd">&quot;&quot;&quot;``store_kind`` of the SQLite / ``.annot`` backend.&quot;&quot;&quot;</span>
+<span class="n">SQLITE_KIND</span> <span class="o">=</span> <span class="s2">"sqlite"</span>
+<span class="sd">"""``store_kind`` of the SQLite / ``.annot`` backend."""</span>
 
-<span class="n">POSTGRES_KIND</span> <span class="o">=</span> <span class="s2">&quot;postgres&quot;</span>
-<span class="sd">&quot;&quot;&quot;``store_kind`` of the Postgres backend.&quot;&quot;&quot;</span>
+<span class="n">POSTGRES_KIND</span> <span class="o">=</span> <span class="s2">"postgres"</span>
+<span class="sd">"""``store_kind`` of the Postgres backend."""</span>
 
 <span class="n">SQLITE_MIGRATION_BUSY_TIMEOUT_MS</span> <span class="o">=</span> <span class="mi">30_000</span>
-<span class="sd">&quot;&quot;&quot;How long a migrating connection waits on another writer&#39;s lock.</span>
+<span class="sd">"""How long a migrating connection waits on another writer's lock.</span>
 
 <span class="sd">Generous on purpose: when several workers race to open the same ``.annot``</span>
 <span class="sd">with ``migrate=True``, the losers should wait for the winner and then skip</span>
-<span class="sd">the already-applied steps, not fail at sqlite&#39;s 5s default.&quot;&quot;&quot;</span>
+<span class="sd">the already-applied steps, not fail at sqlite's 5s default."""</span>
 
 
 <div class="viewcode-block" id="StoreMigrationError">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/migrations.html#lacing.StoreMigrationError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StoreMigrationError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a store migration step is missing or fails.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">"""Raised when a store migration step is missing or fails."""</span></div>
 
 
 
@@ -226,14 +226,14 @@
     <span class="n">from_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a forward store migration from ``from_version`` to ``to_version``.</span>
+<span class="w">    </span><span class="sd">"""Register a forward store migration from ``from_version`` to ``to_version``.</span>
 
-<span class="sd">    The decorated function takes the backend&#39;s open connection and must</span>
+<span class="sd">    The decorated function takes the backend's open connection and must</span>
 <span class="sd">    perform every change of the step — DDL, row rewrites, and the</span>
 <span class="sd">    ``meta.schema_version`` write. Steps must be one version at a time</span>
 <span class="sd">    (``to_version == from_version + 1``); the runner chains them.</span>
 
-<span class="sd">    Step authors: read the module docstring&#39;s rules — no ``executescript``</span>
+<span class="sd">    Step authors: read the module docstring's rules — no ``executescript``</span>
 <span class="sd">    / ``COMMIT`` / ``ROLLBACK`` inside a step, preserve rowids on table</span>
 <span class="sd">    rebuilds, and rebuild the interval index with</span>
 <span class="sd">    :func:`rebuild_annotations_rtree` if the ``annotations`` table was</span>
@@ -241,14 +241,14 @@
 
 <span class="sd">    Re-registering the same ``(store_kind, from_version)`` pair replaces the</span>
 <span class="sd">    previous entry.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">to_version</span> <span class="o">!=</span> <span class="n">from_version</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;store migrations must be single-step: from_version=</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;to_version=</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">; chains compose by repeated lookup.&quot;</span>
+            <span class="sa">f</span><span class="s2">"store migrations must be single-step: from_version=</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"to_version=</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">; chains compose by repeated lookup."</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">from_version</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;from_version must be &gt;= 1, got </span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"from_version must be &gt;= 1, got </span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="n">_STORE_MIGRATION_REGISTRY</span><span class="p">[(</span><span class="n">store_kind</span><span class="p">,</span> <span class="n">from_version</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">to_version</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
@@ -261,12 +261,12 @@
 <div class="viewcode-block" id="reachable_versions">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/migrations.html#lacing.reachable_versions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reachable_versions</span><span class="p">(</span><span class="n">store_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">from_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Versions reachable from ``from_version`` by chaining registered steps.</span>
+<span class="w">    </span><span class="sd">"""Versions reachable from ``from_version`` by chaining registered steps.</span>
 
 <span class="sd">    Ascending, excluding ``from_version`` itself. Empty when no step leaves</span>
 <span class="sd">    ``from_version`` — which is what a refusal message should say out loud</span>
-<span class="sd">    instead of the bare &quot;run a migration&quot; it used to say.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    instead of the bare "run a migration" it used to say.</span>
+<span class="sd">    """</span>
     <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">current</span> <span class="o">=</span> <span class="n">from_version</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">step</span> <span class="o">:=</span> <span class="n">_STORE_MIGRATION_REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">store_kind</span><span class="p">,</span> <span class="n">current</span><span class="p">)))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -284,27 +284,27 @@
     <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">run_step</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]],</span> <span class="nb">int</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Chain registered steps from ``from_version`` up to ``to_version``.</span>
+<span class="w">    </span><span class="sd">"""Chain registered steps from ``from_version`` up to ``to_version``.</span>
 
 <span class="sd">    Backend-neutral core: ``run_step(conn, from_v, to_v, func)`` owns the</span>
-<span class="sd">    backend&#39;s whole per-step discipline (lock, under-lock version re-check,</span>
+<span class="sd">    backend's whole per-step discipline (lock, under-lock version re-check,</span>
 <span class="sd">    step execution, in-transaction verification, commit) and returns the</span>
 <span class="sd">    version the store is now at — ``to_v`` when it applied the step, or the</span>
 <span class="sd">    version it found under the lock when a concurrent migrator had already</span>
 <span class="sd">    advanced it (the loop then reassesses instead of double-applying).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">from_version</span> <span class="o">&gt;</span> <span class="n">to_version</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> store is at schema_version=</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">, newer than &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;the requested v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">; only forward migrations are supported.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> store is at schema_version=</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2">, newer than "</span>
+            <span class="sa">f</span><span class="s2">"the requested v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">; only forward migrations are supported."</span>
         <span class="p">)</span>
     <span class="n">current</span> <span class="o">=</span> <span class="n">from_version</span>
     <span class="k">while</span> <span class="n">current</span> <span class="o">&lt;</span> <span class="n">to_version</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">_STORE_MIGRATION_REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">store_kind</span><span class="p">,</span> <span class="n">current</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;no store migration registered for </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"no store migration registered for </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">next_version</span><span class="p">,</span> <span class="n">func</span> <span class="o">=</span> <span class="n">step</span>
         <span class="k">try</span><span class="p">:</span>
@@ -313,13 +313,13 @@
             <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;store migration </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">next_version</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"store migration </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">next_version</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
         <span class="k">if</span> <span class="n">reached</span> <span class="o">==</span> <span class="n">current</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;store migration </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">next_version</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="s2">&quot;made no progress.&quot;</span>
+                <span class="sa">f</span><span class="s2">"store migration </span><span class="si">{</span><span class="n">store_kind</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">next_version</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="s2">"made no progress."</span>
             <span class="p">)</span>
         <span class="n">current</span> <span class="o">=</span> <span class="n">reached</span>
     <span class="k">return</span> <span class="n">current</span>
@@ -333,30 +333,30 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_read_version</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
+            <span class="s2">"SELECT value FROM meta WHERE key = 'schema_version'"</span>
         <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;cannot read meta.schema_version — not a lacing .annot file? (</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">"cannot read meta.schema_version — not a lacing .annot file? (</span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">)"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-            <span class="s2">&quot;no schema_version row in meta — not a lacing .annot file?&quot;</span>
+            <span class="s2">"no schema_version row in meta — not a lacing .annot file?"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_prepare</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pin the migration connection&#39;s pragmas.</span>
+<span class="w">    </span><span class="sd">"""Pin the migration connection's pragmas.</span>
 
-<span class="sd">    ``foreign_keys = OFF`` explicitly (sqlite&#39;s per-connection default, but</span>
+<span class="sd">    ``foreign_keys = OFF`` explicitly (sqlite's per-connection default, but</span>
 <span class="sd">    the ladder *relies* on it — table rebuilds are impossible under FK</span>
 <span class="sd">    enforcement — so it is pinned, not assumed; ``foreign_key_check`` before</span>
 <span class="sd">    each commit is the compensating guarantee). PRAGMA toggles inside a</span>
-<span class="sd">    step&#39;s transaction are no-ops, so this is the only place it can be set.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PRAGMA busy_timeout = </span><span class="si">{</span><span class="n">SQLITE_MIGRATION_BUSY_TIMEOUT_MS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA foreign_keys = OFF&quot;</span><span class="p">)</span>
+<span class="sd">    step's transaction are no-ops, so this is the only place it can be set.</span>
+<span class="sd">    """</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PRAGMA busy_timeout = </span><span class="si">{</span><span class="n">SQLITE_MIGRATION_BUSY_TIMEOUT_MS</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"PRAGMA foreign_keys = OFF"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_run_step</span><span class="p">(</span>
@@ -365,84 +365,84 @@
     <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One step under ``BEGIN IMMEDIATE``, fully verified before COMMIT.&quot;&quot;&quot;</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;BEGIN IMMEDIATE&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""One step under ``BEGIN IMMEDIATE``, fully verified before COMMIT."""</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"BEGIN IMMEDIATE"</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">found</span> <span class="o">=</span> <span class="n">_sqlite_read_version</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">found</span> <span class="o">!=</span> <span class="n">from_version</span><span class="p">:</span>
             <span class="c1"># A concurrent migrator won the race while we waited for the</span>
-            <span class="c1"># lock; whatever it did is committed truth — reassess, don&#39;t</span>
+            <span class="c1"># lock; whatever it did is committed truth — reassess, don't</span>
             <span class="c1"># re-apply.</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;ROLLBACK&quot;</span><span class="p">)</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"ROLLBACK"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">found</span>
         <span class="n">func</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">conn</span><span class="o">.</span><span class="n">in_transaction</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">: the step ended its own transaction — &quot;</span>
-                <span class="s2">&quot;conn.executescript (which implicitly commits) and explicit &quot;</span>
-                <span class="s2">&quot;COMMIT/ROLLBACK are forbidden inside steps; whatever ran &quot;</span>
-                <span class="s2">&quot;before the break is already committed.&quot;</span>
+                <span class="sa">f</span><span class="s2">"store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; "</span>
+                <span class="sa">f</span><span class="s2">"v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">: the step ended its own transaction — "</span>
+                <span class="s2">"conn.executescript (which implicitly commits) and explicit "</span>
+                <span class="s2">"COMMIT/ROLLBACK are forbidden inside steps; whatever ran "</span>
+                <span class="s2">"before the break is already committed."</span>
             <span class="p">)</span>
         <span class="n">stamped</span> <span class="o">=</span> <span class="n">_sqlite_read_version</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">stamped</span> <span class="o">!=</span> <span class="n">to_version</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2"> completed without stamping &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;meta.schema_version (found </span><span class="si">{</span><span class="n">stamped</span><span class="si">}</span><span class="s2">); the step function &quot;</span>
-                <span class="s2">&quot;must write it. Rolled back.&quot;</span>
+                <span class="sa">f</span><span class="s2">"store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; "</span>
+                <span class="sa">f</span><span class="s2">"v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2"> completed without stamping "</span>
+                <span class="sa">f</span><span class="s2">"meta.schema_version (found </span><span class="si">{</span><span class="n">stamped</span><span class="si">}</span><span class="s2">); the step function "</span>
+                <span class="s2">"must write it. Rolled back."</span>
             <span class="p">)</span>
         <span class="n">_sqlite_verify_integrity</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">from_version</span><span class="o">=</span><span class="n">from_version</span><span class="p">,</span> <span class="n">to_version</span><span class="o">=</span><span class="n">to_version</span><span class="p">)</span>
-        <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;COMMIT&quot;</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"COMMIT"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">to_version</span>
     <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">):</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;ROLLBACK&quot;</span><span class="p">)</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"ROLLBACK"</span><span class="p">)</span>
         <span class="k">raise</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_verify_integrity</span><span class="p">(</span>
     <span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">from_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;In-transaction sanity gates a defective step cannot slip past.</span>
+<span class="w">    </span><span class="sd">"""In-transaction sanity gates a defective step cannot slip past.</span>
 
-<span class="sd">    Runs before the step&#39;s COMMIT so a violation rolls the step back.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">head</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">violations</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA foreign_key_check&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="sd">    Runs before the step's COMMIT so a violation rolls the step back.</span>
+<span class="sd">    """</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"store migration </span><span class="si">{</span><span class="n">SQLITE_KIND</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">from_version</span><span class="si">}</span><span class="s2"> -&gt; v</span><span class="si">{</span><span class="n">to_version</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">violations</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"PRAGMA foreign_key_check"</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">violations</span><span class="p">:</span>
         <span class="n">sample</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">violations</span><span class="p">[:</span><span class="mi">5</span><span class="p">]]</span>
         <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2">: foreign_key_check found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">violations</span><span class="p">)</span><span class="si">}</span><span class="s2"> violation(s), &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;e.g. </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">. Rolled back.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2">: foreign_key_check found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">violations</span><span class="p">)</span><span class="si">}</span><span class="s2"> violation(s), "</span>
+            <span class="sa">f</span><span class="s2">"e.g. </span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">. Rolled back."</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="n">_sqlite_has_table</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s2">&quot;annotations&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_sqlite_has_table</span><span class="p">(</span>
-        <span class="n">conn</span><span class="p">,</span> <span class="s2">&quot;annotations_rtree&quot;</span>
+    <span class="k">if</span> <span class="n">_sqlite_has_table</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s2">"annotations"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_sqlite_has_table</span><span class="p">(</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="s2">"annotations_rtree"</span>
     <span class="p">):</span>
         <span class="n">orphaned</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s2">&quot;SELECT count(*) FROM annotations_rtree r WHERE NOT EXISTS &quot;</span>
-            <span class="s2">&quot;(SELECT 1 FROM annotations a WHERE a.rowid = r.rowid)&quot;</span>
+            <span class="s2">"SELECT count(*) FROM annotations_rtree r WHERE NOT EXISTS "</span>
+            <span class="s2">"(SELECT 1 FROM annotations a WHERE a.rowid = r.rowid)"</span>
         <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">unindexed</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s2">&quot;SELECT count(*) FROM annotations a WHERE a.start_value IS NOT NULL &quot;</span>
-            <span class="s2">&quot;AND NOT EXISTS &quot;</span>
-            <span class="s2">&quot;(SELECT 1 FROM annotations_rtree r WHERE r.rowid = a.rowid)&quot;</span>
+            <span class="s2">"SELECT count(*) FROM annotations a WHERE a.start_value IS NOT NULL "</span>
+            <span class="s2">"AND NOT EXISTS "</span>
+            <span class="s2">"(SELECT 1 FROM annotations_rtree r WHERE r.rowid = a.rowid)"</span>
         <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">orphaned</span> <span class="ow">or</span> <span class="n">unindexed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2">: annotations_rtree is out of sync (</span><span class="si">{</span><span class="n">orphaned</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;orphaned index row(s), </span><span class="si">{</span><span class="n">unindexed</span><span class="si">}</span><span class="s2"> unindexed &quot;</span>
-                <span class="s2">&quot;annotation(s)). Table rebuilds must preserve rowids &quot;</span>
-                <span class="s2">&quot;(INSERT INTO new (rowid, ...) SELECT rowid, ... FROM old) &quot;</span>
-                <span class="s2">&quot;and re-index via rebuild_annotations_rtree(conn). &quot;</span>
-                <span class="s2">&quot;Rolled back.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2">: annotations_rtree is out of sync (</span><span class="si">{</span><span class="n">orphaned</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"orphaned index row(s), </span><span class="si">{</span><span class="n">unindexed</span><span class="si">}</span><span class="s2"> unindexed "</span>
+                <span class="s2">"annotation(s)). Table rebuilds must preserve rowids "</span>
+                <span class="s2">"(INSERT INTO new (rowid, ...) SELECT rowid, ... FROM old) "</span>
+                <span class="s2">"and re-index via rebuild_annotations_rtree(conn). "</span>
+                <span class="s2">"Rolled back."</span>
             <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_has_table</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s2">&quot;SELECT 1 FROM sqlite_master WHERE type IN (&#39;table&#39;, &#39;view&#39;) AND name = ?&quot;</span><span class="p">,</span>
+            <span class="s2">"SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ?"</span><span class="p">,</span>
             <span class="p">(</span><span class="n">name</span><span class="p">,),</span>
         <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
         <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -452,25 +452,25 @@
 <div class="viewcode-block" id="rebuild_annotations_rtree">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/migrations.html#lacing.rebuild_annotations_rtree">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rebuild_annotations_rtree</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rebuild the interval index from the ``annotations`` table, in place.</span>
+<span class="w">    </span><span class="sd">"""Rebuild the interval index from the ``annotations`` table, in place.</span>
 
 <span class="sd">    For use *inside* a migration step after a table rebuild. Reproduces the</span>
-<span class="sd">    store&#39;s ULP-widening contract (bounds widened by one float ULP so</span>
+<span class="sd">    store's ULP-widening contract (bounds widened by one float ULP so</span>
 <span class="sd">    float→exact-bound comparisons never drop hits — see</span>
 <span class="sd">    :mod:`lacing.store.sqlite`). Returns the number of rows indexed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM annotations_rtree&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"DELETE FROM annotations_rtree"</span><span class="p">)</span>
     <span class="n">indexed</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-        <span class="s2">&quot;SELECT rowid, start_value, start_rate, end_value, end_rate &quot;</span>
-        <span class="s2">&quot;FROM annotations WHERE start_value IS NOT NULL&quot;</span>
+        <span class="s2">"SELECT rowid, start_value, start_rate, end_value, end_rate "</span>
+        <span class="s2">"FROM annotations WHERE start_value IS NOT NULL"</span>
     <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">start_value</span><span class="p">,</span> <span class="n">start_rate</span><span class="p">,</span> <span class="n">end_value</span><span class="p">,</span> <span class="n">end_rate</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
         <span class="n">start_s</span> <span class="o">=</span> <span class="n">start_value</span> <span class="o">/</span> <span class="n">start_rate</span>
         <span class="n">end_s</span> <span class="o">=</span> <span class="n">end_value</span> <span class="o">/</span> <span class="n">end_rate</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s2">&quot;INSERT INTO annotations_rtree (rowid, start_seconds, end_seconds) &quot;</span>
-            <span class="s2">&quot;VALUES (?, ?, ?)&quot;</span><span class="p">,</span>
+            <span class="s2">"INSERT INTO annotations_rtree (rowid, start_seconds, end_seconds) "</span>
+            <span class="s2">"VALUES (?, ?, ?)"</span><span class="p">,</span>
             <span class="p">(</span>
                 <span class="n">rowid</span><span class="p">,</span>
                 <span class="n">math</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">start_s</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
@@ -489,9 +489,9 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Migrate a ``.annot`` file in place, returning ``(from, to)`` versions.</span>
+<span class="w">    </span><span class="sd">"""Migrate a ``.annot`` file in place, returning ``(from, to)`` versions.</span>
 
-<span class="sd">    ``to_version`` defaults to the current build&#39;s</span>
+<span class="sd">    ``to_version`` defaults to the current build's</span>
 <span class="sd">    :data:`lacing.store.sqlite.SCHEMA_VERSION`. Already-current files are a</span>
 <span class="sd">    no-op (``from == to``). Each step runs in its own ``BEGIN IMMEDIATE``</span>
 <span class="sd">    transaction with the version re-checked under the lock, so concurrent</span>
@@ -500,13 +500,13 @@
 
 <span class="sd">    Raises :class:`StoreMigrationError` when the file does not exist, is</span>
 <span class="sd">    not a ``.annot`` file, a step is missing, fails, or breaks one of the</span>
-<span class="sd">    runner&#39;s in-transaction guarantees.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    runner's in-transaction guarantees.</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.sqlite</span><span class="w"> </span><span class="kn">import</span> <span class="n">SCHEMA_VERSION</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="c1"># Connecting would CREATE an empty junk database at the typo&#39;d path.</span>
-        <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;no such file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Connecting would CREATE an empty junk database at the typo'd path.</span>
+        <span class="k">raise</span> <span class="n">StoreMigrationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"no such file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">SCHEMA_VERSION</span> <span class="k">if</span> <span class="n">to_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_version</span><span class="p">)</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">isolation_level</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -528,12 +528,12 @@
 <div class="viewcode-block" id="migrate_sqlite_connection">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/migrations.html#lacing.migrate_sqlite_connection">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">migrate_sqlite_connection</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">to_version</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the SQLite ladder on an already-open connection.</span>
+<span class="w">    </span><span class="sd">"""Run the SQLite ladder on an already-open connection.</span>
 
 <span class="sd">    The hook :class:`~lacing.store.sqlite.SqliteStore` uses for its</span>
 <span class="sd">    ``migrate=True`` opt-in; external callers with a file path want</span>
 <span class="sd">    :func:`migrate_annot_file`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_sqlite_prepare</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_run_steps</span><span class="p">(</span>
         <span class="n">conn</span><span class="p">,</span>
@@ -552,16 +552,16 @@
 
 <span class="nd">@register_store_migration</span><span class="p">(</span><span class="n">store_kind</span><span class="o">=</span><span class="n">SQLITE_KIND</span><span class="p">,</span> <span class="n">from_version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">to_version</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_sqlite_v1_to_v2</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;v2 (lacing#14 / defect D5): ``prov_was_derived_from`` may hold 64-hex</span>
+<span class="w">    </span><span class="sd">"""v2 (lacing#14 / defect D5): ``prov_was_derived_from`` may hold 64-hex</span>
 <span class="sd">    artifact ``asset_id`` strings alongside annotation UUIDs.</span>
 
 <span class="sd">    Stamp-only, by design: every v1 row is already valid v2 data — the</span>
 <span class="sd">    version bump exists to make **pre-v2 builds** (whose read path eagerly</span>
 <span class="sd">    ``UUID()``-parses the column) refuse the file instead of crashing on</span>
-<span class="sd">    the first asset id. The step&#39;s whole job is the version write; the</span>
-<span class="sd">    runner&#39;s in-transaction verification covers the rest.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE meta SET value = &#39;2&#39; WHERE key = &#39;schema_version&#39;&quot;</span><span class="p">)</span>
+<span class="sd">    the first asset id. The step's whole job is the version write; the</span>
+<span class="sd">    runner's in-transaction verification covers the rest.</span>
+<span class="sd">    """</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"UPDATE meta SET value = '2' WHERE key = 'schema_version'"</span><span class="p">)</span>
 </pre></div>
 
            </div>

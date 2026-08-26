@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.digest &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.digest &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,23 +125,23 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.digest</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Content digests over an annotation&#39;s *value* — the freshness primitive.</span>
+<span></span><span class="sd">"""Content digests over an annotation's *value* — the freshness primitive.</span>
 
 <span class="sd">lacing has **three** digests and they answer **three different questions**.</span>
 <span class="sd">Collapsing any two of them is a silent correctness bug, so the boundary is</span>
 <span class="sd">spelled out here and cross-referenced from the other two:</span>
 
 <span class="sd">- :func:`lacing.hash_bytes` / :func:`lacing.hash_file` — SHA-256 over an</span>
-<span class="sd">  **artifact&#39;s bytes**. Answers *&quot;are these two files the same file?&quot;*. This</span>
+<span class="sd">  **artifact's bytes**. Answers *"are these two files the same file?"*. This</span>
 <span class="sd">  is the ``Artifact.asset_id`` contract (:mod:`lacing.artifact`).</span>
 <span class="sd">- :func:`lacing.server.etag.annotation_etag` — BLAKE2b-128 over the **whole</span>
-<span class="sd">  annotation**, ``id`` and ``provenance`` included. Answers *&quot;has this record</span>
-<span class="sd">  been touched since I read it?&quot;*. This is the ``If-Match`` / HTTP 412</span>
+<span class="sd">  annotation**, ``id`` and ``provenance`` included. Answers *"has this record</span>
+<span class="sd">  been touched since I read it?"*. This is the ``If-Match`` / HTTP 412</span>
 <span class="sd">  optimistic-concurrency primitive, and it is *deliberately* unstable across</span>
 <span class="sd">  regenerations.</span>
-<span class="sd">- :func:`annotation_value_digest` (this module) — SHA-256 over an annotation&#39;s</span>
-<span class="sd">  **value**, ``id`` and ``provenance`` excluded. Answers *&quot;did the answer</span>
-<span class="sd">  actually change?&quot;*. This is the freshness / early-cutoff primitive.</span>
+<span class="sd">- :func:`annotation_value_digest` (this module) — SHA-256 over an annotation's</span>
+<span class="sd">  **value**, ``id`` and ``provenance`` excluded. Answers *"did the answer</span>
+<span class="sd">  actually change?"*. This is the freshness / early-cutoff primitive.</span>
 
 <span class="sd">A regeneration that produces byte-identical content mints a fresh ``uuid4``</span>
 <span class="sd">``id`` and a fresh ``provenance.generated_at_time``, so ``annotation_etag``</span>
@@ -167,13 +167,13 @@
 
 <span class="sd">**Included** (:data:`VALUE_FIELDS`):</span>
 
-<span class="sd">- ``body`` — it *is* the annotation&#39;s value. Trivially included.</span>
+<span class="sd">- ``body`` — it *is* the annotation's value. Trivially included.</span>
 <span class="sd">- ``body_schema_uri`` — the same ``dict`` means different things under</span>
 <span class="sd">  different schemas, and a schema-version bump is a semantic change even when</span>
 <span class="sd">  the payload bytes are unchanged. Excluding it would let a ``.../v1`` body</span>
-<span class="sd">  satisfy a ``.../v2`` consumer&#39;s cache lookup.</span>
+<span class="sd">  satisfy a ``.../v2`` consumer's cache lookup.</span>
 <span class="sd">- ``tier`` — the tier is part of what the annotation asserts (which layer of</span>
-<span class="sd">  the analysis this claim belongs to), and lacing&#39;s tier stereotypes impose</span>
+<span class="sd">  the analysis this claim belongs to), and lacing's tier stereotypes impose</span>
 <span class="sd">  structural constraints. Two identical bodies on different tiers are</span>
 <span class="sd">  different claims.</span>
 <span class="sd">- ``reference`` — what the annotation is *about*: the asset and the interval.</span>
@@ -212,7 +212,7 @@
 <span class="sd">  **The default.** Use it unless you can state why the rest is irrelevant.</span>
 <span class="sd">- :func:`annotation_body_digest` — ``{body, body_schema_uri}`` only.</span>
 
-<span class="sd">**Be precise about what the narrow one drops, because &quot;re-timing&quot; undersells</span>
+<span class="sd">**Be precise about what the narrow one drops, because "re-timing" undersells</span>
 <span class="sd">it.** ``annotation_body_digest`` drops the *entire* ``reference`` — the asset</span>
 <span class="sd">identity as well as the interval — plus ``tier`` and ``confidence``. Two</span>
 <span class="sd">annotations carrying the same body over **different assets** digest alike</span>
@@ -239,8 +239,8 @@
 <span class="sd">the boundary is, because an unbounded version of it would be false:</span>
 
 <span class="sd">1. **Non-``str`` mapping keys raise** :class:`NonStringBodyKeyError`.</span>
-<span class="sd">   ``model_dump(mode=&quot;json&quot;)`` coerces keys to strings, so a body like</span>
-<span class="sd">   ``{1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}`` collapses to ``{&quot;1&quot;: &quot;b&quot;}`` — an entire entry is</span>
+<span class="sd">   ``model_dump(mode="json")`` coerces keys to strings, so a body like</span>
+<span class="sd">   ``{1: "a", "1": "b"}`` collapses to ``{"1": "b"}`` — an entire entry is</span>
 <span class="sd">   annihilated, and two bodies differing only in the annihilated entry would</span>
 <span class="sd">   digest **alike**. That is a wrong hit, so it is refused rather than</span>
 <span class="sd">   documented. Such a body is already broken data: it does not survive a</span>
@@ -254,7 +254,7 @@
 <span class="sd">   ``PydanticSerializationError`` rather than digesting a ``repr`` that embeds</span>
 <span class="sd">   a memory address.</span>
 <span class="sd">3. **Equal-but-differently-serialised rationals digest differently.**</span>
-<span class="sd">   :class:`~lacing.time.RationalTime` serialises as ``{&quot;v&quot;: …, &quot;r&quot;: …}``, so</span>
+<span class="sd">   :class:`~lacing.time.RationalTime` serialises as ``{"v": …, "r": …}``, so</span>
 <span class="sd">   ``RationalTime(1, 24)`` and ``RationalTime(2, 48)`` compare **equal** but</span>
 <span class="sd">   digest differently — a rate change moves the digest even when the instant</span>
 <span class="sd">   is unchanged. This is a spurious *miss*. (``annotation_etag`` has the same</span>
@@ -263,7 +263,7 @@
 <span class="sd">Changing :data:`VALUE_FIELDS` or the canonicalisation is a **breaking cache</span>
 <span class="sd">invalidation event** for every consumer: every digest changes at once. Bump</span>
 <span class="sd">the scheme string when you do it, so the change is legible in a trace.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -276,95 +276,95 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;annotation_value_digest&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;annotation_body_digest&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NonStringBodyKeyError&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VALUE_FIELDS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BODY_FIELDS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VALUE_DIGEST_SCHEME&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BODY_DIGEST_SCHEME&quot;</span><span class="p">,</span>
+    <span class="s2">"annotation_value_digest"</span><span class="p">,</span>
+    <span class="s2">"annotation_body_digest"</span><span class="p">,</span>
+    <span class="s2">"NonStringBodyKeyError"</span><span class="p">,</span>
+    <span class="s2">"VALUE_FIELDS"</span><span class="p">,</span>
+    <span class="s2">"BODY_FIELDS"</span><span class="p">,</span>
+    <span class="s2">"VALUE_DIGEST_SCHEME"</span><span class="p">,</span>
+    <span class="s2">"BODY_DIGEST_SCHEME"</span><span class="p">,</span>
 <span class="p">]</span>
 
 
 <div class="viewcode-block" id="NonStringBodyKeyError">
 <a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.NonStringBodyKeyError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NonStringBodyKeyError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An annotation ``body`` contains a mapping key that is not a ``str``.</span>
+<span class="w">    </span><span class="sd">"""An annotation ``body`` contains a mapping key that is not a ``str``.</span>
 
-<span class="sd">    JSON object keys are strings, so ``model_dump(mode=&quot;json&quot;)`` coerces</span>
+<span class="sd">    JSON object keys are strings, so ``model_dump(mode="json")`` coerces</span>
 <span class="sd">    non-string keys — and two distinct keys can coerce to the *same* string,</span>
-<span class="sd">    silently annihilating an entry. ``{1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}`` dumps to</span>
-<span class="sd">    ``{&quot;1&quot;: &quot;b&quot;}``; a body differing only in the lost entry would digest</span>
+<span class="sd">    silently annihilating an entry. ``{1: "a", "1": "b"}`` dumps to</span>
+<span class="sd">    ``{"1": "b"}``; a body differing only in the lost entry would digest</span>
 <span class="sd">    identically, which is a wrong cache **hit**.</span>
 
 <span class="sd">    Since lacing#24 the *envelope* refuses such a body at validation — the</span>
 <span class="sd">    producer-side fix. This error lives here rather than in ``lacing.model``</span>
 <span class="sd">    because this module is deliberately import-light (stdlib only, pinned by</span>
 <span class="sd">    test) and the model can import from it, not vice versa.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"body"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Raise :class:`NonStringBodyKeyError` for any non-``str`` mapping key.</span>
 
 <span class="sd">    Walks nested mappings and sequences, because the key-collapse hazard is</span>
-<span class="sd">    just as real one level down: ``{&quot;k&quot;: {1: &quot;a&quot;, &quot;1&quot;: &quot;b&quot;}}`` loses an entry</span>
+<span class="sd">    just as real one level down: ``{"k": {1: "a", "1": "b"}}`` loses an entry</span>
 <span class="sd">    exactly the same way. ``path`` is threaded through so the error names the</span>
 <span class="sd">    offending location rather than just the annotation.</span>
 
 <span class="sd">    The single implementation behind two enforcement points: the</span>
 <span class="sd">    ``Annotation.body`` validator (the primary gate, lacing#24) and this</span>
-<span class="sd">    module&#39;s pre-digest re-check (defense-in-depth — ``model_copy`` /</span>
+<span class="sd">    module's pre-digest re-check (defense-in-depth — ``model_copy`` /</span>
 <span class="sd">    ``model_construct`` bypass validators, and a wrong digest is a wrong</span>
 <span class="sd">    cache *hit*).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">NonStringBodyKeyError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has a non-str key </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> of type &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. JSON object keys are strings, so &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;this key would be coerced — and a coercion collision &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;silently drops an entry, which would make two different &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;annotations digest alike. Fix the producer so the body &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;contains only JSON types.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> has a non-str key </span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> of type "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. JSON object keys are strings, so "</span>
+                    <span class="sa">f</span><span class="s2">"this key would be coerced — and a coercion collision "</span>
+                    <span class="sa">f</span><span class="s2">"silently drops an entry, which would make two different "</span>
+                    <span class="sa">f</span><span class="s2">"annotations digest alike. Fix the producer so the body "</span>
+                    <span class="sa">f</span><span class="s2">"contains only JSON types."</span>
                 <span class="p">)</span>
-            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2">]&quot;</span><span class="p">)</span>
+            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2">]"</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sub</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+            <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
 
 
 <span class="n">VALUE_FIELDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;body&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;confidence&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;reference&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;tier&quot;</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">,</span>
+    <span class="s2">"body_schema_uri"</span><span class="p">,</span>
+    <span class="s2">"confidence"</span><span class="p">,</span>
+    <span class="s2">"reference"</span><span class="p">,</span>
+    <span class="s2">"tier"</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;Annotation fields that constitute its *value*. See the module docstring for</span>
-<span class="sd">why each is in, and why ``id`` and ``provenance`` are out.&quot;&quot;&quot;</span>
+<span class="sd">"""Annotation fields that constitute its *value*. See the module docstring for</span>
+<span class="sd">why each is in, and why ``id`` and ``provenance`` are out."""</span>
 
-<span class="n">BODY_FIELDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">)</span>
-<span class="sd">&quot;&quot;&quot;The narrower payload for :func:`annotation_body_digest`.</span>
+<span class="n">BODY_FIELDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"body"</span><span class="p">,</span> <span class="s2">"body_schema_uri"</span><span class="p">)</span>
+<span class="sd">"""The narrower payload for :func:`annotation_body_digest`.</span>
 
 <span class="sd">Note what this drops, which is more than timing: the **entire** ``reference``</span>
 <span class="sd">(*which asset* / *which node* / *which annotation*, not just *when*), plus</span>
 <span class="sd">``tier`` and ``confidence``. Two annotations over different assets digest</span>
-<span class="sd">alike here.&quot;&quot;&quot;</span>
+<span class="sd">alike here."""</span>
 
-<span class="n">VALUE_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">&quot;lacing/annotation-value-digest/v1&quot;</span>
-<span class="sd">&quot;&quot;&quot;Domain-separation tag mixed into :func:`annotation_value_digest`.&quot;&quot;&quot;</span>
+<span class="n">VALUE_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">"lacing/annotation-value-digest/v1"</span>
+<span class="sd">"""Domain-separation tag mixed into :func:`annotation_value_digest`."""</span>
 
-<span class="n">BODY_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">&quot;lacing/annotation-body-digest/v1&quot;</span>
-<span class="sd">&quot;&quot;&quot;Domain-separation tag mixed into :func:`annotation_body_digest`.&quot;&quot;&quot;</span>
+<span class="n">BODY_DIGEST_SCHEME</span> <span class="o">=</span> <span class="s2">"lacing/annotation-body-digest/v1"</span>
+<span class="sd">"""Domain-separation tag mixed into :func:`annotation_body_digest`."""</span>
 
 
 <div class="viewcode-block" id="annotation_value_digest">
 <a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.annotation_value_digest">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">annotation_value_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the SHA-256 hex digest of ``annotation``&#39;s value.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotation_value_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">"Annotation"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the SHA-256 hex digest of ``annotation``'s value.</span>
 
 <span class="sd">    Covers ``body``, ``body_schema_uri``, ``tier``, ``reference`` and</span>
 <span class="sd">    ``confidence``. Excludes ``id`` and ``provenance``, so a regeneration that</span>
@@ -380,16 +380,16 @@
 <span class="sd">    &gt;&gt;&gt; def make(**kw):</span>
 <span class="sd">    ...     base = dict(</span>
 <span class="sd">    ...         id=uuid4(),</span>
-<span class="sd">    ...         tier=&quot;words&quot;,</span>
+<span class="sd">    ...         tier="words",</span>
 <span class="sd">    ...         reference=MediaRef(</span>
-<span class="sd">    ...             asset_id=&quot;sha256:abc&quot;,</span>
+<span class="sd">    ...             asset_id="sha256:abc",</span>
 <span class="sd">    ...             interval=TimeInterval(RationalTime(0), RationalTime(24000)),</span>
 <span class="sd">    ...         ),</span>
-<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
-<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         body={"text": "hello"},</span>
+<span class="sd">    ...         body_schema_uri="annot://schema/word/v1",</span>
 <span class="sd">    ...         provenance=Provenance(</span>
-<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
-<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             was_generated_by="agent:m@1",</span>
+<span class="sd">    ...             was_attributed_to="thor",</span>
 <span class="sd">    ...             generated_at_time=RationalTime(0),</span>
 <span class="sd">    ...         ),</span>
 <span class="sd">    ...     )</span>
@@ -400,8 +400,8 @@
 
 <span class="sd">    &gt;&gt;&gt; a = make()</span>
 <span class="sd">    &gt;&gt;&gt; b = make(provenance=Provenance(</span>
-<span class="sd">    ...     was_generated_by=&quot;agent:m@1&quot;,</span>
-<span class="sd">    ...     was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...     was_generated_by="agent:m@1",</span>
+<span class="sd">    ...     was_attributed_to="thor",</span>
 <span class="sd">    ...     generated_at_time=RationalTime(999),</span>
 <span class="sd">    ... ))</span>
 <span class="sd">    &gt;&gt;&gt; annotation_value_digest(a) == annotation_value_digest(b)</span>
@@ -409,19 +409,19 @@
 
 <span class="sd">    A changed body does not:</span>
 
-<span class="sd">    &gt;&gt;&gt; annotation_value_digest(make(body={&quot;text&quot;: &quot;goodbye&quot;})) == (</span>
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(make(body={"text": "goodbye"})) == (</span>
 <span class="sd">    ...     annotation_value_digest(a)</span>
 <span class="sd">    ... )</span>
 <span class="sd">    False</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">_digest</span><span class="p">(</span><span class="n">VALUE_DIGEST_SCHEME</span><span class="p">,</span> <span class="n">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">VALUE_FIELDS</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="annotation_body_digest">
 <a class="viewcode-back" href="../../module_docs/lacing/digest.html#lacing.annotation_body_digest">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">annotation_body_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the SHA-256 hex digest of ``{body, body_schema_uri}`` only.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotation_body_digest</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">"Annotation"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the SHA-256 hex digest of ``{body, body_schema_uri}`` only.</span>
 
 <span class="sd">    The narrow sibling of :func:`annotation_value_digest`. It drops the</span>
 <span class="sd">    **entire** ``reference`` — *which asset* / *which node* / *which</span>
@@ -439,28 +439,28 @@
 <span class="sd">    &gt;&gt;&gt; from lacing import RationalTime, TimeInterval</span>
 <span class="sd">    &gt;&gt;&gt; def over(asset):</span>
 <span class="sd">    ...     return Annotation(</span>
-<span class="sd">    ...         id=uuid4(), tier=&quot;words&quot;,</span>
+<span class="sd">    ...         id=uuid4(), tier="words",</span>
 <span class="sd">    ...         reference=MediaRef(</span>
 <span class="sd">    ...             asset_id=asset,</span>
 <span class="sd">    ...             interval=TimeInterval(RationalTime(0), RationalTime(24000)),</span>
 <span class="sd">    ...         ),</span>
-<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
-<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         body={"text": "hello"},</span>
+<span class="sd">    ...         body_schema_uri="annot://schema/word/v1",</span>
 <span class="sd">    ...         provenance=Provenance(</span>
-<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
-<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             was_generated_by="agent:m@1",</span>
+<span class="sd">    ...             was_attributed_to="thor",</span>
 <span class="sd">    ...             generated_at_time=RationalTime(0),</span>
 <span class="sd">    ...         ),</span>
 <span class="sd">    ...     )</span>
 
 <span class="sd">    Different **assets**, identical body digest — this is the footgun:</span>
 
-<span class="sd">    &gt;&gt;&gt; annotation_body_digest(over(&quot;sha256:interview&quot;)) == (</span>
-<span class="sd">    ...     annotation_body_digest(over(&quot;sha256:broadcast&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; annotation_body_digest(over("sha256:interview")) == (</span>
+<span class="sd">    ...     annotation_body_digest(over("sha256:broadcast"))</span>
 <span class="sd">    ... )</span>
 <span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; annotation_value_digest(over(&quot;sha256:interview&quot;)) == (</span>
-<span class="sd">    ...     annotation_value_digest(over(&quot;sha256:broadcast&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; annotation_value_digest(over("sha256:interview")) == (</span>
+<span class="sd">    ...     annotation_value_digest(over("sha256:broadcast"))</span>
 <span class="sd">    ... )</span>
 <span class="sd">    False</span>
 
@@ -470,13 +470,13 @@
 <span class="sd">    &gt;&gt;&gt; def make(interval):</span>
 <span class="sd">    ...     return Annotation(</span>
 <span class="sd">    ...         id=uuid4(),</span>
-<span class="sd">    ...         tier=&quot;words&quot;,</span>
-<span class="sd">    ...         reference=MediaRef(asset_id=&quot;sha256:abc&quot;, interval=interval),</span>
-<span class="sd">    ...         body={&quot;text&quot;: &quot;hello&quot;},</span>
-<span class="sd">    ...         body_schema_uri=&quot;annot://schema/word/v1&quot;,</span>
+<span class="sd">    ...         tier="words",</span>
+<span class="sd">    ...         reference=MediaRef(asset_id="sha256:abc", interval=interval),</span>
+<span class="sd">    ...         body={"text": "hello"},</span>
+<span class="sd">    ...         body_schema_uri="annot://schema/word/v1",</span>
 <span class="sd">    ...         provenance=Provenance(</span>
-<span class="sd">    ...             was_generated_by=&quot;agent:m@1&quot;,</span>
-<span class="sd">    ...             was_attributed_to=&quot;thor&quot;,</span>
+<span class="sd">    ...             was_generated_by="agent:m@1",</span>
+<span class="sd">    ...             was_attributed_to="thor",</span>
 <span class="sd">    ...             generated_at_time=RationalTime(0),</span>
 <span class="sd">    ...         ),</span>
 <span class="sd">    ...     )</span>
@@ -486,7 +486,7 @@
 <span class="sd">    True</span>
 <span class="sd">    &gt;&gt;&gt; annotation_value_digest(early) == annotation_value_digest(late)</span>
 <span class="sd">    False</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">_digest</span><span class="p">(</span><span class="n">BODY_DIGEST_SCHEME</span><span class="p">,</span> <span class="n">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">BODY_FIELDS</span><span class="p">))</span></div>
 
 
@@ -494,37 +494,37 @@
 <span class="c1"># --- internals ---------------------------------------------------------------</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">&quot;Annotation&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project ``annotation``&#39;s JSON-mode dump onto ``fields``.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_payload</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="s2">"Annotation"</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Project ``annotation``'s JSON-mode dump onto ``fields``.</span>
 
 <span class="sd">    Dumping the whole model once and projecting is deliberate: it routes every</span>
-<span class="sd">    field through pydantic&#39;s JSON serializer, so ``RationalTime`` reaches the</span>
+<span class="sd">    field through pydantic's JSON serializer, so ``RationalTime`` reaches the</span>
 <span class="sd">    canonicaliser in its ``{v, r}`` wire form. Hand-assembling the payload from</span>
 <span class="sd">    raw attributes bypasses that.</span>
 
 <span class="sd">    The dump is preceded by :func:`reject_non_string_keys` over the *raw*</span>
 <span class="sd">    body, because the check has to happen **before** the coercion it exists to</span>
 <span class="sd">    catch — once dumped, the annihilated entry is already gone.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Defense-in-depth, not the primary gate: the envelope validator refuses</span>
     <span class="c1"># these at construction (lacing#24), but model_copy/model_construct</span>
     <span class="c1"># bypass validators, and a wrong digest here is a wrong cache HIT.</span>
-    <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span>
-    <span class="n">dumped</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+    <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="s2">"body"</span><span class="p">)</span>
+    <span class="n">dumped</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"json"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">dumped</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_digest</span><span class="p">(</span><span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SHA-256 hex over ``scheme`` plus the canonical JSON of ``payload``.</span>
+<span class="w">    </span><span class="sd">"""SHA-256 hex over ``scheme`` plus the canonical JSON of ``payload``.</span>
 
 <span class="sd">    ``sort_keys=True`` canonicalises dict ordering recursively, which is what</span>
 <span class="sd">    makes the digest independent of insertion order and stable across</span>
 <span class="sd">    processes. ``scheme`` is a domain-separation tag: without it, two digest</span>
 <span class="sd">    functions in this module whose payloads happened to coincide would return</span>
 <span class="sd">    the same hex for different questions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">canonical</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">canonical</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<span class="sd">    """</span>
+    <span class="n">canonical</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">canonical</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 </pre></div>
 
            </div>

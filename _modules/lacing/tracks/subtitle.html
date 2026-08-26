@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.tracks.subtitle &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.tracks.subtitle &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.tracks.subtitle</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Subtitle / lyric / caption tracks — the (sections, lines, words) trio.</span>
+<span></span><span class="sd">"""Subtitle / lyric / caption tracks — the (sections, lines, words) trio.</span>
 
 <span class="sd">``SubtitleBuilder`` lets callers add sections, lines, and words to a</span>
 <span class="sd">store with float seconds and a single ``asset_id``, instead of</span>
@@ -152,19 +152,19 @@
 <span class="sd">    from lacing.tracks.subtitle import SubtitleBuilder, SubtitleTrack</span>
 
 <span class="sd">    store = MemoryStore()</span>
-<span class="sd">    with SubtitleBuilder(store, asset_id=&quot;song/audio.mp3&quot;) as b:</span>
-<span class="sd">        b.section(&quot;intro&quot;, 0.0, 12.5)</span>
-<span class="sd">        b.line(&quot;I came down to the river&quot;, 12.5, 16.2,</span>
-<span class="sd">               section=&quot;verse_1&quot;, words=[</span>
-<span class="sd">                   (&quot;I&quot;,     12.5, 12.7),</span>
-<span class="sd">                   (&quot;came&quot;,  12.7, 13.0),</span>
-<span class="sd">                   (&quot;down&quot;,  13.0, 13.3),</span>
+<span class="sd">    with SubtitleBuilder(store, asset_id="song/audio.mp3") as b:</span>
+<span class="sd">        b.section("intro", 0.0, 12.5)</span>
+<span class="sd">        b.line("I came down to the river", 12.5, 16.2,</span>
+<span class="sd">               section="verse_1", words=[</span>
+<span class="sd">                   ("I",     12.5, 12.7),</span>
+<span class="sd">                   ("came",  12.7, 13.0),</span>
+<span class="sd">                   ("down",  13.0, 13.3),</span>
 <span class="sd">               ])</span>
 
-<span class="sd">    track = SubtitleTrack(store, asset_id=&quot;song/audio.mp3&quot;)</span>
+<span class="sd">    track = SubtitleTrack(store, asset_id="song/audio.mp3")</span>
 <span class="sd">    chorus_lines = track.lines_in(35.0, 55.0)</span>
 <span class="sd">    section_at_42 = track.sections_covering(42.0)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -179,13 +179,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
 
 
-<span class="n">SECTIONS_TIER</span> <span class="o">=</span> <span class="s2">&quot;sections&quot;</span>
-<span class="n">LINES_TIER</span> <span class="o">=</span> <span class="s2">&quot;lines&quot;</span>
-<span class="n">WORDS_TIER</span> <span class="o">=</span> <span class="s2">&quot;words&quot;</span>
+<span class="n">SECTIONS_TIER</span> <span class="o">=</span> <span class="s2">"sections"</span>
+<span class="n">LINES_TIER</span> <span class="o">=</span> <span class="s2">"lines"</span>
+<span class="n">WORDS_TIER</span> <span class="o">=</span> <span class="s2">"words"</span>
 
-<span class="n">SECTION_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/song-section/v1&quot;</span>
-<span class="n">LINE_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/lyric-line/v1&quot;</span>
-<span class="n">WORD_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/word/v1&quot;</span>
+<span class="n">SECTION_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/song-section/v1"</span>
+<span class="n">LINE_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/lyric-line/v1"</span>
+<span class="n">WORD_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/word/v1"</span>
 
 <span class="n">DEFAULT_RATE</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># ms-precision is plenty for sung-text alignment</span>
 
@@ -194,29 +194,29 @@
 <span class="c1">#: callers building outside the builder.</span>
 <span class="n">BUILT_IN_BODY_SCHEMAS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">SECTION_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;verse_1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;verse 1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;mood&quot;</span><span class="p">:</span> <span class="s2">&quot;wistful&quot;</span><span class="p">,</span>
+        <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"verse_1"</span><span class="p">,</span>
+        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"verse 1"</span><span class="p">,</span>
+        <span class="s2">"energy"</span><span class="p">:</span> <span class="s2">"medium"</span><span class="p">,</span>
+        <span class="s2">"mood"</span><span class="p">:</span> <span class="s2">"wistful"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">LINE_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;I came down to the river&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;line_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="s2">&quot;verse_1&quot;</span><span class="p">,</span>
+        <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"I came down to the river"</span><span class="p">,</span>
+        <span class="s2">"line_index"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"section"</span><span class="p">:</span> <span class="s2">"verse_1"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="n">WORD_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;river&quot;</span><span class="p">,</span> <span class="s2">&quot;line_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.94</span><span class="p">},</span>
+    <span class="n">WORD_SCHEMA_URI</span><span class="p">:</span> <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"river"</span><span class="p">,</span> <span class="s2">"line_index"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"confidence"</span><span class="p">:</span> <span class="mf">0.94</span><span class="p">},</span>
 <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_interval</span><span class="p">(</span><span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeInterval</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lossless float-seconds → ``TimeInterval`` at ``rate`` ticks/second.</span>
+<span class="w">    </span><span class="sd">"""Lossless float-seconds → ``TimeInterval`` at ``rate`` ticks/second.</span>
 
-<span class="sd">    Rounds to integer ticks so a value like ``14.2`` at rate=1000 doesn&#39;t</span>
-<span class="sd">    trip the strict &quot;lossy decimal&quot; guard. Empty ranges are widened by</span>
+<span class="sd">    Rounds to integer ticks so a value like ``14.2`` at rate=1000 doesn't</span>
+<span class="sd">    trip the strict "lossy decimal" guard. Empty ranges are widened by</span>
 <span class="sd">    one tick — the store rejects zero-length intervals.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rate must be positive (got </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rate must be positive (got </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
     <span class="n">start_t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">start_s</span> <span class="o">*</span> <span class="n">rate</span><span class="p">))</span>
     <span class="n">end_t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">end_s</span> <span class="o">*</span> <span class="n">rate</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">end_t</span> <span class="o">&lt;=</span> <span class="n">start_t</span><span class="p">:</span>
@@ -226,7 +226,7 @@
 
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">_BuiltAnnotation</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Receipt for an inserted annotation — useful in tests + telemetry.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Receipt for an inserted annotation — useful in tests + telemetry."""</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
     <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span>
@@ -237,27 +237,27 @@
 <div class="viewcode-block" id="register_subtitle_schemas">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.register_subtitle_schemas">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_subtitle_schemas</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register permissive body validators for the subtitle URIs.</span>
+<span class="w">    </span><span class="sd">"""Register permissive body validators for the subtitle URIs.</span>
 
 <span class="sd">    Calling this is *optional*; the builder works fine without</span>
 <span class="sd">    registered schemas. Use it when you want body-shape errors to</span>
 <span class="sd">    surface at write time rather than later.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">_Section</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Section</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">):</span>
         <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
         <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">energy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">mood</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">_Line</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Line</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">):</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
         <span class="n">line_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">section</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">_Word</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Word</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"allow"</span><span class="p">):</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
         <span class="n">line_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">confidence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -271,7 +271,7 @@
 <div class="viewcode-block" id="SubtitleBuilder">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleBuilder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubtitleBuilder</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builder for ``(sections, lines, words)`` tiers over one asset.</span>
+<span class="w">    </span><span class="sd">"""Builder for ``(sections, lines, words)`` tiers over one asset.</span>
 
 <span class="sd">    The builder is a context manager *only as a convenience*; it has no</span>
 <span class="sd">    transactional semantics. Calling ``.section()`` / ``.line()`` /</span>
@@ -283,12 +283,12 @@
 <span class="sd">            to. Typically a path or content-hash of the audio file.</span>
 <span class="sd">        rate: Tick rate for time intervals. Defaults to 1000 (ms).</span>
 <span class="sd">        was_generated_by: ``Provenance.was_generated_by``. Defaults to</span>
-<span class="sd">            ``&quot;lacing.tracks.subtitle&quot;``.</span>
+<span class="sd">            ``"lacing.tracks.subtitle"``.</span>
 <span class="sd">        was_attributed_to: ``Provenance.was_attributed_to``.</span>
 <span class="sd">        ensure_tiers: When True (default), creates the three tiers if</span>
-<span class="sd">            they don&#39;t exist. Pass False if your store uses different</span>
-<span class="sd">            tier names and you&#39;ve created them yourself.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            they don't exist. Pass False if your store uses different</span>
+<span class="sd">            tier names and you've created them yourself.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -296,8 +296,8 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">,</span>
-        <span class="n">was_generated_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing.tracks.subtitle&quot;</span><span class="p">,</span>
-        <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lacing&quot;</span><span class="p">,</span>
+        <span class="n">was_generated_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lacing.tracks.subtitle"</span><span class="p">,</span>
+        <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lacing"</span><span class="p">,</span>
         <span class="n">ensure_tiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="n">store</span>
@@ -321,19 +321,19 @@
         <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">energy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">mood</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="n">energy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="n">mood</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
         <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a song section.&quot;&quot;&quot;</span>
-        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">}</span>
+<span class="w">        </span><span class="sd">"""Add a song section."""</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="n">label</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
         <span class="k">if</span> <span class="n">energy</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
         <span class="k">if</span> <span class="n">mood</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;mood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mood</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"mood"</span><span class="p">]</span> <span class="o">=</span> <span class="n">mood</span>
         <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
             <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">SECTIONS_TIER</span><span class="p">,</span> <span class="n">SECTION_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
@@ -348,21 +348,21 @@
         <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">line_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">section</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">section</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
         <span class="n">words</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span>
             <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
         <span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
         <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a lyric line. ``words`` is an optional list of</span>
+<span class="w">        </span><span class="sd">"""Add a lyric line. ``words`` is an optional list of</span>
 <span class="sd">        ``(text, start, end)`` or ``(text, start, end, confidence)``</span>
 <span class="sd">        tuples that will be inserted on the ``words`` tier.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+<span class="sd">        """</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">line_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;line_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"line_index"</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
         <span class="k">if</span> <span class="n">section</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;section&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"section"</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
         <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
             <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
         <span class="n">receipt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">LINES_TIER</span><span class="p">,</span> <span class="n">LINE_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
@@ -374,7 +374,7 @@
                 <span class="n">wtext</span><span class="p">,</span> <span class="n">wstart</span><span class="p">,</span> <span class="n">wend</span><span class="p">,</span> <span class="n">wconf</span> <span class="o">=</span> <span class="n">w</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;word tuples must be (text, start, end[, confidence]); got </span><span class="si">{</span><span class="n">w</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"word tuples must be (text, start, end[, confidence]); got </span><span class="si">{</span><span class="n">w</span><span class="si">!r}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">word</span><span class="p">(</span>
                 <span class="n">wtext</span><span class="p">,</span>
@@ -398,12 +398,12 @@
         <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add one word.&quot;&quot;&quot;</span>
-        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+<span class="w">        </span><span class="sd">"""Add one word."""</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">line_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;line_index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"line_index"</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_index</span>
         <span class="k">if</span> <span class="n">confidence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">body</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">confidence</span><span class="p">)</span>
+            <span class="n">body</span><span class="p">[</span><span class="s2">"confidence"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">confidence</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
             <span class="n">body</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">WORDS_TIER</span><span class="p">,</span> <span class="n">WORD_SCHEMA_URI</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
@@ -422,13 +422,13 @@
         <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_BuiltAnnotation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an annotation to ``tier`` with explicit schema/body.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add an annotation to ``tier`` with explicit schema/body."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">tier</span><span class="p">,</span> <span class="n">body_schema_uri</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
 
 
     <span class="c1"># --- context manager (no transactional semantics) --------------------</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SubtitleBuilder&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SubtitleBuilder"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -486,7 +486,7 @@
 <div class="viewcode-block" id="SubtitleTrack">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubtitleTrack</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read-side facade for ``(sections, lines, words)`` over an asset.</span>
+<span class="w">    </span><span class="sd">"""Read-side facade for ``(sections, lines, words)`` over an asset.</span>
 
 <span class="sd">    Methods take ``float`` seconds; conversions to ``RationalTime`` are</span>
 <span class="sd">    handled internally. Returned annotations are sorted by start time.</span>
@@ -497,7 +497,7 @@
 <span class="sd">            whose ``MediaRef.asset_id`` equals this value. Pass</span>
 <span class="sd">            ``None`` to ignore asset filtering (rarely what you want).</span>
 <span class="sd">        rate: Tick rate used to build query intervals.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -515,24 +515,24 @@
 <div class="viewcode-block" id="SubtitleTrack.lines_in">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.lines_in">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lines_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lines that overlap ``[start_s, end_s]``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Lines that overlap ``[start_s, end_s]``."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">LINES_TIER</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SubtitleTrack.words_in">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.words_in">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">words_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Words that overlap ``[start_s, end_s]``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Words that overlap ``[start_s, end_s]``."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">WORDS_TIER</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SubtitleTrack.sections_covering">
 <a class="viewcode-back" href="../../../module_docs/lacing/tracks/subtitle.html#lacing.tracks.SubtitleTrack.sections_covering">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sections_covering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sections whose interval contains ``t`` (typically one).&quot;&quot;&quot;</span>
-        <span class="c1"># Use a tiny interval at t; &quot;contains&quot; semantics emerge naturally</span>
+<span class="w">        </span><span class="sd">"""Sections whose interval contains ``t`` (typically one)."""</span>
+        <span class="c1"># Use a tiny interval at t; "contains" semantics emerge naturally</span>
         <span class="c1"># via intersect over a degenerate window.</span>
-        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># half a tick — doesn&#39;t snap to neighbour</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># half a tick — doesn't snap to neighbour</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tier_in</span><span class="p">(</span><span class="n">SECTIONS_TIER</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span></div>
 
 

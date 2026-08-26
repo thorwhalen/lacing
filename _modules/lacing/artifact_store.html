@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact_store &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.artifact_store &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.artifact_store</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Artifact store — a metadata catalog and a blob store behind one facade.</span>
+<span></span><span class="sd">"""Artifact store — a metadata catalog and a blob store behind one facade.</span>
 
 <span class="sd">An :class:`~lacing.artifact.Artifact` describes a generated file; this module</span>
 <span class="sd">*persists* artifacts. It is the storage layer that ``reelee`` (and any other</span>
@@ -167,17 +167,17 @@
 <span class="sd">&gt;&gt;&gt; from lacing import Artifact</span>
 <span class="sd">&gt;&gt;&gt; store = ArtifactStore.in_memory()</span>
 <span class="sd">&gt;&gt;&gt; art = Artifact.from_bytes(</span>
-<span class="sd">...     b&quot;fake-png-bytes&quot;, kind=&quot;image&quot;,</span>
-<span class="sd">...     was_generated_by=&quot;agent:flux&quot;, was_attributed_to=&quot;user:thor&quot;,</span>
+<span class="sd">...     b"fake-png-bytes", kind="image",</span>
+<span class="sd">...     was_generated_by="agent:flux", was_attributed_to="user:thor",</span>
 <span class="sd">... )</span>
 <span class="sd">&gt;&gt;&gt; _ = store.save(art.asset_id, art)</span>
 <span class="sd">&gt;&gt;&gt; store[art.asset_id].kind</span>
-<span class="sd">&#39;image&#39;</span>
+<span class="sd">'image'</span>
 <span class="sd">&gt;&gt;&gt; art.asset_id in store</span>
 <span class="sd">True</span>
 <span class="sd">&gt;&gt;&gt; len(store)</span>
 <span class="sd">1</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -198,50 +198,50 @@
 <span class="c1">#: spell credentials the old way keep working (with a DeprecationWarning)</span>
 <span class="c1">#: rather than getting an opaque TypeError from a signature they never saw.</span>
 <span class="n">_S3DOL_LEGACY_KWARGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;profile_name&quot;</span><span class="p">:</span> <span class="s2">&quot;profile&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+    <span class="s2">"profile_name"</span><span class="p">:</span> <span class="s2">"profile"</span><span class="p">,</span>
+    <span class="s2">"path"</span><span class="p">:</span> <span class="s2">"prefix"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_s3_kwargs_to_v1</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate pre-v1 s3dol kwargs to the v1 ``s3_store`` signature.</span>
+<span class="w">    </span><span class="sd">"""Translate pre-v1 s3dol kwargs to the v1 ``s3_store`` signature.</span>
 
 <span class="sd">    s3dol v1 takes credentials as one ``credentials=`` value (normalised to a</span>
 <span class="sd">    picklable spec, so the store survives a process hop) rather than three</span>
 <span class="sd">    loose ``aws_*`` kwargs, and replaces the ``make_bucket`` tri-state with</span>
 <span class="sd">    ``on_missing_bucket``.</span>
 
-<span class="sd">    &gt;&gt;&gt; _s3_kwargs_to_v1({&#39;endpoint_url&#39;: &#39;https://x&#39;, &#39;region_name&#39;: &#39;eu-west-1&#39;})</span>
-<span class="sd">    {&#39;endpoint_url&#39;: &#39;https://x&#39;, &#39;region_name&#39;: &#39;eu-west-1&#39;}</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; _s3_kwargs_to_v1({'endpoint_url': 'https://x', 'region_name': 'eu-west-1'})</span>
+<span class="sd">    {'endpoint_url': 'https://x', 'region_name': 'eu-west-1'}</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
     <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">)</span>
     <span class="n">deprecated</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">access</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_access_key_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_secret_access_key&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;aws_session_token&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">access</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"aws_access_key_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">secret</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"aws_secret_access_key"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"aws_session_token"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">access</span> <span class="ow">or</span> <span class="n">secret</span> <span class="ow">or</span> <span class="n">token</span><span class="p">:</span>
-        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;aws_access_key_id/aws_secret_access_key/aws_session_token&quot;</span><span class="p">)</span>
+        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"aws_access_key_id/aws_secret_access_key/aws_session_token"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">access</span> <span class="ow">and</span> <span class="n">secret</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;from_s3 needs both aws_access_key_id and aws_secret_access_key &quot;</span>
-                <span class="s2">&quot;(a token alone is not a credential). Better: pass s3dol v1&#39;s &quot;</span>
-                <span class="s2">&quot;credentials=(key, secret) or credentials=&#39;&lt;profile-name&gt;&#39;.&quot;</span>
+                <span class="s2">"from_s3 needs both aws_access_key_id and aws_secret_access_key "</span>
+                <span class="s2">"(a token alone is not a credential). Better: pass s3dol v1's "</span>
+                <span class="s2">"credentials=(key, secret) or credentials='&lt;profile-name&gt;'."</span>
             <span class="p">)</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;credentials&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">if</span> <span class="n">token</span> <span class="k">else</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"credentials"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">if</span> <span class="n">token</span> <span class="k">else</span> <span class="p">(</span><span class="n">access</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;make_bucket&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;make_bucket&quot;</span><span class="p">)</span>
-        <span class="c1"># v0 tri-state -&gt; v1 policy. Note v1&#39;s default never probes and never</span>
+    <span class="k">if</span> <span class="s2">"make_bucket"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">deprecated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"make_bucket"</span><span class="p">)</span>
+        <span class="c1"># v0 tri-state -&gt; v1 policy. Note v1's default never probes and never</span>
         <span class="c1"># creates, so a missing bucket surfaces on first use rather than being</span>
         <span class="c1"># silently minted from a typo.</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;on_missing_bucket&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
-            <span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;raise&quot;</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;assume&quot;</span><span class="p">,</span>
-        <span class="p">}[</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;make_bucket&quot;</span><span class="p">)]</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"on_missing_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="kc">True</span><span class="p">:</span> <span class="s2">"create"</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">:</span> <span class="s2">"raise"</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">:</span> <span class="s2">"assume"</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"make_bucket"</span><span class="p">)]</span>
 
     <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">_S3DOL_LEGACY_KWARGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -250,28 +250,28 @@
 
     <span class="k">if</span> <span class="n">deprecated</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;from_s3 received pre-v1 s3dol kwarg(s): </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">deprecated</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;They were translated to the s3dol&gt;=1 signature &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;(credentials=/profile=/prefix=/on_missing_bucket=); pass those &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;directly instead. Translation will be removed in a future lacing.&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"from_s3 received pre-v1 s3dol kwarg(s): </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">deprecated</span><span class="p">)</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="sa">f</span><span class="s2">"They were translated to the s3dol&gt;=1 signature "</span>
+            <span class="sa">f</span><span class="s2">"(credentials=/profile=/prefix=/on_missing_bucket=); pass those "</span>
+            <span class="sa">f</span><span class="s2">"directly instead. Translation will be removed in a future lacing."</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">kwargs</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ArtifactStore&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ArtifactStore"</span><span class="p">]</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_mk_sql_refcount</span><span class="p">(</span><span class="n">sql_store</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a ``content_hash -&gt; row count`` query over a ``sqldol`` store.</span>
+<span class="w">    </span><span class="sd">"""Build a ``content_hash -&gt; row count`` query over a ``sqldol`` store.</span>
 
-<span class="sd">    Reaches through the ``sqldol.SQLAlchemyStore`` to its persister&#39;s ORM</span>
+<span class="sd">    Reaches through the ``sqldol.SQLAlchemyStore`` to its persister's ORM</span>
 <span class="sd">    session and counts rows whose indexed ``content_hash`` column matches —</span>
 <span class="sd">    one query, not a scan. Used by :meth:`ArtifactStore.from_sql` to wire the</span>
 <span class="sd">    GC reference-count capability that :meth:`ArtifactStore.count_refs` probes</span>
 <span class="sd">    for. Works identically on SQLite and Postgres (plain SQLAlchemy).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">func</span>
 
     <span class="n">persister</span> <span class="o">=</span> <span class="n">sql_store</span><span class="o">.</span><span class="n">store</span>  <span class="c1"># the SQLAlchemyPersister behind the dol Store</span>
@@ -291,7 +291,7 @@
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArtifactStore</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Facade over an artifact ``catalog`` and an optional ``blobs`` store.</span>
+<span class="w">    </span><span class="sd">"""Facade over an artifact ``catalog`` and an optional ``blobs`` store.</span>
 
 <span class="sd">    The object *is* a ``MutableMapping[str, record]`` over the catalog —</span>
 <span class="sd">    ``store[artifact_id]``, iteration, ``len``, ``get``, ``clear`` and the</span>
@@ -303,7 +303,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        catalog: Injected ``id -&gt; record`` store. Records are pydantic models</span>
 <span class="sd">            (``lacing.Artifact`` by default, but any ``BaseModel`` works — the</span>
-<span class="sd">            store does not inspect the record&#39;s shape).</span>
+<span class="sd">            store does not inspect the record's shape).</span>
 <span class="sd">        blobs: Injected ``content_hash -&gt; bytes`` store, or ``None`` for a</span>
 <span class="sd">            catalog-only store (Stage-1 metadata persistence). Blob methods</span>
 <span class="sd">            raise / no-op when it is ``None``.</span>
@@ -311,7 +311,7 @@
 <span class="sd">    Construct one with :meth:`in_memory` or :meth:`from_directory` rather than</span>
 <span class="sd">    wiring the backing stores by hand, unless you are injecting a custom</span>
 <span class="sd">    backend.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">catalog</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]</span>
     <span class="n">blobs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -340,7 +340,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Persist one artifact, optionally with its bytes.</span>
+<span class="w">        </span><span class="sd">"""Persist one artifact, optionally with its bytes.</span>
 
 <span class="sd">        Writes the blob (if ``data`` is given) **before** the catalog row, so a</span>
 <span class="sd">        crash never leaves the catalog pointing at missing bytes. Idempotent on</span>
@@ -354,18 +354,18 @@
 <span class="sd">                is responsible for also recording that hash on ``record``.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            The blob&#39;s content hash if ``data`` was written, else ``None``.</span>
+<span class="sd">            The blob's content hash if ``data`` was written, else ``None``.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: ``data`` was given but no blob store is configured.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="s2">&quot;ArtifactStore.save received blob bytes but has no blob &quot;</span>
-                    <span class="s2">&quot;store configured. Construct it with .in_memory() or &quot;</span>
-                    <span class="s2">&quot;.from_directory(), or inject a `blobs` store.&quot;</span>
+                    <span class="s2">"ArtifactStore.save received blob bytes but has no blob "</span>
+                    <span class="s2">"store configured. Construct it with .in_memory() or "</span>
+                    <span class="s2">".from_directory(), or inject a `blobs` store."</span>
                 <span class="p">)</span>
             <span class="n">content_hash</span> <span class="o">=</span> <span class="n">hash_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>  <span class="c1"># content-addressed -&gt; idempotent</span>
@@ -376,7 +376,7 @@
 <div class="viewcode-block" id="ArtifactStore.index">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the whole catalog as a plain dict (e.g. for UI hydration).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the whole catalog as a plain dict (e.g. for UI hydration)."""</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">)</span></div>
 
 
@@ -385,7 +385,7 @@
 <div class="viewcode-block" id="ArtifactStore.put_blob">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.put_blob">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">put_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store ``data`` content-addressed; return its content hash.</span>
+<span class="w">        </span><span class="sd">"""Store ``data`` content-addressed; return its content hash.</span>
 
 <span class="sd">        Idempotent: identical bytes always map to the same hash and overwrite</span>
 <span class="sd">        an identical blob. Delegates to :meth:`put_blob_stream` so there is</span>
@@ -394,14 +394,14 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: no blob store is configured.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_blob_stream</span><span class="p">((</span><span class="n">data</span><span class="p">,))</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.put_blob_stream">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.put_blob_stream">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">put_blob_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stream ``chunks`` content-addressed; return their SHA-256 hash.</span>
+<span class="w">        </span><span class="sd">"""Stream ``chunks`` content-addressed; return their SHA-256 hash.</span>
 
 <span class="sd">        The streaming-friendly counterpart to :meth:`put_blob` — callers hand</span>
 <span class="sd">        in an iterable (e.g. ``requests.Response.iter_content``) instead of</span>
@@ -429,10 +429,10 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RuntimeError: no blob store is configured.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ArtifactStore has no blob store configured.&quot;</span><span class="p">)</span>
-        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"ArtifactStore has no blob store configured."</span><span class="p">)</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">))</span>
         <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
@@ -448,7 +448,7 @@
 <div class="viewcode-block" id="ArtifactStore.get_blob">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.get_blob">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the bytes for ``content_hash``, or ``None`` if absent.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the bytes for ``content_hash``, or ``None`` if absent."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
@@ -462,7 +462,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">iter_blob</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield the blob&#39;s bytes in ``chunk_size`` chunks.</span>
+<span class="w">        </span><span class="sd">"""Yield the blob's bytes in ``chunk_size`` chunks.</span>
 
 <span class="sd">        The streaming counterpart to :meth:`get_blob` — what an HTTP response</span>
 <span class="sd">        body iterates over when serving a large blob without holding it all</span>
@@ -472,7 +472,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: no blob exists for ``content_hash``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_blob</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
@@ -483,9 +483,9 @@
 <div class="viewcode-block" id="ArtifactStore.blob_path">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.blob_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">blob_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the local filesystem path of the blob, or ``None``.</span>
+<span class="w">        </span><span class="sd">"""Return the local filesystem path of the blob, or ``None``.</span>
 
-<span class="sd">        The store&#39;s blob backend is opaque (any ``MutableMapping``), but some</span>
+<span class="sd">        The store's blob backend is opaque (any ``MutableMapping``), but some</span>
 <span class="sd">        backends — notably the filesystem-backed ``dol.Files`` produced by</span>
 <span class="sd">        :meth:`from_directory` — store each blob as one file under a known</span>
 <span class="sd">        root directory. This method exposes that path *when available*, so a</span>
@@ -500,10 +500,10 @@
 
 <span class="sd">        Callers must treat ``None`` as the cue to use the streaming read</span>
 <span class="sd">        path, not as an error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;rootdir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">content_hash</span>
@@ -513,14 +513,14 @@
 <div class="viewcode-block" id="ArtifactStore.has_blob">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.has_blob">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the blob store holds ``content_hash``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Whether the blob store holds ``content_hash``."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">content_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.blob_location">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.blob_location">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">blob_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;str | Path | None&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the cheapest *servable* location for a blob — without</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blob_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"str | Path | None"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Resolve the cheapest *servable* location for a blob — without</span>
 <span class="sd">        reading its bytes. The capability the HTTP layer probes to serve a</span>
 <span class="sd">        blob the most efficient way, generalizing :meth:`blob_path` so</span>
 <span class="sd">        filesystem / S3 / R2 backends all answer one probe:</span>
@@ -534,11 +534,11 @@
 <span class="sd">        - everything else (plain ``dict``, or a missing blob) returns</span>
 <span class="sd">          ``None`` — the cue to fall back to :meth:`iter_blob` streaming.</span>
 
-<span class="sd">        Callers treat ``None`` as &quot;stream it&quot;, not as an error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Callers treat ``None`` as "stream it", not as an error.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">content_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">url_for</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">&quot;url_for&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">url_for</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"url_for"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">url_for</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="n">url_for</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
@@ -546,16 +546,16 @@
                 <span class="c1"># A backend may *refuse* to sign rather than sign wrongly —</span>
                 <span class="c1"># s3dol&gt;=1 does exactly that when its store has been wrapped</span>
                 <span class="c1"># by a key codec, because the URL could then address a</span>
-                <span class="c1"># different object. &quot;No safe URL&quot; is not an error here, it is</span>
+                <span class="c1"># different object. "No safe URL" is not an error here, it is</span>
                 <span class="c1"># the documented cue to stream; but it should not pass in</span>
                 <span class="c1"># silence, since streaming through the app is the expensive</span>
                 <span class="c1"># path this method exists to avoid.</span>
                 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.url_for refused to sign &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">); falling back to &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;streaming. Serving stays correct, just slower.&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.url_for refused to sign "</span>
+                    <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">); falling back to "</span>
+                    <span class="sa">f</span><span class="s2">"streaming. Serving stays correct, just slower."</span><span class="p">,</span>
                     <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
@@ -570,11 +570,11 @@
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.in_memory">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">in_memory</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore backed entirely by in-memory dicts.</span>
+<span class="w">        </span><span class="sd">"""An ArtifactStore backed entirely by in-memory dicts.</span>
 
 <span class="sd">        For tests, scratch work, and as the trivial reference backend. Nothing</span>
 <span class="sd">        persists across processes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="p">{},</span> <span class="n">blobs</span><span class="o">=</span><span class="p">{})</span></div>
 
 
@@ -584,7 +584,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_directory</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore persisted under ``root``.</span>
+<span class="w">        </span><span class="sd">"""An ArtifactStore persisted under ``root``.</span>
 
 <span class="sd">        Lays out two subdirectories: ``catalog/`` (one ``&lt;id&gt;.json`` file per</span>
 <span class="sd">        record) and ``blobs/`` (one file per content hash). Both are ``dol``</span>
@@ -596,20 +596,20 @@
 <span class="sd">            record_type: The pydantic model the catalog deserializes JSON into.</span>
 <span class="sd">                Defaults to :class:`~lacing.artifact.Artifact`; callers with</span>
 <span class="sd">                their own record schema pass their model here.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-        <span class="n">catalog_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">&quot;catalog&quot;</span>
-        <span class="n">blob_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">&quot;blobs&quot;</span>
+        <span class="n">catalog_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">"catalog"</span>
+        <span class="n">blob_dir</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="s2">"blobs"</span>
         <span class="n">catalog_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">blob_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">catalog</span> <span class="o">=</span> <span class="n">wrap_kvs</span><span class="p">(</span>
-            <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">catalog_dir</span><span class="p">)),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)),</span>
-            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_id</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span>
+            <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">catalog_dir</span><span class="p">)),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)),</span>
+            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">artifact_id</span><span class="si">}</span><span class="s2">.json"</span><span class="p">,</span>
             <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="p">(</span>
-                <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
+                <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
             <span class="p">),</span>
-            <span class="n">data_of_obj</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+            <span class="n">data_of_obj</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">),</span>
             <span class="n">obj_of_data</span><span class="o">=</span><span class="k">lambda</span> <span class="n">raw</span><span class="p">:</span> <span class="n">record_type</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">blobs</span> <span class="o">=</span> <span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">blob_dir</span><span class="p">))</span>
@@ -619,7 +619,7 @@
 <div class="viewcode-block" id="ArtifactStore.count_refs">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact_store.html#lacing.ArtifactStore.count_refs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">count_refs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;How many catalog records point at ``content_hash`` (a blob).</span>
+<span class="w">        </span><span class="sd">"""How many catalog records point at ``content_hash`` (a blob).</span>
 
 <span class="sd">        The reference count that a garbage collector needs: a blob is safe to</span>
 <span class="sd">        delete only when **no** catalog record still names its content hash.</span>
@@ -637,13 +637,13 @@
 <span class="sd">        facade is unchanged either way; only the speed differs.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            content_hash: The blob&#39;s content hash (``Artifact.asset_id``).</span>
+<span class="sd">            content_hash: The blob's content hash (``Artifact.asset_id``).</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The number of catalog records whose content hash equals</span>
 <span class="sd">            ``content_hash``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fast</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span> <span class="s2">&quot;refcount_by_content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span> <span class="s2">"refcount_by_content_hash"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">fast</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">fast</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
         <span class="c1"># Fallback: scan every record. Reads the content hash off whichever of</span>
@@ -651,8 +651,8 @@
         <span class="c1"># canonical Artifact field — then ``content_hash``).</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">rec_hash</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
-                <span class="n">record</span><span class="p">,</span> <span class="s2">&quot;content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">rec_hash</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"asset_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">record</span><span class="p">,</span> <span class="s2">"content_hash"</span><span class="p">,</span> <span class="kc">None</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">rec_hash</span> <span class="o">==</span> <span class="n">content_hash</span><span class="p">:</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -666,16 +666,16 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">catalog</span><span class="p">:</span> <span class="s2">&quot;MutableMapping[str, BaseModel] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">catalog</span><span class="p">:</span> <span class="s2">"MutableMapping[str, BaseModel] | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">s3_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore with **blobs in an S3-compatible object store**</span>
+<span class="w">        </span><span class="sd">"""An ArtifactStore with **blobs in an S3-compatible object store**</span>
 <span class="sd">        (AWS S3 / Cloudflare R2 / MinIO / Supabase) via ``s3dol``.</span>
 
 <span class="sd">        Content-addressed blobs are a natural fit for object storage: flat,</span>
 <span class="sd">        immutable, dedup-friendly, forever-cacheable keys. :meth:`blob_location`</span>
-<span class="sd">        returns a presigned GET URL (via s3dol&#39;s ``url_for``) so a serving layer</span>
+<span class="sd">        returns a presigned GET URL (via s3dol's ``url_for``) so a serving layer</span>
 <span class="sd">        can 302-redirect and let the store deliver the bytes (and HTTP ``Range``)</span>
 <span class="sd">        directly, off the app process.</span>
 
@@ -687,7 +687,7 @@
 <span class="sd">            bucket_name: The object-store bucket.</span>
 <span class="sd">            catalog: The ``id -&gt; record`` catalog ``MutableMapping``. Defaults</span>
 <span class="sd">                to ``{}`` (in-memory).</span>
-<span class="sd">            prefix: Optional key prefix within the bucket (e.g. ``&quot;blobs&quot;``).</span>
+<span class="sd">            prefix: Optional key prefix within the bucket (e.g. ``"blobs"``).</span>
 <span class="sd">            **s3_kwargs: Forwarded to ``s3dol.s3_store`` — ``endpoint_url``</span>
 <span class="sd">                (set for R2 / MinIO / Supabase), ``region_name``, ``profile``,</span>
 <span class="sd">                ``credentials``, ``preset``, ``anon``, ``on_missing_bucket``.</span>
@@ -698,11 +698,11 @@
 
 <span class="sd">        Requires ``s3dol&gt;=1`` (and ``boto3``) — imported lazily so the</span>
 <span class="sd">        dependency is only needed when this constructor is used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">s3dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">s3_store</span>
 
         <span class="n">blobs</span> <span class="o">=</span> <span class="n">s3_store</span><span class="p">(</span>
-            <span class="n">bucket_name</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_s3_kwargs_to_v1</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">)</span>
+            <span class="n">bucket_name</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">_s3_kwargs_to_v1</span><span class="p">(</span><span class="n">s3_kwargs</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="p">{}</span> <span class="k">if</span> <span class="n">catalog</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">blobs</span><span class="o">=</span><span class="n">blobs</span><span class="p">)</span></div>
 
@@ -714,31 +714,31 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">blobs</span><span class="p">:</span> <span class="s2">&quot;MutableMapping[str, bytes] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">blobs</span><span class="p">:</span> <span class="s2">"MutableMapping[str, bytes] | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span><span class="p">,</span>
-        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;artifact_catalog&quot;</span><span class="p">,</span>
-        <span class="n">content_hash_of</span><span class="p">:</span> <span class="s2">&quot;Callable[[BaseModel], str | None] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"artifact_catalog"</span><span class="p">,</span>
+        <span class="n">content_hash_of</span><span class="p">:</span> <span class="s2">"Callable[[BaseModel], str | None] | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">db_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;An ArtifactStore with a **SQL-backed catalog** (durable, queryable)</span>
-<span class="sd">        via ``sqldol`` — the SQL counterpart of :meth:`from_s3`&#39;s object store.</span>
+<span class="w">        </span><span class="sd">"""An ArtifactStore with a **SQL-backed catalog** (durable, queryable)</span>
+<span class="sd">        via ``sqldol`` — the SQL counterpart of :meth:`from_s3`'s object store.</span>
 
 <span class="sd">        The catalog row schema is deliberately minimal and **vendor-neutral**:</span>
 <span class="sd">        one ``TEXT`` column holds the record serialized exactly as</span>
 <span class="sd">        :meth:`from_directory` serializes it (``record.model_dump_json`` out,</span>
 <span class="sd">        ``record_type.model_validate_json`` in), and one indexed ``content_hash``</span>
-<span class="sd">        column carries the record&#39;s blob hash so the GC reference count</span>
+<span class="sd">        column carries the record's blob hash so the GC reference count</span>
 <span class="sd">        (:meth:`count_refs`) is a single indexed query rather than a full scan.</span>
 
 <span class="sd">        Because the connection is just a SQLAlchemy URI, the *same* code runs</span>
 <span class="sd">        on SQLite for tests and on Postgres in production — that is the whole</span>
 <span class="sd">        point of the facade. Pick the backend with the ``uri`` alone::</span>
 
-<span class="sd">            ArtifactStore.from_sql(&quot;sqlite:///artifacts.db&quot;)          # local / tests</span>
-<span class="sd">            ArtifactStore.from_sql(&quot;postgresql://u:p@host:5432/db&quot;)   # production</span>
+<span class="sd">            ArtifactStore.from_sql("sqlite:///artifacts.db")          # local / tests</span>
+<span class="sd">            ArtifactStore.from_sql("postgresql://u:p@host:5432/db")   # production</span>
 
 <span class="sd">        The catalog and blob backends are independent: pass ``blobs`` to pair a</span>
-<span class="sd">        SQL catalog with any blob store (e.g. ``from_s3``&#39;s ``S3Store``), or</span>
+<span class="sd">        SQL catalog with any blob store (e.g. ``from_s3``'s ``S3Store``), or</span>
 <span class="sd">        leave it ``None`` for a catalog-only store (Stage-1 metadata</span>
 <span class="sd">        persistence; see :meth:`from_aws` for the common S3 + SQL pairing).</span>
 
@@ -751,53 +751,53 @@
 <span class="sd">                Defaults to :class:`~lacing.artifact.Artifact`; callers with</span>
 <span class="sd">                their own record schema pass their model here.</span>
 <span class="sd">            collection_name: The SQL table name for the catalog.</span>
-<span class="sd">            content_hash_of: How to read a record&#39;s blob hash for the indexed</span>
+<span class="sd">            content_hash_of: How to read a record's blob hash for the indexed</span>
 <span class="sd">                ``content_hash`` column. Defaults to ``asset_id`` (the canonical</span>
 <span class="sd">                Artifact field), then ``content_hash``. Pass a callable for a</span>
 <span class="sd">                record whose hash lives elsewhere; records without a hash store</span>
 <span class="sd">                an empty string.</span>
 <span class="sd">            **db_kwargs: Forwarded to ``sqldol.SQLAlchemyStore`` /</span>
-<span class="sd">                SQLAlchemy&#39;s ``create_engine`` (e.g. ``connect_args``,</span>
+<span class="sd">                SQLAlchemy's ``create_engine`` (e.g. ``connect_args``,</span>
 <span class="sd">                ``pool_size``).</span>
 
 <span class="sd">        Requires ``sqldol`` (and ``SQLAlchemy``) — imported lazily so the</span>
 <span class="sd">        dependency is only needed when this constructor is used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">sqldol</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemyStore</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">sqldol.sql_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemyPersister</span>
 
         <span class="k">if</span> <span class="n">content_hash_of</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">content_hash_of</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
-                    <span class="n">record</span><span class="p">,</span> <span class="s2">&quot;content_hash&quot;</span><span class="p">,</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"asset_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span>
+                    <span class="n">record</span><span class="p">,</span> <span class="s2">"content_hash"</span><span class="p">,</span> <span class="kc">None</span>
                 <span class="p">)</span>
 
         <span class="n">raw</span> <span class="o">=</span> <span class="n">SQLAlchemyStore</span><span class="p">(</span>
             <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">,</span>
             <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
-            <span class="n">key_fields</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">},</span>
+            <span class="n">key_fields</span><span class="o">=</span><span class="p">{</span><span class="s2">"artifact_id"</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">},</span>
             <span class="n">data_fields</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;record_json&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_TEXT</span><span class="p">,</span>
-                <span class="s2">&quot;content_hash&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span>
+                <span class="s2">"record_json"</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_TEXT</span><span class="p">,</span>
+                <span class="s2">"content_hash"</span><span class="p">:</span> <span class="n">SQLAlchemyPersister</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="o">**</span><span class="n">db_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_key_of_id</span><span class="p">(</span><span class="n">row_or_key</span><span class="p">):</span>
             <span class="c1"># ``wrap_kvs`` hands this the key dict on writes and the ORM row on</span>
-            <span class="c1"># iteration (sqldol&#39;s ``__iter__`` yields rows, not keys).</span>
+            <span class="c1"># iteration (sqldol's ``__iter__`` yields rows, not keys).</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row_or_key</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">row_or_key</span><span class="p">[</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">row_or_key</span><span class="p">[</span><span class="s2">"artifact_id"</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">row_or_key</span><span class="o">.</span><span class="n">artifact_id</span>
 
         <span class="n">catalog</span> <span class="o">=</span> <span class="n">wrap_kvs</span><span class="p">(</span>
             <span class="n">raw</span><span class="p">,</span>
-            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;artifact_id&quot;</span><span class="p">:</span> <span class="n">artifact_id</span><span class="p">},</span>
+            <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="p">{</span><span class="s2">"artifact_id"</span><span class="p">:</span> <span class="n">artifact_id</span><span class="p">},</span>
             <span class="n">key_of_id</span><span class="o">=</span><span class="n">_key_of_id</span><span class="p">,</span>
             <span class="n">data_of_obj</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;record_json&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(),</span>
-                <span class="s2">&quot;content_hash&quot;</span><span class="p">:</span> <span class="n">content_hash_of</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">"record_json"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(),</span>
+                <span class="s2">"content_hash"</span><span class="p">:</span> <span class="n">content_hash_of</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">obj_of_data</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">record_type</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">record_json</span><span class="p">),</span>
         <span class="p">)</span>
@@ -816,12 +816,12 @@
         <span class="n">uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">record_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Artifact</span><span class="p">,</span>
-        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;artifact_catalog&quot;</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"artifact_catalog"</span><span class="p">,</span>
         <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="s2">&quot;dict | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">sql_kwargs</span><span class="p">:</span> <span class="s2">&quot;dict | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="s2">"dict | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sql_kwargs</span><span class="p">:</span> <span class="s2">"dict | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactStore</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The production pairing: **S3-compatible blobs + SQL catalog**.</span>
+<span class="w">        </span><span class="sd">"""The production pairing: **S3-compatible blobs + SQL catalog**.</span>
 
 <span class="sd">        A thin convenience over :meth:`from_s3` (blobs) and :meth:`from_sql`</span>
 <span class="sd">        (catalog) so the common cloud deployment is one call. The blob store is</span>
@@ -839,7 +839,7 @@
 <span class="sd">                ``endpoint_url`` for R2/MinIO/Supabase, ``region_name``, …).</span>
 <span class="sd">            sql_kwargs: Extra kwargs forwarded to :meth:`from_sql`</span>
 <span class="sd">                (``content_hash_of``, SQLAlchemy engine kwargs, …).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">s3_store</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_s3</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">s3_kwargs</span> <span class="ow">or</span> <span class="p">{}))</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_sql</span><span class="p">(</span>
             <span class="n">uri</span><span class="p">,</span>
@@ -853,21 +853,21 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash-while-spooling to a same-directory tempfile, then atomic rename.</span>
+<span class="w">    </span><span class="sd">"""Hash-while-spooling to a same-directory tempfile, then atomic rename.</span>
 
 <span class="sd">    The same-directory part is load-bearing twice: ``os.replace`` is only</span>
 <span class="sd">    atomic within a filesystem, and a content-addressed name must not exist</span>
 <span class="sd">    until the content behind it is complete — a reader that finds the hash</span>
 <span class="sd">    finds the whole blob, never a prefix of it (lacing#25).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
     <span class="n">rootdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
-    <span class="n">fd</span><span class="p">,</span> <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;.blob-&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.part&quot;</span><span class="p">)</span>
+    <span class="n">fd</span><span class="p">,</span> <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">".blob-"</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".part"</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">spool</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">spool</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
                 <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
                 <span class="n">spool</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>

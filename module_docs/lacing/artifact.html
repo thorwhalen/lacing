@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.artifact &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -169,13 +169,13 @@ BLAKE3 if they prefer; the consumer treats <code class="docutils literal notrans
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">hash_file</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create one from a path:</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="n">_</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">".bin"</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">_</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">"hello world"</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">&quot;test:doctest&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                       <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">&quot;user:thor&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span> <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"test:doctest"</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"user:thor"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">kind</span>
-<span class="go">&#39;text&#39;</span>
+<span class="go">'text'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">bytes_size</span>
 <span class="go">11</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">asset_id</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>  <span class="c1"># SHA-256 hex</span>
@@ -245,8 +245,8 @@ should switch on this <em>before</em> falling back to <code class="docutils lite
 <dt class="sig sig-object py" id="lacing.artifact.hash_bytes">
 <span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">hash_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/lacing/artifact.html#hash_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.hash_bytes" title="Link to this definition"></a></dt>
 <dd><p>Return the canonical <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (SHA-256 hex) for <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hash_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;hello world&quot;</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
-<span class="go">&#39;b94d27b9&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hash_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">"hello world"</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
+<span class="go">'b94d27b9'</span>
 </pre></div>
 </div>
 </dd></dl>

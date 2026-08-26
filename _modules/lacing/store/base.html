@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.base &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.store.base &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,16 +125,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.store.base</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;``IntervalAnnotationStore`` — the headline Pythonic API.</span>
+<span></span><span class="sd">"""``IntervalAnnotationStore`` — the headline Pythonic API.</span>
 
 <span class="sd">A ``MutableMapping[TimeInterval, list[Annotation]]`` facade with methods</span>
-<span class="sd">named after Allen&#39;s relations. See ANN-DOC §C (&quot;a natural design target&quot;)</span>
+<span class="sd">named after Allen's relations. See ANN-DOC §C ("a natural design target")</span>
 <span class="sd">and BACK-DOC §4.1.</span>
 
 <span class="sd">The facade hides the index. Phase 0 ships ``MemoryStore`` over</span>
 <span class="sd">``intervaltree``. Phase 1 adds SQLite + R*Tree (``.annot``) and PostgreSQL</span>
 <span class="sd">+ ``tstzrange`` GiST. The mapping interface is the same in all three.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -151,7 +151,7 @@
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore">[docs]</a>
 <span class="nd">@runtime_checkable</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">IntervalAnnotationStore</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for any interval-keyed annotation store.</span>
+<span class="w">    </span><span class="sd">"""Protocol for any interval-keyed annotation store.</span>
 
 <span class="sd">    Conceptually a ``MutableMapping[TimeInterval, list[Annotation]]``: keys</span>
 <span class="sd">    are ``TimeInterval``; values are lists because multiple annotations can</span>
@@ -162,11 +162,11 @@
 <span class="sd">    forcing a single class hierarchy. The mapping methods below match the</span>
 <span class="sd">    ``MutableMapping`` ABC; concrete backends like :class:`MemoryStore`</span>
 <span class="sd">    implement the full interface.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Mapping interface (from MutableMapping) -----------------------------</span>
     <span class="c1"># Indexing by TimeInterval returns the annotations at that exact key.</span>
-    <span class="c1"># For &quot;everything that overlaps t&quot; use .intersects(t).</span>
+    <span class="c1"># For "everything that overlaps t" use .intersects(t).</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span> <span class="o">...</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
@@ -179,21 +179,21 @@
 <div class="viewcode-block" id="IntervalAnnotationStore.add">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append ``annotation`` to the list at its reference interval.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Append ``annotation`` to the list at its reference interval."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.remove">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.remove">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Annotation</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove and return the annotation with this id, or None if absent.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove and return the annotation with this id, or None if absent."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.all">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.all">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate every annotation in the store, order unspecified.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterate every annotation in the store, order unspecified."""</span>
         <span class="o">...</span></div>
 
 
@@ -204,56 +204,56 @@
 <div class="viewcode-block" id="IntervalAnnotationStore.intersects">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.intersects">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">intersects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotations whose interval shares any time with ``query``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Annotations whose interval shares any time with ``query``."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.during">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.during">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">during</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotations whose interval is strictly inside ``query`` (Allen ``d``).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Annotations whose interval is strictly inside ``query`` (Allen ``d``)."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.contains">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.contains">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotations whose interval strictly contains ``query`` (Allen ``di``).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Annotations whose interval strictly contains ``query`` (Allen ``di``)."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.overlaps">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.overlaps">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Strict Allen ``o``: ``a.start &lt; q.start &lt; a.end &lt; q.end``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Strict Allen ``o``: ``a.start &lt; q.start &lt; a.end &lt; q.end``."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.meets">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.meets">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allen ``m``: ``a.end == q.start``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Allen ``m``: ``a.end == q.start``."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.starts">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.starts">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">starts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allen ``s``: same start, earlier end.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Allen ``s``: same start, earlier end."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.finishes">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.finishes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finishes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allen ``f``: later start, same end.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Allen ``f``: later start, same end."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.equals">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.equals">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allen ``=``: identical interval.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Allen ``=``: identical interval."""</span>
         <span class="o">...</span></div>
 
 
@@ -262,10 +262,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">relate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotations whose interval has any of the named ``relations`` to ``query``.</span>
+<span class="w">        </span><span class="sd">"""Annotations whose interval has any of the named ``relations`` to ``query``.</span>
 
 <span class="sd">        Generic dispatch — useful when relations are computed at runtime.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="o">...</span></div>
 
 
@@ -274,14 +274,14 @@
 <div class="viewcode-block" id="IntervalAnnotationStore.by_tier">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.by_tier">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">by_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;All annotations on ``tier_name``, regardless of interval.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""All annotations on ``tier_name``, regardless of interval."""</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="IntervalAnnotationStore.at_tier">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.at_tier">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">at_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotations on ``tier_name`` that intersect ``query``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Annotations on ``tier_name`` that intersect ``query``."""</span>
         <span class="o">...</span></div>
 
 
@@ -290,8 +290,8 @@
 <div class="viewcode-block" id="IntervalAnnotationStore.tiers">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.tiers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tiers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tier</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registered tiers. Annotations may reference tiers not yet registered;</span>
-<span class="sd">        callers decide whether that&#39;s an error.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Registered tiers. Annotations may reference tiers not yet registered;</span>
+<span class="sd">        callers decide whether that's an error."""</span>
         <span class="o">...</span></div>
 
 
@@ -303,7 +303,7 @@
 <div class="viewcode-block" id="IntervalAnnotationStore.extend">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/base.html#lacing.IntervalAnnotationStore.extend">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Annotation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add many; equivalent to repeated ``.add`` but adapters can optimize.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add many; equivalent to repeated ``.add`` but adapters can optimize."""</span>
         <span class="o">...</span></div>
 </div>
 

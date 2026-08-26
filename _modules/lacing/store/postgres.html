@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.postgres &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.store.postgres &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,9 +125,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.store.postgres</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;PostgreSQL-backed annotation store using ``int8range`` + GiST.</span>
+<span></span><span class="sd">"""PostgreSQL-backed annotation store using ``int8range`` + GiST.</span>
 
-<span class="sd">Maps lacing&#39;s interval model to Postgres native range types (BACK-DOC §4.2):</span>
+<span class="sd">Maps lacing's interval model to Postgres native range types (BACK-DOC §4.2):</span>
 
 <span class="sd">============== =====================================================</span>
 <span class="sd">Allen relation Postgres operator (int8range / tstzrange)</span>
@@ -142,8 +142,8 @@
 <span class="sd">strict overlap ``a &amp;&amp; b AND lower(a) &lt; lower(b) AND upper(a) &lt; upper(b)``</span>
 <span class="sd">============== =====================================================</span>
 
-<span class="sd">We store intervals as ``int8range(start_value, end_value, &#39;[)&#39;)`` — half-open,</span>
-<span class="sd">matching lacing&#39;s ``TimeInterval`` semantics — at a **per-(owner, project)</span>
+<span class="sd">We store intervals as ``int8range(start_value, end_value, '[)')`` — half-open,</span>
+<span class="sd">matching lacing's ``TimeInterval`` semantics — at a **per-(owner, project)</span>
 <span class="sd">rate** recorded in the ``projects`` table. All inserts must be at that rate;</span>
 <span class="sd">re-quantizing happens on insert if necessary.</span>
 
@@ -156,25 +156,25 @@
 
 <span class="sd">Multiple logical stores (one per nw/reelee project) coexist in a single</span>
 <span class="sd">Postgres database via **tenant columns on shared tables** (the decision in</span>
-<span class="sd">``reelee/docs/storage_migration_plan.md`` §&quot;Postgres tenancy&quot;): every</span>
+<span class="sd">``reelee/docs/storage_migration_plan.md`` §"Postgres tenancy"): every</span>
 <span class="sd">``annotations`` and ``tiers`` row carries an ``owner_id`` and a ``project_id``,</span>
 <span class="sd">and every query is scoped by ``(owner_id, project_id)``. A ``PostgresStore``</span>
 <span class="sd">instance is bound to one ``(owner_id, project_id)`` at construction and behaves</span>
 <span class="sd">exactly like a single-tenant store; two stores with different project ids over</span>
-<span class="sd">the same database never see each other&#39;s rows.</span>
+<span class="sd">the same database never see each other's rows.</span>
 
 <span class="sd">``owner_id`` is a forward seam for the multi-tenant access layer (reelee#174):</span>
 <span class="sd">the column is carried and scoped now, but its *enforcement* (the policy</span>
-<span class="sd">decision point) is deferred — today every store defaults ``owner_id=&quot;default&quot;``.</span>
+<span class="sd">decision point) is deferred — today every store defaults ``owner_id="default"``.</span>
 
 <span class="sd">The per-tier ``EXCLUDE USING GIST`` no-overlap constraint is likewise scoped by</span>
-<span class="sd">``(owner_id, project_id, tier)`` so one project&#39;s non-overlap rule cannot block</span>
-<span class="sd">another project&#39;s annotations.</span>
+<span class="sd">``(owner_id, project_id, tier)`` so one project's non-overlap rule cannot block</span>
+<span class="sd">another project's annotations.</span>
 
 <span class="sd">Connection pooling (Phase 4)</span>
 <span class="sd">----------------------------</span>
 
-<span class="sd">``nw``&#39;s :class:`~nw.graph.ProjectGraph` opens and closes the store per</span>
+<span class="sd">``nw``'s :class:`~nw.graph.ProjectGraph` opens and closes the store per</span>
 <span class="sd">operation. That is fine for a SQLite file but pathological for a network DB, so</span>
 <span class="sd">this module keeps a process-wide :class:`psycopg_pool.ConnectionPool` per</span>
 <span class="sd">connection string (see :func:`get_pool`); a ``PostgresStore`` borrows a</span>
@@ -187,7 +187,7 @@
 
 <span class="sd">Status: Phase 4. Tested via ``pytest-postgresql`` sandbox (no live server</span>
 <span class="sd">needed for development).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -214,7 +214,7 @@
 
 
 <span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="sd">&quot;&quot;&quot;Current schema version stored in the ``meta`` table.</span>
+<span class="sd">"""Current schema version stored in the ``meta`` table.</span>
 
 <span class="sd">v2 (Phase 4, reelee#177) added tenant columns (``owner_id`` / ``project_id``)</span>
 <span class="sd">to ``tiers`` and ``annotations``, and a per-``(owner, project)`` ``projects``</span>
@@ -226,24 +226,24 @@
 <span class="sd">``UUID()``-parses the column) refuse rather than crash mid-read.</span>
 
 <span class="sd">The migration ladder (:mod:`lacing.store.migrations`,</span>
-<span class="sd">``store_kind=&quot;postgres&quot;``) is deliberately **empty**: no Postgres database</span>
+<span class="sd">``store_kind="postgres"``) is deliberately **empty**: no Postgres database</span>
 <span class="sd">at any version ever held real data — the backend is config-selectable and</span>
 <span class="sd">was never enabled in any environment; production has always been the</span>
 <span class="sd">per-caller sqlite ``.annot`` layout (verified 2026-08-15, lacing#15).</span>
 <span class="sd">Dev databases at v1/v2 are recreated, not migrated. Register steps from</span>
-<span class="sd">v3 forward once a deployed Postgres exists.&quot;&quot;&quot;</span>
+<span class="sd">v3 forward once a deployed Postgres exists."""</span>
 
-<span class="n">DEFAULT_OWNER_ID</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
-<span class="sd">&quot;&quot;&quot;Owner placeholder until the multi-tenant access layer (reelee#174) lands.</span>
+<span class="n">DEFAULT_OWNER_ID</span> <span class="o">=</span> <span class="s2">"default"</span>
+<span class="sd">"""Owner placeholder until the multi-tenant access layer (reelee#174) lands.</span>
 
 <span class="sd">The ``owner_id`` column is carried and scoped now; its enforcement is deferred.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">DEFAULT_PROJECT_ID</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
-<span class="sd">&quot;&quot;&quot;Project placeholder for single-project / legacy use.&quot;&quot;&quot;</span>
+<span class="n">DEFAULT_PROJECT_ID</span> <span class="o">=</span> <span class="s2">"default"</span>
+<span class="sd">"""Project placeholder for single-project / legacy use."""</span>
 
 
-<span class="n">_DDL</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">_DDL</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">CREATE TABLE IF NOT EXISTS meta (</span>
 <span class="s2">    key   TEXT PRIMARY KEY,</span>
 <span class="s2">    value TEXT NOT NULL</span>
@@ -263,7 +263,7 @@
 <span class="s2">    name        TEXT NOT NULL,</span>
 <span class="s2">    stereotype  TEXT NOT NULL,</span>
 <span class="s2">    parent      TEXT,</span>
-<span class="s2">    metadata    JSONB NOT NULL DEFAULT &#39;</span><span class="si">{}</span><span class="s2">&#39;::jsonb,</span>
+<span class="s2">    metadata    JSONB NOT NULL DEFAULT '</span><span class="si">{}</span><span class="s2">'::jsonb,</span>
 <span class="s2">    enforce_no_overlap BOOLEAN NOT NULL DEFAULT FALSE,</span>
 <span class="s2">    PRIMARY KEY (owner_id, project_id, name),</span>
 <span class="s2">    FOREIGN KEY (owner_id, project_id, parent)</span>
@@ -275,7 +275,7 @@
 <span class="s2">    owner_id        TEXT NOT NULL,</span>
 <span class="s2">    project_id      TEXT NOT NULL,</span>
 <span class="s2">    tier            TEXT NOT NULL,</span>
-<span class="s2">    ref_kind        TEXT NOT NULL CHECK (ref_kind IN (&#39;media&#39;, &#39;node&#39;, &#39;annotation&#39;)),</span>
+<span class="s2">    ref_kind        TEXT NOT NULL CHECK (ref_kind IN ('media', 'node', 'annotation')),</span>
 <span class="s2">    asset_id        TEXT,</span>
 <span class="s2">    scene_path      TEXT,</span>
 <span class="s2">    target_id       UUID,</span>
@@ -291,7 +291,7 @@
 <span class="s2">    body_schema_uri TEXT NOT NULL,</span>
 <span class="s2">    prov_was_generated_by   TEXT NOT NULL,</span>
 <span class="s2">    prov_was_attributed_to  TEXT NOT NULL,</span>
-<span class="s2">    prov_was_derived_from   JSONB NOT NULL DEFAULT &#39;[]&#39;::jsonb,</span>
+<span class="s2">    prov_was_derived_from   JSONB NOT NULL DEFAULT '[]'::jsonb,</span>
 <span class="s2">    prov_generated_at_value BIGINT NOT NULL,</span>
 <span class="s2">    prov_generated_at_rate  INTEGER NOT NULL,</span>
 <span class="s2">    prov_activity           TEXT NOT NULL,</span>
@@ -307,7 +307,7 @@
 <span class="s2">    ON annotations (owner_id, project_id, tier);</span>
 <span class="s2">CREATE INDEX IF NOT EXISTS idx_ann_tenant_asset</span>
 <span class="s2">    ON annotations (owner_id, project_id, asset_id);</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 
 <span class="c1"># ---------------------------------------------------------------------------</span>
@@ -318,21 +318,21 @@
 <div class="viewcode-block" id="PgSchemaMismatchError">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PgSchemaMismatchError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PgSchemaMismatchError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised on opening a database whose schema_version differs.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">"""Raised on opening a database whose schema_version differs."""</span></div>
 
 
 
 <div class="viewcode-block" id="TierOverlapError">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.TierOverlapError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TierOverlapError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an insert would violate a per-tier no-overlap constraint.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">"""Raised when an insert would violate a per-tier no-overlap constraint."""</span></div>
 
 
 
 <div class="viewcode-block" id="RateMismatchError">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.RateMismatchError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RateMismatchError</span><span class="p">(</span><span class="n">LossyTimeConversionError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an annotation&#39;s interval cannot be represented at the project rate.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">"""Raised when an annotation's interval cannot be represented at the project rate."""</span></div>
 
 
 
@@ -348,26 +348,26 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">psycopg.types.range</span><span class="w"> </span><span class="kn">import</span> <span class="n">Range</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — covered by extra missing</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;PostgresStore requires psycopg. Install with: &quot;</span>
-            <span class="s2">&quot;pip install &#39;lacing[postgres]&#39;  (or directly: pip install &#39;psycopg[binary]&#39;)&quot;</span>
+            <span class="s2">"PostgresStore requires psycopg. Install with: "</span>
+            <span class="s2">"pip install 'lacing[postgres]'  (or directly: pip install 'psycopg[binary]')"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">return</span> <span class="n">psycopg</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="n">Range</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_safe_tier_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a constraint-name-safe fragment from a string.</span>
+<span class="w">    </span><span class="sd">"""Build a constraint-name-safe fragment from a string.</span>
 
 <span class="sd">    Used to assemble per-tenant per-tier EXCLUDE-constraint names. Lowercased,</span>
 <span class="sd">    non-identifier characters collapsed to ``_``, length-bounded so the full</span>
-<span class="sd">    constraint name stays within Postgres&#39;s 63-byte identifier limit.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    constraint name stays within Postgres's 63-byte identifier limit.</span>
+<span class="sd">    """</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">"_"</span><span class="p">:</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)[:</span><span class="mi">40</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;x&quot;</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)[:</span><span class="mi">40</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">"x"</span>
 
 
 <span class="c1"># ---------------------------------------------------------------------------</span>
@@ -384,7 +384,7 @@
 <div class="viewcode-block" id="get_pool">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.get_pool">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_pool</span><span class="p">(</span><span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">pool_kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a process-wide :class:`psycopg_pool.ConnectionPool` for a conninfo.</span>
+<span class="w">    </span><span class="sd">"""Return a process-wide :class:`psycopg_pool.ConnectionPool` for a conninfo.</span>
 
 <span class="sd">    One pool per distinct ``connection_string`` (the keying happens here, not at</span>
 <span class="sd">    the call-site), created lazily on first request. Raises :class:`ImportError`</span>
@@ -398,18 +398,18 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The shared pool for this conninfo.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">pool</span> <span class="o">=</span> <span class="n">_POOLS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">connection_string</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">psycopg_pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConnectionPool</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — optional dep</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;Connection pooling needs psycopg_pool. Install with: &quot;</span>
-                <span class="s2">&quot;pip install &#39;lacing[postgres]&#39;  (or: pip install psycopg_pool). &quot;</span>
-                <span class="s2">&quot;Pass use_pool=False to use a single long-lived connection instead.&quot;</span>
+                <span class="s2">"Connection pooling needs psycopg_pool. Install with: "</span>
+                <span class="s2">"pip install 'lacing[postgres]'  (or: pip install psycopg_pool). "</span>
+                <span class="s2">"Pass use_pool=False to use a single long-lived connection instead."</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;min_size&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;max_size&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">pool_kwargs</span><span class="p">}</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"min_size"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"max_size"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">"open"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">pool_kwargs</span><span class="p">}</span>
         <span class="n">pool</span> <span class="o">=</span> <span class="n">ConnectionPool</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">_POOLS</span><span class="p">[</span><span class="n">connection_string</span><span class="p">]</span> <span class="o">=</span> <span class="n">pool</span>
     <span class="k">return</span> <span class="n">pool</span></div>
@@ -419,7 +419,7 @@
 <div class="viewcode-block" id="close_all_pools">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.close_all_pools">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">close_all_pools</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Close every registered connection pool (test teardown / shutdown).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Close every registered connection pool (test teardown / shutdown)."""</span>
     <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">_POOLS</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -437,11 +437,11 @@
 <div class="viewcode-block" id="PostgresStore">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PostgresStore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PostgresStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;PostgreSQL-backed ``IntervalAnnotationStore``, scoped to one tenant.</span>
+<span class="w">    </span><span class="sd">"""PostgreSQL-backed ``IntervalAnnotationStore``, scoped to one tenant.</span>
 
 <span class="sd">    A store instance is bound to one ``(owner_id, project_id)`` pair; multiple</span>
 <span class="sd">    instances over the same database (different project ids) coexist without</span>
-<span class="sd">    seeing each other&#39;s annotations or tiers (see the module docstring on</span>
+<span class="sd">    seeing each other's annotations or tiers (see the module docstring on</span>
 <span class="sd">    multi-tenancy). The mapping/Allen/tier surface is unchanged — the tenant</span>
 <span class="sd">    scoping is transparent.</span>
 
@@ -455,14 +455,14 @@
 <span class="sd">        owner_id: Tenant owner. Defaults to :data:`DEFAULT_OWNER_ID` — the</span>
 <span class="sd">            forward seam for the access layer (reelee#174); enforcement deferred.</span>
 <span class="sd">        project_id: Logical project key. Defaults to :data:`DEFAULT_PROJECT_ID`.</span>
-<span class="sd">            ``nw`` passes the project&#39;s ``project_asset_id`` here.</span>
+<span class="sd">            ``nw`` passes the project's ``project_asset_id`` here.</span>
 <span class="sd">        autocommit: If True (default), statements run in their own transaction.</span>
 <span class="sd">        use_pool: When True (default) and the connection is given as a string,</span>
 <span class="sd">            borrow a connection from a process-wide pool keyed by the conninfo</span>
 <span class="sd">            (amortizes per-op connect cost; see :func:`get_pool`). Falls back to</span>
 <span class="sd">            a dedicated connection when ``psycopg_pool`` is unavailable, when the</span>
 <span class="sd">            connection is given as a dict, or when ``use_pool=False``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -482,7 +482,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span> <span class="o">=</span> <span class="n">project_id</span>
 
         <span class="c1"># Normalize to a conninfo string so we can pool. A dict still works but</span>
-        <span class="c1"># can&#39;t be a pool key, so it always takes the dedicated-connection path.</span>
+        <span class="c1"># can't be a pool key, so it always takes the dedicated-connection path.</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">conninfo</span> <span class="o">=</span> <span class="n">psycopg</span><span class="o">.</span><span class="n">conninfo</span><span class="o">.</span><span class="n">make_conninfo</span><span class="p">(</span><span class="o">**</span><span class="n">connection_string</span><span class="p">)</span>
             <span class="n">poolable</span> <span class="o">=</span> <span class="kc">False</span>
@@ -513,23 +513,23 @@
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">_DDL</span><span class="p">)</span>
             <span class="c1"># Global schema version (shared across all tenants in the DB).</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
+                <span class="s2">"SELECT value FROM meta WHERE key = 'schema_version'"</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) &quot;</span>
-                    <span class="s2">&quot;ON CONFLICT (key) DO NOTHING&quot;</span><span class="p">,</span>
-                    <span class="p">(</span><span class="s2">&quot;schema_version&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SCHEMA_VERSION</span><span class="p">)),</span>
+                    <span class="s2">"INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) "</span>
+                    <span class="s2">"ON CONFLICT (key) DO NOTHING"</span><span class="p">,</span>
+                    <span class="p">(</span><span class="s2">"schema_version"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SCHEMA_VERSION</span><span class="p">)),</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">got_version</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">got_version</span> <span class="o">!=</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">got_version</span> <span class="o">&gt;</span> <span class="n">SCHEMA_VERSION</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="n">PgSchemaMismatchError</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;database has schema_version=</span><span class="si">{</span><span class="n">got_version</span><span class="si">}</span><span class="s2">, &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">. The &quot;</span>
-                            <span class="s2">&quot;database is newer than this build — upgrade &quot;</span>
-                            <span class="s2">&quot;lacing (store migrations are forward-only).&quot;</span>
+                            <span class="sa">f</span><span class="s2">"database has schema_version=</span><span class="si">{</span><span class="n">got_version</span><span class="si">}</span><span class="s2">, "</span>
+                            <span class="sa">f</span><span class="s2">"this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">. The "</span>
+                            <span class="s2">"database is newer than this build — upgrade "</span>
+                            <span class="s2">"lacing (store migrations are forward-only)."</span>
                         <span class="p">)</span>
                     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
                         <span class="n">POSTGRES_KIND</span><span class="p">,</span>
@@ -538,30 +538,30 @@
 
                     <span class="n">reachable</span> <span class="o">=</span> <span class="n">reachable_versions</span><span class="p">(</span><span class="n">POSTGRES_KIND</span><span class="p">,</span> <span class="n">got_version</span><span class="p">)</span>
                     <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot; Registered migrations reach: &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;v</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">reachable</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                        <span class="sa">f</span><span class="s2">" Registered migrations reach: "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'v</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">'</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">reachable</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
                         <span class="k">if</span> <span class="n">reachable</span>
                         <span class="k">else</span> <span class="p">(</span>
-                            <span class="s2">&quot; No registered migration leaves that version — &quot;</span>
-                            <span class="s2">&quot;no Postgres deployment holds real data (see &quot;</span>
-                            <span class="s2">&quot;SCHEMA_VERSION); drop and recreate the database.&quot;</span>
+                            <span class="s2">" No registered migration leaves that version — "</span>
+                            <span class="s2">"no Postgres deployment holds real data (see "</span>
+                            <span class="s2">"SCHEMA_VERSION); drop and recreate the database."</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
                     <span class="k">raise</span> <span class="n">PgSchemaMismatchError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;database has schema_version=</span><span class="si">{</span><span class="n">got_version</span><span class="si">}</span><span class="s2">, &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">"database has schema_version=</span><span class="si">{</span><span class="n">got_version</span><span class="si">}</span><span class="s2">, "</span>
+                        <span class="sa">f</span><span class="s2">"this build expects </span><span class="si">{</span><span class="n">SCHEMA_VERSION</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">"</span>
                     <span class="p">)</span>
 
             <span class="c1"># Per-(owner, project) rate.</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT rate FROM projects WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">"SELECT rate FROM projects WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="s2">&quot;INSERT INTO projects (owner_id, project_id, rate) &quot;</span>
-                    <span class="s2">&quot;VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) &quot;</span>
-                    <span class="s2">&quot;ON CONFLICT (owner_id, project_id) DO NOTHING&quot;</span><span class="p">,</span>
+                    <span class="s2">"INSERT INTO projects (owner_id, project_id, rate) "</span>
+                    <span class="s2">"VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) "</span>
+                    <span class="s2">"ON CONFLICT (owner_id, project_id) DO NOTHING"</span><span class="p">,</span>
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">,</span> <span class="n">rate</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">rate</span>
@@ -569,9 +569,9 @@
                 <span class="n">stored_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">rate</span> <span class="o">!=</span> <span class="n">stored_rate</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">PgSchemaMismatchError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;project (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">!r}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">!r}</span><span class="s2">) has &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;rate=</span><span class="si">{</span><span class="n">stored_rate</span><span class="si">}</span><span class="s2">, opened with rate=</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">. Re-quantize &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;the data or open with the original rate.&quot;</span>
+                        <span class="sa">f</span><span class="s2">"project (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">!r}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">!r}</span><span class="s2">) has "</span>
+                        <span class="sa">f</span><span class="s2">"rate=</span><span class="si">{</span><span class="n">stored_rate</span><span class="si">}</span><span class="s2">, opened with rate=</span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">. Re-quantize "</span>
+                        <span class="sa">f</span><span class="s2">"the data or open with the original rate."</span>
                     <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span> <span class="o">=</span> <span class="n">stored_rate</span>
 
@@ -601,7 +601,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PostgresStore&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"PostgresStore"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -610,36 +610,36 @@
     <span class="c1"># --- meta ----------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_meta_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Namespace a user meta key by tenant so projects don&#39;t collide.</span>
+<span class="w">        </span><span class="sd">"""Namespace a user meta key by tenant so projects don't collide.</span>
 
 <span class="sd">        ``schema_version`` is the one global key (set in :meth:`_init_schema`);</span>
-<span class="sd">        all caller-set keys are stored under ``&quot;&lt;owner&gt;/&lt;project&gt;:&lt;key&gt;&quot;``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="sd">        all caller-set keys are stored under ``"&lt;owner&gt;/&lt;project&gt;:&lt;key&gt;"``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT value FROM meta WHERE key = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_meta_key</span><span class="p">(</span><span class="n">key</span><span class="p">),)</span>
+                <span class="s2">"SELECT value FROM meta WHERE key = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_meta_key</span><span class="p">(</span><span class="n">key</span><span class="p">),)</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># schema_version is stored unscoped (DB-global); allow reading it.</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"schema_version"</span><span class="p">:</span>
                 <span class="n">gv</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="s2">&quot;SELECT value FROM meta WHERE key = &#39;schema_version&#39;&quot;</span>
+                    <span class="s2">"SELECT value FROM meta WHERE key = 'schema_version'"</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
                 <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">gv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">gv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># rate moved to the projects table in v2; expose it via get_meta too.</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;rate&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"rate"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) &quot;</span>
-                <span class="s2">&quot;ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value&quot;</span><span class="p">,</span>
+                <span class="s2">"INSERT INTO meta (key, value) VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">) "</span>
+                <span class="s2">"ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value"</span><span class="p">,</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_meta_key</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">value</span><span class="p">),</span>
             <span class="p">)</span>
 
@@ -648,7 +648,7 @@
 <div class="viewcode-block" id="PostgresStore.add_tier">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.PostgresStore.add_tier">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier</span><span class="p">:</span> <span class="n">Tier</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">enforce_no_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add or update a tier.</span>
+<span class="w">        </span><span class="sd">"""Add or update a tier.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            tier: Tier definition.</span>
@@ -656,20 +656,20 @@
 <span class="sd">                GIST`` constraint forbidding overlapping annotations within</span>
 <span class="sd">                this tier. Required for proper TIME_SUBDIVISION enforcement.</span>
 <span class="sd">                Cannot be toggled after the tier has annotations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">sql</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sql</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;INSERT INTO tiers &quot;</span>
-                <span class="s2">&quot;  (owner_id, project_id, name, stereotype, parent, metadata, &quot;</span>
-                <span class="s2">&quot;   enforce_no_overlap) &quot;</span>
-                <span class="s2">&quot;VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">::jsonb, </span><span class="si">%s</span><span class="s2">) &quot;</span>
-                <span class="s2">&quot;ON CONFLICT(owner_id, project_id, name) DO UPDATE SET &quot;</span>
-                <span class="s2">&quot;  stereotype = EXCLUDED.stereotype, &quot;</span>
-                <span class="s2">&quot;  parent     = EXCLUDED.parent, &quot;</span>
-                <span class="s2">&quot;  metadata   = EXCLUDED.metadata, &quot;</span>
-                <span class="s2">&quot;  enforce_no_overlap = EXCLUDED.enforce_no_overlap&quot;</span><span class="p">,</span>
+                <span class="s2">"INSERT INTO tiers "</span>
+                <span class="s2">"  (owner_id, project_id, name, stereotype, parent, metadata, "</span>
+                <span class="s2">"   enforce_no_overlap) "</span>
+                <span class="s2">"VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">::jsonb, </span><span class="si">%s</span><span class="s2">) "</span>
+                <span class="s2">"ON CONFLICT(owner_id, project_id, name) DO UPDATE SET "</span>
+                <span class="s2">"  stereotype = EXCLUDED.stereotype, "</span>
+                <span class="s2">"  parent     = EXCLUDED.parent, "</span>
+                <span class="s2">"  metadata   = EXCLUDED.metadata, "</span>
+                <span class="s2">"  enforce_no_overlap = EXCLUDED.enforce_no_overlap"</span><span class="p">,</span>
                 <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">,</span>
@@ -682,20 +682,20 @@
             <span class="p">)</span>
 
             <span class="c1"># Constraint name is unique per (owner, project, tier) so one</span>
-            <span class="c1"># project&#39;s no-overlap rule never blocks another&#39;s annotations.</span>
+            <span class="c1"># project's no-overlap rule never blocks another's annotations.</span>
             <span class="n">constraint_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exclusion_constraint_name</span><span class="p">(</span><span class="n">tier</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="n">existing</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT 1 FROM pg_constraint WHERE conname = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">"SELECT 1 FROM pg_constraint WHERE conname = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">constraint_name</span><span class="p">,),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">enforce_no_overlap</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">existing</span><span class="p">:</span>
                 <span class="c1"># Partial EXCLUDE constraint scoped to this tenant + tier.</span>
                 <span class="n">stmt</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">SQL</span><span class="p">(</span>
-                    <span class="s2">&quot;ALTER TABLE annotations &quot;</span>
-                    <span class="s2">&quot;ADD CONSTRAINT </span><span class="si">{name}</span><span class="s2"> EXCLUDE USING GIST (span WITH &amp;&amp;) &quot;</span>
-                    <span class="s2">&quot;WHERE (owner_id = </span><span class="si">{owner}</span><span class="s2"> AND project_id = </span><span class="si">{project}</span><span class="s2"> &quot;</span>
-                    <span class="s2">&quot;       AND tier = </span><span class="si">{tier_lit}</span><span class="s2">)&quot;</span>
+                    <span class="s2">"ALTER TABLE annotations "</span>
+                    <span class="s2">"ADD CONSTRAINT </span><span class="si">{name}</span><span class="s2"> EXCLUDE USING GIST (span WITH &amp;&amp;) "</span>
+                    <span class="s2">"WHERE (owner_id = </span><span class="si">{owner}</span><span class="s2"> AND project_id = </span><span class="si">{project}</span><span class="s2"> "</span>
+                    <span class="s2">"       AND tier = </span><span class="si">{tier_lit}</span><span class="s2">)"</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Identifier</span><span class="p">(</span><span class="n">constraint_name</span><span class="p">),</span>
                     <span class="n">owner</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">),</span>
@@ -704,24 +704,24 @@
                 <span class="p">)</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">enforce_no_overlap</span> <span class="ow">and</span> <span class="n">existing</span><span class="p">:</span>
-                <span class="n">stmt</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">SQL</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE annotations DROP CONSTRAINT </span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">stmt</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">SQL</span><span class="p">(</span><span class="s2">"ALTER TABLE annotations DROP CONSTRAINT </span><span class="si">{name}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">sql</span><span class="o">.</span><span class="n">Identifier</span><span class="p">(</span><span class="n">constraint_name</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_exclusion_constraint_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Per-(owner, project, tier) constraint name, within PG&#39;s 63-byte cap.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Per-(owner, project, tier) constraint name, within PG's 63-byte cap."""</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;no_ovl_</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"no_ovl_</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">)</span><span class="si">}</span><span class="s2">_"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">_safe_tier_id</span><span class="p">(</span><span class="n">tier_name</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)[:</span><span class="mi">63</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tier</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT name, stereotype, parent, metadata FROM tiers &quot;</span>
-                <span class="s2">&quot;WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> AND name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">"SELECT name, stereotype, parent, metadata FROM tiers "</span>
+                <span class="s2">"WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> AND name = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_row_to_tier</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
@@ -729,8 +729,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">tiers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tier</span><span class="p">]:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT name, stereotype, parent, metadata FROM tiers &quot;</span>
-                <span class="s2">&quot;WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> ORDER BY name&quot;</span><span class="p">,</span>
+                <span class="s2">"SELECT name, stereotype, parent, metadata FROM tiers "</span>
+                <span class="s2">"WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> ORDER BY name"</span><span class="p">,</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">([</span><span class="n">_row_to_tier</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">])</span>
@@ -738,8 +738,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">is_no_overlap_enforced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">&quot;SELECT enforce_no_overlap FROM tiers &quot;</span>
-                <span class="s2">&quot;WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> AND name = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">"SELECT enforce_no_overlap FROM tiers "</span>
+                <span class="s2">"WHERE owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2"> AND name = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="kc">False</span>
@@ -751,24 +751,24 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_do_add</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
         <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psycopg</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ExclusionViolation</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TierOverlapError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;annotation </span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> would overlap an existing one in tier &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">tier</span><span class="si">!r}</span><span class="s2"> (per-tier EXCLUDE constraint is active)&quot;</span>
+                <span class="sa">f</span><span class="s2">"annotation </span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> would overlap an existing one in tier "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">annotation</span><span class="o">.</span><span class="n">tier</span><span class="si">!r}</span><span class="s2"> (per-tier EXCLUDE constraint is active)"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;SQL ``AND``-able tenant predicate + its params.</span>
+<span class="w">        </span><span class="sd">"""SQL ``AND``-able tenant predicate + its params.</span>
 
 <span class="sd">        Every annotation query carries this so a store only ever sees rows for</span>
 <span class="sd">        its own ``(owner_id, project_id)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"owner_id = </span><span class="si">%s</span><span class="s2"> AND project_id = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_do_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation</span><span class="p">:</span> <span class="n">Annotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cols</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_annotation_to_row</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;INSERT INTO annotations (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">) &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;VALUES (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"INSERT INTO annotations (</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">) "</span>
+                <span class="sa">f</span><span class="s2">"VALUES (</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">'</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
                 <span class="n">values</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -776,7 +776,7 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE id = %s AND </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE id = %s AND </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">annotation_id</span><span class="p">,</span> <span class="o">*</span><span class="n">params</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
@@ -785,7 +785,7 @@
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
             <span class="n">ann</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_to_annotation</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">)))</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;DELETE FROM annotations WHERE id = %s AND </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"DELETE FROM annotations WHERE id = %s AND </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">annotation_id</span><span class="p">,</span> <span class="o">*</span><span class="n">params</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">ann</span>
@@ -794,7 +794,7 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">params</span>
+                <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">params</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
@@ -807,10 +807,10 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT COUNT(*) FROM (&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;  SELECT DISTINCT start_value, end_value FROM annotations &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;  WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND ref_kind = &#39;media&#39; AND start_value IS NOT NULL&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;) AS d&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT COUNT(*) FROM ("</span>
+                <span class="sa">f</span><span class="s2">"  SELECT DISTINCT start_value, end_value FROM annotations "</span>
+                <span class="sa">f</span><span class="s2">"  WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND ref_kind = 'media' AND start_value IS NOT NULL"</span>
+                <span class="sa">f</span><span class="s2">") AS d"</span><span class="p">,</span>
                 <span class="n">params</span><span class="p">,</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -819,9 +819,9 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT DISTINCT start_value, end_value FROM annotations &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND ref_kind = &#39;media&#39; AND start_value IS NOT NULL &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;ORDER BY start_value, end_value&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT DISTINCT start_value, end_value FROM annotations "</span>
+                <span class="sa">f</span><span class="s2">"WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND ref_kind = 'media' AND start_value IS NOT NULL "</span>
+                <span class="sa">f</span><span class="s2">"ORDER BY start_value, end_value"</span><span class="p">,</span>
                 <span class="n">params</span><span class="p">,</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">start_value</span><span class="p">,</span> <span class="n">end_value</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
@@ -831,11 +831,11 @@
             <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_key_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Integer endpoints at the project rate for an exact-key lookup.</span>
+<span class="w">        </span><span class="sd">"""Integer endpoints at the project rate for an exact-key lookup.</span>
 
 <span class="sd">        Used by the mapping operations, which key on the exact interval — the</span>
 <span class="sd">        integer pair, not ``span`` (a half-open point has an empty span).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -845,8 +845,8 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT 1 FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;AND start_value = %s AND end_value = %s LIMIT 1&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT 1 FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"AND start_value = %s AND end_value = %s LIMIT 1"</span><span class="p">,</span>
                 <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">ev</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -856,8 +856,8 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;AND start_value = %s AND end_value = %s&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"AND start_value = %s AND end_value = %s"</span><span class="p">,</span>
                 <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">ev</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
@@ -870,8 +870,8 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;DELETE FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;AND start_value = %s AND end_value = %s&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"DELETE FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"AND start_value = %s AND end_value = %s"</span><span class="p">,</span>
                 <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">ev</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
@@ -885,33 +885,33 @@
     <span class="c1"># --- Allen-relation queries ---------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">intersects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">"&amp;&amp;"</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">during</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="c1"># Strict: a&#39;s span is strictly inside q (Allen &#39;d&#39; excludes shared</span>
+        <span class="c1"># Strict: a's span is strictly inside q (Allen 'd' excludes shared</span>
         <span class="c1"># endpoints). We pre-filter with `&lt;@` then re-check exact rationals.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&lt;@&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"&lt;@"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">DURING</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;@&gt;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"@&gt;"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">overlaps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="c1"># Strict Allen &#39;o&#39;: pre-filter with `&amp;&amp;`, re-check rationals.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">)</span>
+        <span class="c1"># Strict Allen 'o': pre-filter with `&amp;&amp;`, re-check rationals.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"&amp;&amp;"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">OVERLAPS</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">meets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
         <span class="c1"># `-|-` matches both meets and met_by; rational predicate disambiguates.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;-|-&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"-|-"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">starts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"&amp;&amp;"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">STARTS</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">finishes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_candidates_filtered</span><span class="p">(</span><span class="s2">"&amp;&amp;"</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">AllenRelation</span><span class="o">.</span><span class="n">FINISHES</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]:</span>
-        <span class="c1"># Range equality matches Allen &#39;=&#39; exactly.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="c1"># Range equality matches Allen '=' exactly.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_with_op</span><span class="p">(</span><span class="s2">"="</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">relate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">,</span> <span class="n">relations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AllenRelation</span><span class="p">]</span>
@@ -937,7 +937,7 @@
         <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
-            <span class="n">sql_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND span </span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2"> %s&quot;</span>
+            <span class="n">sql_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND span </span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2"> %s"</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_text</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">span</span><span class="p">))</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
@@ -969,8 +969,8 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;AND ((span &amp;&amp; %s) OR (span -|- %s))&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"AND ((span &amp;&amp; %s) OR (span -|- %s))"</span><span class="p">,</span>
                 <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">span</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
@@ -983,7 +983,7 @@
         <span class="n">scope</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND tier = %s&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"SELECT * FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> AND tier = %s"</span><span class="p">,</span>
                 <span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">tier_name</span><span class="p">),</span>
             <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span> <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span> <span class="k">else</span> <span class="p">[]</span>
@@ -1025,16 +1025,16 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cur</span><span class="p">:</span>
                 <span class="n">n_anns</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;SELECT COUNT(*) FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">params</span>
+                    <span class="sa">f</span><span class="s2">"SELECT COUNT(*) FROM annotations WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">params</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">n_tiers</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;SELECT COUNT(*) FROM tiers WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">params</span>
+                    <span class="sa">f</span><span class="s2">"SELECT COUNT(*) FROM tiers WHERE </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">params</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — closed connection</span>
-            <span class="k">return</span> <span class="s2">&quot;PostgresStore(&lt;closed&gt;)&quot;</span>
+            <span class="k">return</span> <span class="s2">"PostgresStore(&lt;closed&gt;)"</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;PostgresStore(owner=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">!r}</span><span class="s2">, project=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">!r}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_anns</span><span class="si">}</span><span class="s2"> annotations, </span><span class="si">{</span><span class="n">n_tiers</span><span class="si">}</span><span class="s2"> tiers, rate=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">"PostgresStore(owner=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span><span class="si">!r}</span><span class="s2">, project=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_id</span><span class="si">!r}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n_anns</span><span class="si">}</span><span class="s2"> annotations, </span><span class="si">{</span><span class="n">n_tiers</span><span class="si">}</span><span class="s2"> tiers, rate=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2">)"</span>
         <span class="p">)</span>
 
     <span class="c1"># --- conversion helpers -----------------------------------------</span>
@@ -1042,10 +1042,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_interval_to_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="n">TimeInterval</span><span class="p">):</span>
         <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
         <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_value</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="s2">&quot;[)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="s2">"[)"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">RationalTime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a RationalTime to integer ticks at the project rate.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert a RationalTime to integer ticks at the project rate."""</span>
         <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">rate</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">value</span>
         <span class="c1"># Use to_rate which raises on lossy conversion</span>
@@ -1053,8 +1053,8 @@
             <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">to_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
         <span class="k">except</span> <span class="n">LossyTimeConversionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RateMismatchError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;RationalTime </span><span class="si">{</span><span class="n">t</span><span class="si">!r}</span><span class="s2"> cannot be expressed at project rate &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2"> without loss&quot;</span>
+                <span class="sa">f</span><span class="s2">"RationalTime </span><span class="si">{</span><span class="n">t</span><span class="si">!r}</span><span class="s2"> cannot be expressed at project rate "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="si">}</span><span class="s2"> without loss"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_span_to_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeInterval</span><span class="p">:</span>
@@ -1073,19 +1073,19 @@
         <span class="n">target_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">MediaRef</span><span class="p">):</span>
-            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;media&quot;</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">"media"</span>
             <span class="n">asset_id</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">asset_id</span>
             <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">NodeRef</span><span class="p">):</span>
-            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;node&quot;</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">"node"</span>
             <span class="n">scene_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">scene_path</span>
             <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">AnnotationRef</span><span class="p">):</span>
-            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">&quot;annotation&quot;</span>
+            <span class="n">ref_kind</span> <span class="o">=</span> <span class="s2">"annotation"</span>
             <span class="n">target_id</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">target_id</span>
             <span class="n">iv</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">interval</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover  — discriminated union</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown reference kind: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown reference kind: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval_to_span</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">iv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1096,26 +1096,26 @@
             <span class="n">end_value</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cols</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;owner_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;project_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;tier&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ref_kind&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;asset_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scene_path&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;target_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;span&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;start_value&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;end_value&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body_schema_uri&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_was_generated_by&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_was_attributed_to&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_generated_at_value&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_generated_at_rate&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;prov_activity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;confidence&quot;</span><span class="p">,</span>
+            <span class="s2">"id"</span><span class="p">,</span>
+            <span class="s2">"owner_id"</span><span class="p">,</span>
+            <span class="s2">"project_id"</span><span class="p">,</span>
+            <span class="s2">"tier"</span><span class="p">,</span>
+            <span class="s2">"ref_kind"</span><span class="p">,</span>
+            <span class="s2">"asset_id"</span><span class="p">,</span>
+            <span class="s2">"scene_path"</span><span class="p">,</span>
+            <span class="s2">"target_id"</span><span class="p">,</span>
+            <span class="s2">"span"</span><span class="p">,</span>
+            <span class="s2">"start_value"</span><span class="p">,</span>
+            <span class="s2">"end_value"</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">,</span>
+            <span class="s2">"body_schema_uri"</span><span class="p">,</span>
+            <span class="s2">"prov_was_generated_by"</span><span class="p">,</span>
+            <span class="s2">"prov_was_attributed_to"</span><span class="p">,</span>
+            <span class="s2">"prov_was_derived_from"</span><span class="p">,</span>
+            <span class="s2">"prov_generated_at_value"</span><span class="p">,</span>
+            <span class="s2">"prov_generated_at_rate"</span><span class="p">,</span>
+            <span class="s2">"prov_activity"</span><span class="p">,</span>
+            <span class="s2">"confidence"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># Re-quantize generated_at to project rate too if needed.</span>
         <span class="n">gen_at</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">generated_at_time</span>
@@ -1156,46 +1156,46 @@
         <span class="c1"># Reconstruct the interval from the integer endpoints (lossless source</span>
         <span class="c1"># of truth), NOT from `span`: Postgres canonicalizes a half-open point</span>
         <span class="c1"># [n, n) to the empty range and reports lower/upper as NULL on readback.</span>
-        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_value&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"start_value"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span>
-                <span class="n">RationalTime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;start_value&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
-                <span class="n">RationalTime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;end_value&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
+                <span class="n">RationalTime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"start_value"</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
+                <span class="n">RationalTime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"end_value"</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">interval</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">ref</span><span class="p">:</span> <span class="n">Reference</span>
-        <span class="n">kind</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;ref_kind&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;media&quot;</span><span class="p">:</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"ref_kind"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"media"</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">ref</span> <span class="o">=</span> <span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;asset_id&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"asset_id"</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"node"</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">ref</span> <span class="o">=</span> <span class="n">NodeRef</span><span class="p">(</span><span class="n">scene_path</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;scene_path&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;annotation&quot;</span><span class="p">:</span>
-            <span class="n">ref</span> <span class="o">=</span> <span class="n">AnnotationRef</span><span class="p">(</span><span class="n">target_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;target_id&quot;</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">NodeRef</span><span class="p">(</span><span class="n">scene_path</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"scene_path"</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"annotation"</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">AnnotationRef</span><span class="p">(</span><span class="n">target_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"target_id"</span><span class="p">],</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown ref_kind: </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown ref_kind: </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">provenance</span> <span class="o">=</span> <span class="n">Provenance</span><span class="p">(</span>
-            <span class="n">was_generated_by</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_generated_by&quot;</span><span class="p">],</span>
-            <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_attributed_to&quot;</span><span class="p">],</span>
+            <span class="n">was_generated_by</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"prov_was_generated_by"</span><span class="p">],</span>
+            <span class="n">was_attributed_to</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"prov_was_attributed_to"</span><span class="p">],</span>
             <span class="c1"># Raw strings: the Provenance union (UUID | AssetId) discriminates.</span>
-            <span class="n">was_derived_from</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_was_derived_from&quot;</span><span class="p">]),</span>
+            <span class="n">was_derived_from</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"prov_was_derived_from"</span><span class="p">]),</span>
             <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span>
-                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_value&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_generated_at_rate&quot;</span><span class="p">]</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">"prov_generated_at_value"</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">"prov_generated_at_rate"</span><span class="p">]</span>
             <span class="p">),</span>
-            <span class="n">activity</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;prov_activity&quot;</span><span class="p">],</span>
+            <span class="n">activity</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"prov_activity"</span><span class="p">],</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Annotation</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
-            <span class="n">tier</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;tier&quot;</span><span class="p">],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+            <span class="n">tier</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"tier"</span><span class="p">],</span>
             <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span>
-            <span class="n">body</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">],</span>
-            <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;body_schema_uri&quot;</span><span class="p">],</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"body"</span><span class="p">],</span>
+            <span class="n">body_schema_uri</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"body_schema_uri"</span><span class="p">],</span>
             <span class="n">provenance</span><span class="o">=</span><span class="n">provenance</span><span class="p">,</span>
-            <span class="n">confidence</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;confidence&quot;</span><span class="p">],</span>
+            <span class="n">confidence</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">"confidence"</span><span class="p">],</span>
         <span class="p">)</span></div>
 
 
@@ -1225,7 +1225,7 @@
     <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_OWNER_ID</span><span class="p">,</span>
     <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_PROJECT_ID</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PostgresStore</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replicate an in-memory store into a Postgres database (one tenant).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Replicate an in-memory store into a Postgres database (one tenant)."""</span>
     <span class="n">pg</span> <span class="o">=</span> <span class="n">PostgresStore</span><span class="p">(</span>
         <span class="n">connection_string</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span> <span class="n">owner_id</span><span class="o">=</span><span class="n">owner_id</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span>
     <span class="p">)</span>
@@ -1239,7 +1239,7 @@
 <div class="viewcode-block" id="to_memory">
 <a class="viewcode-back" href="../../../module_docs/lacing/store/postgres.html#lacing.store.to_memory">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">to_memory</span><span class="p">(</span><span class="n">pg_store</span><span class="p">:</span> <span class="n">PostgresStore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Snapshot a ``PostgresStore`` into a ``MemoryStore``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Snapshot a ``PostgresStore`` into a ``MemoryStore``."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryStore</span>
 
     <span class="n">mem</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,12 +125,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.model</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Annotation envelope, references, and provenance.</span>
+<span></span><span class="sd">"""Annotation envelope, references, and provenance.</span>
 
 <span class="sd">One envelope, typed body. The ``body: dict`` is validated by the schema at</span>
 <span class="sd">``body_schema_uri`` (semver). No polymorphic class hierarchy. See BACK-DOC §2.1</span>
 <span class="sd">and ``.claude/skills/lacing-schema-codegen/SKILL.md``.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -152,31 +152,31 @@
 <div class="viewcode-block" id="MediaRef">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.MediaRef">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MediaRef</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference to a region of a content-addressed media asset.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reference to a region of a content-addressed media asset."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;media&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;media&quot;</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"media"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"media"</span>
     <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Content hash (BLAKE3 / SHA-256) of the source asset.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Content hash (BLAKE3 / SHA-256) of the source asset."</span>
     <span class="p">)</span>
-    <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Region within the asset.&quot;</span><span class="p">)</span></div>
+    <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Region within the asset."</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="NodeRef">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.NodeRef">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NodeRef</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference to a node in a structured scene/document graph.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reference to a node in a structured scene/document graph."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;node&quot;</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"node"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"node"</span>
     <span class="n">scene_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Slash-separated path identifying the node.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Slash-separated path identifying the node."</span>
     <span class="p">)</span>
     <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Region within the node&#39;s local time.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Region within the node's local time."</span>
     <span class="p">)</span></div>
 
 
@@ -184,53 +184,53 @@
 <div class="viewcode-block" id="AnnotationRef">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.AnnotationRef">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnnotationRef</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference to another annotation (for discussion threads, review, derivations).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reference to another annotation (for discussion threads, review, derivations)."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;annotation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;annotation&quot;</span>
-    <span class="n">target_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;ID of the target annotation.&quot;</span><span class="p">)</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"annotation"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"annotation"</span>
+    <span class="n">target_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"ID of the target annotation."</span><span class="p">)</span>
     <span class="n">interval</span><span class="p">:</span> <span class="n">TimeInterval</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional sub-interval of the target (e.g., commenting on part of it).&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Optional sub-interval of the target (e.g., commenting on part of it)."</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
-<span class="n">Reference</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">MediaRef</span> <span class="o">|</span> <span class="n">NodeRef</span> <span class="o">|</span> <span class="n">AnnotationRef</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">discriminator</span><span class="o">=</span><span class="s2">&quot;kind&quot;</span><span class="p">)]</span>
-<span class="sd">&quot;&quot;&quot;Discriminated union on ``kind``.&quot;&quot;&quot;</span>
+<span class="n">Reference</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">MediaRef</span> <span class="o">|</span> <span class="n">NodeRef</span> <span class="o">|</span> <span class="n">AnnotationRef</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">discriminator</span><span class="o">=</span><span class="s2">"kind"</span><span class="p">)]</span>
+<span class="sd">"""Discriminated union on ``kind``."""</span>
 
 
 <span class="c1"># --- Provenance --------------------------------------------------------------</span>
 <span class="c1"># Inline on every annotation. Subset of W3C PROV-O. See ANN-DOC §C, BACK-DOC §4.5.</span>
 
 
-<span class="n">AssetId</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$&quot;</span><span class="p">)]</span>
-<span class="sd">&quot;&quot;&quot;A content-addressed artifact identity — the SHA-256 of the artifact&#39;s</span>
+<span class="n">AssetId</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">"^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$"</span><span class="p">)]</span>
+<span class="sd">"""A content-addressed artifact identity — the SHA-256 of the artifact's</span>
 <span class="sd">bytes, as :class:`lacing.Artifact` enforces: **bare 64-hex only**.</span>
 <span class="sd">``MediaRef.asset_id``-style prefixed identifiers (``blake3:…``,</span>
 <span class="sd">``sha256:…``) are a different, free-form vocabulary and are NOT</span>
 <span class="sd">provenance refs — copying one in here is a loud ``ValidationError``, by</span>
 <span class="sd">design. Format-disjoint from a UUID string (36 hyphenated chars), so the</span>
-<span class="sd">:data:`ProvenanceRef` union is unambiguous.&quot;&quot;&quot;</span>
+<span class="sd">:data:`ProvenanceRef` union is unambiguous."""</span>
 
 <span class="n">ProvenanceRef</span> <span class="o">=</span> <span class="n">UUID</span> <span class="o">|</span> <span class="n">AssetId</span>
-<span class="sd">&quot;&quot;&quot;One upstream reference in ``was_derived_from``: an annotation ``id``</span>
+<span class="sd">"""One upstream reference in ``was_derived_from``: an annotation ``id``</span>
 <span class="sd">(UUID) or an artifact ``asset_id`` (64-hex SHA-256). Widened from bare</span>
 <span class="sd">``list[UUID]`` by lacing#14 (defect D5) so artifact-to-artifact lineage —</span>
 <span class="sd">the tier where the expensive things live — is representable at all.</span>
 <span class="sd">Consumers that walk lineage discriminate with</span>
 <span class="sd">:func:`partition_provenance_refs`. Derivation *roles* (lacing#17) will</span>
 <span class="sd">arrive as a separate additive qualification field, PROV-O-style — this</span>
-<span class="sd">list stays the simple edge walk.&quot;&quot;&quot;</span>
+<span class="sd">list stays the simple edge walk."""</span>
 
 
 <div class="viewcode-block" id="partition_provenance_refs">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.partition_provenance_refs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">partition_provenance_refs</span><span class="p">(</span>
-    <span class="n">refs</span><span class="p">:</span> <span class="s2">&quot;list[ProvenanceRef]&quot;</span><span class="p">,</span>
+    <span class="n">refs</span><span class="p">:</span> <span class="s2">"list[ProvenanceRef]"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split ``was_derived_from`` into ``(annotation_ids, asset_ids)``.</span>
+<span class="w">    </span><span class="sd">"""Split ``was_derived_from`` into ``(annotation_ids, asset_ids)``.</span>
 
 <span class="sd">    The one discriminator every lineage walker needs, provided centrally so</span>
 <span class="sd">    no consumer re-derives (or half-derives) the union rule.</span>
@@ -238,7 +238,7 @@
 <span class="sd">    ``refs`` must come from a **validated** :class:`Provenance` — the split</span>
 <span class="sd">    is by runtime type (``UUID`` vs ``str``), so a raw wire list that never</span>
 <span class="sd">    passed validation would land every UUID *string* in the asset bucket.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">annotation_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">asset_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
@@ -253,33 +253,33 @@
 <div class="viewcode-block" id="Provenance">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.Provenance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Provenance</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;W3C PROV-O subset, embedded inline on every annotation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""W3C PROV-O subset, embedded inline on every annotation."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
     <span class="n">was_generated_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Activity identifier. Conventions: ``user:&lt;handle&gt;``, &quot;</span>
-            <span class="s2">&quot;``agent:&lt;model&gt;@&lt;hash&gt;``, ``adapter:&lt;format&gt;``, ``processor:&lt;name&gt;``.&quot;</span>
+            <span class="s2">"Activity identifier. Conventions: ``user:&lt;handle&gt;``, "</span>
+            <span class="s2">"``agent:&lt;model&gt;@&lt;hash&gt;``, ``adapter:&lt;format&gt;``, ``processor:&lt;name&gt;``."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Responsible party (user, org, or agent).&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Responsible party (user, org, or agent)."</span>
     <span class="p">)</span>
     <span class="n">was_derived_from</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ProvenanceRef</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Upstream references this one is derived from: annotation IDs &quot;</span>
-            <span class="s2">&quot;(UUID) and/or artifact asset_ids (64-hex SHA-256).&quot;</span>
+            <span class="s2">"Upstream references this one is derived from: annotation IDs "</span>
+            <span class="s2">"(UUID) and/or artifact asset_ids (64-hex SHA-256)."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">generated_at_time</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;When the annotation was generated.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When the annotation was generated."</span>
     <span class="p">)</span>
     <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;create&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;One of: ``create``, ``import``, ``derive``, ``migrate``, ``infer``.&quot;</span><span class="p">,</span>
+        <span class="s2">"create"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"One of: ``create``, ``import``, ``derive``, ``migrate``, ``infer``."</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -290,36 +290,36 @@
 <div class="viewcode-block" id="Annotation">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.Annotation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Annotation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The single annotation envelope. ``body`` is typed by ``body_schema_uri``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""The single annotation envelope. ``body`` is typed by ``body_schema_uri``."""</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Stable identifier.&quot;</span><span class="p">)</span>
-    <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the tier this annotation belongs to.&quot;</span><span class="p">)</span>
-    <span class="n">reference</span><span class="p">:</span> <span class="n">Reference</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What this annotation annotates.&quot;</span><span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Stable identifier."</span><span class="p">)</span>
+    <span class="n">tier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Name of the tier this annotation belongs to."</span><span class="p">)</span>
+    <span class="n">reference</span><span class="p">:</span> <span class="n">Reference</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"What this annotation annotates."</span><span class="p">)</span>
     <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Domain-specific payload, validated by body_schema_uri.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Domain-specific payload, validated by body_schema_uri."</span>
     <span class="p">)</span>
     <span class="n">body_schema_uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
-        <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^annot://schema/[a-z0-9-]+/v\d+$&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;e.g., ``annot://schema/named-entity/v1``&quot;</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">"^annot://schema/[a-z0-9-]+/v\d+$"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"e.g., ``annot://schema/named-entity/v1``"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">provenance</span><span class="p">:</span> <span class="n">Provenance</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Who/when/why this annotation was created.&quot;</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Who/when/why this annotation was created."</span>
     <span class="p">)</span>
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional [0,1] confidence — for soft labels and AI-generated annotations.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Optional [0,1] confidence — for soft labels and AI-generated annotations."</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span>
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">"body"</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_body_keys_must_be_strings</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="c1"># The contract already exists on paper — body is &quot;validated by</span>
-        <span class="c1"># body_schema_uri&quot; and JSON Schema object keys are strings — this</span>
+        <span class="c1"># The contract already exists on paper — body is "validated by</span>
+        <span class="c1"># body_schema_uri" and JSON Schema object keys are strings — this</span>
         <span class="c1"># enforces it where the data enters, before a store round-trip can</span>
         <span class="c1"># silently annihilate an entry (lacing#24).</span>
         <span class="n">reject_non_string_keys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -327,7 +327,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">interval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeInterval</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience: the reference&#39;s interval, if any.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convenience: the reference's interval, if any."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">interval</span></div>
 
 </pre></div>

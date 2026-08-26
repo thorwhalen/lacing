@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.worker &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.worker &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -142,8 +142,8 @@ constructed lazily by <a class="reference internal" href="#lacing.worker.build_w
 <span class="kn">from</span><span class="w"> </span><span class="nn">arq</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_worker</span>
 
 <span class="n">settings</span> <span class="o">=</span> <span class="n">build_worker_settings</span><span class="p">(</span>
-    <span class="n">store_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">&quot;project.annot&quot;</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="n">oplog_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">SqliteOpLog</span><span class="p">(</span><span class="s2">&quot;project.annot.oplog&quot;</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">store_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">"project.annot"</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">oplog_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">SqliteOpLog</span><span class="p">(</span><span class="s2">"project.annot.oplog"</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="n">run_worker</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
 
@@ -152,8 +152,8 @@ constructed lazily by <a class="reference internal" href="#lacing.worker.build_w
 
 <span class="n">redis</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_pool</span><span class="p">(</span><span class="n">RedisSettings</span><span class="p">())</span>
 <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">enqueue_job</span><span class="p">(</span>
-    <span class="s2">&quot;run_processor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;low_confidence_review&quot;</span><span class="p">,</span>
+    <span class="s2">"run_processor"</span><span class="p">,</span>
+    <span class="s2">"low_confidence_review"</span><span class="p">,</span>
     <span class="n">threshold</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>

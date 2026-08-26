@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.reference_lock &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.bodies.reference_lock &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,13 +125,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.bodies.reference_lock</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Body schema for a *locked reference* — a first-class “this is canonical”.</span>
+<span></span><span class="sd">"""Body schema for a *locked reference* — a first-class “this is canonical”.</span>
 
 <span class="sd">URI: ``annot://schema/reference-lock/v1``</span>
 
 <span class="sd">A **reference lock** records the decision that one or more reference</span>
-<span class="sd">artifacts *are* the canonical anchor for some subject — a character&#39;s</span>
-<span class="sd">face, a location&#39;s architecture, a style, a prop. Once a subject is</span>
+<span class="sd">artifacts *are* the canonical anchor for some subject — a character's</span>
+<span class="sd">face, a location's architecture, a style, a prop. Once a subject is</span>
 <span class="sd">locked, a *supervisor* can check every later generation against the</span>
 <span class="sd">locked anchor and flag drift (the consumer in reelee runs the</span>
 <span class="sd">identity/likeness comparison and emits ``continuity-violation/v1``</span>
@@ -144,26 +144,26 @@
 <span class="sd">  Lock a single canonical headshot, or a set (front / three-quarter /</span>
 <span class="sd">  full-body / expression sheet). ``primary_artifact_id`` names the one</span>
 <span class="sd">  to show by default.</span>
-<span class="sd">- **Project- or scene-scoped.** ``scope`` is ``&quot;project&quot;`` by default</span>
-<span class="sd">  (the character is locked for the whole piece) or ``&quot;scene&quot;`` (a</span>
+<span class="sd">- **Project- or scene-scoped.** ``scope`` is ``"project"`` by default</span>
+<span class="sd">  (the character is locked for the whole piece) or ``"scene"`` (a</span>
 <span class="sd">  re-lock for a flashback / costume change), in which case</span>
 <span class="sd">  ``scope_ref`` names the scene/segment it applies to. Re-locks chain</span>
-<span class="sd">  via ``supersedes`` (the prior lock&#39;s annotation id).</span>
+<span class="sd">  via ``supersedes`` (the prior lock's annotation id).</span>
 <span class="sd">- **Per-aspect checklist with advisory-by-default gating.**</span>
 <span class="sd">  ``checklist`` is the set of aspects the supervisor compares</span>
-<span class="sd">  (``&quot;face&quot;``, ``&quot;architecture&quot;``, ``&quot;props&quot;``, ``&quot;lighting&quot;``,</span>
-<span class="sd">  ``&quot;costume&quot;``, ``&quot;palette&quot;``, …). ``hard_gates`` is the subset that</span>
+<span class="sd">  (``"face"``, ``"architecture"``, ``"props"``, ``"lighting"``,</span>
+<span class="sd">  ``"costume"``, ``"palette"``, …). ``hard_gates`` is the subset that</span>
 <span class="sd">  *blocks* on mismatch; it defaults to empty, so every aspect is</span>
 <span class="sd">  **advisory** (flag, never auto-reject) — honouring the field</span>
-<span class="sd">  observation that over-strict likeness filters waste the user&#39;s time</span>
+<span class="sd">  observation that over-strict likeness filters waste the user's time</span>
 <span class="sd">  rejecting perfectly good images.</span>
 
 <span class="sd">The lock is itself an annotation; *who* locked it and *when* live in</span>
-<span class="sd">the annotation&#39;s PROV-O provenance, not in this body.</span>
+<span class="sd">the annotation's PROV-O provenance, not in this body.</span>
 
 <span class="sd">Reference: ``reelee/docs/Narrative to Storyboard.md`` (reference</span>
 <span class="sd">consistency); reelee-web epic #151, lacing #9.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -174,89 +174,89 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<span class="n">REFERENCE_LOCK_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">&quot;annot://schema/reference-lock/v1&quot;</span>
+<span class="n">REFERENCE_LOCK_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/reference-lock/v1"</span>
 
 
-<span class="n">SubjectKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;character&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">,</span> <span class="s2">&quot;prop&quot;</span><span class="p">,</span> <span class="s2">&quot;other&quot;</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;What the lock anchors. ``character`` (a face/identity), ``location``</span>
+<span class="n">SubjectKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"character"</span><span class="p">,</span> <span class="s2">"location"</span><span class="p">,</span> <span class="s2">"style"</span><span class="p">,</span> <span class="s2">"prop"</span><span class="p">,</span> <span class="s2">"other"</span><span class="p">]</span>
+<span class="sd">"""What the lock anchors. ``character`` (a face/identity), ``location``</span>
 <span class="sd">(architecture / set), ``style`` (look anchor), ``prop`` (a recurring</span>
-<span class="sd">object), or ``other`` for anything not yet enumerated.&quot;&quot;&quot;</span>
+<span class="sd">object), or ``other`` for anything not yet enumerated."""</span>
 
 
-<span class="n">Scope</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;scene&quot;</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;``project`` — locked for the whole piece (the default). ``scene`` —</span>
+<span class="n">Scope</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"project"</span><span class="p">,</span> <span class="s2">"scene"</span><span class="p">]</span>
+<span class="sd">"""``project`` — locked for the whole piece (the default). ``scene`` —</span>
 <span class="sd">re-locked for one scene/segment (flashback, costume change); requires</span>
-<span class="sd">``scope_ref``.&quot;&quot;&quot;</span>
+<span class="sd">``scope_ref``."""</span>
 
 
 <div class="viewcode-block" id="ReferenceLockBodyV1">
 <a class="viewcode-back" href="../../../module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReferenceLockBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Body of a reference-lock annotation.</span>
+<span class="w">    </span><span class="sd">"""Body of a reference-lock annotation.</span>
 
 <span class="sd">    Records that ``locked_artifact_ids`` are the canonical anchor for</span>
 <span class="sd">    ``subject_id`` (a ``subject_kind``), the aspects a supervisor should</span>
 <span class="sd">    compare (``checklist``), which of those block vs merely warn</span>
 <span class="sd">    (``hard_gates``), and the advisory identity threshold</span>
 <span class="sd">    (``min_similarity``).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
     <span class="n">subject_kind</span><span class="p">:</span> <span class="n">SubjectKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;What this lock anchors — character / location / style / prop / other.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"What this lock anchors — character / location / style / prop / other."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">subject_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Id (or stable name) of the entity this lock anchors — e.g. a &quot;</span>
-            <span class="s2">&quot;character-ref / location-ref annotation id.&quot;</span>
+            <span class="s2">"Id (or stable name) of the entity this lock anchors — e.g. a "</span>
+            <span class="s2">"character-ref / location-ref annotation id."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">locked_artifact_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;1..N reference artifact / annotation ids that *are* the &quot;</span>
-            <span class="s2">&quot;canonical anchor. One canonical image, or a set &quot;</span>
-            <span class="s2">&quot;(front / three-quarter / full-body / expressions).&quot;</span>
+            <span class="s2">"1..N reference artifact / annotation ids that *are* the "</span>
+            <span class="s2">"canonical anchor. One canonical image, or a set "</span>
+            <span class="s2">"(front / three-quarter / full-body / expressions)."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">primary_artifact_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;The representative artifact to display; must be one of &quot;</span>
-            <span class="s2">&quot;``locked_artifact_ids``. Defaults to the first when omitted.&quot;</span>
+            <span class="s2">"The representative artifact to display; must be one of "</span>
+            <span class="s2">"``locked_artifact_ids``. Defaults to the first when omitted."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;project&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lock scope — &#39;project&#39; (whole piece) or &#39;scene&#39; (re-lock).&quot;</span><span class="p">,</span>
+        <span class="s2">"project"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Lock scope — 'project' (whole piece) or 'scene' (re-lock)."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">scope_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;When ``scope == &#39;scene&#39;``, the scene/segment id this lock &quot;</span>
-            <span class="s2">&quot;applies to. Must be None for project scope.&quot;</span>
+            <span class="s2">"When ``scope == 'scene'``, the scene/segment id this lock "</span>
+            <span class="s2">"applies to. Must be None for project scope."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">checklist</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="p">(</span><span class="s2">&quot;face&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="s2">"face"</span><span class="p">,),</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Aspects the supervisor compares against the anchor — e.g. &quot;</span>
-            <span class="s2">&quot;&#39;face&#39;, &#39;architecture&#39;, &#39;props&#39;, &#39;lighting&#39;, &#39;costume&#39;, &quot;</span>
-            <span class="s2">&quot;&#39;palette&#39;. Strings (not Literal) so new aspects need no &quot;</span>
-            <span class="s2">&quot;schema bump.&quot;</span>
+            <span class="s2">"Aspects the supervisor compares against the anchor — e.g. "</span>
+            <span class="s2">"'face', 'architecture', 'props', 'lighting', 'costume', "</span>
+            <span class="s2">"'palette'. Strings (not Literal) so new aspects need no "</span>
+            <span class="s2">"schema bump."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">hard_gates</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="p">(),</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Subset of ``checklist`` that BLOCKS on mismatch (auto-reject &quot;</span>
-            <span class="s2">&quot;/ queue regen). Empty by default → every aspect is advisory &quot;</span>
-            <span class="s2">&quot;(flag, never auto-block).&quot;</span>
+            <span class="s2">"Subset of ``checklist`` that BLOCKS on mismatch (auto-reject "</span>
+            <span class="s2">"/ queue regen). Empty by default → every aspect is advisory "</span>
+            <span class="s2">"(flag, never auto-block)."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">min_similarity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -264,56 +264,56 @@
         <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Advisory identity-similarity threshold in [0, 1]; a candidate &quot;</span>
-            <span class="s2">&quot;scoring below this is flagged as drift. None → use the &quot;</span>
-            <span class="s2">&quot;supervisor&#39;s system default.&quot;</span>
+            <span class="s2">"Advisory identity-similarity threshold in [0, 1]; a candidate "</span>
+            <span class="s2">"scoring below this is flagged as drift. None → use the "</span>
+            <span class="s2">"supervisor's system default."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">supersedes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Prior reference-lock annotation id this re-lock replaces &quot;</span>
-            <span class="s2">&quot;(costume change, scene re-lock). None for the first lock.&quot;</span>
+            <span class="s2">"Prior reference-lock annotation id this re-lock replaces "</span>
+            <span class="s2">"(costume change, scene re-lock). None for the first lock."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">notes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">""</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Human checklist hints the vision supervisor can use — e.g. &quot;</span>
-            <span class="s2">&quot;&#39;the green flat cap is present&#39;, &#39;same bar layout&#39;.&quot;</span>
+            <span class="s2">"Human checklist hints the vision supervisor can use — e.g. "</span>
+            <span class="s2">"'the green flat cap is present', 'same bar layout'."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Opaque per-aspect config (e.g. per-aspect thresholds). &quot;</span>
-            <span class="s2">&quot;Ignored by lacing; consumed by the producing supervisor.&quot;</span>
+            <span class="s2">"Opaque per-aspect config (e.g. per-aspect thresholds). "</span>
+            <span class="s2">"Ignored by lacing; consumed by the producing supervisor."</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ReferenceLockBodyV1&quot;</span><span class="p">:</span>
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_invariants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ReferenceLockBodyV1"</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locked_artifact_ids</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;primary_artifact_id must be one of locked_artifact_ids &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span><span class="si">!r}</span><span class="s2">).&quot;</span>
+                <span class="s2">"primary_artifact_id must be one of locked_artifact_ids "</span>
+                <span class="sa">f</span><span class="s2">"(got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span><span class="si">!r}</span><span class="s2">)."</span>
             <span class="p">)</span>
         <span class="n">extra_gates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_gates</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checklist</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">extra_gates</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;hard_gates must be a subset of checklist; unknown: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">extra_gates</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">"hard_gates must be a subset of checklist; unknown: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">extra_gates</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">&quot;scene&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scope_ref is required when scope == &#39;scene&#39;.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">&quot;project&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;scope_ref must be None when scope == &#39;project&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">"scene"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"scope_ref is required when scope == 'scene'."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">==</span> <span class="s2">"project"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"scope_ref must be None when scope == 'project'."</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">primary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The artifact id to display — ``primary_artifact_id`` or the first locked one.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The artifact id to display — ``primary_artifact_id`` or the first locked one."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primary_artifact_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">locked_artifact_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 

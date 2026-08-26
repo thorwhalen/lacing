@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.artifact &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.artifact &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.artifact</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Content-addressed artifact references.</span>
+<span></span><span class="sd">"""Content-addressed artifact references.</span>
 
 <span class="sd">An :class:`Artifact` is a generated file (or remote URL) with provenance.</span>
 <span class="sd">Anything that *produces* media — a fal.ai call, a ``ffmpeg`` compose, a</span>
@@ -138,7 +138,7 @@
 <span class="sd">- It reuses :class:`lacing.Provenance` and :class:`lacing.MediaRef`. The</span>
 <span class="sd">  ``asset_id`` *is* the content hash that ``MediaRef`` already documents.</span>
 <span class="sd">- Multiple producers (falaw, an, nw, artful, mixing) need to express</span>
-<span class="sd">  &quot;I produced a file.&quot; Putting ``Artifact`` in any one of them forces a</span>
+<span class="sd">  "I produced a file." Putting ``Artifact`` in any one of them forces a</span>
 <span class="sd">  wrong-direction dependency from the others.</span>
 <span class="sd">- The provenance chain (``was_derived_from``, ``was_generated_by``) is the</span>
 <span class="sd">  same shape for an annotation and an artifact. Reusing it unifies lineage.</span>
@@ -146,9 +146,9 @@
 <span class="sd">Hashing</span>
 <span class="sd">-------</span>
 
-<span class="sd">``asset_id`` is the SHA-256 hex digest of the artifact&#39;s bytes. SHA-256 is</span>
+<span class="sd">``asset_id`` is the SHA-256 hex digest of the artifact's bytes. SHA-256 is</span>
 <span class="sd">in the stdlib, deterministic, and compatible with the</span>
-<span class="sd">``MediaRef.asset_id`` documentation (&quot;BLAKE3 / SHA-256&quot;). Producers may use</span>
+<span class="sd">``MediaRef.asset_id`` documentation ("BLAKE3 / SHA-256"). Producers may use</span>
 <span class="sd">BLAKE3 if they prefer; the consumer treats ``asset_id`` opaquely.</span>
 
 <span class="sd">Examples</span>
@@ -158,13 +158,13 @@
 <span class="sd">&gt;&gt;&gt; from lacing.artifact import Artifact, hash_file</span>
 <span class="sd">&gt;&gt;&gt; # Create one from a path:</span>
 <span class="sd">&gt;&gt;&gt; import tempfile</span>
-<span class="sd">&gt;&gt;&gt; with tempfile.NamedTemporaryFile(&quot;wb&quot;, suffix=&quot;.bin&quot;, delete=False) as f:</span>
-<span class="sd">...     _ = f.write(b&quot;hello world&quot;)</span>
+<span class="sd">&gt;&gt;&gt; with tempfile.NamedTemporaryFile("wb", suffix=".bin", delete=False) as f:</span>
+<span class="sd">...     _ = f.write(b"hello world")</span>
 <span class="sd">...     p = Path(f.name)</span>
-<span class="sd">&gt;&gt;&gt; a = Artifact.from_path(p, kind=&quot;text&quot;, was_generated_by=&quot;test:doctest&quot;,</span>
-<span class="sd">...                        was_attributed_to=&quot;user:thor&quot;)</span>
+<span class="sd">&gt;&gt;&gt; a = Artifact.from_path(p, kind="text", was_generated_by="test:doctest",</span>
+<span class="sd">...                        was_attributed_to="user:thor")</span>
 <span class="sd">&gt;&gt;&gt; a.kind</span>
-<span class="sd">&#39;text&#39;</span>
+<span class="sd">'text'</span>
 <span class="sd">&gt;&gt;&gt; a.bytes_size</span>
 <span class="sd">11</span>
 <span class="sd">&gt;&gt;&gt; len(a.asset_id) == 64  # SHA-256 hex</span>
@@ -179,7 +179,7 @@
 <span class="sd">&gt;&gt;&gt; b = Artifact.model_validate_json(data)</span>
 <span class="sd">&gt;&gt;&gt; b.asset_id == a.asset_id</span>
 <span class="sd">True</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -193,28 +193,28 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span>
 
 
-<span class="n">ArtifactKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;video&quot;</span><span class="p">,</span> <span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;Coarse mime-class. Producers should pick the closest match; consumers</span>
-<span class="sd">should switch on this *before* falling back to ``mime``/``path.suffix``.&quot;&quot;&quot;</span>
+<span class="n">ArtifactKind</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"image"</span><span class="p">,</span> <span class="s2">"video"</span><span class="p">,</span> <span class="s2">"audio"</span><span class="p">,</span> <span class="s2">"json"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">]</span>
+<span class="sd">"""Coarse mime-class. Producers should pick the closest match; consumers</span>
+<span class="sd">should switch on this *before* falling back to ``mime``/``path.suffix``."""</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_now_rt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RationalTime</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated private alias for :meth:`RationalTime.now`.</span>
+<span class="w">    </span><span class="sd">"""Deprecated private alias for :meth:`RationalTime.now`.</span>
 
 <span class="sd">    Kept because ``nw``, ``falaw``, and ``artful`` import this symbol. New</span>
 <span class="sd">    code should call ``RationalTime.now()`` directly.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="hash_bytes">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact.html#lacing.hash_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">hash_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the canonical ``asset_id`` (SHA-256 hex) for ``data``.</span>
+<span class="w">    </span><span class="sd">"""Return the canonical ``asset_id`` (SHA-256 hex) for ``data``.</span>
 
-<span class="sd">    &gt;&gt;&gt; hash_bytes(b&quot;hello world&quot;)[:8]</span>
-<span class="sd">    &#39;b94d27b9&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; hash_bytes(b"hello world")[:8]</span>
+<span class="sd">    'b94d27b9'</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
 
 
@@ -222,9 +222,9 @@
 <div class="viewcode-block" id="hash_file">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact.html#lacing.hash_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">hash_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the canonical ``asset_id`` (SHA-256 hex) for the file at ``path``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the canonical ``asset_id`` (SHA-256 hex) for the file at ``path``."""</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">while</span> <span class="n">chunk</span> <span class="o">:=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">):</span>
             <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
@@ -234,9 +234,9 @@
 <div class="viewcode-block" id="Artifact">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact.html#lacing.Artifact">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Artifact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A content-addressed generated file with provenance.</span>
+<span class="w">    </span><span class="sd">"""A content-addressed generated file with provenance.</span>
 
-<span class="sd">    ``asset_id`` is the SHA-256 hex digest of the artifact&#39;s bytes. Two</span>
+<span class="sd">    ``asset_id`` is the SHA-256 hex digest of the artifact's bytes. Two</span>
 <span class="sd">    artifacts with the same ``asset_id`` are byte-identical regardless of</span>
 <span class="sd">    where they live — so caches keyed on ``asset_id`` are safe across</span>
 <span class="sd">    machines and re-runs.</span>
@@ -245,56 +245,56 @@
 <span class="sd">    (``was_derived_from``, ``was_generated_by``) is the same for artifacts</span>
 <span class="sd">    and annotations. An annotation referencing an artifact does so via</span>
 <span class="sd">    ``MediaRef(asset_id=artifact.asset_id, …)``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;frozen&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="s2">&quot;forbid&quot;</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
     <span class="n">asset_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;SHA-256 hex digest of the bytes (canonical content hash).&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"SHA-256 hex digest of the bytes (canonical content hash)."</span><span class="p">,</span>
         <span class="n">min_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
         <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-        <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$&quot;</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">"^[0-9a-f]</span><span class="si">{64}</span><span class="s2">$"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">kind</span><span class="p">:</span> <span class="n">ArtifactKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Coarse mime-class.&quot;</span><span class="p">)</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="n">ArtifactKind</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Coarse mime-class."</span><span class="p">)</span>
     <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Local filesystem path, if the artifact is stored locally.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Local filesystem path, if the artifact is stored locally."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Remote URL (https / s3 / gs / signed) if the artifact lives remotely.&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Remote URL (https / s3 / gs / signed) if the artifact lives remotely."</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">bytes_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Size of the artifact in bytes.&quot;</span><span class="p">)</span>
+    <span class="n">bytes_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Size of the artifact in bytes."</span><span class="p">)</span>
     <span class="n">duration_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Duration in seconds (for audio/video).&quot;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Duration in seconds (for audio/video)."</span>
     <span class="p">)</span>
     <span class="n">mime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Optional precise mime, e.g. &quot;image/png&quot;, &quot;video/mp4&quot;.&#39;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">'Optional precise mime, e.g. "image/png", "video/mp4".'</span>
     <span class="p">)</span>
     <span class="n">provenance</span><span class="p">:</span> <span class="n">Provenance</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Who/when/why this artifact was generated. Reuses lacing.Provenance &quot;</span>
-            <span class="s2">&quot;so artifact + annotation lineage chains are unified.&quot;</span>
+            <span class="s2">"Who/when/why this artifact was generated. Reuses lacing.Provenance "</span>
+            <span class="s2">"so artifact + annotation lineage chains are unified."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">cost_usd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Spend attributed to producing this artifact, stamped by the &quot;</span>
-            <span class="s2">&quot;producer from the OBSERVED run outcome (falaw stamps 0.0 for a &quot;</span>
-            <span class="s2">&quot;cache hit — a known zero — and its rate-card estimate for a &quot;</span>
-            <span class="s2">&quot;billed call). An estimate of billing, not a vendor receipt; &quot;</span>
-            <span class="s2">&quot;None means unknown, never free.&quot;</span>
+            <span class="s2">"Spend attributed to producing this artifact, stamped by the "</span>
+            <span class="s2">"producer from the OBSERVED run outcome (falaw stamps 0.0 for a "</span>
+            <span class="s2">"cache hit — a known zero — and its rate-card estimate for a "</span>
+            <span class="s2">"billed call). An estimate of billing, not a vendor receipt; "</span>
+            <span class="s2">"None means unknown, never free."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">producer_call_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Opaque producer-side call identifier — e.g. ``fal_call_id``, &quot;</span>
-            <span class="s2">&quot;``mixing_op_id`` — for tracing back to the producer&#39;s event log.&quot;</span>
+            <span class="s2">"Opaque producer-side call identifier — e.g. ``fal_call_id``, "</span>
+            <span class="s2">"``mixing_op_id`` — for tracing back to the producer's event log."</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -310,15 +310,15 @@
         <span class="n">kind</span><span class="p">:</span> <span class="n">ArtifactKind</span><span class="p">,</span>
         <span class="n">was_generated_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">was_derived_from</span><span class="p">:</span> <span class="s2">&quot;tuple[ProvenanceRef, ...]&quot;</span> <span class="o">=</span> <span class="p">(),</span>
-        <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+        <span class="n">was_derived_from</span><span class="p">:</span> <span class="s2">"tuple[ProvenanceRef, ...]"</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"create"</span><span class="p">,</span>
         <span class="n">generated_at_time</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">duration_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cost_usd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">producer_call_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Artifact</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an Artifact from a local file. Hashes the file&#39;s bytes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create an Artifact from a local file. Hashes the file's bytes."""</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">generated_at_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">generated_at_time</span> <span class="o">=</span> <span class="n">_now_rt</span><span class="p">()</span>
@@ -355,15 +355,15 @@
         <span class="n">was_attributed_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">was_derived_from</span><span class="p">:</span> <span class="s2">&quot;tuple[ProvenanceRef, ...]&quot;</span> <span class="o">=</span> <span class="p">(),</span>
-        <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+        <span class="n">was_derived_from</span><span class="p">:</span> <span class="s2">"tuple[ProvenanceRef, ...]"</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"create"</span><span class="p">,</span>
         <span class="n">generated_at_time</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">duration_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cost_usd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">producer_call_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Artifact</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an Artifact from in-memory bytes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create an Artifact from in-memory bytes."""</span>
         <span class="k">if</span> <span class="n">generated_at_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">generated_at_time</span> <span class="o">=</span> <span class="n">_now_rt</span><span class="p">()</span>
         <span class="n">prov</span> <span class="o">=</span> <span class="n">Provenance</span><span class="p">(</span>
@@ -391,12 +391,12 @@
 
 <div class="viewcode-block" id="Artifact.to_media_ref">
 <a class="viewcode-back" href="../../module_docs/lacing/artifact.html#lacing.Artifact.to_media_ref">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_media_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MediaRef&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a :class:`lacing.MediaRef` pointing at this artifact.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_media_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MediaRef"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a :class:`lacing.MediaRef` pointing at this artifact.</span>
 
 <span class="sd">        Use this to attach an annotation to a region of the artifact:</span>
 <span class="sd">        ``MediaRef(asset_id=artifact.asset_id, interval=…)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MediaRef</span>
 
         <span class="k">return</span> <span class="n">MediaRef</span><span class="p">(</span><span class="n">asset_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_id</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="n">interval</span><span class="p">)</span></div>

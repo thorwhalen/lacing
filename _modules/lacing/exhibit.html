@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.exhibit &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.exhibit &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.exhibit</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Artifact exhibit — render an annotation graph as a readable document.</span>
+<span></span><span class="sd">"""Artifact exhibit — render an annotation graph as a readable document.</span>
 
 <span class="sd">Walks a set of :class:`~lacing.Annotation`\\ s and lays them out as a</span>
 <span class="sd">document: each artifact is a card with its body, any generated images,</span>
@@ -138,8 +138,8 @@
 <span class="sd">resolves the relative paths (via ``base_url``) and embeds the bytes.</span>
 
 <span class="sd">The annotation graph — annotations + ``provenance.was_derived_from`` +</span>
-<span class="sd">image references — *is* the &quot;artifacts and links&quot; model, so this runs on</span>
-<span class="sd">**any** lacing graph: a project, a test run&#39;s artifacts, anything. The</span>
+<span class="sd">image references — *is* the "artifacts and links" model, so this runs on</span>
+<span class="sd">**any** lacing graph: a project, a test run's artifacts, anything. The</span>
 <span class="sd">renderer is pure (graph → document) and has no knowledge of where the</span>
 <span class="sd">graph came from.</span>
 
@@ -159,7 +159,7 @@
 <span class="sd">Images are resolved through an injected ``image_resolver`` callback</span>
 <span class="sd">(image-reference → local file path) so this module needs no knowledge</span>
 <span class="sd">of how media is stored or downloaded — the caller wires that in.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -172,7 +172,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;render_artifact_exhibit&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"render_artifact_exhibit"</span><span class="p">]</span>
 
 
 <span class="c1"># --------------------------------------------------------------------------</span>
@@ -180,34 +180,34 @@
 <span class="c1"># --------------------------------------------------------------------------</span>
 
 <span class="n">_LABEL_FIELDS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;caption&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;logline&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;panel_id&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;beat_id&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;label&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;kind&quot;</span><span class="p">,</span>
+    <span class="s2">"caption"</span><span class="p">,</span>
+    <span class="s2">"logline"</span><span class="p">,</span>
+    <span class="s2">"description"</span><span class="p">,</span>
+    <span class="s2">"name"</span><span class="p">,</span>
+    <span class="s2">"panel_id"</span><span class="p">,</span>
+    <span class="s2">"beat_id"</span><span class="p">,</span>
+    <span class="s2">"label"</span><span class="p">,</span>
+    <span class="s2">"kind"</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Short schema name of an annotation, e.g. ``storyboard-panel``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Short schema name of an annotation, e.g. ``storyboard-panel``."""</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body_schema_uri</span>
-    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">uri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;annot://&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">uri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"annot://"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>
     <span class="c1"># .../&lt;name&gt;/&lt;version&gt; → the name is the second-to-last segment.</span>
     <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">uri</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_artifact_label</span><span class="p">(</span><span class="n">ann</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A short human label — the first populated of a few well-known</span>
-<span class="sd">    body fields, else the kind.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A short human label — the first populated of a few well-known</span>
+<span class="sd">    body fields, else the kind."""</span>
     <span class="n">body</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">_LABEL_FIELDS</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-            <span class="k">return</span> <span class="n">text</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">70</span> <span class="k">else</span> <span class="n">text</span><span class="p">[:</span><span class="mi">67</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;…&quot;</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">text</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">70</span> <span class="k">else</span> <span class="n">text</span><span class="p">[:</span><span class="mi">67</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"…"</span>
     <span class="k">return</span> <span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
 
 
@@ -216,16 +216,16 @@
     <span class="n">resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">images_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve one image reference to an HTML ``src``.</span>
+<span class="w">    </span><span class="sd">"""Resolve one image reference to an HTML ``src``.</span>
 
 <span class="sd">    The ``resolver`` turns an image reference into a local file path</span>
 <span class="sd">    (or ``None``). With ``images_dir`` set, the bytes are written there</span>
 <span class="sd">    as a content-addressed file and a relative ``&lt;dir&gt;/&lt;name&gt;`` path is</span>
 <span class="sd">    returned — keeping the HTML and Markdown small. With ``images_dir``</span>
 <span class="sd">    ``None`` the image is inlined as a ``data:`` URI, so the HTML is a</span>
-<span class="sd">    single self-contained file. Returns ``None`` when the bytes can&#39;t be</span>
+<span class="sd">    single self-contained file. Returns ``None`` when the bytes can't be</span>
 <span class="sd">    obtained — the caller then shows a placeholder.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">resolver</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -236,45 +236,45 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;jpeg&quot;</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"jpeg"</span>
     <span class="k">if</span> <span class="n">images_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mime</span> <span class="o">=</span> <span class="s2">&quot;jpeg&quot;</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;jpg&quot;</span> <span class="k">else</span> <span class="n">ext</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;data:image/</span><span class="si">{</span><span class="n">mime</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">mime</span> <span class="o">=</span> <span class="s2">"jpeg"</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">"jpg"</span> <span class="k">else</span> <span class="n">ext</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"data:image/</span><span class="si">{</span><span class="n">mime</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'ascii'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">dest</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">name</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dest</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">images_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">dest</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">images_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">images_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_render_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;HTML for one body-field value — readable, escaped, fold-if-long.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""HTML for one body-field value — readable, escaped, fold-if-long."""</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;br&gt;&quot;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"&lt;br&gt;"</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;details&gt;&lt;summary&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars&lt;/summary&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&lt;/details&gt;&quot;</span>
-        <span class="k">return</span> <span class="n">text</span> <span class="ow">or</span> <span class="s2">&quot;&lt;em&gt;—&lt;/em&gt;&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;details&gt;&lt;summary&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars&lt;/summary&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&lt;/details&gt;"</span>
+        <span class="k">return</span> <span class="n">text</span> <span class="ow">or</span> <span class="s2">"&lt;em&gt;—&lt;/em&gt;"</span>
     <span class="n">rendered</span> <span class="o">=</span> <span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rendered</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;details&gt;&lt;summary&gt;show&lt;/summary&gt;&lt;pre&gt;</span><span class="si">{</span><span class="n">rendered</span><span class="si">}</span><span class="s2">&lt;/pre&gt;&lt;/details&gt;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;pre&gt;</span><span class="si">{</span><span class="n">rendered</span><span class="si">}</span><span class="s2">&lt;/pre&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;details&gt;&lt;summary&gt;show&lt;/summary&gt;&lt;pre&gt;</span><span class="si">{</span><span class="n">rendered</span><span class="si">}</span><span class="s2">&lt;/pre&gt;&lt;/details&gt;"</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;pre&gt;</span><span class="si">{</span><span class="n">rendered</span><span class="si">}</span><span class="s2">&lt;/pre&gt;"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_render_body</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A ``&lt;dl&gt;`` of an annotation&#39;s body fields (``images`` excluded —</span>
-<span class="sd">    rendered separately).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A ``&lt;dl&gt;`` of an annotation's body fields (``images`` excluded —</span>
+<span class="sd">    rendered separately)."""</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;images&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"images"</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;&lt;dt&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;/dt&gt;&lt;dd&gt;</span><span class="si">{</span><span class="n">_render_value</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="si">}</span><span class="s2">&lt;/dd&gt;&quot;</span>
+            <span class="sa">f</span><span class="s2">"&lt;dt&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;/dt&gt;&lt;dd&gt;</span><span class="si">{</span><span class="n">_render_value</span><span class="p">(</span><span class="n">body</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="si">}</span><span class="s2">&lt;/dd&gt;"</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;dl&gt;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/dl&gt;&quot;</span> <span class="k">if</span> <span class="n">rows</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;dl&gt;</span><span class="si">{</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/dl&gt;"</span> <span class="k">if</span> <span class="n">rows</span> <span class="k">else</span> <span class="s2">""</span>
 
 
-<span class="n">_EXHIBIT_CSS</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">_EXHIBIT_CSS</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">:root { color-scheme: light dark; }</span>
 <span class="s2">body { font: 15px/1.55 -apple-system, system-ui, sans-serif;</span>
 <span class="s2">  max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem; }</span>
@@ -298,7 +298,7 @@
 <span class="s2">img.panel { max-width: 100%; border-radius: 6px; margin: .5rem 0; }</span>
 <span class="s2">.links { font-size: .82rem; margin-top: .6rem; }</span>
 <span class="s2">.links a { color: #2a3a6e; }</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_exhibit_html</span><span class="p">(</span>
@@ -308,12 +308,12 @@
     <span class="n">image_resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">images_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the annotation graph as one HTML document — each artifact a</span>
+<span class="w">    </span><span class="sd">"""Render the annotation graph as one HTML document — each artifact a</span>
 <span class="sd">    card, derivation links as in-document hyperlinks.</span>
 
 <span class="sd">    With ``images_dir`` set, panel images are written there as sibling</span>
 <span class="sd">    files and referenced relatively; with it ``None`` they are inlined</span>
-<span class="sd">    as ``data:`` URIs (a single self-contained file).&quot;&quot;&quot;</span>
+<span class="sd">    as ``data:`` URIs (a single self-contained file)."""</span>
     <span class="n">by_id</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">):</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">}</span>
     <span class="n">feeds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
@@ -323,60 +323,60 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_link</span><span class="p">(</span><span class="n">aid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">by_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">aid</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;span class=&quot;aid&quot;&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">aid</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;&#39;</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2"> · </span><span class="si">{</span><span class="n">_artifact_label</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;a href=&quot;#a-</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/a&gt;&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">'&lt;span class="aid"&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">aid</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;'</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2"> · </span><span class="si">{</span><span class="n">_artifact_label</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">'&lt;a href="#a-</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s1">"&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/a&gt;'</span>
 
     <span class="n">kinds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
         <span class="n">kinds</span><span class="p">[</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">)]</span> <span class="o">=</span> <span class="n">kinds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">summary</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">× </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kinds</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">× </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kinds</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
 
     <span class="n">cards</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
         <span class="n">aid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="n">imgs</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">():</span>
+        <span class="n">imgs</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"images"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">():</span>
             <span class="n">src</span> <span class="o">=</span> <span class="n">_image_src</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">image_resolver</span><span class="p">,</span> <span class="n">images_dir</span><span class="p">)</span>
             <span class="n">imgs</span> <span class="o">+=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;&lt;img class=&quot;panel&quot; src=&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">&quot; alt=&quot;panel image&quot;&gt;&#39;</span>
+                <span class="sa">f</span><span class="s1">'&lt;img class="panel" src="</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">" alt="panel image"&gt;'</span>
                 <span class="k">if</span> <span class="n">src</span>
-                <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;&lt;p&gt;&lt;em&gt;image unavailable: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;/em&gt;&lt;/p&gt;&quot;</span>
+                <span class="k">else</span> <span class="sa">f</span><span class="s2">"&lt;p&gt;&lt;em&gt;image unavailable: "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'url'</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">''</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;/em&gt;&lt;/p&gt;"</span>
             <span class="p">)</span>
         <span class="n">derived</span> <span class="o">=</span> <span class="n">ann</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">was_derived_from</span>
-        <span class="n">links</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">links</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="n">derived</span><span class="p">:</span>
             <span class="n">links</span> <span class="o">+=</span> <span class="p">(</span>
-                <span class="s1">&#39;&lt;div class=&quot;links&quot;&gt;↑ derived from: &#39;</span>
-                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">derived</span><span class="p">)</span>
-                <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+                <span class="s1">'&lt;div class="links"&gt;↑ derived from: '</span>
+                <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">derived</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">feeds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">aid</span><span class="p">):</span>
             <span class="n">links</span> <span class="o">+=</span> <span class="p">(</span>
-                <span class="s1">&#39;&lt;div class=&quot;links&quot;&gt;↓ feeds into: &#39;</span>
-                <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_link</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">feeds</span><span class="p">[</span><span class="n">aid</span><span class="p">])</span>
-                <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;&quot;</span>
+                <span class="s1">'&lt;div class="links"&gt;↓ feeds into: '</span>
+                <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_link</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">feeds</span><span class="p">[</span><span class="n">aid</span><span class="p">])</span>
+                <span class="o">+</span> <span class="s2">"&lt;/div&gt;"</span>
             <span class="p">)</span>
         <span class="c1"># Literal spaces between the heading spans: the flex layout</span>
         <span class="c1"># ignores them for the HTML render, but they give the HTML→md</span>
         <span class="c1"># conversion the word boundaries it needs.</span>
         <span class="n">cards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;&lt;section class=&quot;artifact&quot; id=&quot;a-</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s1">&quot;&gt;&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;&lt;h2&gt;&lt;span class=&quot;kind&quot;&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">))</span><span class="si">}</span><span class="s1">&lt;/span&gt; &#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;&lt;span class=&quot;label&quot;&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">_artifact_label</span><span class="p">(</span><span class="n">ann</span><span class="p">))</span><span class="si">}</span><span class="s1">&lt;/span&gt; &#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;&lt;span class=&quot;aid&quot;&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">aid</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/h2&gt;&#39;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">imgs</span><span class="si">}{</span><span class="n">_render_body</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}{</span><span class="n">links</span><span class="si">}</span><span class="s2">&lt;/section&gt;&quot;</span>
+            <span class="sa">f</span><span class="s1">'&lt;section class="artifact" id="a-</span><span class="si">{</span><span class="n">aid</span><span class="si">}</span><span class="s1">"&gt;'</span>
+            <span class="sa">f</span><span class="s1">'&lt;h2&gt;&lt;span class="kind"&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">_artifact_kind</span><span class="p">(</span><span class="n">ann</span><span class="p">))</span><span class="si">}</span><span class="s1">&lt;/span&gt; '</span>
+            <span class="sa">f</span><span class="s1">'&lt;span class="label"&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">_artifact_label</span><span class="p">(</span><span class="n">ann</span><span class="p">))</span><span class="si">}</span><span class="s1">&lt;/span&gt; '</span>
+            <span class="sa">f</span><span class="s1">'&lt;span class="aid"&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">aid</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span><span class="si">}</span><span class="s1">&lt;/span&gt;&lt;/h2&gt;'</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">imgs</span><span class="si">}{</span><span class="n">_render_body</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}{</span><span class="n">links</span><span class="si">}</span><span class="s2">&lt;/section&gt;"</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span>
-        <span class="s2">&quot;&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset=&#39;utf-8&#39;&gt;&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;&lt;title&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/title&gt;&lt;style&gt;</span><span class="si">{</span><span class="n">_EXHIBIT_CSS</span><span class="si">}</span><span class="s2">&lt;/style&gt;&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/h1&gt;&quot;</span>
-        <span class="sa">f</span><span class="s1">&#39;&lt;p class=&quot;summary&quot;&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span><span class="si">}</span><span class="s1"> artifacts — &#39;</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/body&gt;&lt;/html&gt;&quot;</span>
+        <span class="s2">"&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta charset='utf-8'&gt;"</span>
+        <span class="sa">f</span><span class="s2">"&lt;title&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/title&gt;&lt;style&gt;</span><span class="si">{</span><span class="n">_EXHIBIT_CSS</span><span class="si">}</span><span class="s2">&lt;/style&gt;"</span>
+        <span class="sa">f</span><span class="s2">"&lt;/head&gt;&lt;body&gt;&lt;h1&gt;</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/h1&gt;"</span>
+        <span class="sa">f</span><span class="s1">'&lt;p class="summary"&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span><span class="si">}</span><span class="s1"> artifacts — '</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/p&gt;"</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/body&gt;&lt;/html&gt;"</span>
     <span class="p">)</span>
 
 
@@ -386,20 +386,20 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_require</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">purpose</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import an optional converter, or raise a clear, actionable error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Import an optional converter, or raise a clear, actionable error."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># noqa: TRY003 — the message *is* the point</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;lacing.exhibit: </span><span class="si">{</span><span class="n">purpose</span><span class="si">}</span><span class="s2"> needs the optional &#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;package. Install it with `pip install lacing[exhibit]` &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;(or `pip install </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">`).&quot;</span>
+            <span class="sa">f</span><span class="s2">"lacing.exhibit: </span><span class="si">{</span><span class="n">purpose</span><span class="si">}</span><span class="s2"> needs the optional '</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">' "</span>
+            <span class="sa">f</span><span class="s2">"package. Install it with `pip install lacing[exhibit]` "</span>
+            <span class="sa">f</span><span class="s2">"(or `pip install </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">`)."</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_default_image_resolver</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The fallback resolver — use the image reference&#39;s own ``path``.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""The fallback resolver — use the image reference's own ``path``."""</span>
+    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path"</span><span class="p">)</span>
 
 
 <span class="c1"># --------------------------------------------------------------------------</span>
@@ -413,11 +413,11 @@
     <span class="n">annotations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">formats</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;md&quot;</span><span class="p">),</span>
-    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Artifact exhibit&quot;</span><span class="p">,</span>
+    <span class="n">formats</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"html"</span><span class="p">,</span> <span class="s2">"pdf"</span><span class="p">,</span> <span class="s2">"md"</span><span class="p">),</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Artifact exhibit"</span><span class="p">,</span>
     <span class="n">image_resolver</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render an annotation graph as a human-readable artifact exhibit.</span>
+<span class="w">    </span><span class="sd">"""Render an annotation graph as a human-readable artifact exhibit.</span>
 
 <span class="sd">    Lays every annotation out as a card — body, panel images, and</span>
 <span class="sd">    in-document hyperlinks to the artifacts it derives from / feeds</span>
@@ -438,7 +438,7 @@
 <span class="sd">            is always built in memory (the others derive from it).</span>
 <span class="sd">        title: document title.</span>
 <span class="sd">        image_resolver: ``image-reference → local file path`` callback.</span>
-<span class="sd">            Defaults to reading the reference&#39;s own ``path`` field; a</span>
+<span class="sd">            Defaults to reading the reference's own ``path`` field; a</span>
 <span class="sd">            caller whose images live behind URLs passes a resolver that</span>
 <span class="sd">            downloads / caches them (keeping this module media-agnostic).</span>
 
@@ -449,7 +449,7 @@
 <span class="sd">        RuntimeError: when ``pdf`` / ``md`` is requested but its optional</span>
 <span class="sd">            converter (``weasyprint`` / ``dn``) is not installed — the</span>
 <span class="sd">            message names the install command.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">annotations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="p">)</span>
     <span class="n">resolver</span> <span class="o">=</span> <span class="n">image_resolver</span> <span class="ow">or</span> <span class="n">_default_image_resolver</span>
 
@@ -462,29 +462,29 @@
         <span class="n">annotations</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
         <span class="n">image_resolver</span><span class="o">=</span><span class="n">resolver</span><span class="p">,</span>
-        <span class="n">images_dir</span><span class="o">=</span><span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span>
+        <span class="n">images_dir</span><span class="o">=</span><span class="n">out</span> <span class="o">/</span> <span class="s2">"images"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">written</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="s2">&quot;html&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;exhibit.html&quot;</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"html"</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">"exhibit.html"</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
         <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;pdf&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"pdf"</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
         <span class="c1"># weasyprint, not wkhtmltopdf: only weasyprint carries the</span>
         <span class="c1"># in-document anchor links through to clickable PDF links.</span>
         <span class="c1"># ``base_url`` lets it resolve the relative ``images/`` paths and</span>
         <span class="c1"># embed the bytes, so the PDF stays a self-contained single file.</span>
-        <span class="n">weasyprint</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">&quot;weasyprint&quot;</span><span class="p">,</span> <span class="s2">&quot;the PDF export&quot;</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;exhibit.pdf&quot;</span>
+        <span class="n">weasyprint</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">"weasyprint"</span><span class="p">,</span> <span class="s2">"the PDF export"</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">"exhibit.pdf"</span>
         <span class="n">weasyprint</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="p">))</span><span class="o">.</span><span class="n">write_pdf</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
         <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;md&quot;</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
-        <span class="n">dn</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">&quot;dn&quot;</span><span class="p">,</span> <span class="s2">&quot;the Markdown export&quot;</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">&quot;exhibit.md&quot;</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">dn</span><span class="o">.</span><span class="n">html_to_markdown</span><span class="p">(</span><span class="n">html_doc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"md"</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
+        <span class="n">dn</span> <span class="o">=</span> <span class="n">_require</span><span class="p">(</span><span class="s2">"dn"</span><span class="p">,</span> <span class="s2">"the Markdown export"</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="s2">"exhibit.md"</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">dn</span><span class="o">.</span><span class="n">html_to_markdown</span><span class="p">(</span><span class="n">html_doc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
         <span class="n">written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">written</span></div>

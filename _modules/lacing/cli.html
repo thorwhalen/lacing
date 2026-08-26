@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.cli &mdash; lacing 0.0.32 documentation</title>
+  <title>lacing.cli &mdash; lacing 0.0.33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+      <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for lacing.cli</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Command-line interface for lacing.</span>
+<span></span><span class="sd">"""Command-line interface for lacing.</span>
 
 <span class="sd">Built with ``argh`` (argparse + dataclass-style argument inference).</span>
 <span class="sd">The entry point is ``lacing`` — see ``project.scripts`` in pyproject.toml.</span>
@@ -154,7 +154,7 @@
 
 <span class="sd">The CLI imports each Phase 0/1 adapter at startup so they self-register.</span>
 <span class="sd">Add new adapters by editing ``_ENABLED_ADAPTERS`` in this module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -170,22 +170,22 @@
 
 
 <span class="n">_ENABLED_ADAPTERS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;lacing.adapters.textgrid&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.webvtt&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.web_annotation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.annot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.eaf&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.jams&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.label_studio&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lacing.adapters.otio&quot;</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.textgrid"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.webvtt"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.web_annotation"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.annot"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.eaf"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.jams"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.label_studio"</span><span class="p">,</span>
+    <span class="s2">"lacing.adapters.otio"</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_adapters</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import adapter modules so they register themselves.</span>
+<span class="w">    </span><span class="sd">"""Import adapter modules so they register themselves.</span>
 
 <span class="sd">    Idempotent — Python caches the imports.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_ENABLED_ADAPTERS</span><span class="p">:</span>
         <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
@@ -201,16 +201,16 @@
     <span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">dst</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">src_format</span><span class="p">:</span> <span class="s2">&quot;str | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">dst_format</span><span class="p">:</span> <span class="s2">&quot;str | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">src_format</span><span class="p">:</span> <span class="s2">"str | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dst_format</span><span class="p">:</span> <span class="s2">"str | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert between annotation file formats.</span>
+<span class="w">    </span><span class="sd">"""Convert between annotation file formats.</span>
 
 <span class="sd">    SRC is a path to a recognized file (or ``-`` for stdin bytes — not yet).</span>
 <span class="sd">    DST is the output path. Formats are inferred from extensions; override</span>
 <span class="sd">    with --src-format / --dst-format.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_ensure_adapters</span><span class="p">()</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">dump</span> <span class="k">as</span> <span class="n">adapter_dump</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">adapter_load</span>
@@ -219,13 +219,13 @@
     <span class="k">if</span> <span class="n">dst_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dst_format</span> <span class="o">=</span> <span class="n">_infer_format_from_extension</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dst_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot infer output format from </span><span class="si">{</span><span class="n">dst</span><span class="si">!r}</span><span class="s2">. Pass --dst-format.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot infer output format from </span><span class="si">{</span><span class="n">dst</span><span class="si">!r}</span><span class="s2">. Pass --dst-format."</span><span class="p">)</span>
     <span class="n">adapter_dump</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">dst_format</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote </span><span class="si">{</span><span class="n">dst</span><span class="si">!r}</span><span class="s2"> (</span><span class="si">{</span><span class="n">dst_format</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Wrote </span><span class="si">{</span><span class="n">dst</span><span class="si">!r}</span><span class="s2"> (</span><span class="si">{</span><span class="n">dst_format</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_infer_format_from_extension</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;str | None&quot;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_infer_format_from_extension</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"str | None"</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_adapter</span>
 
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -247,20 +247,20 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">tier</span><span class="p">:</span> <span class="s2">&quot;str | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">start</span><span class="p">:</span> <span class="s2">&quot;float | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">end</span><span class="p">:</span> <span class="s2">&quot;float | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;intersects&quot;</span><span class="p">,</span>
-    <span class="n">src_format</span><span class="p">:</span> <span class="s2">&quot;str | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tier</span><span class="p">:</span> <span class="s2">"str | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="s2">"float | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="s2">"float | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"intersects"</span><span class="p">,</span>
+    <span class="n">src_format</span><span class="p">:</span> <span class="s2">"str | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print annotations from PATH matching a tier and/or time-interval query.</span>
+<span class="w">    </span><span class="sd">"""Print annotations from PATH matching a tier and/or time-interval query.</span>
 
 <span class="sd">    Output is JSON-lines on stdout. ``--start`` and ``--end`` are seconds.</span>
 <span class="sd">    ``--relation`` is one of: intersects, during, contains, overlaps, meets,</span>
 <span class="sd">    starts, finishes, equals.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_ensure_adapters</span><span class="p">()</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">adapter_load</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
@@ -270,7 +270,7 @@
     <span class="n">iter_anns</span><span class="p">:</span> <span class="n">Iterable</span>
     <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;--start and --end must be given together&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"--start and --end must be given together"</span><span class="p">)</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span>
             <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">),</span>
             <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">end</span><span class="p">),</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">),</span>
@@ -278,12 +278,12 @@
         <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">relation</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;unknown relation </span><span class="si">{</span><span class="n">relation</span><span class="si">!r}</span><span class="s2">. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Try: intersects, during, contains, overlaps, meets, starts, finishes, equals.&quot;</span>
+                <span class="sa">f</span><span class="s2">"unknown relation </span><span class="si">{</span><span class="n">relation</span><span class="si">!r}</span><span class="s2">. "</span>
+                <span class="sa">f</span><span class="s2">"Try: intersects, during, contains, overlaps, meets, starts, finishes, equals."</span>
             <span class="p">)</span>
         <span class="n">iter_anns</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">iter_anns</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">_iter_all</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+        <span class="n">iter_anns</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">)</span> <span class="k">else</span> <span class="n">_iter_all</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">iter_anns</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">iter_anns</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">tier</span> <span class="o">==</span> <span class="n">tier</span><span class="p">)</span>
@@ -291,7 +291,7 @@
     <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">iter_anns</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;... (limit reached at </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"... (limit reached at </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="k">break</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">_ann_to_jsonline</span><span class="p">(</span><span class="n">ann</span><span class="p">))</span>
         <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span></div>
@@ -299,7 +299,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_iter_all</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fallback when the store doesn&#39;t expose .all().&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fallback when the store doesn't expose .all()."""</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
             <span class="k">yield</span> <span class="n">a</span>
@@ -311,13 +311,13 @@
     <span class="n">end_seconds</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">iv</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">to_fraction</span><span class="p">())</span> <span class="k">if</span> <span class="n">iv</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-            <span class="s2">&quot;tier&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
-            <span class="s2">&quot;start_seconds&quot;</span><span class="p">:</span> <span class="n">start_seconds</span><span class="p">,</span>
-            <span class="s2">&quot;end_seconds&quot;</span><span class="p">:</span> <span class="n">end_seconds</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
-            <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">body_schema_uri</span><span class="p">,</span>
-            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+            <span class="s2">"tier"</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span>
+            <span class="s2">"start_seconds"</span><span class="p">:</span> <span class="n">start_seconds</span><span class="p">,</span>
+            <span class="s2">"end_seconds"</span><span class="p">:</span> <span class="n">end_seconds</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+            <span class="s2">"schema"</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">body_schema_uri</span><span class="p">,</span>
+            <span class="s2">"confidence"</span><span class="p">:</span> <span class="n">ann</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
@@ -333,35 +333,35 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">src_format</span><span class="p">:</span> <span class="s2">&quot;str | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">src_format</span><span class="p">:</span> <span class="s2">"str | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Round-trip PATH through load + dump and report a summary.</span>
+<span class="w">    </span><span class="sd">"""Round-trip PATH through load + dump and report a summary.</span>
 
 <span class="sd">    Useful for confirming an external file is well-formed and that the</span>
 <span class="sd">    adapter understands it.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_ensure_adapters</span><span class="p">()</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">adapter_load</span>
 
     <span class="n">store</span> <span class="o">=</span> <span class="n">adapter_load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">src_format</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
-    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">iter_all</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">anns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_all</span><span class="p">())</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">iter_all</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">_iter_all</span><span class="p">(</span><span class="n">store</span><span class="p">))</span>
-    <span class="n">tiers_iter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">&quot;tiers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">tiers_iter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"tiers"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">tiers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tiers_iter</span><span class="p">())</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">tiers_iter</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
 
     <span class="n">by_tier</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">anns</span><span class="p">:</span>
         <span class="n">by_tier</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">tier</span><span class="p">]</span> <span class="o">=</span> <span class="n">by_tier</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;path: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;format: </span><span class="si">{</span><span class="n">src_format</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">_infer_format_from_extension</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&lt;unknown&gt;&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;annotations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">anns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tiers declared: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tiers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"path: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"format: </span><span class="si">{</span><span class="n">src_format</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">_infer_format_from_extension</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'&lt;unknown&gt;'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"annotations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">anns</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"tiers declared: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tiers</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">by_tier</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;annotations per tier:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"annotations per tier:"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">by_tier</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -375,14 +375,14 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">migrate</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">to_version</span><span class="p">:</span> <span class="s2">&quot;int | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">to_version</span><span class="p">:</span> <span class="s2">"int | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upgrade PATH (a ``.annot`` file) to the current store schema, in place.</span>
+<span class="w">    </span><span class="sd">"""Upgrade PATH (a ``.annot`` file) to the current store schema, in place.</span>
 
 <span class="sd">    Migration is explicit — opening a stale file never rewrites it — so this</span>
-<span class="sd">    verb is the ladder&#39;s front door. Already-current files are a no-op.</span>
+<span class="sd">    verb is the ladder's front door. Already-current files are a no-op.</span>
 <span class="sd">    ``--to-version`` upgrades part-way (mainly useful in tests).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoreMigrationError</span><span class="p">,</span> <span class="n">migrate_annot_file</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -392,12 +392,12 @@
             <span class="n">to_version</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">to_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_version</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="n">StoreMigrationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="n">reached</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: already at schema_version=</span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2">, nothing to do&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: already at schema_version=</span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2">, nothing to do"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: migrated schema_version </span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">reached</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: migrated schema_version </span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">reached</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -409,15 +409,15 @@
 <div class="viewcode-block" id="list_formats">
 <a class="viewcode-back" href="../../module_docs/lacing/cli.html#lacing.cli.list_formats">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_formats</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print every registered format adapter.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Print every registered format adapter."""</span>
     <span class="n">_ensure_adapters</span><span class="p">()</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">registered</span>
 
     <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">registered</span><span class="p">():</span>
-        <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;(none)&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="si">:</span><span class="s2">20s</span><span class="si">}</span><span class="s2">  extensions: </span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"(none)"</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">name</span><span class="si">:</span><span class="s2">20s</span><span class="si">}</span><span class="s2">  extensions: </span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">20s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">''</span><span class="si">:</span><span class="s2">20s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">spec</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -426,13 +426,13 @@
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="s2">&quot;list[str] | None&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argh</span><span class="o">.</span><span class="n">ArghParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;lacing&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="s2">"list[str] | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argh</span><span class="o">.</span><span class="n">ArghParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">"lacing"</span><span class="p">)</span>
     <span class="n">argh</span><span class="o">.</span><span class="n">add_commands</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="p">[</span><span class="n">convert</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">migrate</span><span class="p">,</span> <span class="n">list_formats</span><span class="p">])</span>
     <span class="n">argh</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">argv</span><span class="o">=</span><span class="n">argv</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
