@@ -210,6 +210,40 @@ class TestLowConfidenceReview:
         # The body links back to the source.
         assert review.body["reason"] == "low_confidence"
 
+    def test_the_flagged_rows_validate_against_the_uri_they_claim(self):
+        """The lacing#37 guard, generalized: every annotation stamping a
+        REGISTERED body_schema_uri must validate against the model
+        registered under it — that is the whole point of the field, and its
+        absence is what let the processor ship rows claiming ``review/v1``
+        that failed that model five ways at once."""
+        from lacing.bodies.review_candidate import REVIEW_CANDIDATE_BODY_SCHEMA_URI
+        from lacing.schema import get_body_schema, registered_uris
+
+        store, log = self._setup(confidences=[0.1, 0.4])
+        run_sync("low_confidence_review", store=store, oplog=log, threshold=0.5)
+
+        registered = set(registered_uris())
+        checked = 0
+        for ann in store.all():
+            if ann.body_schema_uri in registered and isinstance(ann.body, dict):
+                get_body_schema(ann.body_schema_uri).model_validate(ann.body)
+                checked += 1
+        assert checked >= 2  # at least the two flagged rows were examined
+
+        candidate = next(store.by_tier("for-review"))
+        assert candidate.body_schema_uri == REVIEW_CANDIDATE_BODY_SCHEMA_URI
+        # And the candidate is genuinely NOT a review: the review model still
+        # refuses this shape, which is why it has its own URI.
+        from pydantic import ValidationError
+
+        from lacing.bodies.review import ReviewBodyV1
+
+        try:
+            ReviewBodyV1(**candidate.body)
+            raise AssertionError("ReviewBodyV1 accepted a candidate body")
+        except ValidationError:
+            pass
+
     def test_does_not_recurse_on_review_tier(self):
         # If we run twice, the second pass should not re-flag review entries.
         store, log = self._setup(confidences=[0.1, 0.2])

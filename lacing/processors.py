@@ -228,17 +228,26 @@ async def low_confidence_review(
             # Only ``MediaRef`` annotations carry a stable asset_id.
             continue
 
+        # A CANDIDATE, not a review: "look at this one" is a queue pointer,
+        # not a note or verdict, and stamping ``review/v1`` on this body made
+        # every row fail validation against that URI's registered model in
+        # five ways at once (lacing#37). One URI per body shape.
+        from lacing.bodies.review_candidate import (
+            REVIEW_CANDIDATE_BODY_SCHEMA_URI,
+            ReviewCandidateBodyV1,
+        )
+
         review_ann = Annotation(
             id=uuid4(),
             tier=review_tier,
             reference=MediaRef(asset_id=asset_id, interval=iv),
-            body={
-                "reason": "low_confidence",
-                "source_id": str(ann.id),
-                "source_confidence": ann.confidence,
-                "source_tier": ann.tier,
-            },
-            body_schema_uri="annot://schema/review/v1",
+            body=ReviewCandidateBodyV1(
+                reason="low_confidence",
+                source_id=str(ann.id),
+                source_confidence=ann.confidence,
+                source_tier=ann.tier,
+            ).model_dump(),
+            body_schema_uri=REVIEW_CANDIDATE_BODY_SCHEMA_URI,
             provenance=Provenance(
                 was_generated_by=actor,
                 was_attributed_to=actor,

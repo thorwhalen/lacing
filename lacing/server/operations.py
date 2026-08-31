@@ -54,14 +54,14 @@ Two separations, and only one of them is the tier's doing:
 
 Not to be confused with :func:`lacing.processors.low_confidence_review`,
 which mirrors low-confidence annotations onto a **different** tier
-(``"for-review"``) as timed ``MediaRef`` copies whose body is
-``{"reason", "source_id", "source_confidence", "source_tier"}``. That
-body is stamped ``annot://schema/review/v1`` but does **not** validate
-against :class:`~lacing.bodies.review.ReviewBodyV1` (no ``review_kind``,
-and ``extra="forbid"`` rejects all four of its keys) -- a pre-existing
-divergence tracked in lacing#37, not a shape to copy. The two are
-different features that share the word "review": one flags candidates
-*for* review, the other records the verdict *of* one."""
+(``"for-review"``) as timed ``MediaRef`` copies carrying their own body,
+:class:`~lacing.bodies.review_candidate.ReviewCandidateBodyV1`
+(``annot://schema/review-candidate/v1`` — lacing#37 resolved the earlier
+mis-stamping of ``review/v1`` on that shape). The two are different
+features that share the word "review": a candidate flags something *for*
+review and queues; a review records the note or verdict *of* one. The
+tier split (``"for-review"`` vs ``DFLT_REVIEW_TIER = "review"``) mirrors
+the body split, deliberately."""
 
 
 # ---------------------------------------------------------------------------
