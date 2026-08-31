@@ -15,6 +15,7 @@ from lacing.bodies import (  # noqa: F401  registers
     named_entity,
     reference_lock,
     review,
+    review_candidate,
     word,
 )
 
@@ -23,5 +24,6 @@ __all__ = [
     "named_entity",
     "reference_lock",
     "review",
+    "review_candidate",
     "word",
 ]
