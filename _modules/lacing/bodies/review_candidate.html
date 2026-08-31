@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.bodies.continuity_violation &mdash; lacing 0.0.34 documentation</title>
+  <title>lacing.bodies.review_candidate &mdash; lacing 0.0.34 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -116,7 +116,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">lacing.bodies.continuity_violation</li>
+      <li class="breadcrumb-item active">lacing.bodies.review_candidate</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -125,123 +125,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for lacing.bodies.continuity_violation</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Body schema for continuity violations — generic, cross-media.</span>
+  <h1>Source code for lacing.bodies.review_candidate</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Body schema for review *candidates* — "this needs a human's eyes".</span>
 
-<span class="sd">URI: ``annot://schema/continuity-violation/v1``</span>
+<span class="sd">URI: ``annot://schema/review-candidate/v1``</span>
 
-<span class="sd">A *continuity violation* is a typed claim about a relationship between</span>
-<span class="sd">two or more annotations: "panels 5 and 6 cross the 180° axis", "the</span>
-<span class="sd">character drift between panel 3 and panel 4 exceeds the embed-distance</span>
-<span class="sd">threshold", "object detection finds a prop in panel 7 absent from</span>
-<span class="sd">panel 8."</span>
+<span class="sd">A review-candidate is what an automated processor emits when it flags an</span>
+<span class="sd">annotation as worth a human look — today,</span>
+<span class="sd">:func:`lacing.processors.low_confidence_review` flagging low-confidence</span>
+<span class="sd">rows. It is deliberately NOT a :class:`~lacing.bodies.review.ReviewBodyV1`:</span>
 
-<span class="sd">The schema is intentionally generic. Specific rule families live in</span>
-<span class="sd">their producing packages — reelee defines axis_180, character_drift,</span>
-<span class="sd">prop_hallucination, etc. via dedicated Transforms — but the *envelope*</span>
-<span class="sd">that carries the result is generic enough to live in lacing.</span>
+<span class="sd">- a review is a structured **note or verdict** (a continuity observation,</span>
+<span class="sd">  an approval carrying a ``decision``) written *about* work;</span>
+<span class="sd">- a candidate is a **pointer into a queue** — "look at this one, and here</span>
+<span class="sd">  is why it was flagged" — with no message, no status lifecycle, and no</span>
+<span class="sd">  verdict. Reviewing a candidate *produces* a review; the candidate is the</span>
+<span class="sd">  input, not an early draft of the output.</span>
 
-<span class="sd">Violations attach as ``review/v1`` annotations whose ``review_kind ==</span>
-<span class="sd">"continuity"`` (see :mod:`lacing.bodies.review`).</span>
+<span class="sd">The two lived under one URI for a while, and the processor's rows failed</span>
+<span class="sd">validation against the model registered for that URI in five ways at once</span>
+<span class="sd">(lacing#37). One URI per body shape is the contract ``body_schema_uri``</span>
+<span class="sd">exists to keep; giving the candidate its own name is the whole fix — no</span>
+<span class="sd">stored ``review/v1`` body changes shape, so no migration.</span>
 
-<span class="sd">Reference: ``reelee/docs/Narrative to Storyboard.md`` §6.5, §8.1.</span>
+<span class="sd">The tier split mirrors the body split, stated here because it is easy to</span>
+<span class="sd">read as an accident: candidates land on ``"for-review"`` (the processor's</span>
+<span class="sd">default) while human/agent reviews land on ``"review"``</span>
+<span class="sd">(``operations.DFLT_REVIEW_TIER``). Candidates queue; reviews record.</span>
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span>
 
 
-<span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/continuity-violation/v1"</span>
+<span class="n">REVIEW_CANDIDATE_BODY_SCHEMA_URI</span> <span class="o">=</span> <span class="s2">"annot://schema/review-candidate/v1"</span>
 
 
-<span class="n">Severity</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"info"</span><span class="p">,</span> <span class="s2">"warn"</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">]</span>
-
-
-<span class="n">SuggestedAction</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
-    <span class="s2">"regen_panel"</span><span class="p">,</span>
-    <span class="s2">"regen_with_ref"</span><span class="p">,</span>
-    <span class="s2">"manual_edit"</span><span class="p">,</span>
-    <span class="s2">"accept"</span><span class="p">,</span>
-<span class="p">]</span>
-<span class="sd">"""Coarse action the edit-loop UI offers in response. Producing</span>
-<span class="sd">Transforms pick one; the FE wires each to a button + acture command."""</span>
-
-
-<div class="viewcode-block" id="ContinuityViolationBodyV1">
-<a class="viewcode-back" href="../../../module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ContinuityViolationBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Body of a continuity-violation annotation."""</span>
+<div class="viewcode-block" id="ReviewCandidateBodyV1">
+<a class="viewcode-back" href="../../../module_docs/lacing/bodies/review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReviewCandidateBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Body of a review-candidate annotation."""</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
 
-    <span class="n">rule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Producing-rule slug — e.g. 'axis_180', 'eyeline', "</span>
-            <span class="s2">"'character_drift', 'environment_drift', 'prop_hallucination', "</span>
-            <span class="s2">"'30_rule', 'costume', 'lighting', 'time_of_day', 'weather', "</span>
-            <span class="s2">"'screen_direction'. Strings rather than Literal so new "</span>
-            <span class="s2">"rules can be added without a schema bump."</span>
+            <span class="s2">"Why this was flagged — a short machine token, not prose "</span>
+            <span class="s2">"(``'low_confidence'``). A string rather than a Literal so a "</span>
+            <span class="s2">"custom processor can flag for its own reasons without a schema "</span>
+            <span class="s2">"rev; renderers treat unknown reasons generically."</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">annotation_ids</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"≥2 annotation ids the violation relates (e.g. the two "</span>
-            <span class="s2">"panels in conflict). Order is meaningful when the rule is "</span>
-            <span class="s2">"directional (e.g. 'character_drift' from A to B)."</span>
-        <span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Id of the annotation being flagged for review."</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">severity</span><span class="p">:</span> <span class="n">Severity</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">"warn"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"info / warn / error."</span><span class="p">)</span>
-    <span class="n">detection_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">""</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"How the violation was detected — 'face_embed_cosine', "</span>
-            <span class="s2">"'optical_flow_direction', 'object_detect_set_diff', etc."</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">detection_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">source_confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Numeric detection signal (e.g. cosine distance). None for "</span>
-            <span class="s2">"boolean detections."</span>
+            <span class="s2">"The flagged annotation's confidence at flag time, when the "</span>
+            <span class="s2">"reason is confidence-based. Recorded on the candidate because "</span>
+            <span class="s2">"the source's confidence is mutable — the queue entry should say "</span>
+            <span class="s2">"what the flagger saw."</span>
         <span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Threshold the value crossed to trigger the violation. None "</span>
-            <span class="s2">"for boolean detections."</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">suggested_fix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">source_tier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">""</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Human-readable fix sentence; the FE renders it in the continuity panel."</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">suggested_action</span><span class="p">:</span> <span class="n">SuggestedAction</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">"manual_edit"</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Coarse action recommendation. Drives which button the FE highlights."</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">evidence</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">"Rule-specific evidence (e.g. eyeline vectors, bbox set "</span>
-            <span class="s2">"diffs). Opaque to lacing; consumed by the inspector."</span>
-        <span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Tier of the flagged annotation, for queue grouping."</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
-<span class="n">register_body_schema</span><span class="p">(</span><span class="n">CONTINUITY_VIOLATION_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ContinuityViolationBodyV1</span><span class="p">)</span>
+<span class="n">register_body_schema</span><span class="p">(</span><span class="n">REVIEW_CANDIDATE_BODY_SCHEMA_URI</span><span class="p">,</span> <span class="n">ReviewCandidateBodyV1</span><span class="p">)</span>
 </pre></div>
 
            </div>

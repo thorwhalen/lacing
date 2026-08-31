@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.store.memory &mdash; lacing 0.0.34 documentation</title>
+  <title>lacing.bodies.review_candidate &mdash; lacing 0.0.34 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -24,8 +24,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="lacing.store.migrations" href="migrations.html" />
-    <link rel="prev" title="lacing.store.base" href="base.html" /> 
+    <link rel="next" title="lacing.bodies.word" href="word.html" />
+    <link rel="prev" title="lacing.bodies.review" href="review.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -63,12 +63,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../artifact.html">lacing.artifact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../artifact_store.html">lacing.artifact_store</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bodies.html">lacing.bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/named_entity.html">lacing.bodies.named_entity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/review.html">lacing.bodies.review</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/review_candidate.html">lacing.bodies.review_candidate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bodies/word.html">lacing.bodies.word</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">lacing.bodies.review</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.bodies.review_candidate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.bodies.review_candidate.ReviewCandidateBodyV1"><code class="docutils literal notranslate"><span class="pre">ReviewCandidateBodyV1</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.bodies.review_candidate.ReviewCandidateBodyV1.model_config"><code class="docutils literal notranslate"><span class="pre">ReviewCandidateBodyV1.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">lacing.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../digest.html">lacing.digest</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../exhibit.html">lacing.exhibit</a></li>
@@ -92,14 +98,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../server/routers/oplog.html">lacing.server.routers.oplog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../server/routers/tiers.html">lacing.server.routers.tiers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../store.html">lacing.store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html">lacing.store.base</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.store.memory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lacing.store.memory.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="migrations.html">lacing.store.migrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="postgres.html">lacing.store.postgres</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sqlite.html">lacing.store.sqlite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/base.html">lacing.store.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/memory.html">lacing.store.memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/migrations.html">lacing.store.migrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store/sqlite.html">lacing.store.sqlite</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tier.html">lacing.tier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../time.html">lacing.time</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tracks.html">lacing.tracks</a></li>
@@ -121,9 +124,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">lacing.store.memory</li>
+      <li class="breadcrumb-item active">lacing.bodies.review_candidate</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/module_docs/lacing/store/memory.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/module_docs/lacing/bodies/review_candidate.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -131,20 +134,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-lacing.store.memory">
-<span id="lacing-store-memory"></span><h1>lacing.store.memory<a class="headerlink" href="#module-lacing.store.memory" title="Link to this heading"></a></h1>
-<p>In-memory annotation store backed by an interval tree.</p>
-<p>Uses <code class="docutils literal notranslate"><span class="pre">intervaltree</span></code> (Apache-2.0). Annotations whose reference is not a
-<code class="docutils literal notranslate"><span class="pre">MediaRef</span></code> (i.e., they have no time interval) are kept in a separate
-list — they can still be enumerated via <code class="docutils literal notranslate"><span class="pre">all()</span></code> / <code class="docutils literal notranslate"><span class="pre">by_tier</span></code> but
-won’t appear in interval queries.</p>
+  <section id="module-lacing.bodies.review_candidate">
+<span id="lacing-bodies-review-candidate"></span><h1>lacing.bodies.review_candidate<a class="headerlink" href="#module-lacing.bodies.review_candidate" title="Link to this heading"></a></h1>
+<p>Body schema for review <em>candidates</em> — “this needs a human’s eyes”.</p>
+<p>URI: <code class="docutils literal notranslate"><span class="pre">annot://schema/review-candidate/v1</span></code></p>
+<p>A review-candidate is what an automated processor emits when it flags an
+annotation as worth a human look — today,
+<a class="reference internal" href="../processors.html#lacing.processors.low_confidence_review" title="lacing.processors.low_confidence_review"><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.processors.low_confidence_review()</span></code></a> flagging low-confidence
+rows. It is deliberately NOT a <a class="reference internal" href="review.html#lacing.bodies.review.ReviewBodyV1" title="lacing.bodies.review.ReviewBodyV1"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReviewBodyV1</span></code></a>:</p>
+<ul class="simple">
+<li><p>a review is a structured <strong>note or verdict</strong> (a continuity observation,
+an approval carrying a <code class="docutils literal notranslate"><span class="pre">decision</span></code>) written <em>about</em> work;</p></li>
+<li><p>a candidate is a <strong>pointer into a queue</strong> — “look at this one, and here
+is why it was flagged” — with no message, no status lifecycle, and no
+verdict. Reviewing a candidate <em>produces</em> a review; the candidate is the
+input, not an early draft of the output.</p></li>
+</ul>
+<p>The two lived under one URI for a while, and the processor’s rows failed
+validation against the model registered for that URI in five ways at once
+(lacing#37). One URI per body shape is the contract <code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code>
+exists to keep; giving the candidate its own name is the whole fix — no
+stored <code class="docutils literal notranslate"><span class="pre">review/v1</span></code> body changes shape, so no migration.</p>
+<p>The tier split mirrors the body split, stated here because it is easy to
+read as an accident: candidates land on <code class="docutils literal notranslate"><span class="pre">&quot;for-review&quot;</span></code> (the processor’s
+default) while human/agent reviews land on <code class="docutils literal notranslate"><span class="pre">&quot;review&quot;</span></code>
+(<code class="docutils literal notranslate"><span class="pre">operations.DFLT_REVIEW_TIER</span></code>). Candidates queue; reviews record.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="lacing.store.memory.MemoryStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.memory.</span></span><span class="sig-name descname"><span class="pre">MemoryStore</span></span><a class="reference internal" href="../../../_modules/lacing/store/memory.html#MemoryStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.memory.MemoryStore" title="Link to this definition"></a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> implementation over <code class="docutils literal notranslate"><span class="pre">intervaltree</span></code>.</p>
-<p>Conforms to the protocol in <code class="docutils literal notranslate"><span class="pre">lacing.store.base</span></code>. We don’t formally
-inherit from <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> because it’s a <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>
-with method bodies — structural typing is enough.</p>
+<dt class="sig sig-object py" id="lacing.bodies.review_candidate.ReviewCandidateBodyV1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.bodies.review_candidate.</span></span><span class="sig-name descname"><span class="pre">ReviewCandidateBodyV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_confidence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_tier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/lacing/bodies/review_candidate.html#ReviewCandidateBodyV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.bodies.review_candidate.ReviewCandidateBodyV1" title="Link to this definition"></a></dt>
+<dd><p>Body of a review-candidate annotation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.bodies.review_candidate.ReviewCandidateBodyV1.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.bodies.review_candidate.ReviewCandidateBodyV1.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -153,8 +177,8 @@ with method bodies — structural typing is enough.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="base.html" class="btn btn-neutral float-left" title="lacing.store.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="migrations.html" class="btn btn-neutral float-right" title="lacing.store.migrations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="review.html" class="btn btn-neutral float-left" title="lacing.bodies.review" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="word.html" class="btn btn-neutral float-right" title="lacing.bodies.word" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
