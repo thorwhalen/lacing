@@ -16,6 +16,7 @@
    module_docs/lacing/artifact
    module_docs/lacing/artifact_store
    module_docs/lacing/bodies
+   module_docs/lacing/bodies/character_voice
    module_docs/lacing/bodies/continuity_violation
    module_docs/lacing/bodies/named_entity
    module_docs/lacing/bodies/reference_lock
