@@ -1,6 +1,6 @@
 """Command-line interface for lacing.
 
-Built with ``argh`` (argparse + dataclass-style argument inference).
+Built with ``cw`` (argparse + signature-driven argument inference).
 The entry point is ``lacing`` — see ``project.scripts`` in pyproject.toml.
 
 Subcommands:
@@ -27,17 +27,38 @@ Subcommands:
 
 The CLI imports each Phase 0/1 adapter at startup so they self-register.
 Add new adapters by editing ``_ENABLED_ADAPTERS`` in this module.
+
+Type annotations are load-bearing here
+--------------------------------------
+
+This module has ``from __future__ import annotations``, so every annotation
+below is a *string* at runtime. ``argh``, which this CLI used to be built with,
+reads ``__annotations__`` raw and is therefore blind to PEP 563: under it,
+``--start``, ``--end`` and ``--to-version`` all arrived as ``str`` no matter what
+their annotations said, and the only defence was hand-written coercion in the
+command body (which ``migrate`` had and ``query`` did not — so
+``lacing query f.vtt --start abc --end 2.0`` used to get all the way into
+``RationalTime`` before failing).
+
+:data:`_CONVENTION` turns that off. ``resolve_hints=True`` makes ``cw`` resolve
+annotations with :func:`typing.get_type_hints` instead of reading them raw, so
+``start: float | None`` becomes ``type=float`` at argparse's ``type=`` site —
+where a bad value is a clean ``usage:`` + exit 2 rather than a traceback from
+somewhere in the call stack. Which means: **annotate the parameters, and do not
+coerce in the body.**
 """
 
 from __future__ import annotations
 
+import argparse
+import dataclasses
 import importlib
 import json
 import sys
 from collections.abc import Iterable
 from typing import Annotated
 
-import argh
+import cw
 
 from lacing.allen import AllenRelation
 
@@ -248,11 +269,7 @@ def migrate(
     from lacing.store.migrations import StoreMigrationError, migrate_annot_file
 
     try:
-        found, reached = migrate_annot_file(
-            path,
-            # argh delivers option values as strings; coerce here.
-            to_version=None if to_version is None else int(to_version),
-        )
+        found, reached = migrate_annot_file(path, to_version=to_version)
     except StoreMigrationError as exc:
         print(f"error: {exc}", file=sys.stderr)
         raise SystemExit(1)
@@ -284,10 +301,27 @@ def list_formats() -> None:
 # ---------------------------------------------------------------------------
 
 
+#: argh's grammar, with one switch flipped: annotations are resolved rather than
+#: read raw, so this module's PEP 563 string annotations actually reach argparse's
+#: ``type=`` site. See "Type annotations are load-bearing here" above.
+_CONVENTION = dataclasses.replace(cw.ARGH, resolve_hints=True)
+
+_COMMANDS = [convert, query, validate, migrate, list_formats]
+
+
+def mk_parser() -> argparse.ArgumentParser:
+    """Build the ``lacing`` parser — a plain :class:`argparse.ArgumentParser`."""
+    return cw.mk_parser(_COMMANDS, prog="lacing", convention=_CONVENTION)
+
+
 def main(argv: "list[str] | None" = None) -> None:
-    parser = argh.ArghParser(prog="lacing")
-    argh.add_commands(parser, [convert, query, validate, migrate, list_formats])
-    argh.dispatch(parser, argv=argv)
+    """Entry point for the ``lacing`` console script.
+
+    ``cw.run`` *returns* the exit code where argh's ``dispatch`` exited by
+    itself, so the ``SystemExit`` here is what makes ``lacing no-such-command``
+    exit 2 rather than 0.
+    """
+    raise SystemExit(cw.run(mk_parser(), argv))
 
 
 if __name__ == "__main__":  # pragma: no cover

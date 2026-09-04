@@ -367,13 +367,22 @@ class TestLadderMechanics:
 
 
 class TestCli:
+    """End-to-end through ``lacing.cli.main``.
+
+    ``main`` raises ``SystemExit`` with the dispatcher's exit code — 0 included.
+    ``cw.run`` *returns* that code where argh's ``dispatch`` exited by itself,
+    and dropping the ``raise`` would make argument errors exit 0.
+    """
+
     def test_cli_migrates_a_stale_file(self, tmp_path, monkeypatch, capsys):
         path = tmp_path / "a.annot"
         _write_v1_file(path)
         _register_v1_to_v2()
         _pretend_build_expects(monkeypatch, 2)
 
-        cli_main(["migrate", str(path)])
+        with pytest.raises(SystemExit) as exc:
+            cli_main(["migrate", str(path)])
+        assert exc.value.code == 0
 
         assert "1 -> 2" in capsys.readouterr().out
         assert _stamped_version(path) == 2
@@ -382,7 +391,9 @@ class TestCli:
         path = tmp_path / "a.annot"
         _write_current_file(path)
 
-        cli_main(["migrate", str(path)])
+        with pytest.raises(SystemExit) as exc:
+            cli_main(["migrate", str(path)])
+        assert exc.value.code == 0
 
         assert "nothing to do" in capsys.readouterr().out
 
@@ -415,7 +426,9 @@ class TestCli:
         _register_v1_to_v2()
         _pretend_build_expects(monkeypatch, 3)
 
-        cli_main(["migrate", str(path), "--to-version", "2"])
+        with pytest.raises(SystemExit) as exc:
+            cli_main(["migrate", str(path), "--to-version", "2"])
+        assert exc.value.code == 0
 
         assert "1 -> 2" in capsys.readouterr().out
         assert _stamped_version(path) == 2

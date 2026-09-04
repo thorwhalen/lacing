@@ -220,7 +220,7 @@ packages so users can adopt the data model without infra.
 **Done:**
 - SQLite + R*Tree → defines the `.annot` portable file format (BACK-DOC §3.1). ✓
 - `.annot` adapter (lossless round-trip + `persistent=True` for live mutation). ✓
-- CLI (`argh`): `lacing convert`, `lacing query`, `lacing validate`, `lacing list-formats`. ✓
+- CLI (`cw`): `lacing convert`, `lacing query`, `lacing validate`, `lacing list-formats`. ✓
 - **ELAN EAF adapter** — first adapter to exercise the tier hierarchy with stereotypes (TIME_SUBDIVISION, INCLUDED_IN, SYMBOLIC_SUBDIVISION, SYMBOLIC_ASSOCIATION). ✓
 - **Postgres backend** with `int8range` + GiST + per-tier `EXCLUDE` (optional via `pip install 'lacing[postgres]'`). Tested via `pytest-postgresql` sandbox — no live server needed for CI. ✓
 - **`schema.py`** — body-schema registry, validation, JSON Schema export, and forward migrations. Seed bodies (`word`, `named-entity` with v1→v2 migration) under `lacing/bodies/`. ✓
