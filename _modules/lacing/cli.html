@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.cli &mdash; lacing 0.0.35 documentation</title>
+  <title>lacing.cli &mdash; lacing 0.0.36 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=39aadc1c"></script>
+      <script src="../../_static/documentation_options.js?v=0e525676"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -129,7 +129,7 @@
   <h1>Source code for lacing.cli</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Command-line interface for lacing.</span>
 
-<span class="sd">Built with ``argh`` (argparse + dataclass-style argument inference).</span>
+<span class="sd">Built with ``cw`` (argparse + signature-driven argument inference).</span>
 <span class="sd">The entry point is ``lacing`` — see ``project.scripts`` in pyproject.toml.</span>
 
 <span class="sd">Subcommands:</span>
@@ -156,17 +156,38 @@
 
 <span class="sd">The CLI imports each Phase 0/1 adapter at startup so they self-register.</span>
 <span class="sd">Add new adapters by editing ``_ENABLED_ADAPTERS`` in this module.</span>
+
+<span class="sd">Type annotations are load-bearing here</span>
+<span class="sd">--------------------------------------</span>
+
+<span class="sd">This module has ``from __future__ import annotations``, so every annotation</span>
+<span class="sd">below is a *string* at runtime. ``argh``, which this CLI used to be built with,</span>
+<span class="sd">reads ``__annotations__`` raw and is therefore blind to PEP 563: under it,</span>
+<span class="sd">``--start``, ``--end`` and ``--to-version`` all arrived as ``str`` no matter what</span>
+<span class="sd">their annotations said, and the only defence was hand-written coercion in the</span>
+<span class="sd">command body (which ``migrate`` had and ``query`` did not — so</span>
+<span class="sd">``lacing query f.vtt --start abc --end 2.0`` used to get all the way into</span>
+<span class="sd">``RationalTime`` before failing).</span>
+
+<span class="sd">:data:`_CONVENTION` turns that off. ``resolve_hints=True`` makes ``cw`` resolve</span>
+<span class="sd">annotations with :func:`typing.get_type_hints` instead of reading them raw, so</span>
+<span class="sd">``start: float | None`` becomes ``type=float`` at argparse's ``type=`` site —</span>
+<span class="sd">where a bad value is a clean ``usage:`` + exit 2 rather than a traceback from</span>
+<span class="sd">somewhere in the call stack. Which means: **annotate the parameters, and do not</span>
+<span class="sd">coerce in the body.**</span>
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">argh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cw</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.allen</span><span class="w"> </span><span class="kn">import</span> <span class="n">AllenRelation</span>
 
@@ -388,11 +409,7 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store.migrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoreMigrationError</span><span class="p">,</span> <span class="n">migrate_annot_file</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">found</span><span class="p">,</span> <span class="n">reached</span> <span class="o">=</span> <span class="n">migrate_annot_file</span><span class="p">(</span>
-            <span class="n">path</span><span class="p">,</span>
-            <span class="c1"># argh delivers option values as strings; coerce here.</span>
-            <span class="n">to_version</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">to_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_version</span><span class="p">),</span>
-        <span class="p">)</span>
+        <span class="n">found</span><span class="p">,</span> <span class="n">reached</span> <span class="o">=</span> <span class="n">migrate_annot_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">to_version</span><span class="o">=</span><span class="n">to_version</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">StoreMigrationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -428,10 +445,33 @@
 <span class="c1"># ---------------------------------------------------------------------------</span>
 
 
+<span class="c1">#: argh's grammar, with one switch flipped: annotations are resolved rather than</span>
+<span class="c1">#: read raw, so this module's PEP 563 string annotations actually reach argparse's</span>
+<span class="c1">#: ``type=`` site. See "Type annotations are load-bearing here" above.</span>
+<span class="n">_CONVENTION</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">cw</span><span class="o">.</span><span class="n">ARGH</span><span class="p">,</span> <span class="n">resolve_hints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">_COMMANDS</span> <span class="o">=</span> <span class="p">[</span><span class="n">convert</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">migrate</span><span class="p">,</span> <span class="n">list_formats</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="mk_parser">
+<a class="viewcode-back" href="../../module_docs/lacing/cli.html#lacing.cli.mk_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Build the ``lacing`` parser — a plain :class:`argparse.ArgumentParser`."""</span>
+    <span class="k">return</span> <span class="n">cw</span><span class="o">.</span><span class="n">mk_parser</span><span class="p">(</span><span class="n">_COMMANDS</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s2">"lacing"</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="n">_CONVENTION</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../module_docs/lacing/cli.html#lacing.cli.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="s2">"list[str] | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argh</span><span class="o">.</span><span class="n">ArghParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">"lacing"</span><span class="p">)</span>
-    <span class="n">argh</span><span class="o">.</span><span class="n">add_commands</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="p">[</span><span class="n">convert</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">migrate</span><span class="p">,</span> <span class="n">list_formats</span><span class="p">])</span>
-    <span class="n">argh</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">argv</span><span class="o">=</span><span class="n">argv</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Entry point for the ``lacing`` console script.</span>
+
+<span class="sd">    ``cw.run`` *returns* the exit code where argh's ``dispatch`` exited by</span>
+<span class="sd">    itself, so the ``SystemExit`` here is what makes ``lacing no-such-command``</span>
+<span class="sd">    exit 2 rather than 0.</span>
+<span class="sd">    """</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="n">cw</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mk_parser</span><span class="p">(),</span> <span class="n">argv</span><span class="p">))</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>

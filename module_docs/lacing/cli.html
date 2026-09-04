@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.cli &mdash; lacing 0.0.35 documentation</title>
+  <title>lacing.cli &mdash; lacing 0.0.36 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=39aadc1c"></script>
+      <script src="../../_static/documentation_options.js?v=0e525676"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -71,9 +71,12 @@
 <li class="toctree-l1"><a class="reference internal" href="bodies/review_candidate.html">lacing.bodies.review_candidate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bodies/word.html">lacing.bodies.word</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.cli</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#type-annotations-are-load-bearing-here">Type annotations are load-bearing here</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.convert"><code class="docutils literal notranslate"><span class="pre">convert()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.list_formats"><code class="docutils literal notranslate"><span class="pre">list_formats()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.cli.mk_parser"><code class="docutils literal notranslate"><span class="pre">mk_parser()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.query"><code class="docutils literal notranslate"><span class="pre">query()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.cli.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
 </ul>
@@ -139,7 +142,7 @@
   <section id="module-lacing.cli">
 <span id="lacing-cli"></span><h1>lacing.cli<a class="headerlink" href="#module-lacing.cli" title="Link to this heading"></a></h1>
 <p>Command-line interface for lacing.</p>
-<p>Built with <code class="docutils literal notranslate"><span class="pre">argh</span></code> (argparse + dataclass-style argument inference).
+<p>Built with <code class="docutils literal notranslate"><span class="pre">cw</span></code> (argparse + signature-driven argument inference).
 The entry point is <code class="docutils literal notranslate"><span class="pre">lacing</span></code> — see <code class="docutils literal notranslate"><span class="pre">project.scripts</span></code> in pyproject.toml.</p>
 <p>Subcommands:</p>
 <blockquote>
@@ -163,6 +166,23 @@ opening a stale file never rewrites it.</p>
 </div></blockquote>
 <p>The CLI imports each Phase 0/1 adapter at startup so they self-register.
 Add new adapters by editing <code class="docutils literal notranslate"><span class="pre">_ENABLED_ADAPTERS</span></code> in this module.</p>
+<section id="type-annotations-are-load-bearing-here">
+<h2>Type annotations are load-bearing here<a class="headerlink" href="#type-annotations-are-load-bearing-here" title="Link to this heading"></a></h2>
+<p>This module has <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">annotations</span></code>, so every annotation
+below is a <em>string</em> at runtime. <code class="docutils literal notranslate"><span class="pre">argh</span></code>, which this CLI used to be built with,
+reads <code class="docutils literal notranslate"><span class="pre">__annotations__</span></code> raw and is therefore blind to PEP 563: under it,
+<code class="docutils literal notranslate"><span class="pre">--start</span></code>, <code class="docutils literal notranslate"><span class="pre">--end</span></code> and <code class="docutils literal notranslate"><span class="pre">--to-version</span></code> all arrived as <code class="docutils literal notranslate"><span class="pre">str</span></code> no matter what
+their annotations said, and the only defence was hand-written coercion in the
+command body (which <code class="docutils literal notranslate"><span class="pre">migrate</span></code> had and <code class="docutils literal notranslate"><span class="pre">query</span></code> did not — so
+<code class="docutils literal notranslate"><span class="pre">lacing</span> <span class="pre">query</span> <span class="pre">f.vtt</span> <span class="pre">--start</span> <span class="pre">abc</span> <span class="pre">--end</span> <span class="pre">2.0</span></code> used to get all the way into
+<code class="docutils literal notranslate"><span class="pre">RationalTime</span></code> before failing).</p>
+<p><code class="xref py py-data docutils literal notranslate"><span class="pre">_CONVENTION</span></code> turns that off. <code class="docutils literal notranslate"><span class="pre">resolve_hints=True</span></code> makes <code class="docutils literal notranslate"><span class="pre">cw</span></code> resolve
+annotations with <code class="xref py py-func docutils literal notranslate"><span class="pre">typing.get_type_hints()</span></code> instead of reading them raw, so
+<code class="docutils literal notranslate"><span class="pre">start:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span></code> becomes <code class="docutils literal notranslate"><span class="pre">type=float</span></code> at argparse’s <code class="docutils literal notranslate"><span class="pre">type=</span></code> site —
+where a bad value is a clean <code class="docutils literal notranslate"><span class="pre">usage:</span></code> + exit 2 rather than a traceback from
+somewhere in the call stack. Which means: <strong>annotate the parameters, and do not
+coerce in the body.</strong></p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="lacing.cli.convert">
 <span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.convert" title="Link to this definition"></a></dt>
@@ -179,12 +199,27 @@ with –src-format / –dst-format.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lacing.cli.main">
+<span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.main" title="Link to this definition"></a></dt>
+<dd><p>Entry point for the <code class="docutils literal notranslate"><span class="pre">lacing</span></code> console script.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cw.run</span></code> <em>returns</em> the exit code where argh’s <code class="docutils literal notranslate"><span class="pre">dispatch</span></code> exited by
+itself, so the <code class="docutils literal notranslate"><span class="pre">SystemExit</span></code> here is what makes <code class="docutils literal notranslate"><span class="pre">lacing</span> <span class="pre">no-such-command</span></code>
+exit 2 rather than 0.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lacing.cli.migrate">
 <span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.migrate" title="Link to this definition"></a></dt>
 <dd><p>Upgrade PATH (a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file) to the current store schema, in place.</p>
 <p>Migration is explicit — opening a stale file never rewrites it — so this
 verb is the ladder’s front door. Already-current files are a no-op.
 <code class="docutils literal notranslate"><span class="pre">--to-version</span></code> upgrades part-way (mainly useful in tests).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.cli.mk_parser">
+<span class="sig-prename descclassname"><span class="pre">lacing.cli.</span></span><span class="sig-name descname"><span class="pre">mk_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ArgumentParser</span></span></span><a class="reference internal" href="../../_modules/lacing/cli.html#mk_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.cli.mk_parser" title="Link to this definition"></a></dt>
+<dd><p>Build the <code class="docutils literal notranslate"><span class="pre">lacing</span></code> parser — a plain <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
