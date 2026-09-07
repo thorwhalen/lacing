@@ -64,6 +64,16 @@ def test_builder_writes_sections_lines_words(store_with_song):
     assert len(track.all_words()) == 6
 
 
+def test_builder_stamps_the_write_time_not_tick_zero(store_with_song):
+    """lacing#35: ``SubtitleBuilder`` built one shared ``Provenance`` in
+    ``__init__`` with ``generated_at_time=RationalTime.zero(rate)``, reused
+    for every annotation it writes. It used to stamp tick 0 — every
+    subtitle row oldest-forever to any consumer ordering by it."""
+    track = SubtitleTrack(store_with_song, asset_id="song/audio.mp3")
+    section = track.all_sections()[0]
+    assert section.provenance.generated_at_time.to_seconds() > 0
+
+
 def test_lines_in_window(store_with_song):
     track = SubtitleTrack(store_with_song, asset_id="song/audio.mp3")
     inside = track.lines_in(15.0, 17.0)

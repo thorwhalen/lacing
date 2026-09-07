@@ -301,6 +301,8 @@ class TestDensityChangePoints:
         assert result["markers"] >= 1
         markers = list(store.by_tier("density-change-points"))
         assert len(markers) == result["markers"]
+        # All markers should be point intervals.
+        assert all(m.interval.is_point for m in markers)
 
     def test_marker_stamps_the_detection_time_not_tick_zero(self):
         """lacing#35: the density-change marker's ``generated_at_time`` must
@@ -318,8 +320,6 @@ class TestDensityChangePoints:
         markers = list(store.by_tier("density-change-points"))
         assert markers
         assert all(m.provenance.generated_at_time.to_seconds() > 0 for m in markers)
-        # All markers should be point intervals.
-        assert all(m.interval.is_point for m in markers)
 
     def test_min_delta_filters(self):
         store, log = self._setup_burst()
