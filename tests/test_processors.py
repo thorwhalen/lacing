@@ -210,6 +210,16 @@ class TestLowConfidenceReview:
         # The body links back to the source.
         assert review.body["reason"] == "low_confidence"
 
+    def test_review_candidate_stamps_the_flag_time_not_tick_zero(self):
+        """lacing#35: the review-candidate's ``generated_at_time`` must be
+        when the flag was raised. It used to be ``RationalTime.zero()`` —
+        every flagged row at tick 0, oldest-forever to any consumer ordering
+        by it."""
+        store, log = self._setup(confidences=[0.1])
+        run_sync("low_confidence_review", store=store, oplog=log, threshold=0.5)
+        review = next(store.by_tier("for-review"))
+        assert review.provenance.generated_at_time.to_seconds() > 0
+
     def test_the_flagged_rows_validate_against_the_uri_they_claim(self):
         """The lacing#37 guard, generalized: every annotation stamping a
         REGISTERED body_schema_uri must validate against the model
@@ -291,6 +301,23 @@ class TestDensityChangePoints:
         assert result["markers"] >= 1
         markers = list(store.by_tier("density-change-points"))
         assert len(markers) == result["markers"]
+
+    def test_marker_stamps_the_detection_time_not_tick_zero(self):
+        """lacing#35: the density-change marker's ``generated_at_time`` must
+        be when the marker was detected. It used to be
+        ``RationalTime.zero()`` — every marker at tick 0, oldest-forever to
+        any consumer ordering by it."""
+        store, log = self._setup_burst()
+        run_sync(
+            "detect_density_change_points",
+            store=store,
+            oplog=log,
+            bucket_seconds=1.0,
+            min_delta=3,
+        )
+        markers = list(store.by_tier("density-change-points"))
+        assert markers
+        assert all(m.provenance.generated_at_time.to_seconds() > 0 for m in markers)
         # All markers should be point intervals.
         assert all(m.interval.is_point for m in markers)
 

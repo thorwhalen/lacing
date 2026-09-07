@@ -73,7 +73,7 @@ def _default_provenance(creator: str = "anonymous") -> Provenance:
     return Provenance(
         was_generated_by="server:lacing",
         was_attributed_to=creator,
-        generated_at_time=RationalTime.zero(),
+        generated_at_time=RationalTime.now(),
         activity="create",
     )
 

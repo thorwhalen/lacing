@@ -252,7 +252,7 @@ async def low_confidence_review(
                 was_generated_by=actor,
                 was_attributed_to=actor,
                 was_derived_from=[ann.id],
-                generated_at_time=RationalTime.zero(),
+                generated_at_time=RationalTime.now(),
                 activity="derive",
             ),
         )
@@ -368,7 +368,7 @@ async def detect_density_change_points(
                 provenance=Provenance(
                     was_generated_by=actor,
                     was_attributed_to=actor,
-                    generated_at_time=RationalTime.zero(),
+                    generated_at_time=RationalTime.now(),
                     activity="derive",
                 ),
             )
