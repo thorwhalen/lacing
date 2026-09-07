@@ -142,6 +142,15 @@ class TestAnnotations:
         assert "id" in body
         assert body["provenance"]["was_generated_by"] == "server:lacing"
 
+    def test_create_stamps_the_creation_time_not_tick_zero(self, client):
+        """lacing#35: ``generated_at_time`` must be when the REST create
+        happened. It used to be ``RationalTime.zero()`` — every REST-created
+        annotation at tick 0, oldest-forever to any consumer ordering by it."""
+        r = client.post("/annotations", json=_annotation_payload())
+        wire = r.json()["provenance"]["generated_at_time"]
+        stamped = wire["v"] / wire["r"]
+        assert stamped > 0
+
     def test_get_returns_etag(self, client):
         post = client.post("/annotations", json=_annotation_payload())
         ann_id = post.json()["id"]

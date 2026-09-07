@@ -26,6 +26,7 @@ from lacing.model import (
 )
 from lacing.server.deps import get_oplog, get_store
 from lacing.server.etag import annotation_etag, matches, parse_if_match
+from lacing.server.operations import _default_provenance
 from lacing.time import RationalTime, TimeInterval
 
 
@@ -66,15 +67,6 @@ def _build_reference(payload: dict[str, Any]) -> Reference:
     raise HTTPException(
         status.HTTP_400_BAD_REQUEST,
         detail=f"reference.kind must be media|node|annotation, got {kind!r}",
-    )
-
-
-def _default_provenance(creator: str = "anonymous") -> Provenance:
-    return Provenance(
-        was_generated_by="server:lacing",
-        was_attributed_to=creator,
-        generated_at_time=RationalTime.zero(),
-        activity="create",
     )
 
 

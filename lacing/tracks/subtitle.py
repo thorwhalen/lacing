@@ -174,7 +174,7 @@ class SubtitleBuilder:
         self._provenance = Provenance(
             was_generated_by=was_generated_by,
             was_attributed_to=was_attributed_to,
-            generated_at_time=RationalTime.zero(rate),
+            generated_at_time=RationalTime.now(rate),
         )
         if ensure_tiers:
             self._ensure_tiers()
