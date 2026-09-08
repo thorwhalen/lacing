@@ -33,6 +33,16 @@ class RationalTime:
 - **Wire format:** `{"v": int, "r": int}`. TS mirrors with `bigint`.
 - Use `fractions.Fraction` for arithmetic. `float` only at the *very* edge (display, third-party libs that demand it).
 - `to_seconds()` returns float **for display only.** Never round-trip through it.
+- **JSON Schema:** `RATIONAL_TIME_JSON_SCHEMA` / `TIME_INTERVAL_JSON_SCHEMA` in `lacing/time.py` are the exported wire shapes. `v` and `r` are `"integer"` — **never `"number"`** — and `r` carries `exclusiveMinimum: 0`.
+
+**Pydantic integration — both hooks, always.** A custom time type needs
+`__get_pydantic_core_schema__` *and* `__get_pydantic_json_schema__`. The core
+schema is a plain validator function, which Pydantic cannot describe on its
+own; without the JSON-Schema hook, `model_json_schema()` raises
+`PydanticInvalidForJsonSchema` for every model embedding the type, and
+non-negotiable 9 (Pydantic → JSON Schema → Zod) silently breaks (lacing#47).
+Wire-form validation raises `ValueError`, so a malformed payload surfaces as a
+Pydantic `ValidationError`, not a bare `TypeError` escaping the model boundary.
 
 **Banned patterns:**
 - `time_in_seconds: float` anywhere in the model, wire, or storage layer.

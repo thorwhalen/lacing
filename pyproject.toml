@@ -43,6 +43,9 @@ dev = [
     "praatio>=6.0",
     "pympi-ling>=1.7",
     "jams>=0.3",
+    # Used by tests/test_time_json_schema.py to check the exported JSON Schema
+    # really rejects a float tick; present transitively before, explicit now.
+    "jsonschema>=4.0",
     "psycopg[binary]>=3.1",
     "psycopg_pool>=3.2",
     "pytest-postgresql>=6.0",

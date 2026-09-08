@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "description": "Body of a review annotation.",
+  "properties": {
+    "review_kind": {
+      "description": "What flavor of review this is.",
+      "enum": [
+        "continuity",
+        "segmentation",
+        "prompt",
+        "grammar",
+        "timing",
+        "iconic_moment",
+        "manual",
+        "approval"
+      ],
+      "title": "Review Kind",
+      "type": "string"
+    },
+    "target_annotation_ids": {
+      "description": "Annotation ids this review targets. Typically one, but continuity reviews carry the same ids as the underlying ContinuityViolationBodyV1.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Target Annotation Ids",
+      "type": "array"
+    },
+    "message": {
+      "default": "",
+      "description": "Human-readable note shown in the review panel.",
+      "title": "Message",
+      "type": "string"
+    },
+    "status": {
+      "default": "open",
+      "description": "Lifecycle state.",
+      "enum": [
+        "open",
+        "addressed",
+        "wont_fix",
+        "deferred"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "author": {
+      "default": "human",
+      "description": "Coarse author chip \u2014 human / agent / system.",
+      "enum": [
+        "human",
+        "agent",
+        "system"
+      ],
+      "title": "Author",
+      "type": "string"
+    },
+    "decision": {
+      "anyOf": [
+        {
+          "enum": [
+            "accepted",
+            "rejected"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Verdict of an ``approval`` review \u2014 ``accepted`` / ``rejected``. ``None`` for review kinds that observe rather than rule.",
+      "title": "Decision"
+    },
+    "violation_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional id of a ``continuity-violation/v1`` (or other typed payload) backing this review. The FE inspector follows this ref to render rule-specific evidence.",
+      "title": "Violation Ref"
+    },
+    "suggested_action_slug": {
+      "default": "",
+      "description": "Optional acture command slug the FE should highlight as the default action (e.g. 'panel.regen', 'panel.editPrompt').",
+      "title": "Suggested Action Slug",
+      "type": "string"
+    }
+  },
+  "required": [
+    "review_kind"
+  ],
+  "title": "ReviewBodyV1",
+  "type": "object"
+}

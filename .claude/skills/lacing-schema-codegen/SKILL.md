@@ -126,8 +126,10 @@ class NamedEntityBody(BaseModel):
 The exact tooling (per BACK-DOC §6):
 
 ```bash
-# Step 1: Pydantic → JSON Schema (in lacing)
-python -m lacing.schema.export --out lacing/schema/
+# Step 1: Pydantic → JSON Schema (in lacing). Import lacing.bodies FIRST —
+# export_json_schemas only writes what is registered, so skipping the import
+# silently truncates lacing/schema/index.json to {}.
+python -c "import lacing.bodies; from lacing.schema import export_json_schemas; export_json_schemas('lacing/schema/')"
 
 # Step 2: JSON Schema → Zod (in lacing-ui; scripts/codegen.mjs reads the
 # sibling lacing checkout's lacing/schema/, or $LACING_SCHEMA_DIR)
@@ -140,6 +142,22 @@ lacing without a lacing-ui codegen commit turns lacing-ui's CI red — by
 design. The envelope (RationalTime/Reference/Provenance) is hand-written in
 lacing-ui `src/domain/envelope.ts`, NOT generated — it moves in lockstep
 with lacing/model.py by hand (see lacing#14's widening for the pattern).
+
+## Custom types need a JSON-Schema hook
+
+Any non-Pydantic type embedded in a model (`RationalTime`, `TimeInterval`)
+must define **both** `__get_pydantic_core_schema__` and
+`__get_pydantic_json_schema__`. The core-schema hook alone makes the type
+validate and serialize but leaves `model_json_schema()` raising
+`PydanticInvalidForJsonSchema`, which breaks step 1 of the pipeline for every
+model that embeds it — `Provenance`, `Annotation`, `MediaRef`, `NodeRef`
+(lacing#47). `lacing/time.py` exports the two shapes as
+`RATIONAL_TIME_JSON_SCHEMA` and `TIME_INTERVAL_JSON_SCHEMA`.
+
+Note what is *not* exported to `lacing/schema/`: `export_json_schemas` writes
+**body** schemas only. The envelope's TS mirror stays hand-written in
+lacing-ui `src/domain/envelope.ts`, so an envelope-level JSON-Schema change
+does not move a committed artifact in this repo — check lacing-ui by hand.
 
 ## The boundary between envelope and body
 
