@@ -339,7 +339,7 @@ This matches FRONT-DOC §6.2's "drag-in-progress is UI; the drag
 ### Phase 3.1 — Codegen + domain (1–2 days)
 
 - `npm run codegen` script that:
-  1. Calls into the Python repo via subprocess (or fetches a checked-in JSON dump): `python -m lacing.schema.export ./schema-export/`.
+  1. Calls into the Python repo via subprocess (or fetches a checked-in JSON dump): `python -c "import lacing.bodies; from lacing.schema import export_json_schemas; export_json_schemas('./schema-export/')"`. The `import lacing.bodies` is required — the export writes only *registered* schemas, and without it the run produces an empty `index.json`.
   2. Runs `json-schema-to-zod` over `./schema-export/`.
   3. Writes `src/types/generated/*.ts`.
 - Hand-written Zod schemas for envelope types (`RationalTime`,

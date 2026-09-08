@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 from pydantic import BaseModel, Field
 
+import lacing
 from lacing import schema as lacing_schema
 from lacing.schema import (
     BodySchemaError,
@@ -87,9 +88,9 @@ class TestUri:
         for bad in [
             "annot://schema/bad",
             "annot://schema/bad/v",
-            "annot://schema/Bad/v1",   # uppercase rejected
+            "annot://schema/Bad/v1",  # uppercase rejected
             "annot://schema/bad_name/v1",  # underscore rejected
-            "annot://schema/bad/V1",   # capital V rejected
+            "annot://schema/bad/V1",  # capital V rejected
             "https://example/schema/word/v1",
         ]:
             with pytest.raises(ValueError):
@@ -253,6 +254,82 @@ class TestJsonSchemaExport:
         assert not (tmp_path / "index.json").exists()
 
 
+class TestEmptyRegistryGuard:
+    """An export from an empty registry must not destroy committed artifacts.
+
+    The failure this guards against is silent and delayed: ``export_json_schemas``
+    writes only what is *registered*, and the registry is populated by importing
+    ``lacing.bodies``. Run the export without that import and ``index.json``
+    becomes ``{}`` while the ``v<N>.json`` files sit orphaned beside it. Nothing
+    fails, so it is noticed a week later.
+    """
+
+    def test_empty_registry_refuses_to_export(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(lacing_schema, "_BODY_REGISTRY", {})
+        with pytest.raises(
+            lacing_schema.EmptySchemaRegistryError, match="lacing.bodies"
+        ):
+            export_json_schemas(tmp_path)
+
+    def test_empty_registry_leaves_an_existing_index_intact(
+        self, tmp_path, monkeypatch
+    ):
+        register_body_schema("annot://schema/dummy/v1", _DummyV1)
+        export_json_schemas(tmp_path)
+        before = (tmp_path / "index.json").read_text()
+        assert json.loads(before)  # non-empty to start with
+
+        monkeypatch.setattr(lacing_schema, "_BODY_REGISTRY", {})
+        with pytest.raises(lacing_schema.EmptySchemaRegistryError):
+            export_json_schemas(tmp_path)
+        assert (tmp_path / "index.json").read_text() == before
+
+    def test_allow_empty_is_the_explicit_escape_hatch(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(lacing_schema, "_BODY_REGISTRY", {})
+        written = export_json_schemas(tmp_path, allow_empty=True)
+        assert json.loads((tmp_path / "index.json").read_text()) == {}
+        assert written == [tmp_path / "index.json"]
+
+    def test_guard_does_not_create_the_target_directory(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(lacing_schema, "_BODY_REGISTRY", {})
+        target = tmp_path / "nope"
+        with pytest.raises(lacing_schema.EmptySchemaRegistryError):
+            export_json_schemas(target)
+        assert not target.exists()
+
+
+class TestCommittedArtifactFreshness:
+    """The committed ``lacing/schema/`` tree must equal a fresh export.
+
+    Four body schemas drifted out of that tree unnoticed because nothing
+    compared it against the registry. This is the test that would have caught
+    it. When it fails, the fix is to re-run the export and commit the result —
+    see the ``lacing-schema-codegen`` skill.
+    """
+
+    def test_committed_tree_matches_a_fresh_export(self, tmp_path):
+        import lacing.bodies  # noqa: F401  registers the built-ins
+
+        committed = Path(lacing.__file__).parent / "schema"
+        export_json_schemas(tmp_path)
+
+        def tree(root: Path) -> dict[str, str]:
+            return {
+                str(p.relative_to(root)): p.read_text()
+                for p in sorted(root.rglob("*.json"))
+            }
+
+        fresh, on_disk = tree(tmp_path), tree(committed)
+        missing = sorted(set(fresh) - set(on_disk))
+        extra = sorted(set(on_disk) - set(fresh))
+        assert not missing, (
+            f"registered but not committed — re-run the export: {missing}"
+        )
+        assert not extra, f"committed but no longer registered: {extra}"
+        stale = sorted(k for k in fresh if fresh[k] != on_disk[k])
+        assert not stale, f"committed content is stale — re-run the export: {stale}"
+
+
 # ---------------------------------------------------------------------------
 # Migrations
 # ---------------------------------------------------------------------------
@@ -322,9 +399,7 @@ class TestMigrations:
 
     def test_register_rejects_non_consecutive(self):
         with pytest.raises(ValueError):
-            register_migration(
-                schema_name="dummy", from_version=1, to_version=3
-            )
+            register_migration(schema_name="dummy", from_version=1, to_version=3)
 
     def test_chain_of_migrations(self):
         # Build a v1 -> v2 -> v3 chain

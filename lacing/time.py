@@ -10,6 +10,7 @@ and third-party libs that demand a float.
 
 from __future__ import annotations
 
+import copy
 import math
 import time
 from fractions import Fraction
@@ -53,8 +54,8 @@ TIME_INTERVAL_JSON_SCHEMA: dict[str, Any] = {
     "title": "TimeInterval",
     "description": "A half-open interval [start, end). start == end is a point.",
     "properties": {
-        "start": RATIONAL_TIME_JSON_SCHEMA,
-        "end": RATIONAL_TIME_JSON_SCHEMA,
+        "start": copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA),
+        "end": copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA),
     },
     "required": ["start", "end"],
     "additionalProperties": False,
@@ -298,6 +299,20 @@ class RationalTime:
 
     @classmethod
     def from_wire(cls, d: dict[str, int]) -> "RationalTime":
+        """Build from the wire form. Unknown keys are an error, not ignored.
+
+        ``RATIONAL_TIME_JSON_SCHEMA`` sets ``additionalProperties: false`` and
+        lacing-ui's Zod mirror is ``.strict()``; accepting extras here would
+        make Python the one lax end of a contract both other ends enforce, so
+        a ``{"v": 0, "r": 1, "seconds": 0.0}`` payload would round-trip through
+        Python and then be rejected by the frontend.
+        """
+        missing = {"v", "r"} - d.keys()
+        if missing:
+            raise ValueError(f"missing wire key(s): {sorted(missing)}")
+        extra = d.keys() - {"v", "r"}
+        if extra:
+            raise ValueError(f"unexpected wire key(s): {sorted(extra)}")
         return cls(d["v"], d["r"])
 
     @classmethod
@@ -334,7 +349,7 @@ class RationalTime:
         ``PydanticInvalidForJsonSchema`` for ``Provenance``, ``Annotation``
         and friends, breaking the Pydantic → JSON Schema → Zod pipeline.
         """
-        return dict(RATIONAL_TIME_JSON_SCHEMA)
+        return copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA)
 
 
 class TimeInterval:
@@ -397,6 +412,13 @@ class TimeInterval:
 
     @classmethod
     def from_wire(cls, d: dict) -> "TimeInterval":
+        """Build from the wire form. See :meth:`RationalTime.from_wire` on extras."""
+        missing = {"start", "end"} - d.keys()
+        if missing:
+            raise ValueError(f"missing wire key(s): {sorted(missing)}")
+        extra = d.keys() - {"start", "end"}
+        if extra:
+            raise ValueError(f"unexpected wire key(s): {sorted(extra)}")
         return cls(
             RationalTime.from_wire(d["start"]),
             RationalTime.from_wire(d["end"]),
@@ -444,4 +466,4 @@ class TimeInterval:
         See :meth:`RationalTime.__get_pydantic_json_schema__` for why the
         hook is needed at all.
         """
-        return dict(TIME_INTERVAL_JSON_SCHEMA)
+        return copy.deepcopy(TIME_INTERVAL_JSON_SCHEMA)

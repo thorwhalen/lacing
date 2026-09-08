@@ -42,6 +42,7 @@ from lacing.quality import (
 )
 from lacing.schema import (
     BodySchemaError,
+    EmptySchemaRegistryError,
     MigrationError,
     UnknownBodySchemaError,
     export_json_schemas,
@@ -163,6 +164,7 @@ __all__ = [
     "migrate",
     "validate_body",
     "BodySchemaError",
+    "EmptySchemaRegistryError",
     "UnknownBodySchemaError",
     "MigrationError",
 ]
