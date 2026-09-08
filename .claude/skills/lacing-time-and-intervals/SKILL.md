@@ -137,7 +137,6 @@ still carry it; lacing does no backfill (lacing#44).
 ## Quick checklist before commit
 
 - [ ] `generated_at_time` producers use `RationalTime.now()`; consumers gate comparisons on `generated_at_is_known`.
-
 - [ ] No `float` in any signature/field except display layers and external library bridges.
 - [ ] Every `TimeInterval` is half-open; point intervals (`start == end`) handled.
 - [ ] Overlap/containment predicates go through `lacing/allen.py`, not ad-hoc.

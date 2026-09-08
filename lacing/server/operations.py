@@ -127,7 +127,7 @@ def _build_reference(payload: dict[str, Any]) -> Reference:
     raise ValueError(f"reference.kind must be media|node|annotation, got {kind!r}")
 
 
-def _default_provenance(creator: str = "anonymous") -> Provenance:
+def default_provenance(creator: str = "anonymous") -> Provenance:
     # now(), not zero(): generated_at_time is *when this was generated* —
     # consumers (nw freshness, verdict ordering) read it as wall-clock, and
     # tick 0 made every server-created annotation look older than everything
@@ -156,7 +156,7 @@ def add_annotation_from_payload(
     """Build an ``Annotation`` from a flat dict payload, add to store + op-log."""
     ref = _build_reference(reference)
     if provenance is None:
-        prov = _default_provenance(actor)
+        prov = default_provenance(actor)
     else:
         prov = Provenance.model_validate(provenance)
 

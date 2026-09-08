@@ -25,8 +25,7 @@ from lacing.time import RationalTime, TimeInterval  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
-@pytest.fixture
-def sample_jams_path(tmp_path) -> Path:
+def build_sample_jams(tmp_path) -> Path:
     """Build a small JAMS file with chord and beat annotations."""
     j = jams_lib.JAMS()
     j.file_metadata.duration = 4.0
@@ -46,6 +45,11 @@ def sample_jams_path(tmp_path) -> Path:
     out = tmp_path / "sample.jams"
     j.save(str(out))
     return out
+
+
+@pytest.fixture
+def sample_jams_path(tmp_path) -> Path:
+    return build_sample_jams(tmp_path)
 
 
 def _make_store_for_dump(rate: int = 1000) -> MemoryStore:
@@ -168,16 +172,12 @@ class TestLoad:
         assert a.provenance.was_attributed_to == "anonymous"
 
     def test_attribution_override(self, sample_jams_path):
-        store = adapter_module.load(
-            sample_jams_path, rate=1000, attribution="alice"
-        )
+        store = adapter_module.load(sample_jams_path, rate=1000, attribution="alice")
         a = next(store.all())
         assert a.provenance.was_attributed_to == "alice"
 
     def test_asset_id_override(self, sample_jams_path):
-        store = adapter_module.load(
-            sample_jams_path, rate=1000, asset_id="blake3:hash"
-        )
+        store = adapter_module.load(sample_jams_path, rate=1000, asset_id="blake3:hash")
         a = next(store.all())
         assert a.reference.asset_id == "blake3:hash"
 
@@ -278,11 +278,21 @@ class TestRoundTrip:
 
         # Beat values (zero-duration round-trips)
         original_beats = sorted(
-            (a.body["value"], a.interval.start.value, a.interval.end.value, a.confidence)
+            (
+                a.body["value"],
+                a.interval.start.value,
+                a.interval.end.value,
+                a.confidence,
+            )
             for a in original.by_tier("beat")
         )
         loaded_beats = sorted(
-            (a.body["value"], a.interval.start.value, a.interval.end.value, a.confidence)
+            (
+                a.body["value"],
+                a.interval.start.value,
+                a.interval.end.value,
+                a.confidence,
+            )
             for a in loaded.by_tier("beat")
         )
         assert original_beats == loaded_beats

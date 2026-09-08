@@ -23,8 +23,7 @@ from lacing.time import RationalTime, TimeInterval  # noqa: E402
 # --- fixtures ---------------------------------------------------------------
 
 
-@pytest.fixture
-def sample_textgrid_path(tmp_path) -> Path:
+def build_sample_textgrid(tmp_path) -> Path:
     """Build a small TextGrid on disk using praatio directly.
 
     Two tiers: ``words`` (interval) + ``tones`` (point), times exact at rate 1000.
@@ -56,6 +55,11 @@ def sample_textgrid_path(tmp_path) -> Path:
     return out
 
 
+@pytest.fixture
+def sample_textgrid_path(tmp_path) -> Path:
+    return build_sample_textgrid(tmp_path)
+
+
 def _make_store_for_dump() -> MemoryStore:
     """Build a store with intervals + points across two tiers."""
     s = MemoryStore()
@@ -79,8 +83,12 @@ def _make_store_for_dump() -> MemoryStore:
 
     s.add(_ann("words", TimeInterval.from_seconds("0.0", "0.5", rate=rate), "hello"))
     s.add(_ann("words", TimeInterval.from_seconds("0.5", "1.0", rate=rate), "world"))
-    s.add(_ann("tones", TimeInterval.point(RationalTime.from_seconds("0.25", rate)), "H"))
-    s.add(_ann("tones", TimeInterval.point(RationalTime.from_seconds("0.75", rate)), "L"))
+    s.add(
+        _ann("tones", TimeInterval.point(RationalTime.from_seconds("0.25", rate)), "H")
+    )
+    s.add(
+        _ann("tones", TimeInterval.point(RationalTime.from_seconds("0.75", rate)), "L")
+    )
     return s
 
 
@@ -145,9 +153,7 @@ class TestLoad:
         assert tones[1].body["text"] == "L"
 
     def test_load_provenance(self, sample_textgrid_path):
-        store = adapter_module.load(
-            sample_textgrid_path, rate=1000, attribution="thor"
-        )
+        store = adapter_module.load(sample_textgrid_path, rate=1000, attribution="thor")
         a = next(store.all())
         assert a.provenance.was_generated_by == "adapter:textgrid"
         assert a.provenance.was_attributed_to == "thor"
@@ -206,12 +212,10 @@ class TestRoundTrip:
 
         # tones round-trip
         loaded_tones = sorted(
-            (a.body["text"], a.interval.start.value)
-            for a in loaded.by_tier("tones")
+            (a.body["text"], a.interval.start.value) for a in loaded.by_tier("tones")
         )
         original_tones = sorted(
-            (a.body["text"], a.interval.start.value)
-            for a in original.by_tier("tones")
+            (a.body["text"], a.interval.start.value) for a in original.by_tier("tones")
         )
         assert loaded_tones == original_tones
 

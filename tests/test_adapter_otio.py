@@ -22,8 +22,7 @@ from lacing.time import RationalTime, TimeInterval  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
-@pytest.fixture
-def sample_otio_path(tmp_path) -> Path:
+def build_sample_otio(tmp_path) -> Path:
     """Build a small OTIO file: timeline with two tracks of clips and a marker."""
     tl = otio.schema.Timeline(name="demo")
 
@@ -77,13 +76,20 @@ def sample_otio_path(tmp_path) -> Path:
     return out
 
 
+@pytest.fixture
+def sample_otio_path(tmp_path) -> Path:
+    return build_sample_otio(tmp_path)
+
+
 def _make_store_for_dump() -> MemoryStore:
     s = MemoryStore()
     s.add_tier(Tier("V1"))
     s.add_tier(Tier("markers"))
     rate = 1000
 
-    def _clip(start_ms: int, end_ms: int, name: str, asset: str = "file://demo.mov") -> Annotation:
+    def _clip(
+        start_ms: int, end_ms: int, name: str, asset: str = "file://demo.mov"
+    ) -> Annotation:
         return Annotation(
             id=uuid4(),
             tier="V1",
@@ -191,9 +197,7 @@ class TestLoad:
         assert len(list(store.all())) == 4
 
     def test_asset_id_override(self, sample_otio_path):
-        store = adapter_module.load(
-            sample_otio_path, rate=1000, asset_id="blake3:hash"
-        )
+        store = adapter_module.load(sample_otio_path, rate=1000, asset_id="blake3:hash")
         v1 = next(a for a in store.by_tier("V1"))
         assert v1.reference.asset_id == "blake3:hash"
 

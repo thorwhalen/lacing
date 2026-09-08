@@ -158,8 +158,10 @@ convention = "google"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
+    "lacing",
     "tests",
 ]
+addopts = "--doctest-modules"
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "ELLIPSIS",

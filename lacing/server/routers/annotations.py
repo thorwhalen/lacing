@@ -26,7 +26,7 @@ from lacing.model import (
 )
 from lacing.server.deps import get_oplog, get_store
 from lacing.server.etag import annotation_etag, matches, parse_if_match
-from lacing.server.operations import _default_provenance
+from lacing.server.operations import default_provenance
 from lacing.time import RationalTime, TimeInterval
 
 
@@ -73,7 +73,7 @@ def _build_reference(payload: dict[str, Any]) -> Reference:
 def _build_annotation(payload: AnnotationIn) -> Annotation:
     reference = _build_reference(payload.reference)
     if payload.provenance is None:
-        provenance = _default_provenance()
+        provenance = default_provenance()
     else:
         provenance = Provenance.model_validate(payload.provenance)
 

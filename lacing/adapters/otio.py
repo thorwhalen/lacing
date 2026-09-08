@@ -132,7 +132,7 @@ def load(
 
     store = MemoryStore()
     seen_tiers: set[str] = set()
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     def _ensure_tier(name: str) -> None:
         if name not in seen_tiers:
