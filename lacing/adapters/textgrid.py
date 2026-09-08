@@ -118,7 +118,7 @@ def load(
     grid = _open_textgrid(source, Textgrid, include_empty=include_empty)
 
     store = MemoryStore()
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     for tier_name in grid.tierNames:
         tier = grid.getTier(tier_name)

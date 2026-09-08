@@ -121,7 +121,7 @@ def load(
     resolved_asset = asset_id or _first_media_url(eaf) or DEFAULT_ASSET_ID
 
     store = MemoryStore()
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     # Build tiers: figure out stereotype from each tier's linguistic type.
     tier_to_stereotype: dict[str, TierStereotype] = {}

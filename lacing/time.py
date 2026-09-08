@@ -146,6 +146,12 @@ class RationalTime:
 
     @classmethod
     def zero(cls, rate: int = DEFAULT_RATE) -> "RationalTime":
+        """Tick 0 at ``rate`` — the start of a media timeline.
+
+        Not a wall-clock timestamp: as a ``Provenance.generated_at_time`` it
+        is the UNKNOWN sentinel (``lacing.model.UNKNOWN_GENERATED_AT``), not
+        the epoch. Producers stamp :meth:`now` there.
+        """
         return cls(0, rate)
 
     @classmethod
@@ -155,7 +161,9 @@ class RationalTime:
         Uses ``time.time_ns()`` and builds the value directly, sidestepping
         the float-quantization landmine of ``from_seconds(float)``. Every
         producer of an annotation or artifact needs this for
-        ``Provenance.generated_at_time``.
+        ``Provenance.generated_at_time`` — the only value that field reads
+        as a *known* time. Tick 0 there is the UNKNOWN sentinel
+        (``lacing.model.UNKNOWN_GENERATED_AT``), never the epoch.
         """
         ns = time.time_ns()
         # Round to nearest sample: add half the divisor before integer division.

@@ -137,7 +137,7 @@ def load(
 
     store = MemoryStore()
     seen_tiers: set[str] = set()
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     for task in tasks:
         if not isinstance(task, dict):

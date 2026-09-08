@@ -52,6 +52,7 @@ from lacing.schema import (
     validate as validate_body,
 )
 from lacing.model import (
+    UNKNOWN_GENERATED_AT,
     Annotation,
     AnnotationRef,
     MediaRef,
@@ -105,6 +106,7 @@ __all__ = [
     "NodeRef",
     "AnnotationRef",
     "Provenance",
+    "UNKNOWN_GENERATED_AT",
     # artifact
     "Artifact",
     "ArtifactKind",

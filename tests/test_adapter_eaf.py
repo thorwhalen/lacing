@@ -23,8 +23,7 @@ from lacing.time import RationalTime, TimeInterval  # noqa: E402
 # --- fixtures --------------------------------------------------------------
 
 
-@pytest.fixture
-def sample_eaf_path(tmp_path) -> Path:
+def build_sample_eaf(tmp_path) -> Path:
     """Build a small EAF on disk via pympi.
 
     Two tiers: ``words`` (NONE) + ``phonemes`` (TIME_SUBDIVISION child of words).
@@ -47,6 +46,11 @@ def sample_eaf_path(tmp_path) -> Path:
     return out
 
 
+@pytest.fixture
+def sample_eaf_path(tmp_path) -> Path:
+    return build_sample_eaf(tmp_path)
+
+
 def _make_store_for_dump() -> MemoryStore:
     s = MemoryStore()
     s.add_tier(Tier("words"))
@@ -54,7 +58,11 @@ def _make_store_for_dump() -> MemoryStore:
         Tier("phonemes", stereotype=TierStereotype.TIME_SUBDIVISION, parent="words")
     )
     s.add_tier(
-        Tier("translation", stereotype=TierStereotype.SYMBOLIC_ASSOCIATION, parent="words")
+        Tier(
+            "translation",
+            stereotype=TierStereotype.SYMBOLIC_ASSOCIATION,
+            parent="words",
+        )
     )
 
     def _ann(tier: str, start_ms: int, end_ms: int, text: str) -> Annotation:

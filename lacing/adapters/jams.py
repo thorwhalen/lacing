@@ -166,7 +166,7 @@ def load(
     resolved_asset = _resolve_asset_id(jams_obj, asset_id)
 
     store = MemoryStore()
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     seen_namespaces: set[str] = set()
     for annotation in jams_obj.annotations:

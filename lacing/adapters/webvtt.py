@@ -121,7 +121,7 @@ def load(
 
     store = MemoryStore()
     store.add_tier(Tier(tier))
-    now = RationalTime.zero(rate)
+    now = RationalTime.now(rate)
 
     cues = list(_iter_cues(text, rate))
     for cue in cues:
