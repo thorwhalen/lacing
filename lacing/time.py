@@ -10,17 +10,61 @@ and third-party libs that demand a float.
 
 from __future__ import annotations
 
+import copy
 import math
 import time
 from fractions import Fraction
 from typing import Any
 
-from pydantic import GetCoreSchemaHandler
+from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
+from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema, core_schema
 
 
 DEFAULT_RATE: int = 24000
 """Default rate (ticks/second). LCM 1008000 covers all common video rates exactly."""
+
+
+RATIONAL_TIME_JSON_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "title": "RationalTime",
+    "description": (
+        "A point in time as v/r seconds. Both members are integers — never a "
+        "float, never a JSON number with a fractional part."
+    ),
+    "properties": {
+        "v": {"type": "integer", "description": "Tick count (may be negative)."},
+        "r": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "Rate in ticks per second. Strictly positive.",
+        },
+    },
+    "required": ["v", "r"],
+    "additionalProperties": False,
+}
+"""JSON Schema for the ``RationalTime`` wire shape ``{"v": int, "r": int}``.
+
+Non-negotiable 1 lives here as much as in the constructor: ``integer``, not
+``number``. A JSON Schema validator must reject ``{"v": 0.5, "r": 48000}``.
+"""
+
+TIME_INTERVAL_JSON_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "title": "TimeInterval",
+    "description": "A half-open interval [start, end). start == end is a point.",
+    "properties": {
+        "start": copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA),
+        "end": copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA),
+    },
+    "required": ["start", "end"],
+    "additionalProperties": False,
+}
+"""JSON Schema for the ``TimeInterval`` wire shape ``{"start": ..., "end": ...}``.
+
+``start <= end`` is a constructor invariant that JSON Schema cannot express;
+Pydantic validation still enforces it.
+"""
 
 
 class LossyTimeConversionError(ValueError):
@@ -255,6 +299,20 @@ class RationalTime:
 
     @classmethod
     def from_wire(cls, d: dict[str, int]) -> "RationalTime":
+        """Build from the wire form. Unknown keys are an error, not ignored.
+
+        ``RATIONAL_TIME_JSON_SCHEMA`` sets ``additionalProperties: false`` and
+        lacing-ui's Zod mirror is ``.strict()``; accepting extras here would
+        make Python the one lax end of a contract both other ends enforce, so
+        a ``{"v": 0, "r": 1, "seconds": 0.0}`` payload would round-trip through
+        Python and then be rejected by the frontend.
+        """
+        missing = {"v", "r"} - d.keys()
+        if missing:
+            raise ValueError(f"missing wire key(s): {sorted(missing)}")
+        extra = d.keys() - {"v", "r"}
+        if extra:
+            raise ValueError(f"unexpected wire key(s): {sorted(extra)}")
         return cls(d["v"], d["r"])
 
     @classmethod
@@ -265,8 +323,13 @@ class RationalTime:
             if isinstance(value, RationalTime):
                 return value
             if isinstance(value, dict):
-                return cls.from_wire(value)
-            raise TypeError(f"cannot build RationalTime from {type(value).__name__}")
+                # ValueError, so Pydantic reports a ValidationError rather than
+                # letting a TypeError escape the model boundary uncaught.
+                try:
+                    return cls.from_wire(value)
+                except (TypeError, ValueError, KeyError) as exc:
+                    raise ValueError(f"invalid RationalTime wire form: {exc}") from exc
+            raise ValueError(f"cannot build RationalTime from {type(value).__name__}")
 
         return core_schema.no_info_plain_validator_function(
             _validate,
@@ -274,6 +337,19 @@ class RationalTime:
                 lambda x: x.to_wire(), when_used="always"
             ),
         )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        """The wire shape, so every model embedding a time gets a JSON Schema.
+
+        The core schema is a plain validator function, which Pydantic cannot
+        describe on its own; without this hook ``model_json_schema()`` raises
+        ``PydanticInvalidForJsonSchema`` for ``Provenance``, ``Annotation``
+        and friends, breaking the Pydantic → JSON Schema → Zod pipeline.
+        """
+        return copy.deepcopy(RATIONAL_TIME_JSON_SCHEMA)
 
 
 class TimeInterval:
@@ -336,6 +412,13 @@ class TimeInterval:
 
     @classmethod
     def from_wire(cls, d: dict) -> "TimeInterval":
+        """Build from the wire form. See :meth:`RationalTime.from_wire` on extras."""
+        missing = {"start", "end"} - d.keys()
+        if missing:
+            raise ValueError(f"missing wire key(s): {sorted(missing)}")
+        extra = d.keys() - {"start", "end"}
+        if extra:
+            raise ValueError(f"unexpected wire key(s): {sorted(extra)}")
         return cls(
             RationalTime.from_wire(d["start"]),
             RationalTime.from_wire(d["end"]),
@@ -360,8 +443,12 @@ class TimeInterval:
             if isinstance(value, TimeInterval):
                 return value
             if isinstance(value, dict):
-                return cls.from_wire(value)
-            raise TypeError(f"cannot build TimeInterval from {type(value).__name__}")
+                # See RationalTime's validator: ValueError, not TypeError.
+                try:
+                    return cls.from_wire(value)
+                except (TypeError, ValueError, KeyError) as exc:
+                    raise ValueError(f"invalid TimeInterval wire form: {exc}") from exc
+            raise ValueError(f"cannot build TimeInterval from {type(value).__name__}")
 
         return core_schema.no_info_plain_validator_function(
             _validate,
@@ -369,3 +456,14 @@ class TimeInterval:
                 lambda x: x.to_wire(), when_used="always"
             ),
         )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, schema: CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        """The wire shape ``{"start": RationalTime, "end": RationalTime}``.
+
+        See :meth:`RationalTime.__get_pydantic_json_schema__` for why the
+        hook is needed at all.
+        """
+        return copy.deepcopy(TIME_INTERVAL_JSON_SCHEMA)

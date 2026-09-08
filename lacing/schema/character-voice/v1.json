@@ -1,0 +1,159 @@
+{
+  "additionalProperties": false,
+  "description": "Body of a character-voice annotation \u2014 one character's voice profile.",
+  "properties": {
+    "character_ref": {
+      "description": "The character this voice belongs to \u2014 the ``name`` (or id) of a ``character-ref/v1`` annotation. Dialogue speakers are matched against this to resolve which voice speaks a line.",
+      "title": "Character Ref",
+      "type": "string"
+    },
+    "voice_id": {
+      "description": "The primary TTS voice identifier (provider-specific). The one field a profile must have; ``provider_voice_ids`` carries alternates for other providers.",
+      "title": "Voice Id",
+      "type": "string"
+    },
+    "provider_voice_ids": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Per-provider voice ids, keyed by provider slug (``'elevenlabs'``, ``'minimax'``, ...). A synthesis path looks its provider up here first and falls back to ``voice_id`` \u2014 which is what lets a production switch providers without recasting every character.",
+      "title": "Provider Voice Ids",
+      "type": "object"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "TTS model id (e.g. ``eleven_v3`` for expressive dialogue). None uses the synthesis path's default for the call's register.",
+      "title": "Model Id"
+    },
+    "delivery": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Name of a delivery preset (e.g. ``V3_NATURAL``) to seed the voice settings; the individual knobs below override it.",
+      "title": "Delivery"
+    },
+    "default_emotion": {
+      "default": "",
+      "description": "The emotional register this character speaks in unless a line overrides it (``'warm'``, ``'clipped'``, ``'deadpan'`` \u2014 free text a synthesis path may map to provider controls or fold into a prompt).",
+      "title": "Default Emotion",
+      "type": "string"
+    },
+    "stability": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Voice-setting intent (0-1): lower = more expressive/variable.",
+      "title": "Stability"
+    },
+    "similarity_boost": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Voice-setting intent (0-1): adherence to the source voice.",
+      "title": "Similarity Boost"
+    },
+    "style": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Voice-setting intent (0-1): style exaggeration (0.0 = off).",
+      "title": "Style"
+    },
+    "speed": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Voice-setting intent: speaking-rate multiplier.",
+      "title": "Speed"
+    },
+    "accent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Human-readable accent label. Shown in pickers; a synthesis path MAY fold it into prompt-style controls where the provider has them.",
+      "title": "Accent"
+    },
+    "reference_sample_artifact_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Content-addressed id (64-hex lacing ``AssetId``) of a stored voice sample, for cloning providers. An id, not a URL \u2014 the sample must survive re-uploads byte-identically.",
+      "title": "Reference Sample Artifact Id"
+    },
+    "display_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Human label for this voice in a picker; defaults to the character name.",
+      "title": "Display Name"
+    },
+    "notes": {
+      "default": "",
+      "description": "Free-form notes about the voice choice (direction, casting rationale).",
+      "title": "Notes",
+      "type": "string"
+    }
+  },
+  "required": [
+    "character_ref",
+    "voice_id"
+  ],
+  "title": "CharacterVoiceBodyV1",
+  "type": "object"
+}

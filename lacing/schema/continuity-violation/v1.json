@@ -1,0 +1,92 @@
+{
+  "additionalProperties": false,
+  "description": "Body of a continuity-violation annotation.",
+  "properties": {
+    "rule": {
+      "description": "Producing-rule slug \u2014 e.g. 'axis_180', 'eyeline', 'character_drift', 'environment_drift', 'prop_hallucination', '30_rule', 'costume', 'lighting', 'time_of_day', 'weather', 'screen_direction'. Strings rather than Literal so new rules can be added without a schema bump.",
+      "title": "Rule",
+      "type": "string"
+    },
+    "annotation_ids": {
+      "description": "\u22652 annotation ids the violation relates (e.g. the two panels in conflict). Order is meaningful when the rule is directional (e.g. 'character_drift' from A to B).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Annotation Ids",
+      "type": "array"
+    },
+    "severity": {
+      "default": "warn",
+      "description": "info / warn / error.",
+      "enum": [
+        "info",
+        "warn",
+        "error"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "detection_method": {
+      "default": "",
+      "description": "How the violation was detected \u2014 'face_embed_cosine', 'optical_flow_direction', 'object_detect_set_diff', etc.",
+      "title": "Detection Method",
+      "type": "string"
+    },
+    "detection_value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Numeric detection signal (e.g. cosine distance). None for boolean detections.",
+      "title": "Detection Value"
+    },
+    "threshold": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Threshold the value crossed to trigger the violation. None for boolean detections.",
+      "title": "Threshold"
+    },
+    "suggested_fix": {
+      "default": "",
+      "description": "Human-readable fix sentence; the FE renders it in the continuity panel.",
+      "title": "Suggested Fix",
+      "type": "string"
+    },
+    "suggested_action": {
+      "default": "manual_edit",
+      "description": "Coarse action recommendation. Drives which button the FE highlights.",
+      "enum": [
+        "regen_panel",
+        "regen_with_ref",
+        "manual_edit",
+        "accept"
+      ],
+      "title": "Suggested Action",
+      "type": "string"
+    },
+    "evidence": {
+      "additionalProperties": true,
+      "description": "Rule-specific evidence (e.g. eyeline vectors, bbox set diffs). Opaque to lacing; consumed by the inspector.",
+      "title": "Evidence",
+      "type": "object"
+    }
+  },
+  "required": [
+    "rule",
+    "annotation_ids"
+  ],
+  "title": "ContinuityViolationBodyV1",
+  "type": "object"
+}

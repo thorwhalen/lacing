@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "description": "Body of a review-candidate annotation.",
+  "properties": {
+    "reason": {
+      "description": "Why this was flagged \u2014 a short machine token, not prose (``'low_confidence'``). A string rather than a Literal so a custom processor can flag for its own reasons without a schema rev; renderers treat unknown reasons generically.",
+      "title": "Reason",
+      "type": "string"
+    },
+    "source_id": {
+      "description": "Id of the annotation being flagged for review.",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_confidence": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The flagged annotation's confidence at flag time, when the reason is confidence-based. Recorded on the candidate because the source's confidence is mutable \u2014 the queue entry should say what the flagger saw.",
+      "title": "Source Confidence"
+    },
+    "source_tier": {
+      "default": "",
+      "description": "Tier of the flagged annotation, for queue grouping.",
+      "title": "Source Tier",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason",
+    "source_id"
+  ],
+  "title": "ReviewCandidateBodyV1",
+  "type": "object"
+}

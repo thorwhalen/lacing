@@ -1,4 +1,16 @@
 {
+  "annot://schema/character-voice/v1": {
+    "model": "lacing.bodies.character_voice.CharacterVoiceBodyV1",
+    "name": "character-voice",
+    "path": "character-voice/v1.json",
+    "version": "1"
+  },
+  "annot://schema/continuity-violation/v1": {
+    "model": "lacing.bodies.continuity_violation.ContinuityViolationBodyV1",
+    "name": "continuity-violation",
+    "path": "continuity-violation/v1.json",
+    "version": "1"
+  },
   "annot://schema/named-entity/v1": {
     "model": "lacing.bodies.named_entity.NamedEntityBodyV1",
     "name": "named-entity",
@@ -15,6 +27,18 @@
     "model": "lacing.bodies.reference_lock.ReferenceLockBodyV1",
     "name": "reference-lock",
     "path": "reference-lock/v1.json",
+    "version": "1"
+  },
+  "annot://schema/review-candidate/v1": {
+    "model": "lacing.bodies.review_candidate.ReviewCandidateBodyV1",
+    "name": "review-candidate",
+    "path": "review-candidate/v1.json",
+    "version": "1"
+  },
+  "annot://schema/review/v1": {
+    "model": "lacing.bodies.review.ReviewBodyV1",
+    "name": "review",
+    "path": "review/v1.json",
     "version": "1"
   },
   "annot://schema/word/v1": {

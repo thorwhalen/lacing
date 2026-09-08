@@ -162,11 +162,22 @@ def json_schema(uri: str) -> dict:
     return get_body_schema(uri).model_json_schema()
 
 
+class EmptySchemaRegistryError(RuntimeError):
+    """Raised when an export would write an empty registry over real artifacts.
+
+    Almost always means the caller forgot ``import lacing.bodies``: the
+    registry is populated by importing the body modules, so exporting without
+    that import silently truncates ``index.json`` to ``{}`` and leaves the
+    committed ``v<N>.json`` files orphaned.
+    """
+
+
 def export_json_schemas(
     target_dir: str | Path,
     *,
     overwrite: bool = True,
     include_meta: bool = True,
+    allow_empty: bool = False,
 ) -> list[Path]:
     """Write every registered schema as JSON files under ``target_dir``.
 
@@ -179,8 +190,24 @@ def export_json_schemas(
         include_meta: If True, also write a ``<target_dir>/index.json``
             mapping every URI to its file path and the Pydantic model's
             qualified name (helps the codegen pipeline).
+        allow_empty: If True, permit an export from an empty registry. The
+            default refuses, because the overwhelmingly likely cause is a
+            missing ``import lacing.bodies`` and the write would destroy the
+            committed artifacts.
+
+    Raises:
+        EmptySchemaRegistryError: Nothing is registered and ``allow_empty``
+            is False.
     """
     target = Path(target_dir)
+
+    if not registered_uris() and not allow_empty:
+        raise EmptySchemaRegistryError(
+            f"refusing to export an empty schema registry to {target}: "
+            "no body schema is registered. Did you forget `import lacing.bodies`? "
+            "Pass allow_empty=True if an empty export is really what you want."
+        )
+
     target.mkdir(parents=True, exist_ok=True)
 
     written: list[Path] = []

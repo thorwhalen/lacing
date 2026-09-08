@@ -33,6 +33,31 @@ class RationalTime:
 - **Wire format:** `{"v": int, "r": int}`. TS mirrors with `bigint`.
 - Use `fractions.Fraction` for arithmetic. `float` only at the *very* edge (display, third-party libs that demand it).
 - `to_seconds()` returns float **for display only.** Never round-trip through it.
+- **JSON Schema:** `RATIONAL_TIME_JSON_SCHEMA` / `TIME_INTERVAL_JSON_SCHEMA` in `lacing/time.py` are the exported wire shapes. `v` and `r` are `"integer"` — **never `"number"`** — and `r` carries `exclusiveMinimum: 0`.
+
+**Pydantic integration — both hooks, always.** A custom time type needs
+`__get_pydantic_core_schema__` *and* `__get_pydantic_json_schema__`. The core
+schema is a plain validator function, which Pydantic cannot describe on its
+own; without the JSON-Schema hook, `model_json_schema()` raises
+`PydanticInvalidForJsonSchema` for every model embedding the type, and
+non-negotiable 9 (Pydantic → JSON Schema → Zod) silently breaks (lacing#47).
+Wire-form validation raises `ValueError`, so a malformed payload surfaces as a
+Pydantic `ValidationError`, not a bare `TypeError` escaping the model boundary.
+
+**`from_wire` is strict.** Unknown keys are an error, not ignored. The JSON
+Schema says `additionalProperties: false` and lacing-ui's Zod mirror is
+`.strict()`; a lax `from_wire` would make Python the one end that accepts
+`{"v": 0, "r": 1, "seconds": 0.0}`, so a payload would round-trip through the
+backend and be rejected by the frontend. When you add a wire member, change all
+three: the constructor, the schema constant, and the TS mirror.
+
+**Test the two validators against each other, not just each on its own.** The
+schema constants are a second literal written beside the constructor's checks,
+not derived from them, so they can drift silently — relaxing `rate <= 0` to
+`rate < 0` leaves every shape assertion green. `TestValidatorAgreement` in
+`tests/test_time_json_schema.py` runs a probe matrix through `jsonschema` and
+through Pydantic and asserts the same verdict on each row. Add a row there
+whenever you add a constraint.
 
 **Banned patterns:**
 - `time_in_seconds: float` anywhere in the model, wire, or storage layer.
