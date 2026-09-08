@@ -258,7 +258,7 @@ def annotation_value_digest(annotation: "Annotation") -> str:
     ...         provenance=Provenance(
     ...             was_generated_by="agent:m@1",
     ...             was_attributed_to="thor",
-    ...             generated_at_time=RationalTime(0),
+    ...             generated_at_time=RationalTime.now(),
     ...         ),
     ...     )
     ...     base.update(kw)
@@ -314,7 +314,7 @@ def annotation_body_digest(annotation: "Annotation") -> str:
     ...         provenance=Provenance(
     ...             was_generated_by="agent:m@1",
     ...             was_attributed_to="thor",
-    ...             generated_at_time=RationalTime(0),
+    ...             generated_at_time=RationalTime.now(),
     ...         ),
     ...     )
 
@@ -342,7 +342,7 @@ def annotation_body_digest(annotation: "Annotation") -> str:
     ...         provenance=Provenance(
     ...             was_generated_by="agent:m@1",
     ...             was_attributed_to="thor",
-    ...             generated_at_time=RationalTime(0),
+    ...             generated_at_time=RationalTime.now(),
     ...         ),
     ...     )
     >>> early = make(TimeInterval(RationalTime(0), RationalTime(24000)))
