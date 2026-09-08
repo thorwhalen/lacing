@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.38 documentation</title>
+  <title>lacing &mdash; lacing 0.0.39 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=423071ad"></script>
+      <script src="../_static/documentation_options.js?v=e648f5b4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -89,6 +89,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.EmptySchemaRegistryError"><code class="docutils literal notranslate"><span class="pre">EmptySchemaRegistryError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.InMemoryOpLog"><code class="docutils literal notranslate"><span class="pre">InMemoryOpLog</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.IntervalAnnotationStore.add"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore.add()</span></code></a></li>
@@ -145,6 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#lacing.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.from_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.from_seconds()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.from_seconds_lossy"><code class="docutils literal notranslate"><span class="pre">RationalTime.from_seconds_lossy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.from_wire"><code class="docutils literal notranslate"><span class="pre">RationalTime.from_wire()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.now"><code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_rate"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_seconds()</span></code></a></li>
@@ -166,6 +168,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.TimeInterval"><code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.TimeInterval.duration"><code class="docutils literal notranslate"><span class="pre">TimeInterval.duration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.TimeInterval.from_wire"><code class="docutils literal notranslate"><span class="pre">TimeInterval.from_wire()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
@@ -723,6 +726,16 @@ is responsible for also recording that hash on <code class="docutils literal not
 <dd><p>Raised when a body fails validation against its registered schema.</p>
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.EmptySchemaRegistryError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">EmptySchemaRegistryError</span></span><a class="reference internal" href="../_modules/lacing/schema.html#EmptySchemaRegistryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.EmptySchemaRegistryError" title="Link to this definition"></a></dt>
+<dd><p>Raised when an export would write an empty registry over real artifacts.</p>
+<p>Almost always means the caller forgot <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">lacing.bodies</span></code>: the
+registry is populated by importing the body modules, so exporting without
+that import silently truncates <code class="docutils literal notranslate"><span class="pre">index.json</span></code> to <code class="docutils literal notranslate"><span class="pre">{}</span></code> and leaves the
+committed <code class="docutils literal notranslate"><span class="pre">v&lt;N&gt;.json</span></code> files orphaned.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="lacing.InMemoryOpLog">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">InMemoryOpLog</span></span><a class="reference internal" href="../_modules/lacing/oplog.html#InMemoryOpLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.InMemoryOpLog" title="Link to this definition"></a></dt>
@@ -1058,6 +1071,17 @@ when exactness matters and a lossy conversion should be an error.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.RationalTime.from_wire">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_wire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.from_wire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.from_wire" title="Link to this definition"></a></dt>
+<dd><p>Build from the wire form. Unknown keys are an error, not ignored.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RATIONAL_TIME_JSON_SCHEMA</span></code> sets <code class="docutils literal notranslate"><span class="pre">additionalProperties:</span> <span class="pre">false</span></code> and
+lacing-ui’s Zod mirror is <code class="docutils literal notranslate"><span class="pre">.strict()</span></code>; accepting extras here would
+make Python the one lax end of a contract both other ends enforce, so
+a <code class="docutils literal notranslate"><span class="pre">{&quot;v&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;r&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;seconds&quot;:</span> <span class="pre">0.0}</span></code> payload would round-trip through
+Python and then be rejected by the frontend.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.RationalTime.now">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.now" title="Link to this definition"></a></dt>
 <dd><p>Wall-clock time as a <a class="reference internal" href="#lacing.RationalTime" title="lacing.RationalTime"><code class="xref py py-class docutils literal notranslate"><span class="pre">RationalTime</span></code></a>, quantized to <code class="docutils literal notranslate"><span class="pre">rate</span></code>.</p>
@@ -1193,6 +1217,12 @@ Always <code class="docutils literal notranslate"><span class="pre">start</span>
 <dt class="sig sig-object py" id="lacing.TimeInterval.duration">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">duration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span><a class="headerlink" href="#lacing.TimeInterval.duration" title="Link to this definition"></a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">-</span> <span class="pre">start</span></code> at the same rate as <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.TimeInterval.from_wire">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_wire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.TimeInterval" title="lacing.time.TimeInterval"><span class="pre">TimeInterval</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#TimeInterval.from_wire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.TimeInterval.from_wire" title="Link to this definition"></a></dt>
+<dd><p>Build from the wire form. See <a class="reference internal" href="#lacing.RationalTime.from_wire" title="lacing.RationalTime.from_wire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">RationalTime.from_wire()</span></code></a> on extras.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1368,7 +1398,7 @@ and expected agreement are 1.0; we return 1.0 by convention.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lacing.export_json_schemas">
-<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">export_json_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#export_json_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.export_json_schemas" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">export_json_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/lacing/schema.html#export_json_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.export_json_schemas" title="Link to this definition"></a></dt>
 <dd><p>Write every registered schema as JSON files under <code class="docutils literal notranslate"><span class="pre">target_dir</span></code>.</p>
 <p>Layout: <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/&lt;name&gt;/v&lt;N&gt;.json</span></code>. Returns the list of paths
 written, in registration order.</p>
@@ -1380,7 +1410,15 @@ written, in registration order.</p>
 <li><p><strong>include_meta</strong> – If True, also write a <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/index.json</span></code>
 mapping every URI to its file path and the Pydantic model’s
 qualified name (helps the codegen pipeline).</p></li>
+<li><p><strong>allow_empty</strong> – If True, permit an export from an empty registry. The
+default refuses, because the overwhelmingly likely cause is a
+missing <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">lacing.bodies</span></code> and the write would destroy the
+committed artifacts.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#lacing.EmptySchemaRegistryError" title="lacing.EmptySchemaRegistryError"><strong>EmptySchemaRegistryError</strong></a> – Nothing is registered and <code class="docutils literal notranslate"><span class="pre">allow_empty</span></code>
+    is False.</p>
 </dd>
 </dl>
 </dd></dl>

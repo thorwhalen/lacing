@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.schema &mdash; lacing 0.0.38 documentation</title>
+  <title>lacing.schema &mdash; lacing 0.0.39 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=423071ad"></script>
+      <script src="../../_static/documentation_options.js?v=e648f5b4"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="quality.html">lacing.quality</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">lacing.schema</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.schema.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.schema.EmptySchemaRegistryError"><code class="docutils literal notranslate"><span class="pre">EmptySchemaRegistryError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.schema.MigrationError"><code class="docutils literal notranslate"><span class="pre">MigrationError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.schema.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.schema.clear_registry"><code class="docutils literal notranslate"><span class="pre">clear_registry()</span></code></a></li>
@@ -195,6 +196,16 @@ registered migrations.</p></li>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="lacing.schema.EmptySchemaRegistryError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.schema.</span></span><span class="sig-name descname"><span class="pre">EmptySchemaRegistryError</span></span><a class="reference internal" href="../../_modules/lacing/schema.html#EmptySchemaRegistryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.schema.EmptySchemaRegistryError" title="Link to this definition"></a></dt>
+<dd><p>Raised when an export would write an empty registry over real artifacts.</p>
+<p>Almost always means the caller forgot <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">lacing.bodies</span></code>: the
+registry is populated by importing the body modules, so exporting without
+that import silently truncates <code class="docutils literal notranslate"><span class="pre">index.json</span></code> to <code class="docutils literal notranslate"><span class="pre">{}</span></code> and leaves the
+committed <code class="docutils literal notranslate"><span class="pre">v&lt;N&gt;.json</span></code> files orphaned.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="lacing.schema.MigrationError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.schema.</span></span><span class="sig-name descname"><span class="pre">MigrationError</span></span><a class="reference internal" href="../../_modules/lacing/schema.html#MigrationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.schema.MigrationError" title="Link to this definition"></a></dt>
 <dd><p>Raised when a migration step is missing or fails.</p>
@@ -214,7 +225,7 @@ registered migrations.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lacing.schema.export_json_schemas">
-<span class="sig-prename descclassname"><span class="pre">lacing.schema.</span></span><span class="sig-name descname"><span class="pre">export_json_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/schema.html#export_json_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.schema.export_json_schemas" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">lacing.schema.</span></span><span class="sig-name descname"><span class="pre">export_json_schemas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/lacing/schema.html#export_json_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.schema.export_json_schemas" title="Link to this definition"></a></dt>
 <dd><p>Write every registered schema as JSON files under <code class="docutils literal notranslate"><span class="pre">target_dir</span></code>.</p>
 <p>Layout: <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/&lt;name&gt;/v&lt;N&gt;.json</span></code>. Returns the list of paths
 written, in registration order.</p>
@@ -226,7 +237,15 @@ written, in registration order.</p>
 <li><p><strong>include_meta</strong> – If True, also write a <code class="docutils literal notranslate"><span class="pre">&lt;target_dir&gt;/index.json</span></code>
 mapping every URI to its file path and the Pydantic model’s
 qualified name (helps the codegen pipeline).</p></li>
+<li><p><strong>allow_empty</strong> – If True, permit an export from an empty registry. The
+default refuses, because the overwhelmingly likely cause is a
+missing <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">lacing.bodies</span></code> and the write would destroy the
+committed artifacts.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#lacing.schema.EmptySchemaRegistryError" title="lacing.schema.EmptySchemaRegistryError"><strong>EmptySchemaRegistryError</strong></a> – Nothing is registered and <code class="docutils literal notranslate"><span class="pre">allow_empty</span></code>
+    is False.</p>
 </dd>
 </dl>
 </dd></dl>

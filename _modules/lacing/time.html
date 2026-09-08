@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.time &mdash; lacing 0.0.38 documentation</title>
+  <title>lacing.time &mdash; lacing 0.0.39 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=423071ad"></script>
+      <script src="../../_static/documentation_options.js?v=e648f5b4"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -139,17 +139,61 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetCoreSchemaHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetCoreSchemaHandler</span><span class="p">,</span> <span class="n">GetJsonSchemaHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSchemaValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreSchema</span><span class="p">,</span> <span class="n">core_schema</span>
 
 
 <span class="n">DEFAULT_RATE</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24000</span>
 <span class="sd">"""Default rate (ticks/second). LCM 1008000 covers all common video rates exactly."""</span>
+
+
+<span class="n">RATIONAL_TIME_JSON_SCHEMA</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"RationalTime"</span><span class="p">,</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"A point in time as v/r seconds. Both members are integers — never a "</span>
+        <span class="s2">"float, never a JSON number with a fractional part."</span>
+    <span class="p">),</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"v"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Tick count (may be negative)."</span><span class="p">},</span>
+        <span class="s2">"r"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"exclusiveMinimum"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Rate in ticks per second. Strictly positive."</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"v"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">],</span>
+    <span class="s2">"additionalProperties"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">"""JSON Schema for the ``RationalTime`` wire shape ``{"v": int, "r": int}``.</span>
+
+<span class="sd">Non-negotiable 1 lives here as much as in the constructor: ``integer``, not</span>
+<span class="sd">``number``. A JSON Schema validator must reject ``{"v": 0.5, "r": 48000}``.</span>
+<span class="sd">"""</span>
+
+<span class="n">TIME_INTERVAL_JSON_SCHEMA</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"TimeInterval"</span><span class="p">,</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"A half-open interval [start, end). start == end is a point."</span><span class="p">,</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"start"</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">RATIONAL_TIME_JSON_SCHEMA</span><span class="p">),</span>
+        <span class="s2">"end"</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">RATIONAL_TIME_JSON_SCHEMA</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">],</span>
+    <span class="s2">"additionalProperties"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">"""JSON Schema for the ``TimeInterval`` wire shape ``{"start": ..., "end": ...}``.</span>
+
+<span class="sd">``start &lt;= end`` is a constructor invariant that JSON Schema cannot express;</span>
+<span class="sd">Pydantic validation still enforces it.</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="LossyTimeConversionError">
@@ -405,9 +449,26 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">to_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">"v"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rate</span><span class="p">}</span>
 
+<div class="viewcode-block" id="RationalTime.from_wire">
+<a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.RationalTime.from_wire">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_wire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"RationalTime"</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"v"</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">"r"</span><span class="p">])</span>
+<span class="w">        </span><span class="sd">"""Build from the wire form. Unknown keys are an error, not ignored.</span>
+
+<span class="sd">        ``RATIONAL_TIME_JSON_SCHEMA`` sets ``additionalProperties: false`` and</span>
+<span class="sd">        lacing-ui's Zod mirror is ``.strict()``; accepting extras here would</span>
+<span class="sd">        make Python the one lax end of a contract both other ends enforce, so</span>
+<span class="sd">        a ``{"v": 0, "r": 1, "seconds": 0.0}`` payload would round-trip through</span>
+<span class="sd">        Python and then be rejected by the frontend.</span>
+<span class="sd">        """</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"v"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">}</span> <span class="o">-</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"missing wire key(s): </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"v"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected wire key(s): </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"v"</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">"r"</span><span class="p">])</span></div>
+
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">__get_pydantic_core_schema__</span><span class="p">(</span>
@@ -417,15 +478,33 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RationalTime</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">value</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot build RationalTime from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="c1"># ValueError, so Pydantic reports a ValidationError rather than</span>
+                <span class="c1"># letting a TypeError escape the model boundary uncaught.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"invalid RationalTime wire form: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot build RationalTime from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">core_schema</span><span class="o">.</span><span class="n">no_info_plain_validator_function</span><span class="p">(</span>
             <span class="n">_validate</span><span class="p">,</span>
             <span class="n">serialization</span><span class="o">=</span><span class="n">core_schema</span><span class="o">.</span><span class="n">plain_serializer_function_ser_schema</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_wire</span><span class="p">(),</span> <span class="n">when_used</span><span class="o">=</span><span class="s2">"always"</span>
             <span class="p">),</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_pydantic_json_schema__</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">CoreSchema</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">GetJsonSchemaHandler</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonSchemaValue</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The wire shape, so every model embedding a time gets a JSON Schema.</span>
+
+<span class="sd">        The core schema is a plain validator function, which Pydantic cannot</span>
+<span class="sd">        describe on its own; without this hook ``model_json_schema()`` raises</span>
+<span class="sd">        ``PydanticInvalidForJsonSchema`` for ``Provenance``, ``Annotation``</span>
+<span class="sd">        and friends, breaking the Pydantic → JSON Schema → Zod pipeline.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">RATIONAL_TIME_JSON_SCHEMA</span><span class="p">)</span></div>
 
 
 
@@ -489,12 +568,22 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">to_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">"start"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="o">.</span><span class="n">to_wire</span><span class="p">(),</span> <span class="s2">"end"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end</span><span class="o">.</span><span class="n">to_wire</span><span class="p">()}</span>
 
+<div class="viewcode-block" id="TimeInterval.from_wire">
+<a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.TimeInterval.from_wire">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_wire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"TimeInterval"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Build from the wire form. See :meth:`RationalTime.from_wire` on extras."""</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">}</span> <span class="o">-</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"missing wire key(s): </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"start"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected wire key(s): </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"start"</span><span class="p">]),</span>
             <span class="n">RationalTime</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"end"</span><span class="p">]),</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TimeInterval</span><span class="p">):</span>
@@ -515,15 +604,30 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">TimeInterval</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">value</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot build TimeInterval from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="c1"># See RationalTime's validator: ValueError, not TypeError.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_wire</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"invalid TimeInterval wire form: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot build TimeInterval from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">core_schema</span><span class="o">.</span><span class="n">no_info_plain_validator_function</span><span class="p">(</span>
             <span class="n">_validate</span><span class="p">,</span>
             <span class="n">serialization</span><span class="o">=</span><span class="n">core_schema</span><span class="o">.</span><span class="n">plain_serializer_function_ser_schema</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_wire</span><span class="p">(),</span> <span class="n">when_used</span><span class="o">=</span><span class="s2">"always"</span>
             <span class="p">),</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__get_pydantic_json_schema__</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">CoreSchema</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">GetJsonSchemaHandler</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonSchemaValue</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The wire shape ``{"start": RationalTime, "end": RationalTime}``.</span>
+
+<span class="sd">        See :meth:`RationalTime.__get_pydantic_json_schema__` for why the</span>
+<span class="sd">        hook is needed at all.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">TIME_INTERVAL_JSON_SCHEMA</span><span class="p">)</span></div>
 
 </pre></div>
 
