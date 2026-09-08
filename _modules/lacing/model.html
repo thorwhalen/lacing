@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.37 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=aa2ad26f"></script>
+      <script src="../../_static/documentation_options.js?v=423071ad"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -252,6 +252,26 @@
 
 
 
+<span class="n">UNKNOWN_GENERATED_AT</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">=</span> <span class="n">RationalTime</span><span class="o">.</span><span class="n">zero</span><span class="p">()</span>
+<span class="sd">"""The ``generated_at_time`` an annotation carries when its generation time is</span>
+<span class="sd">**unknown** — tick 0, at any rate.</span>
+
+<span class="sd">This is a sentinel, never a timestamp. ``RationalTime`` is wall-clock time</span>
+<span class="sd">in the provenance role (``RationalTime.now()``), and tick 0 is *not* "the</span>
+<span class="sd">epoch, 1970-01-01": no annotation was generated then. It is what a writer</span>
+<span class="sd">stamps when it has nothing better (the REST path did so until lacing#35),</span>
+<span class="sd">and what every row written that way still carries, since lacing does no</span>
+<span class="sd">backfill (lacing#44). ``RationalTime(0, r) == RationalTime(0, s)`` for any</span>
+<span class="sd">rates, so comparing against this constant is rate-independent.</span>
+
+<span class="sd">Consumers must read it as *unknown*, and unknown resolves the safe way:</span>
+<span class="sd">an annotation whose own generation time — or whose upstream parent's — is</span>
+<span class="sd">unknown is **unverifiable**, hence stale, never "the oldest thing in the</span>
+<span class="sd">project". Test with :attr:`Provenance.generated_at_is_known`; never order</span>
+<span class="sd">a tick-0 annotation against a real timestamp.</span>
+<span class="sd">"""</span>
+
+
 <div class="viewcode-block" id="Provenance">
 <a class="viewcode-back" href="../../module_docs/lacing/model.html#lacing.Provenance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Provenance</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -277,12 +297,35 @@
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">generated_at_time</span><span class="p">:</span> <span class="n">RationalTime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"When the annotation was generated."</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"When the annotation was generated, as wall-clock rational time "</span>
+            <span class="s2">"(``RationalTime.now()``). Tick 0 means UNKNOWN, never the epoch; "</span>
+            <span class="s2">"see ``UNKNOWN_GENERATED_AT`` and ``generated_at_is_known``."</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">activity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">"create"</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">"One of: ``create``, ``import``, ``derive``, ``migrate``, ``infer``."</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generated_at_is_known</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""``False`` when ``generated_at_time`` is the :data:`UNKNOWN_GENERATED_AT` sentinel.</span>
+
+<span class="sd">        The one test every freshness or ordering consumer should make before</span>
+<span class="sd">        comparing ``generated_at_time`` values: an unknown time cannot be</span>
+<span class="sd">        ordered against a known one, and a consumer that compares anyway</span>
+<span class="sd">        reads the row as older than everything (lacing#44).</span>
+
+<span class="sd">        &gt;&gt;&gt; from lacing.time import RationalTime</span>
+<span class="sd">        &gt;&gt;&gt; kw = dict(was_generated_by="user:x", was_attributed_to="x")</span>
+<span class="sd">        &gt;&gt;&gt; Provenance(generated_at_time=RationalTime(0, 1000), **kw).generated_at_is_known</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Provenance(generated_at_time=RationalTime.now(), **kw).generated_at_is_known</span>
+<span class="sd">        True</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generated_at_time</span> <span class="o">!=</span> <span class="n">UNKNOWN_GENERATED_AT</span></div>
 
 
 

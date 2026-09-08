@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.model &mdash; lacing 0.0.37 documentation</title>
+  <title>lacing.model &mdash; lacing 0.0.38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=aa2ad26f"></script>
+      <script src="../../_static/documentation_options.js?v=423071ad"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -93,11 +93,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.model.Provenance.generated_at_is_known"><code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_is_known</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.model.Provenance.model_config"><code class="docutils literal notranslate"><span class="pre">Provenance.model_config</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.ProvenanceRef"><code class="docutils literal notranslate"><span class="pre">ProvenanceRef</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.Reference"><code class="docutils literal notranslate"><span class="pre">Reference</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lacing.model.UNKNOWN_GENERATED_AT"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_GENERATED_AT</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.model.partition_provenance_refs"><code class="docutils literal notranslate"><span class="pre">partition_provenance_refs()</span></code></a></li>
 </ul>
 </li>
@@ -238,6 +240,24 @@ design. Format-disjoint from a UUID string (36 hyphenated chars), so the
 <dt class="sig sig-object py" id="lacing.model.Provenance">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list[~uuid.UUID</span> <span class="pre">|</span> <span class="pre">~typing.Annotated[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FieldInfo(annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NoneType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[MinLen(min_length=64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MaxLen(max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_PydanticGeneralMetadata(pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^[0-9a-f]{64}$')])]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.model.Provenance" title="Link to this definition"></a></dt>
 <dd><p>W3C PROV-O subset, embedded inline on every annotation.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="lacing.model.Provenance.generated_at_is_known">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">generated_at_is_known</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#lacing.model.Provenance.generated_at_is_known" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">False</span></code> when <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> is the <a class="reference internal" href="#lacing.model.UNKNOWN_GENERATED_AT" title="lacing.model.UNKNOWN_GENERATED_AT"><code class="xref py py-data docutils literal notranslate"><span class="pre">UNKNOWN_GENERATED_AT</span></code></a> sentinel.</p>
+<p>The one test every freshness or ordering consumer should make before
+comparing <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> values: an unknown time cannot be
+ordered against a known one, and a consumer that compares anyway
+reads the row as older than everything (lacing#44).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"user:x"</span><span class="p">,</span> <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Provenance</span><span class="p">(</span><span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">generated_at_is_known</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Provenance</span><span class="p">(</span><span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">generated_at_is_known</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.model.Provenance.model_config">
 <span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.model.Provenance.model_config" title="Link to this definition"></a></dt>
@@ -270,6 +290,25 @@ list stays the simple edge walk.</p>
 <span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">Reference</span></span><a class="headerlink" href="#lacing.model.Reference" title="Link to this definition"></a></dt>
 <dd><p>Discriminated union on <code class="docutils literal notranslate"><span class="pre">kind</span></code>.</p>
 <p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Annotated</span></code>[<a class="reference internal" href="#lacing.model.MediaRef" title="lacing.model.MediaRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">MediaRef</span></code></a> | <a class="reference internal" href="#lacing.model.NodeRef" title="lacing.model.NodeRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeRef</span></code></a> | <a class="reference internal" href="#lacing.model.AnnotationRef" title="lacing.model.AnnotationRef"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotationRef</span></code></a>, FieldInfo(annotation=NoneType, required=True, discriminator=’kind’)]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.model.UNKNOWN_GENERATED_AT">
+<span class="sig-prename descclassname"><span class="pre">lacing.model.</span></span><span class="sig-name descname"><span class="pre">UNKNOWN_GENERATED_AT</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">RationalTime(0,</span> <span class="pre">24000)</span></span><a class="headerlink" href="#lacing.model.UNKNOWN_GENERATED_AT" title="Link to this definition"></a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> an annotation carries when its generation time is
+<strong>unknown</strong> — tick 0, at any rate.</p>
+<p>This is a sentinel, never a timestamp. <code class="docutils literal notranslate"><span class="pre">RationalTime</span></code> is wall-clock time
+in the provenance role (<code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code>), and tick 0 is <em>not</em> “the
+epoch, 1970-01-01”: no annotation was generated then. It is what a writer
+stamps when it has nothing better (the REST path did so until lacing#35),
+and what every row written that way still carries, since lacing does no
+backfill (lacing#44). <code class="docutils literal notranslate"><span class="pre">RationalTime(0,</span> <span class="pre">r)</span> <span class="pre">==</span> <span class="pre">RationalTime(0,</span> <span class="pre">s)</span></code> for any
+rates, so comparing against this constant is rate-independent.</p>
+<p>Consumers must read it as <em>unknown</em>, and unknown resolves the safe way:
+an annotation whose own generation time — or whose upstream parent’s — is
+unknown is <strong>unverifiable</strong>, hence stale, never “the oldest thing in the
+project”. Test with <a class="reference internal" href="#lacing.model.Provenance.generated_at_is_known" title="lacing.model.Provenance.generated_at_is_known"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Provenance.generated_at_is_known</span></code></a>; never order
+a tick-0 annotation against a real timestamp.</p>
 </dd></dl>
 
 <dl class="py function">

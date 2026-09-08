@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing &mdash; lacing 0.0.37 documentation</title>
+  <title>lacing &mdash; lacing 0.0.38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=aa2ad26f"></script>
+      <script src="../_static/documentation_options.js?v=423071ad"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -138,6 +138,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.Provenance.generated_at_is_known"><code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_is_known</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.Provenance.model_config"><code class="docutils literal notranslate"><span class="pre">Provenance.model_config</span></code></a></li>
 </ul>
 </li>
@@ -147,6 +148,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.now"><code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_rate"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.to_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_seconds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.RationalTime.zero"><code class="docutils literal notranslate"><span class="pre">RationalTime.zero()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
@@ -984,6 +986,24 @@ clock value across the lifetime of the log.</p>
 <dt class="sig sig-object py" id="lacing.Provenance">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.</span></span><span class="sig-name descname"><span class="pre">Provenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list[~uuid.UUID</span> <span class="pre">|</span> <span class="pre">~typing.Annotated[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FieldInfo(annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NoneType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[MinLen(min_length=64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MaxLen(max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_PydanticGeneralMetadata(pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^[0-9a-f]{64}$')])]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'create'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/model.html#Provenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.Provenance" title="Link to this definition"></a></dt>
 <dd><p>W3C PROV-O subset, embedded inline on every annotation.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="lacing.Provenance.generated_at_is_known">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">generated_at_is_known</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#lacing.Provenance.generated_at_is_known" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">False</span></code> when <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> is the <code class="xref py py-data docutils literal notranslate"><span class="pre">UNKNOWN_GENERATED_AT</span></code> sentinel.</p>
+<p>The one test every freshness or ordering consumer should make before
+comparing <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> values: an unknown time cannot be
+ordered against a known one, and a consumer that compares anyway
+reads the row as older than everything (lacing#44).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"user:x"</span><span class="p">,</span> <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Provenance</span><span class="p">(</span><span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">generated_at_is_known</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Provenance</span><span class="p">(</span><span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">generated_at_is_known</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lacing.Provenance.model_config">
 <span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.Provenance.model_config" title="Link to this definition"></a></dt>
@@ -1044,7 +1064,9 @@ when exactness matters and a lossy conversion should be an error.</p>
 <p>Uses <code class="docutils literal notranslate"><span class="pre">time.time_ns()</span></code> and builds the value directly, sidestepping
 the float-quantization landmine of <code class="docutils literal notranslate"><span class="pre">from_seconds(float)</span></code>. Every
 producer of an annotation or artifact needs this for
-<code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code> — the only value that field reads
+as a <em>known</em> time. Tick 0 there is the UNKNOWN sentinel
+(<code class="docutils literal notranslate"><span class="pre">lacing.model.UNKNOWN_GENERATED_AT</span></code>), never the epoch.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1057,6 +1079,15 @@ producer of an annotation or artifact needs this for
 <dt class="sig sig-object py" id="lacing.RationalTime.to_seconds">
 <span class="sig-name descname"><span class="pre">to_seconds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.to_seconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.to_seconds" title="Link to this definition"></a></dt>
 <dd><p>Float seconds — for display only. Never round-trip through this.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.RationalTime.zero">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lacing/time.html#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../_modules/lacing/time.html#RationalTime.zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.RationalTime.zero" title="Link to this definition"></a></dt>
+<dd><p>Tick 0 at <code class="docutils literal notranslate"><span class="pre">rate</span></code> — the start of a media timeline.</p>
+<p>Not a wall-clock timestamp: as a <code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code> it
+is the UNKNOWN sentinel (<code class="docutils literal notranslate"><span class="pre">lacing.model.UNKNOWN_GENERATED_AT</span></code>), not
+the epoch. Producers stamp <a class="reference internal" href="#lacing.RationalTime.now" title="lacing.RationalTime.now"><code class="xref py py-meth docutils literal notranslate"><span class="pre">now()</span></code></a> there.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1200,7 +1231,7 @@ annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.ann
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
 <span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
 </pre></div>
@@ -1229,7 +1260,7 @@ annotation <em>says</em>; prefer <a class="reference internal" href="#lacing.ann
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
 <span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">early</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">24000</span><span class="p">)))</span>
@@ -1268,7 +1299,7 @@ jobs, and neither substitutes for the other.</p>
 <span class="gp">... </span>        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
 <span class="gp">... </span>            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"agent:m@1"</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
 <span class="gp">... </span>        <span class="p">),</span>
 <span class="gp">... </span>    <span class="p">)</span>
 <span class="gp">... </span>    <span class="n">base</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>

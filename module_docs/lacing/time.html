@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.time &mdash; lacing 0.0.37 documentation</title>
+  <title>lacing.time &mdash; lacing 0.0.38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=aa2ad26f"></script>
+      <script src="../../_static/documentation_options.js?v=423071ad"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#lacing.time.RationalTime.now"><code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.time.RationalTime.to_rate"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lacing.time.RationalTime.to_seconds"><code class="docutils literal notranslate"><span class="pre">RationalTime.to_seconds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lacing.time.RationalTime.zero"><code class="docutils literal notranslate"><span class="pre">RationalTime.zero()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lacing.time.TimeInterval"><code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code></a><ul>
@@ -217,7 +218,9 @@ when exactness matters and a lossy conversion should be an error.</p>
 <p>Uses <code class="docutils literal notranslate"><span class="pre">time.time_ns()</span></code> and builds the value directly, sidestepping
 the float-quantization landmine of <code class="docutils literal notranslate"><span class="pre">from_seconds(float)</span></code>. Every
 producer of an annotation or artifact needs this for
-<code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code> — the only value that field reads
+as a <em>known</em> time. Tick 0 there is the UNKNOWN sentinel
+(<code class="docutils literal notranslate"><span class="pre">lacing.model.UNKNOWN_GENERATED_AT</span></code>), never the epoch.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -230,6 +233,15 @@ producer of an annotation or artifact needs this for
 <dt class="sig sig-object py" id="lacing.time.RationalTime.to_seconds">
 <span class="sig-name descname"><span class="pre">to_seconds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/lacing/time.html#RationalTime.to_seconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.time.RationalTime.to_seconds" title="Link to this definition"></a></dt>
 <dd><p>Float seconds — for display only. Never round-trip through this.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.time.RationalTime.zero">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lacing.time.RationalTime" title="lacing.time.RationalTime"><span class="pre">RationalTime</span></a></span></span><a class="reference internal" href="../../_modules/lacing/time.html#RationalTime.zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.time.RationalTime.zero" title="Link to this definition"></a></dt>
+<dd><p>Tick 0 at <code class="docutils literal notranslate"><span class="pre">rate</span></code> — the start of a media timeline.</p>
+<p>Not a wall-clock timestamp: as a <code class="docutils literal notranslate"><span class="pre">Provenance.generated_at_time</span></code> it
+is the UNKNOWN sentinel (<code class="docutils literal notranslate"><span class="pre">lacing.model.UNKNOWN_GENERATED_AT</span></code>), not
+the epoch. Producers stamp <a class="reference internal" href="#lacing.time.RationalTime.now" title="lacing.time.RationalTime.now"><code class="xref py py-meth docutils literal notranslate"><span class="pre">now()</span></code></a> there.</p>
 </dd></dl>
 
 </dd></dl>

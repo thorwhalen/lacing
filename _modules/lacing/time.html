@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lacing.time &mdash; lacing 0.0.37 documentation</title>
+  <title>lacing.time &mdash; lacing 0.0.38 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=aa2ad26f"></script>
+      <script src="../../_static/documentation_options.js?v=423071ad"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -284,9 +284,18 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_fraction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">Fraction</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"RationalTime"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">)</span>
 
+<div class="viewcode-block" id="RationalTime.zero">
+<a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.RationalTime.zero">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">zero</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_RATE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"RationalTime"</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Tick 0 at ``rate`` — the start of a media timeline.</span>
+
+<span class="sd">        Not a wall-clock timestamp: as a ``Provenance.generated_at_time`` it</span>
+<span class="sd">        is the UNKNOWN sentinel (``lacing.model.UNKNOWN_GENERATED_AT``), not</span>
+<span class="sd">        the epoch. Producers stamp :meth:`now` there.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="RationalTime.now">
 <a class="viewcode-back" href="../../module_docs/lacing/time.html#lacing.RationalTime.now">[docs]</a>
@@ -297,7 +306,9 @@
 <span class="sd">        Uses ``time.time_ns()`` and builds the value directly, sidestepping</span>
 <span class="sd">        the float-quantization landmine of ``from_seconds(float)``. Every</span>
 <span class="sd">        producer of an annotation or artifact needs this for</span>
-<span class="sd">        ``Provenance.generated_at_time``.</span>
+<span class="sd">        ``Provenance.generated_at_time`` — the only value that field reads</span>
+<span class="sd">        as a *known* time. Tick 0 there is the UNKNOWN sentinel</span>
+<span class="sd">        (``lacing.model.UNKNOWN_GENERATED_AT``), never the epoch.</span>
 <span class="sd">        """</span>
         <span class="n">ns</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time_ns</span><span class="p">()</span>
         <span class="c1"># Round to nearest sample: add half the divisor before integer division.</span>
