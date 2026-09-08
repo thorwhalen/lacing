@@ -122,7 +122,21 @@ Snap targets (playhead, in/out points, clip edges, markers, grid) are all
 `RationalTime`. Snapping logic stays in `Fraction` arithmetic. **Never**
 snap by rounding floats.
 
+## Rule 8 — Wall-clock time: tick 0 means UNKNOWN, never the epoch
+
+`Provenance.generated_at_time` is the one `RationalTime` that is wall-clock,
+not media time. Producers stamp `RationalTime.now()`. Tick 0 there is the
+`lacing.UNKNOWN_GENERATED_AT` sentinel (rate-independent: `RationalTime(0, r)`
+equals `RationalTime(0, s)`), not 1970-01-01. Rows written before lacing#35
+still carry it; lacing does no backfill (lacing#44).
+
+- Check `Provenance.generated_at_is_known` before ordering or comparing.
+- Unknown resolves the safe way: **unverifiable, hence stale** — never "oldest".
+- `RationalTime.zero()` is a media-timeline origin; never stamp it as a timestamp.
+
 ## Quick checklist before commit
+
+- [ ] `generated_at_time` producers use `RationalTime.now()`; consumers gate comparisons on `generated_at_is_known`.
 
 - [ ] No `float` in any signature/field except display layers and external library bridges.
 - [ ] Every `TimeInterval` is half-open; point intervals (`start == end`) handled.

@@ -257,9 +257,7 @@ class TestProvenanceRefUnion:
 
         assert again.was_derived_from == prov.was_derived_from
 
-    @pytest.mark.parametrize(
-        "bad", ["not-a-ref", "A" * 64, "c" * 63, "c" * 65, ""]
-    )
+    @pytest.mark.parametrize("bad", ["not-a-ref", "A" * 64, "c" * 63, "c" * 65, ""])
     def test_anything_else_is_refused(self, bad):
         with pytest.raises(ValidationError):
             self._prov([bad])
@@ -272,9 +270,66 @@ class TestProvenanceRefUnion:
         u1, u2, h = uuid4(), uuid4(), "d" * 64
         prov = self._prov([str(u1), h, str(u2)])
 
-        annotation_ids, asset_ids = partition_provenance_refs(
-            prov.was_derived_from
-        )
+        annotation_ids, asset_ids = partition_provenance_refs(prov.was_derived_from)
 
         assert annotation_ids == [u1, u2]
         assert asset_ids == [h]
+
+
+class TestUnknownGeneratedAt:
+    """Tick 0 in ``generated_at_time`` is the UNKNOWN sentinel, never the epoch (lacing#44)."""
+
+    def test_sentinel_is_tick_zero_at_any_rate(self):
+        from lacing import UNKNOWN_GENERATED_AT
+
+        assert UNKNOWN_GENERATED_AT == RationalTime(0)
+        assert UNKNOWN_GENERATED_AT == RationalTime(0, 1000)
+        assert UNKNOWN_GENERATED_AT == RationalTime.zero(48000)
+        assert UNKNOWN_GENERATED_AT != RationalTime(1, 1_000_000_000)
+
+    @pytest.mark.parametrize("rate", [1, 1000, 24000, 48000])
+    def test_tick_zero_is_unknown_regardless_of_rate(self, rate):
+        prov = Provenance(
+            was_generated_by="server:lacing",
+            was_attributed_to="anonymous",
+            generated_at_time=RationalTime(0, rate),
+        )
+        assert prov.generated_at_is_known is False
+
+    def test_now_is_known(self):
+        prov = Provenance(
+            was_generated_by="server:lacing",
+            was_attributed_to="anonymous",
+            generated_at_time=RationalTime.now(),
+        )
+        assert prov.generated_at_is_known is True
+
+    def test_smallest_nonzero_tick_is_known(self):
+        prov = Provenance(
+            was_generated_by="user:thor",
+            was_attributed_to="thor",
+            generated_at_time=RationalTime(1, 1_000_000_000),
+        )
+        assert prov.generated_at_is_known is True
+
+    def test_unknown_survives_the_wire_round_trip(self):
+        prov = Provenance(
+            was_generated_by="server:lacing",
+            was_attributed_to="anonymous",
+            generated_at_time=RationalTime(0, 1000),
+        )
+        back = Provenance.model_validate(prov.model_dump(mode="json"))
+        assert back.generated_at_is_known is False
+        assert back.generated_at_time.rate == 1000
+
+    def test_tick_zero_is_still_accepted_by_validation(self):
+        """Existing rows carry it; the model must keep reading them (no migration)."""
+        ann = Annotation(
+            id=uuid4(),
+            tier="words",
+            reference=_media_ref(),
+            body={"text": "hi"},
+            body_schema_uri="annot://schema/word/v1",
+            provenance=_provenance(),
+        )
+        assert ann.provenance.generated_at_is_known is False

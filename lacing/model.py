@@ -111,6 +111,26 @@ def partition_provenance_refs(
     return annotation_ids, asset_ids
 
 
+UNKNOWN_GENERATED_AT: RationalTime = RationalTime.zero()
+"""The ``generated_at_time`` an annotation carries when its generation time is
+**unknown** — tick 0, at any rate.
+
+This is a sentinel, never a timestamp. ``RationalTime`` is wall-clock time
+in the provenance role (``RationalTime.now()``), and tick 0 is *not* "the
+epoch, 1970-01-01": no annotation was generated then. It is what a writer
+stamps when it has nothing better (the REST path did so until lacing#35),
+and what every row written that way still carries, since lacing does no
+backfill (lacing#44). ``RationalTime(0, r) == RationalTime(0, s)`` for any
+rates, so comparing against this constant is rate-independent.
+
+Consumers must read it as *unknown*, and unknown resolves the safe way:
+an annotation whose own generation time — or whose upstream parent's — is
+unknown is **unverifiable**, hence stale, never "the oldest thing in the
+project". Test with :attr:`Provenance.generated_at_is_known`; never order
+a tick-0 annotation against a real timestamp.
+"""
+
+
 class Provenance(BaseModel):
     """W3C PROV-O subset, embedded inline on every annotation."""
 
@@ -134,12 +154,35 @@ class Provenance(BaseModel):
         ),
     )
     generated_at_time: RationalTime = Field(
-        ..., description="When the annotation was generated."
+        ...,
+        description=(
+            "When the annotation was generated, as wall-clock rational time "
+            "(``RationalTime.now()``). Tick 0 means UNKNOWN, never the epoch; "
+            "see ``UNKNOWN_GENERATED_AT`` and ``generated_at_is_known``."
+        ),
     )
     activity: str = Field(
         "create",
         description="One of: ``create``, ``import``, ``derive``, ``migrate``, ``infer``.",
     )
+
+    @property
+    def generated_at_is_known(self) -> bool:
+        """``False`` when ``generated_at_time`` is the :data:`UNKNOWN_GENERATED_AT` sentinel.
+
+        The one test every freshness or ordering consumer should make before
+        comparing ``generated_at_time`` values: an unknown time cannot be
+        ordered against a known one, and a consumer that compares anyway
+        reads the row as older than everything (lacing#44).
+
+        >>> from lacing.time import RationalTime
+        >>> kw = dict(was_generated_by="user:x", was_attributed_to="x")
+        >>> Provenance(generated_at_time=RationalTime(0, 1000), **kw).generated_at_is_known
+        False
+        >>> Provenance(generated_at_time=RationalTime.now(), **kw).generated_at_is_known
+        True
+        """
+        return self.generated_at_time != UNKNOWN_GENERATED_AT
 
 
 # --- Annotation envelope -----------------------------------------------------

@@ -139,7 +139,7 @@ lacing/
 3. **One envelope, typed body** — `Annotation.body: dict` validated by `body_schema_uri` (semver).
 4. **Allen's algebra is the public predicate API** — never write ad-hoc overlap checks.
 5. **ELAN tier stereotypes verbatim** — `NONE`, `TIME_SUBDIVISION`, `INCLUDED_IN`, `SYMBOLIC_SUBDIVISION`, `SYMBOLIC_ASSOCIATION`.
-6. **PROV-O provenance inline on every annotation** — `was_generated_by`, `was_attributed_to`, `was_derived_from`, `generated_at_time`.
+6. **PROV-O provenance inline on every annotation** — `was_generated_by`, `was_attributed_to`, `was_derived_from`, `generated_at_time`. `generated_at_time` is wall-clock (`RationalTime.now()`); tick 0 is `UNKNOWN_GENERATED_AT`, never the epoch — consumers read it as unverifiable, not oldest.
 7. **MIT/BSD/Apache licenses only.**
 
 The full reasoning lives in [`misc/docs/`](misc/docs/) — four design docs
@@ -179,7 +179,7 @@ store.add(
         provenance=Provenance(
             was_generated_by="user:thor",
             was_attributed_to="thor",
-            generated_at_time=RationalTime.zero(1000),
+            generated_at_time=RationalTime.now(),
         ),
     )
 )
