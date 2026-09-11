@@ -65,9 +65,10 @@ BACK-DOC §2.1, §4.1; FRONT-DOC §1.8 "Recommendation Matrix",
 
 An 18-deliverable survey of node-graph systems for generative media (the
 video_gen research programme — briefs A–G on the design space, H–O on
-ComfyUI at source; held in a private research repo, entry point
-`data/groups/video_gen/docs/reelee_comfyui_decisions_and_rationale.md`,
-evidence under `data/groups/video_gen/docs/research/`) checked this North
+ComfyUI at source; held in the private `av` group repo (formerly `priv`
+`data/groups/video_gen/`), entry point
+`$PP/g/av/docs/reelee_comfyui_decisions_and_rationale.md`,
+evidence under `$PP/g/av/docs/research/`) checked this North
 Star against every comparable system it could read at source. **The core
 bet holds, and the survey sharpens it.**
 
@@ -105,7 +106,7 @@ Two consequences for how we build:
    travels on the *demand* that materialises a work item, never baked into
    the transform — so changing a time range does not edit the graph.
 
-*Source: brief G `GAP-TIME` (`data/groups/video_gen/docs/research/G_synthesis_and_gap_analysis.md`).*
+*Source: brief G `GAP-TIME` (`$PP/g/av/docs/research/G_synthesis_and_gap_analysis.md`).*
 
 ---
 
@@ -327,9 +328,9 @@ tier + viseme tier + program monitor + inspector.** Build exactly that.
 `GAP-CONTRACT-CACHE`, §4.4), brief O §4.6 and §5; decisions of record §6
 and §9. Unlike the companion docs listed at the top of this file, these are
 not in this folder; paths are
-`data/groups/video_gen/docs/research/<BRIEF>.md`.*
+`$PP/g/av/docs/research/<BRIEF>.md`.*
 
-lacing is the annotation SSOT for the video_gen federation (`nw`, `falaw`,
+lacing is the annotation SSOT for the `av` (formerly `video_gen`) federation (`nw`, `falaw`,
 `reelee`, `braidio`, `artful`). That survey found **provenance completeness
 is the strongest confirmed gap in the whole field** — and that one of its
 breakdown modes is structural and ours:
