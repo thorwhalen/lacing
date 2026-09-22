@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=78cc6f98"></script>
+    <script src="../../_static/documentation_options.js?v=dcb4eb81"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.44" />
+  <meta name="docsearch:version" content="0.0.45" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -894,7 +894,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            store does not inspect the record's shape).</span>
 <span class="sd">        blobs: Injected ``content_hash -&gt; bytes`` store, or ``None`` for a</span>
 <span class="sd">            catalog-only store (Stage-1 metadata persistence). Blob methods</span>
-<span class="sd">            raise / no-op when it is ``None``.</span>
+<span class="sd">            raise / no-op when it is ``None``. This is the *raw* backend:</span>
+<span class="sd">            on a filesystem backend its own ``del`` and iteration do no</span>
+<span class="sd">            containment check, so go through :meth:`delete_blob` and</span>
+<span class="sd">            :meth:`iter_blobs` (and the read methods) rather than touching</span>
+<span class="sd">            ``store.blobs`` directly (lacing#55).</span>
 
 <span class="sd">    Construct one with :meth:`in_memory` or :meth:`from_directory` rather than</span>
 <span class="sd">    wiring the backing stores by hand, unless you are injecting a custom</span>
@@ -1105,10 +1109,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">          store) — refused rather than served (lacing#50).</span>
 
 <span class="sd">        Callers must treat ``None`` as the cue to use the streaming read</span>
-<span class="sd">        path, not as an error. This check covers only the *read* side of</span>
-<span class="sd">        this store's own path join; a consumer's record model is still</span>
-<span class="sd">        responsible for validating any key (e.g. an artifact ``id``) it</span>
-<span class="sd">        hands to a separate write path such as ``dol.Files``.</span>
+<span class="sd">        path, not as an error. Deleting and listing blobs have contained</span>
+<span class="sd">        counterparts too (:meth:`delete_blob`, :meth:`iter_blobs`), and the</span>
+<span class="sd">        :meth:`from_directory` catalog confines artifact ids the same way</span>
+<span class="sd">        (lacing#55).</span>
 
 <span class="sd">        The containment check is *point-in-time*: the returned path is the</span>
 <span class="sd">        fully resolved, symlink-free location of a regular file that was</span>
@@ -1151,6 +1155,71 @@ window.runMermaid = runMermaid;</script>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.delete_blob">
+<a class="viewcode-back" href="../../_autosummary/lacing.artifact_store.html#lacing.ArtifactStore.delete_blob">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Delete the blob ``content_hash``; ``KeyError`` if there is none.</span>
+
+<span class="sd">        The contained counterpart of ``del store.blobs[content_hash]``</span>
+<span class="sd">        (lacing#55). On a filesystem-backed store (one exposing ``rootdir``)</span>
+<span class="sd">        a key is deleted only if :meth:`has_blob` would say it exists — a</span>
+<span class="sd">        regular file that resolves inside ``rootdir`` (see</span>
+<span class="sd">        :class:`_ContainedDirStore`, the same gate the catalog of</span>
+<span class="sd">        :meth:`from_directory` uses). A key that escapes (``..``, an absolute path, a</span>
+<span class="sd">        NUL, a symlink pointing outside) raises ``KeyError`` exactly like a</span>
+<span class="sd">        missing blob, as does any key with a ``..`` segment, and nothing</span>
+<span class="sd">        outside the root is touched. The deletion itself is delegated to the</span>
+<span class="sd">        backend's own ``__delitem__`` on the key as given (normalised), so the</span>
+<span class="sd">        backend's delete policy (e.g. ``dol.Files`` moving files to the</span>
+<span class="sd">        trash) is unchanged, and deleting an in-root symlink removes the</span>
+<span class="sd">        link, never the blob it points at.</span>
+
+<span class="sd">        The check is point-in-time, like :meth:`blob_path`: a party that can</span>
+<span class="sd">        write into ``rootdir`` and swap a *directory* component of a nested</span>
+<span class="sd">        key for a symlink between the check and the delete can still redirect</span>
+<span class="sd">        it. Flat content-hash keys, which is all this store writes, have no</span>
+<span class="sd">        such component.</span>
+
+<span class="sd">        Backends without a ``rootdir`` (``dict``, object stores) have no</span>
+<span class="sd">        filesystem to escape; the key passes through to their ``del``.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: no such blob, the key escapes the root, or no blob store</span>
+<span class="sd">                is configured.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span>
+            <span class="k">return</span>
+        <span class="k">del</span> <span class="n">_ContainedDirStore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">)[</span><span class="n">content_hash</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ArtifactStore.iter_blobs">
+<a class="viewcode-back" href="../../_autosummary/lacing.artifact_store.html#lacing.ArtifactStore.iter_blobs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iter_blobs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Yield the content hash (key) of every blob in the blob store.</span>
+
+<span class="sd">        The contained counterpart of ``iter(store.blobs)`` (lacing#55). On a</span>
+<span class="sd">        filesystem-backed store it yields exactly the keys :meth:`has_blob`</span>
+<span class="sd">        accepts — regular files inside ``rootdir`` — and never descends into</span>
+<span class="sd">        a symlinked directory (``dol.Files`` does, so its listing can yield</span>
+<span class="sd">        files that live outside the root, or loop on a symlink cycle).</span>
+<span class="sd">        Hidden entries are skipped, as ``dol.Files`` skips them, which also</span>
+<span class="sd">        keeps the in-flight ``.blob-*.part`` spool files of</span>
+<span class="sd">        :meth:`put_blob_stream` out of the listing.</span>
+
+<span class="sd">        Yields nothing when no blob store is configured; other backends are</span>
+<span class="sd">        iterated as they are.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span>
+            <span class="k">return</span>
+        <span class="k">yield from</span> <span class="n">_ContainedDirStore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.blob_location">
@@ -1227,6 +1296,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        filesystem stores, so the same facade works unchanged over any other</span>
 <span class="sd">        ``dol`` backend (object storage, etc.) when injected directly.</span>
 
+<span class="sd">        Artifact ids are confined to ``catalog/`` (lacing#55): an id whose</span>
+<span class="sd">        ``&lt;id&gt;.json`` would resolve outside it — ``..`` segments, an absolute</span>
+<span class="sd">        path, a NUL, or a symlink pointing out — is refused with ``KeyError``</span>
+<span class="sd">        on get, save and delete, and is simply not ``in`` the store. Nested</span>
+<span class="sd">        ids (``"a/b"``) that stay inside keep working, and listing never</span>
+<span class="sd">        follows a symlinked directory out of ``catalog/``. See</span>
+<span class="sd">        :class:`_ContainedDirStore`.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            root: Directory to hold the store. Created if missing.</span>
 <span class="sd">            record_type: The pydantic model the catalog deserializes JSON into.</span>
@@ -1240,7 +1317,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">blob_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">catalog</span> <span class="o">=</span> <span class="n">wrap_kvs</span><span class="p">(</span>
-            <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">catalog_dir</span><span class="p">)),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)),</span>
+            <span class="n">filt_iter</span><span class="p">(</span>
+                <span class="n">_ContainedDirStore</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">catalog_dir</span><span class="p">))),</span>
+                <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">),</span>
+            <span class="p">),</span>
             <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">artifact_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">artifact_id</span><span class="si">}</span><span class="s2">.json"</span><span class="p">,</span>
             <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="p">(</span>
                 <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
@@ -1581,6 +1661,160 @@ window.runMermaid = runMermaid;</script>
         <span class="k">pass</span>
     <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_iter_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">:</span> <span class="s2">"Path | str"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Yield the relative key of every file :func:`_open_within` would open.</span>
+
+<span class="sd">    Walks ``rootdir`` without following symlinked directories and skips</span>
+<span class="sd">    hidden entries (as ``dol.Files`` does). A plain regular file met on that</span>
+<span class="sd">    walk is physically inside the root and is yielded as is; a symlink is</span>
+<span class="sd">    yielded only if it passes the same gate every read goes through, so a</span>
+<span class="sd">    listing never names a file the store would then refuse to read, and a</span>
+<span class="sd">    symlink cycle cannot loop it. Keys use the OS separator, like</span>
+<span class="sd">    ``dol.Files``' relative keys, and come out sorted per directory.</span>
+<span class="sd">    """</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="n">relative_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="n">relative_dir</span><span class="p">)</span> <span class="k">as</span> <span class="n">scan</span><span class="p">:</span>
+                <span class="n">entries</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">entry</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relative_dir</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">relative_dir</span> <span class="k">else</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_dir</span><span class="p">(</span><span class="n">follow_symlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                    <span class="k">yield from</span> <span class="n">walk</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_file</span><span class="p">(</span><span class="n">follow_symlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">key</span>
+                <span class="k">elif</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_symlink</span><span class="p">():</span>
+                    <span class="n">opened</span> <span class="o">=</span> <span class="n">_open_within</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="k">yield</span> <span class="n">key</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">walk</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_ContainedDirStore</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A ``dol.Files``-like store whose keys cannot leave its ``rootdir``.</span>
+
+<span class="sd">    ``dol.Files`` joins keys onto its root by string and follows ``..`` and</span>
+<span class="sd">    symlinks, so a key is a path anywhere on disk. This wrapper routes every</span>
+<span class="sd">    key through the containment seam of the blob reads (lacing#50/#55).</span>
+<span class="sd">    A key is accepted only if (see :meth:`_contained_key`):</span>
+
+<span class="sd">    - it has no ``..`` segment — refused outright rather than normalised, so</span>
+<span class="sd">      ``"x/../b"`` can never alias record ``b``;</span>
+<span class="sd">    - it is relative (no absolute path, no drive) and :func:`_resolve_within`</span>
+<span class="sd">      keeps it inside ``rootdir`` — which refuses NUL bytes and symlinks</span>
+<span class="sd">      pointing out; and</span>
+<span class="sd">    - its parent directory resolves inside ``rootdir`` too, so acting on the</span>
+<span class="sd">      final *name* (a delete never follows it) cannot land outside.</span>
+
+<span class="sd">    Reads go through :func:`_open_within`, the same descriptor-based,</span>
+<span class="sd">    ``O_NOFOLLOW`` read as :meth:`ArtifactStore.get_blob`. Writes and</span>
+<span class="sd">    deletes are delegated to the wrapped store on the (normalised) key the</span>
+<span class="sd">    caller gave, so its write and delete policy (e.g. trash on delete) is</span>
+<span class="sd">    unchanged, and deleting an in-root symlink removes the link, not its</span>
+<span class="sd">    target. Writing over something that is not a regular file (a FIFO would</span>
+<span class="sd">    hang the writer) is refused. Listing is :func:`_iter_within`: no</span>
+<span class="sd">    symlinked directories followed.</span>
+
+<span class="sd">    A refused key raises ``KeyError`` on get/set/del and is not ``in`` the</span>
+<span class="sd">    store. Writes are checked by name, then opened by name by the wrapped</span>
+<span class="sd">    store: a party that can already write inside ``rootdir`` could race a</span>
+<span class="sd">    symlink in between. That is the same point-in-time caveat as</span>
+<span class="sd">    :meth:`ArtifactStore.blob_path`; keys from outside the store cannot open</span>
+<span class="sd">    it.</span>
+
+<span class="sd">    &gt;&gt;&gt; import tempfile</span>
+<span class="sd">    &gt;&gt;&gt; store = _ContainedDirStore(Files(tempfile.mkdtemp()))</span>
+<span class="sd">    &gt;&gt;&gt; store["a.json"] = b"{}"</span>
+<span class="sd">    &gt;&gt;&gt; list(store), "a.json" in store, "../a.json" in store</span>
+<span class="sd">    (['a.json'], True, False)</span>
+<span class="sd">    &gt;&gt;&gt; store["../../escaped.json"] = b"{}"</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    KeyError: "'../../escaped.json' does not resolve inside the store root"</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">store</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">rootdir</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_contained_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""``key`` normalised, if it names an entry inside ``rootdir``; else None."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitdrive</span><span class="p">(</span><span class="n">key</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">separators</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">altsep</span><span class="p">}</span> <span class="o">-</span> <span class="p">{</span><span class="kc">None</span><span class="p">}</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">separator</span> <span class="ow">in</span> <span class="n">separators</span><span class="p">:</span>
+            <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">seg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="s2">".."</span> <span class="ow">in</span> <span class="n">segments</span> <span class="ow">or</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">normalised</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">normalised</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">and</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">normalised</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_refuse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"does not resolve inside the store root"</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">contained</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contained_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">opened</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">contained</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_open_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">contained</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">contained</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contained_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contained</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refuse</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">contained</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refuse</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">is_regular</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">is_regular</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># nothing there yet: a plain create</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># e.g. a name too long for the filesystem</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refuse</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"cannot be written (</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_regular</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refuse</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">"names something that is not a regular file"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">contained</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_contained_key</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">contained</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contained_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contained</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">opened</span> <span class="o">=</span> <span class="n">_open_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">contained</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">_iter_within</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rootdir</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

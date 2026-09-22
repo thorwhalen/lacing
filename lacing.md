@@ -1,4 +1,4 @@
-> built 2026-09-22 14:57 UTC from 0fafa75 (main) · lacing 0.0.44. Details: build_info.json
+> built 2026-09-22 15:22 UTC from b9c273a (main) · lacing 0.0.45. Details: build_info.json
 
 # index.html.md
 
@@ -1492,7 +1492,11 @@ into the mapping protocol.
     store does not inspect the record’s shape).
   * **blobs** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – Injected `content_hash -> bytes` store, or `None` for a
     catalog-only store (Stage-1 metadata persistence). Blob methods
-    raise / no-op when it is `None`.
+    raise / no-op when it is `None`. This is the *raw* backend:
+    on a filesystem backend its own `del` and iteration do no
+    containment check, so go through [`delete_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.delete_blob) and
+    [`iter_blobs()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.iter_blobs) (and the read methods) rather than touching
+    `store.blobs` directly (lacing#55).
 
 Construct one with [`in_memory()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.in_memory) or [`from_directory()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.from_directory) rather than
 wiring the backing stores by hand, unless you are injecting a custom
@@ -1541,10 +1545,10 @@ returns `None` for:
   store) — refused rather than served (lacing#50).
 
 Callers must treat `None` as the cue to use the streaming read
-path, not as an error. This check covers only the *read* side of
-this store’s own path join; a consumer’s record model is still
-responsible for validating any key (e.g. an artifact `id`) it
-hands to a separate write path such as `dol.Files`.
+path, not as an error. Deleting and listing blobs have contained
+counterparts too ([`delete_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.delete_blob), [`iter_blobs()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.iter_blobs)), and the
+[`from_directory()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.from_directory) catalog confines artifact ids the same way
+(lacing#55).
 
 The containment check is *point-in-time*: the returned path is the
 fully resolved, symlink-free location of a regular file that was
@@ -1583,6 +1587,39 @@ facade is unchanged either way; only the speed differs.
   The number of catalog records whose content hash equals
   `content_hash`.
 
+#### delete_blob(content_hash)
+
+Delete the blob `content_hash`; `KeyError` if there is none.
+
+The contained counterpart of `del store.blobs[content_hash]`
+(lacing#55). On a filesystem-backed store (one exposing `rootdir`)
+a key is deleted only if [`has_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.has_blob) would say it exists — a
+regular file that resolves inside `rootdir` (see
+`_ContainedDirStore`, the same gate the catalog of
+[`from_directory()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.from_directory) uses). A key that escapes (`..`, an absolute path, a
+NUL, a symlink pointing outside) raises `KeyError` exactly like a
+missing blob, as does any key with a `..` segment, and nothing
+outside the root is touched. The deletion itself is delegated to the
+backend’s own `__delitem__` on the key as given (normalised), so the
+backend’s delete policy (e.g. `dol.Files` moving files to the
+trash) is unchanged, and deleting an in-root symlink removes the
+link, never the blob it points at.
+
+The check is point-in-time, like [`blob_path()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.blob_path): a party that can
+write into `rootdir` and swap a *directory* component of a nested
+key for a symlink between the check and the delete can still redirect
+it. Flat content-hash keys, which is all this store writes, have no
+such component.
+
+Backends without a `rootdir` (`dict`, object stores) have no
+filesystem to escape; the key passes through to their `del`.
+
+* **Raises:**
+  [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – no such blob, the key escapes the root, or no blob store
+      is configured.
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
 #### *classmethod* from_aws(bucket_name, uri, \*, record_type=<class 'lacing.artifact.Artifact'>, collection_name='artifact_catalog', prefix=None, s3_kwargs=None, sql_kwargs=None)
 
 The production pairing: **S3-compatible blobs + SQL catalog**.
@@ -1614,6 +1651,14 @@ Lays out two subdirectories: `catalog/` (one `<id>.json` file per
 record) and `blobs/` (one file per content hash). Both are `dol`
 filesystem stores, so the same facade works unchanged over any other
 `dol` backend (object storage, etc.) when injected directly.
+
+Artifact ids are confined to `catalog/` (lacing#55): an id whose
+`<id>.json` would resolve outside it — `..` segments, an absolute
+path, a NUL, or a symlink pointing out — is refused with `KeyError`
+on get, save and delete, and is simply not `in` the store. Nested
+ids (`"a/b"`) that stay inside keep working, and listing never
+follows a symlinked directory out of `catalog/`. See
+`_ContainedDirStore`.
 
 * **Parameters:**
   * **root** ([`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – Directory to hold the store. Created if missing.
@@ -1762,6 +1807,25 @@ be swapped for a true streaming reader without changing this API.
   [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – no blob exists for `content_hash`.
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+
+#### iter_blobs()
+
+Yield the content hash (key) of every blob in the blob store.
+
+The contained counterpart of `iter(store.blobs)` (lacing#55). On a
+filesystem-backed store it yields exactly the keys [`has_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.has_blob)
+accepts — regular files inside `rootdir` — and never descends into
+a symlinked directory (`dol.Files` does, so its listing can yield
+files that live outside the root, or loop on a symlink cycle).
+Hidden entries are skipped, as `dol.Files` skips them, which also
+keeps the in-flight `.blob-*.part` spool files of
+[`put_blob_stream()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.put_blob_stream) out of the listing.
+
+Yields nothing when no blob store is configured; other backends are
+iterated as they are.
+
+* **Return type:**
+  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
 
 #### put_blob(data)
 
@@ -3018,7 +3082,11 @@ into the mapping protocol.
     store does not inspect the record’s shape).
   * **blobs** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – Injected `content_hash -> bytes` store, or `None` for a
     catalog-only store (Stage-1 metadata persistence). Blob methods
-    raise / no-op when it is `None`.
+    raise / no-op when it is `None`. This is the *raw* backend:
+    on a filesystem backend its own `del` and iteration do no
+    containment check, so go through [`delete_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.delete_blob) and
+    [`iter_blobs()`](_autosummary/lacing.html.md#lacing.ArtifactStore.iter_blobs) (and the read methods) rather than touching
+    `store.blobs` directly (lacing#55).
 
 Construct one with [`in_memory()`](_autosummary/lacing.html.md#lacing.ArtifactStore.in_memory) or [`from_directory()`](_autosummary/lacing.html.md#lacing.ArtifactStore.from_directory) rather than
 wiring the backing stores by hand, unless you are injecting a custom
@@ -3067,10 +3135,10 @@ returns `None` for:
   store) — refused rather than served (lacing#50).
 
 Callers must treat `None` as the cue to use the streaming read
-path, not as an error. This check covers only the *read* side of
-this store’s own path join; a consumer’s record model is still
-responsible for validating any key (e.g. an artifact `id`) it
-hands to a separate write path such as `dol.Files`.
+path, not as an error. Deleting and listing blobs have contained
+counterparts too ([`delete_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.delete_blob), [`iter_blobs()`](_autosummary/lacing.html.md#lacing.ArtifactStore.iter_blobs)), and the
+[`from_directory()`](_autosummary/lacing.html.md#lacing.ArtifactStore.from_directory) catalog confines artifact ids the same way
+(lacing#55).
 
 The containment check is *point-in-time*: the returned path is the
 fully resolved, symlink-free location of a regular file that was
@@ -3109,6 +3177,39 @@ facade is unchanged either way; only the speed differs.
   The number of catalog records whose content hash equals
   `content_hash`.
 
+#### delete_blob(content_hash)
+
+Delete the blob `content_hash`; `KeyError` if there is none.
+
+The contained counterpart of `del store.blobs[content_hash]`
+(lacing#55). On a filesystem-backed store (one exposing `rootdir`)
+a key is deleted only if [`has_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.has_blob) would say it exists — a
+regular file that resolves inside `rootdir` (see
+`_ContainedDirStore`, the same gate the catalog of
+[`from_directory()`](_autosummary/lacing.html.md#lacing.ArtifactStore.from_directory) uses). A key that escapes (`..`, an absolute path, a
+NUL, a symlink pointing outside) raises `KeyError` exactly like a
+missing blob, as does any key with a `..` segment, and nothing
+outside the root is touched. The deletion itself is delegated to the
+backend’s own `__delitem__` on the key as given (normalised), so the
+backend’s delete policy (e.g. `dol.Files` moving files to the
+trash) is unchanged, and deleting an in-root symlink removes the
+link, never the blob it points at.
+
+The check is point-in-time, like [`blob_path()`](_autosummary/lacing.html.md#lacing.ArtifactStore.blob_path): a party that can
+write into `rootdir` and swap a *directory* component of a nested
+key for a symlink between the check and the delete can still redirect
+it. Flat content-hash keys, which is all this store writes, have no
+such component.
+
+Backends without a `rootdir` (`dict`, object stores) have no
+filesystem to escape; the key passes through to their `del`.
+
+* **Raises:**
+  [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – no such blob, the key escapes the root, or no blob store
+      is configured.
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
 #### *classmethod* from_aws(bucket_name, uri, \*, record_type=<class 'lacing.artifact.Artifact'>, collection_name='artifact_catalog', prefix=None, s3_kwargs=None, sql_kwargs=None)
 
 The production pairing: **S3-compatible blobs + SQL catalog**.
@@ -3140,6 +3241,14 @@ Lays out two subdirectories: `catalog/` (one `<id>.json` file per
 record) and `blobs/` (one file per content hash). Both are `dol`
 filesystem stores, so the same facade works unchanged over any other
 `dol` backend (object storage, etc.) when injected directly.
+
+Artifact ids are confined to `catalog/` (lacing#55): an id whose
+`<id>.json` would resolve outside it — `..` segments, an absolute
+path, a NUL, or a symlink pointing out — is refused with `KeyError`
+on get, save and delete, and is simply not `in` the store. Nested
+ids (`"a/b"`) that stay inside keep working, and listing never
+follows a symlinked directory out of `catalog/`. See
+`_ContainedDirStore`.
 
 * **Parameters:**
   * **root** ([`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – Directory to hold the store. Created if missing.
@@ -3288,6 +3397,25 @@ be swapped for a true streaming reader without changing this API.
   [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – no blob exists for `content_hash`.
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+
+#### iter_blobs()
+
+Yield the content hash (key) of every blob in the blob store.
+
+The contained counterpart of `iter(store.blobs)` (lacing#55). On a
+filesystem-backed store it yields exactly the keys [`has_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.has_blob)
+accepts — regular files inside `rootdir` — and never descends into
+a symlinked directory (`dol.Files` does, so its listing can yield
+files that live outside the root, or loop on a symlink cycle).
+Hidden entries are skipped, as `dol.Files` skips them, which also
+keeps the in-flight `.blob-*.part` spool files of
+[`put_blob_stream()`](_autosummary/lacing.html.md#lacing.ArtifactStore.put_blob_stream) out of the listing.
+
+Yields nothing when no blob store is configured; other backends are
+iterated as they are.
+
+* **Return type:**
+  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
 
 #### put_blob(data)
 
@@ -6924,18 +7052,16 @@ Build an Arq `WorkerSettings` class with lacing processors registered.
 
 # About this build
 
-This documentation was built on **2026-09-22 14:57 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75</code></a> on branch <code>main</code>, for **lacing 0.0.44** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-09-22 15:22 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a</code></a> on branch <code>main</code>, for **lacing 0.0.45** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.44) is behind the latest release on PyPI (0.0.45): `pip install lacing` gives newer code than these docs describe.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -6946,9 +7072,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35743689704">35743689704</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35746610444">35746610444</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code> (in the history of the built commit) |
+| Event commit | <code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6973,13 +7099,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, newer than the documented version (0.0.44).
+Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout 0fafa75fc13e6669670678f1b19ba7a73a9e7e04
+git checkout b9c273a7a28bb40ecce549a3457eeab1735ec373
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

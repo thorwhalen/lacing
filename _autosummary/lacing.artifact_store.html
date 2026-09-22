@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=78cc6f98"></script>
+    <script src="../_static/documentation_options.js?v=dcb4eb81"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <link rel="prev" title="lacing.artifact" href="lacing.artifact.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.44" />
+  <meta name="docsearch:version" content="0.0.45" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -510,7 +510,11 @@ into the mapping protocol.</p>
 store does not inspect the record’s shape).</p></li>
 <li><p><strong>blobs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MutableMapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Injected <code class="docutils literal notranslate"><span class="pre">content_hash</span> <span class="pre">-&gt;</span> <span class="pre">bytes</span></code> store, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for a
 catalog-only store (Stage-1 metadata persistence). Blob methods
-raise / no-op when it is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+raise / no-op when it is <code class="docutils literal notranslate"><span class="pre">None</span></code>. This is the <em>raw</em> backend:
+on a filesystem backend its own <code class="docutils literal notranslate"><span class="pre">del</span></code> and iteration do no
+containment check, so go through <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.delete_blob" title="lacing.artifact_store.ArtifactStore.delete_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_blob()</span></code></a> and
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.iter_blobs" title="lacing.artifact_store.ArtifactStore.iter_blobs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">iter_blobs()</span></code></a> (and the read methods) rather than touching
+<code class="docutils literal notranslate"><span class="pre">store.blobs</span></code> directly (lacing#55).</p></li>
 </ul>
 </dd>
 </dl>
@@ -564,10 +568,10 @@ absolute path, or a same-named symlink pointing outside the
 store) — refused rather than served (lacing#50).</p></li>
 </ul>
 <p>Callers must treat <code class="docutils literal notranslate"><span class="pre">None</span></code> as the cue to use the streaming read
-path, not as an error. This check covers only the <em>read</em> side of
-this store’s own path join; a consumer’s record model is still
-responsible for validating any key (e.g. an artifact <code class="docutils literal notranslate"><span class="pre">id</span></code>) it
-hands to a separate write path such as <code class="docutils literal notranslate"><span class="pre">dol.Files</span></code>.</p>
+path, not as an error. Deleting and listing blobs have contained
+counterparts too (<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.delete_blob" title="lacing.artifact_store.ArtifactStore.delete_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_blob()</span></code></a>, <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.iter_blobs" title="lacing.artifact_store.ArtifactStore.iter_blobs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">iter_blobs()</span></code></a>), and the
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory" title="lacing.artifact_store.ArtifactStore.from_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_directory()</span></code></a> catalog confines artifact ids the same way
+(lacing#55).</p>
 <p>The containment check is <em>point-in-time</em>: the returned path is the
 fully resolved, symlink-free location of a regular file that was
 inside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> when checked. The caller opens it later, by name,
@@ -613,6 +617,41 @@ facade is unchanged either way; only the speed differs.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.delete_blob">
+<span class="sig-name descname"><span class="pre">delete_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.delete_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.delete_blob" title="Link to this definition">#</a></dt>
+<dd><p>Delete the blob <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>; <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> if there is none.</p>
+<p>The contained counterpart of <code class="docutils literal notranslate"><span class="pre">del</span> <span class="pre">store.blobs[content_hash]</span></code>
+(lacing#55). On a filesystem-backed store (one exposing <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>)
+a key is deleted only if <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.has_blob" title="lacing.artifact_store.ArtifactStore.has_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">has_blob()</span></code></a> would say it exists — a
+regular file that resolves inside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> (see
+<code class="xref py py-class docutils literal notranslate"><span class="pre">_ContainedDirStore</span></code>, the same gate the catalog of
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.from_directory" title="lacing.artifact_store.ArtifactStore.from_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_directory()</span></code></a> uses). A key that escapes (<code class="docutils literal notranslate"><span class="pre">..</span></code>, an absolute path, a
+NUL, a symlink pointing outside) raises <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> exactly like a
+missing blob, as does any key with a <code class="docutils literal notranslate"><span class="pre">..</span></code> segment, and nothing
+outside the root is touched. The deletion itself is delegated to the
+backend’s own <code class="docutils literal notranslate"><span class="pre">__delitem__</span></code> on the key as given (normalised), so the
+backend’s delete policy (e.g. <code class="docutils literal notranslate"><span class="pre">dol.Files</span></code> moving files to the
+trash) is unchanged, and deleting an in-root symlink removes the
+link, never the blob it points at.</p>
+<p>The check is point-in-time, like <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.blob_path" title="lacing.artifact_store.ArtifactStore.blob_path"><code class="xref py py-meth docutils literal notranslate"><span class="pre">blob_path()</span></code></a>: a party that can
+write into <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> and swap a <em>directory</em> component of a nested
+key for a symlink between the check and the delete can still redirect
+it. Flat content-hash keys, which is all this store writes, have no
+such component.</p>
+<p>Backends without a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> (<code class="docutils literal notranslate"><span class="pre">dict</span></code>, object stores) have no
+filesystem to escape; the key passes through to their <code class="docutils literal notranslate"><span class="pre">del</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.14)"><strong>KeyError</strong></a> – no such blob, the key escapes the root, or no blob store
+    is configured.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.from_aws">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_aws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'lacing.artifact.Artifact'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'artifact_catalog'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s3_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.from_aws"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.from_aws" title="Link to this definition">#</a></dt>
 <dd><p>The production pairing: <strong>S3-compatible blobs + SQL catalog</strong>.</p>
@@ -649,6 +688,13 @@ a smoke test. Vendor specifics live only in the two kwargs dicts.</p>
 record) and <code class="docutils literal notranslate"><span class="pre">blobs/</span></code> (one file per content hash). Both are <code class="docutils literal notranslate"><span class="pre">dol</span></code>
 filesystem stores, so the same facade works unchanged over any other
 <code class="docutils literal notranslate"><span class="pre">dol</span></code> backend (object storage, etc.) when injected directly.</p>
+<p>Artifact ids are confined to <code class="docutils literal notranslate"><span class="pre">catalog/</span></code> (lacing#55): an id whose
+<code class="docutils literal notranslate"><span class="pre">&lt;id&gt;.json</span></code> would resolve outside it — <code class="docutils literal notranslate"><span class="pre">..</span></code> segments, an absolute
+path, a NUL, or a symlink pointing out — is refused with <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>
+on get, save and delete, and is simply not <code class="docutils literal notranslate"><span class="pre">in</span></code> the store. Nested
+ids (<code class="docutils literal notranslate"><span class="pre">&quot;a/b&quot;</span></code>) that stay inside keep working, and listing never
+follows a symlinked directory out of <code class="docutils literal notranslate"><span class="pre">catalog/</span></code>. See
+<code class="xref py py-class docutils literal notranslate"><span class="pre">_ContainedDirStore</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -828,6 +874,27 @@ be swapped for a true streaming reader without changing this API.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.iter_blobs">
+<span class="sig-name descname"><span class="pre">iter_blobs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.iter_blobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.iter_blobs" title="Link to this definition">#</a></dt>
+<dd><p>Yield the content hash (key) of every blob in the blob store.</p>
+<p>The contained counterpart of <code class="docutils literal notranslate"><span class="pre">iter(store.blobs)</span></code> (lacing#55). On a
+filesystem-backed store it yields exactly the keys <a class="reference internal" href="#lacing.artifact_store.ArtifactStore.has_blob" title="lacing.artifact_store.ArtifactStore.has_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">has_blob()</span></code></a>
+accepts — regular files inside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> — and never descends into
+a symlinked directory (<code class="docutils literal notranslate"><span class="pre">dol.Files</span></code> does, so its listing can yield
+files that live outside the root, or loop on a symlink cycle).
+Hidden entries are skipped, as <code class="docutils literal notranslate"><span class="pre">dol.Files</span></code> skips them, which also
+keeps the in-flight <code class="docutils literal notranslate"><span class="pre">.blob-*.part</span></code> spool files of
+<a class="reference internal" href="#lacing.artifact_store.ArtifactStore.put_blob_stream" title="lacing.artifact_store.ArtifactStore.put_blob_stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">put_blob_stream()</span></code></a> out of the listing.</p>
+<p>Yields nothing when no blob store is configured; other backends are
+iterated as they are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact_store.ArtifactStore.put_blob">
 <span class="sig-name descname"><span class="pre">put_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.put_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact_store.ArtifactStore.put_blob" title="Link to this definition">#</a></dt>
 <dd><p>Store <code class="docutils literal notranslate"><span class="pre">data</span></code> content-addressed; return its content hash.</p>
@@ -966,6 +1033,7 @@ is responsible for also recording that hash on <code class="docutils literal not
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.blob_location"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.blob_location()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.blob_path"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.blob_path()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.count_refs"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.count_refs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.delete_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.delete_blob()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.from_aws"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_aws()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.from_directory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_directory()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.from_s3"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.from_s3()</span></code></a></li>
@@ -975,6 +1043,7 @@ is responsible for also recording that hash on <code class="docutils literal not
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.in_memory"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.in_memory()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.index"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.index()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.iter_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.iter_blob()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.iter_blobs"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.iter_blobs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.put_blob"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.put_blob()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.put_blob_stream"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.put_blob_stream()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact_store.ArtifactStore.save"><code class="docutils literal notranslate"><span class="pre">ArtifactStore.save()</span></code></a></li>
