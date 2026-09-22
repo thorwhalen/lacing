@@ -404,6 +404,9 @@ Return the bytes for `content_hash`, or `None` if absent.
 
 Whether the blob store holds `content_hash`.
 
+`False` for a key that a filesystem-backed store would resolve
+outside its `rootdir` — see `_escapes_blob_root()`.
+
 * **Return type:**
   [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 

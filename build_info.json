@@ -1,32 +1,32 @@
 {
   "schema_version": 1,
-  "built_at": "2026-09-22T14:03:56Z",
+  "built_at": "2026-09-22T14:41:26Z",
   "package": {
     "name": "lacing",
-    "version": "0.0.41",
+    "version": "0.0.43",
     "display_name": "lacing",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "5cfca7f892d105bbfb9fbb49d031444bd88338f0",
-    "short_commit": "5cfca7f",
+    "commit": "54eb3562b900204a10f45d5226a1fa4be49083f1",
+    "short_commit": "54eb356",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/lacing",
-    "commit_url": "https://github.com/thorwhalen/lacing/commit/5cfca7f892d105bbfb9fbb49d031444bd88338f0",
+    "commit_url": "https://github.com/thorwhalen/lacing/commit/54eb3562b900204a10f45d5226a1fa4be49083f1",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/lacing",
-    "sha": "5cfca7f892d105bbfb9fbb49d031444bd88338f0",
+    "sha": "54eb3562b900204a10f45d5226a1fa4be49083f1",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "35737457127",
-    "run_url": "https://github.com/thorwhalen/lacing/actions/runs/35737457127",
+    "run_id": "35741756712",
+    "run_url": "https://github.com/thorwhalen/lacing/actions/runs/35741756712",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -60,14 +60,16 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.41",
-    "relation": "same",
+    "latest": "0.0.44",
+    "relation": "behind",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/lacing && cd lacing\ngit checkout 5cfca7f892d105bbfb9fbb49d031444bd88338f0\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/lacing && cd lacing\ngit checkout 54eb3562b900204a10f45d5226a1fa4be49083f1\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": true,
-    "notes": []
+    "aligned": false,
+    "notes": [
+      "The documented version (0.0.43) is behind the latest release on PyPI (0.0.44): `pip install lacing` gives newer code than these docs describe."
+    ]
   }
 }
