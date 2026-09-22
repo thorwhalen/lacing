@@ -449,6 +449,229 @@ def test_catalog_only_blob_methods_are_safe():
         store.put_blob(b"bytes")
 
 
+# -- catalog ids: containment (lacing#55) --------------------------------------
+#
+# ``from_directory`` files each record as ``catalog/<id>.json``. An id must not
+# be a path out of ``catalog/``: not for writes, reads, deletes or ``in``.
+
+
+def _catalog_store(tmp_path: Path):
+    store = ArtifactStore.from_directory(tmp_path / "artifacts")
+    return store, tmp_path / "artifacts" / "catalog"
+
+
+_ESCAPING_IDS = [
+    "../../pwned",  # relative traversal
+    "../catalog-evil/pwned",  # sibling sharing the root's name as a prefix
+    "a\x00b",  # NUL
+]
+
+
+@pytest.mark.parametrize("artifact_id", _ESCAPING_IDS)
+def test_catalog_refuses_escaping_ids_on_save(tmp_path: Path, artifact_id):
+    store, _ = _catalog_store(tmp_path)
+    (tmp_path / "artifacts" / "catalog-evil").mkdir()
+    with pytest.raises(KeyError):
+        store.save(artifact_id, _artifact())
+    assert list(tmp_path.rglob("pwned*")) == []  # nothing written anywhere
+    assert list(store) == []
+
+
+def test_catalog_refuses_absolute_ids(tmp_path: Path):
+    store, _ = _catalog_store(tmp_path)
+    target = tmp_path / "abs"
+    with pytest.raises(KeyError):
+        store.save(str(target), _artifact())
+    assert not (tmp_path / "abs.json").exists()
+
+
+def test_catalog_refuses_escaping_ids_on_read_and_delete(tmp_path: Path):
+    store, _ = _catalog_store(tmp_path)
+    outside = tmp_path / "victim.json"
+    outside.write_text(_artifact().model_dump_json())  # parses as a record
+    for artifact_id in ("../../victim", str(tmp_path / "victim")):
+        assert artifact_id not in store
+        assert artifact_id not in store.catalog
+        assert store.get(artifact_id) is None
+        with pytest.raises(KeyError):
+            store[artifact_id]
+        with pytest.raises(KeyError):
+            del store[artifact_id]
+    assert outside.exists()
+
+
+def test_catalog_refuses_symlinks_escaping_the_catalog(tmp_path: Path):
+    store, catalog_dir = _catalog_store(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "leak.json").write_text(_artifact(b"leak").model_dump_json())
+    (catalog_dir / "linkdir").symlink_to(outside)
+    (catalog_dir / "linkfile.json").symlink_to(outside / "leak.json")
+
+    assert list(store) == []  # listing does not follow either link out
+    for artifact_id in ("linkdir/leak", "linkfile"):
+        assert artifact_id not in store
+        with pytest.raises(KeyError):
+            store[artifact_id]
+        with pytest.raises(KeyError):
+            store.save(artifact_id, _artifact())
+        with pytest.raises(KeyError):
+            del store[artifact_id]
+    assert (outside / "leak.json").read_text().startswith("{")
+
+
+def test_catalog_keeps_ids_that_stay_inside(tmp_path: Path):
+    store, catalog_dir = _catalog_store(tmp_path)
+    art = _artifact()
+    (catalog_dir / "nested").mkdir()
+    for artifact_id in ("art-image-abc_123", "with.dots", "nested/deeper"):
+        store.save(artifact_id, art)
+        assert artifact_id in store
+        assert store[artifact_id] == art
+    assert sorted(store) == sorted(
+        ["art-image-abc_123", "with.dots", os.path.join("nested", "deeper")]
+    )
+    del store["nested/deeper"]
+    assert "nested/deeper" not in store
+    assert len(store) == 2
+
+
+def test_catalog_refuses_dotdot_segments_instead_of_aliasing(tmp_path: Path):
+    # "n/../b" would normalise to "b" and overwrite that record: refused.
+    store, _ = _catalog_store(tmp_path)
+    original = _artifact(b"b")
+    store.save("b", original)
+    with pytest.raises(KeyError):
+        store.save("n/../b", _artifact(b"other"))
+    assert "n/../b" not in store
+    assert store["b"] == original
+
+
+def test_catalog_refuses_parent_escaping_even_if_target_points_back(tmp_path: Path):
+    # "linkdir/b" resolves back inside, but acting on that *name* would touch
+    # a file in the outside directory.
+    store, catalog_dir = _catalog_store(tmp_path)
+    store.save("inside", _artifact())
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "b.json").symlink_to(catalog_dir / "inside.json")
+    (catalog_dir / "linkdir").symlink_to(outside)
+    with pytest.raises(KeyError):
+        del store["linkdir/b"]
+    with pytest.raises(KeyError):
+        store.save("linkdir/b", _artifact(b"x"))
+    assert (outside / "b.json").is_symlink()
+
+
+def test_catalog_delete_of_in_root_symlink_removes_the_link_only(tmp_path: Path):
+    store, catalog_dir = _catalog_store(tmp_path)
+    target = _artifact(b"target")
+    store.save("b", target)
+    (catalog_dir / "a.json").symlink_to(catalog_dir / "b.json")
+    assert store["a"] == target
+    del store["a"]
+    assert not (catalog_dir / "a.json").is_symlink()
+    assert store["b"] == target
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="no FIFOs on this OS")
+def test_catalog_refuses_to_write_over_a_fifo(tmp_path: Path):
+    store, catalog_dir = _catalog_store(tmp_path)
+    os.mkfifo(catalog_dir / "fifo.json")
+    with pytest.raises(KeyError):
+        store.save("fifo", _artifact())  # would otherwise block forever
+
+
+def test_catalog_refuses_absolute_ids_even_inside_the_root(tmp_path: Path):
+    store, catalog_dir = _catalog_store(tmp_path)
+    (catalog_dir / "sub").mkdir()
+    store.save("sub/x", _artifact())
+    absolute = str(catalog_dir / "sub" / "x")
+    assert absolute not in store
+    with pytest.raises(KeyError):
+        del store[absolute]
+    assert "sub/x" in store
+
+
+def test_catalog_over_long_id_is_a_key_error(tmp_path: Path):
+    store, _ = _catalog_store(tmp_path)
+    with pytest.raises(KeyError):
+        store.save("x" * 300, _artifact())
+
+
+# -- blob delete and listing: containment (lacing#55) --------------------------
+
+
+def test_delete_blob_removes_a_stored_blob(tmp_path: Path):
+    store, _, _ = _store_and_secret(tmp_path)
+    content_hash = store.put_blob(b"to be deleted")
+    store.delete_blob(content_hash)
+    assert not store.has_blob(content_hash)
+    with pytest.raises(KeyError):
+        store.delete_blob(content_hash)  # already gone
+
+
+@pytest.mark.parametrize(
+    "key_of",
+    [
+        lambda blob_dir, secret: "../../secret.txt",
+        lambda blob_dir, secret: str(secret),
+        lambda blob_dir, secret: "a\x00b",
+    ],
+    ids=["relative", "absolute", "nul"],
+)
+def test_delete_blob_refuses_escaping_keys(tmp_path: Path, key_of):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    with pytest.raises(KeyError):
+        store.delete_blob(key_of(blob_dir, secret))
+    assert secret.read_bytes() == b"do not serve me"
+
+
+def test_delete_blob_refuses_symlinks_escaping_root(tmp_path: Path):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    (blob_dir / ("0" * 64)).symlink_to(secret)
+    (blob_dir / "linkdir").symlink_to(secret.parent)
+    for key in ("0" * 64, f"linkdir/{secret.name}"):
+        assert _reachable(blob_dir, key)
+        with pytest.raises(KeyError):
+            store.delete_blob(key)
+    assert secret.read_bytes() == b"do not serve me"
+
+
+def test_delete_blob_of_in_root_alias_keeps_the_blob(tmp_path: Path):
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    content_hash = store.put_blob(b"keep me")
+    (blob_dir / "alias").symlink_to(blob_dir / content_hash)
+    store.delete_blob("alias")
+    assert not (blob_dir / "alias").is_symlink()
+    assert store.get_blob(content_hash) == b"keep me"
+
+
+def test_iter_blobs_lists_only_contained_blobs(tmp_path: Path):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    content_hash = store.put_blob(b"legit")
+    (blob_dir / ("0" * 64)).symlink_to(secret)  # escaping file link
+    (blob_dir / "linkdir").symlink_to(secret.parent)  # escaping dir link
+    (blob_dir / "loop").symlink_to(blob_dir)  # a cycle must not hang
+    (blob_dir / ".blob-inflight.part").write_bytes(b"partial")  # spool file
+    assert list(store.iter_blobs()) == [content_hash]
+    assert all(store.has_blob(key) for key in store.iter_blobs())
+
+
+def test_blob_delete_and_listing_on_other_backends(tmp_path: Path):
+    store = ArtifactStore(catalog={}, blobs={"../odd": b"x", "h": b"y"})
+    assert sorted(store.iter_blobs()) == ["../odd", "h"]  # opaque keys
+    store.delete_blob("../odd")
+    assert list(store.iter_blobs()) == ["h"]
+    with pytest.raises(KeyError):
+        store.delete_blob("missing")
+
+    catalog_only = ArtifactStore(catalog={})
+    assert list(catalog_only.iter_blobs()) == []
+    with pytest.raises(KeyError):
+        catalog_only.delete_blob("h")
+
+
 # -- filesystem persistence ---------------------------------------------------
 
 
