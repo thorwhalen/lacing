@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import threading
 from pathlib import Path
 
 import pytest
@@ -291,6 +293,105 @@ def test_blob_reads_on_dict_backend_are_not_filtered(tmp_path: Path):
     store = ArtifactStore(catalog={}, blobs={"../odd": b"x"})
     assert store.has_blob("../odd")
     assert store.get_blob("../odd") == b"x"
+
+
+# -- blob reads: check-then-open race (lacing#50, second round) ---------------
+#
+# The containment check resolves the key; the read then opens it. An attacker
+# who can write into the blob directory can swap the checked entry for a
+# symlink in between. These tests hit that window deterministically: they
+# wrap the check so the swap happens right after it has passed.
+
+_needs_openat = pytest.mark.skipif(
+    not (getattr(os, "O_NOFOLLOW", 0) and os.open in os.supports_dir_fd),
+    reason="no openat/O_NOFOLLOW on this OS (Windows): the race window stays open",
+)
+
+
+def _swap_after_check(monkeypatch, swap):
+    from lacing import artifact_store
+
+    real_check = artifact_store._resolve_within
+
+    def check_then_swap(rootdir, key):
+        resolved = real_check(rootdir, key)
+        swap()
+        return resolved
+
+    monkeypatch.setattr(artifact_store, "_resolve_within", check_then_swap)
+
+
+@_needs_openat
+def test_blob_reads_refuse_symlink_swapped_in_after_the_check(
+    tmp_path: Path, monkeypatch
+):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    key = "ab" * 32
+    (blob_dir / key).write_bytes(b"benign")
+
+    def swap():
+        link = blob_dir / ".swap"
+        if not link.is_symlink():
+            link.symlink_to(secret)
+        os.replace(link, blob_dir / key)
+
+    _swap_after_check(monkeypatch, swap)
+    assert _reachable(blob_dir, key)  # the raw join now leads to the secret
+    _assert_refused_everywhere(store, key)
+
+
+@_needs_openat
+def test_blob_reads_refuse_directory_swapped_for_symlink_after_the_check(
+    tmp_path: Path, monkeypatch
+):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    (blob_dir / "ab").mkdir()
+    (blob_dir / "ab" / "secret.txt").write_bytes(b"benign")
+
+    def swap():
+        if not (blob_dir / "ab").is_symlink():
+            (blob_dir / "ab").rename(blob_dir / ".ab-old")
+            (blob_dir / "ab").symlink_to(secret.parent, target_is_directory=True)
+
+    _swap_after_check(monkeypatch, swap)
+    key = "ab/secret.txt"
+    _assert_refused_everywhere(store, key)
+    assert _reachable(blob_dir, key)
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="no FIFOs on this OS")
+def test_blob_reads_refuse_fifo_without_blocking(tmp_path: Path):
+    # Opening a FIFO for reading blocks until a writer appears; a FIFO planted
+    # under a blob's name must read as absent, not hang the server.
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    key = "cd" * 32
+    os.mkfifo(blob_dir / key)
+    done = threading.Event()
+
+    def read_all():
+        _assert_refused_everywhere(store, key)
+        done.set()
+
+    threading.Thread(target=read_all, daemon=True).start()
+    assert done.wait(timeout=10), "blob read blocked on a FIFO"
+
+
+def test_blob_reads_refuse_directory_key(tmp_path: Path):
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    (blob_dir / "somedir").mkdir()
+    _assert_refused_everywhere(store, "somedir")
+
+
+def test_blob_reads_serve_through_a_symlinked_root(tmp_path: Path):
+    # The store's own directory may itself be a symlink (e.g. a mounted volume).
+    real = tmp_path / "real"
+    real.mkdir()
+    (tmp_path / "linked").symlink_to(real, target_is_directory=True)
+    store = ArtifactStore.from_directory(tmp_path / "linked")
+    content_hash = store.put_blob(b"via-link")
+    assert store.has_blob(content_hash)
+    assert store.get_blob(content_hash) == b"via-link"
+    assert store.blob_path(content_hash).read_bytes() == b"via-link"
 
 
 # -- blob_location: the generalized servable-location probe -------------------
