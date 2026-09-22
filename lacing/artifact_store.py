@@ -348,16 +348,26 @@ class ArtifactStore(MutableMapping):
           object-store backends — callers should fall back to
           :meth:`iter_blob`);
         - blobs that are not present.
+        - a ``content_hash`` that does not resolve to a path *inside*
+          ``rootdir`` (path traversal, e.g. ``"../../etc/passwd"`` or an
+          absolute path, or a same-named symlink pointing outside the
+          store) — refused rather than served (lacing#50).
 
         Callers must treat ``None`` as the cue to use the streaming read
-        path, not as an error.
+        path, not as an error. This check covers only the *read* side of
+        this store's own path join; a consumer's record model is still
+        responsible for validating any key (e.g. an artifact ``id``) it
+        hands to a separate write path such as ``dol.Files``.
         """
         if self.blobs is None:
             return None
         rootdir = getattr(self.blobs, "rootdir", None)
         if rootdir is None:
             return None
-        path = Path(rootdir) / content_hash
+        root = Path(rootdir).resolve()
+        path = (root / content_hash).resolve()
+        if root != path and root not in path.parents:
+            return None
         return path if path.is_file() else None
 
     def has_blob(self, content_hash: str) -> bool:

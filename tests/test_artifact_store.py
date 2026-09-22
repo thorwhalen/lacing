@@ -193,6 +193,59 @@ def test_blob_path_returns_none_for_missing_blob(tmp_path: Path):
     assert store.blob_path("0" * 64) is None
 
 
+# -- blob_path: containment (lacing#50) ---------------------------------------
+
+
+def test_blob_path_refuses_relative_traversal(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    root.mkdir()
+    secret = tmp_path / "secret.txt"
+    secret.write_text("do not serve me")
+    store = ArtifactStore.from_directory(root)
+    escaping_hash = "../secret.txt"
+    assert store.blob_path(escaping_hash) is None
+
+
+def test_blob_path_refuses_absolute_path(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    root.mkdir()
+    secret = tmp_path / "secret.txt"
+    secret.write_text("do not serve me")
+    store = ArtifactStore.from_directory(root)
+    assert store.blob_path(str(secret)) is None
+
+
+def test_blob_path_refuses_symlink_escaping_root(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    root.mkdir()
+    secret = tmp_path / "secret.txt"
+    secret.write_text("do not serve me")
+    link_name = "0" * 64
+    (root / link_name).symlink_to(secret)
+    store = ArtifactStore.from_directory(root)
+    assert store.blob_path(link_name) is None
+
+
+def test_blob_path_still_returns_legitimate_blob(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    store = ArtifactStore.from_directory(root)
+    data = b"legit-bytes"
+    content_hash = store.put_blob(data)
+    path = store.blob_path(content_hash)
+    assert path is not None
+    assert path.is_file()
+    assert path.read_bytes() == data
+
+
+def test_blob_location_refuses_traversal(tmp_path: Path):
+    root = tmp_path / "artifacts"
+    root.mkdir()
+    secret = tmp_path / "secret.txt"
+    secret.write_text("do not serve me")
+    store = ArtifactStore.from_directory(root)
+    assert store.blob_location("../secret.txt") is None
+
+
 # -- blob_location: the generalized servable-location probe -------------------
 
 
