@@ -55,6 +55,8 @@ True
 from __future__ import annotations
 
 import hashlib
+import os
+import stat
 from collections.abc import Callable, Iterable, Iterator, MutableMapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -305,9 +307,23 @@ class ArtifactStore(MutableMapping):
         return content_hash
 
     def get_blob(self, content_hash: str) -> bytes | None:
-        """Return the bytes for ``content_hash``, or ``None`` if absent."""
-        if self.blobs is None or self._escapes_blob_root(content_hash):
+        """Return the bytes for ``content_hash``, or ``None`` if absent.
+
+        On a filesystem-backed store (one exposing ``rootdir``) the bytes are
+        read through :func:`_open_within`, never by re-opening the path by
+        name, so a key that would land outside ``rootdir`` — by ``..``, an
+        absolute path, or a symlink, including one swapped in *after* the
+        containment check (lacing#50) — reads as absent.
+        """
+        if self.blobs is None:
             return None
+        rootdir = getattr(self.blobs, "rootdir", None)
+        if rootdir is not None:
+            opened = _open_within(rootdir, content_hash)
+            if opened is None:
+                return None
+            with os.fdopen(opened[1], "rb") as blob_file:
+                return blob_file.read()
         try:
             return self.blobs[content_hash]
         except KeyError:
@@ -358,44 +374,45 @@ class ArtifactStore(MutableMapping):
         this store's own path join; a consumer's record model is still
         responsible for validating any key (e.g. an artifact ``id``) it
         hands to a separate write path such as ``dol.Files``.
+
+        The containment check is *point-in-time*: the returned path is the
+        fully resolved, symlink-free location of a regular file that was
+        inside ``rootdir`` when checked. The caller opens it later, by name,
+        so if untrusted parties can write into ``rootdir`` itself, open it
+        with ``O_NOFOLLOW`` — or serve via :meth:`iter_blob`, which reads
+        through a descriptor and has no such window.
         """
         if self.blobs is None:
             return None
         rootdir = getattr(self.blobs, "rootdir", None)
         if rootdir is None:
             return None
-        path = _resolve_within(rootdir, content_hash)
-        return path if path is not None and path.is_file() else None
+        opened = _open_within(rootdir, content_hash)
+        if opened is None:
+            return None
+        path, fd = opened
+        os.close(fd)
+        return path
 
     def has_blob(self, content_hash: str) -> bool:
         """Whether the blob store holds ``content_hash``.
 
-        ``False`` for a key that a filesystem-backed store would resolve
-        outside its ``rootdir`` — see :meth:`_escapes_blob_root`.
-        """
-        return (
-            self.blobs is not None
-            and not self._escapes_blob_root(content_hash)
-            and content_hash in self.blobs
-        )
-
-    def _escapes_blob_root(self, content_hash: str) -> bool:
-        """Whether a filesystem-backed blob store would resolve
-        ``content_hash`` to a file *outside* its ``rootdir`` (lacing#50).
-
-        The one containment gate every blob *read* goes through
-        (:meth:`get_blob`, hence :meth:`iter_blob`; :meth:`has_blob`;
-        :meth:`blob_location`; :meth:`blob_path`). It must guard all of them,
-        not just :meth:`blob_path`: ``blob_path`` returning ``None`` is the
-        documented cue to fall back to :meth:`iter_blob`, and ``dol.Files``
-        itself follows ``..`` segments and symlinks — so a guard on
-        ``blob_path`` alone just reroutes the traversal to the streaming path.
-
+        On a filesystem-backed store this is exactly "would :meth:`get_blob`
+        return bytes": ``False`` for a key that resolves outside ``rootdir``
+        or names anything but a regular file — see :func:`_open_within`.
         Backends without a ``rootdir`` (``dict``, object stores) have no
-        filesystem to escape, so nothing is refused there.
+        filesystem to escape, so their keys pass through unfiltered.
         """
+        if self.blobs is None:
+            return False
         rootdir = getattr(self.blobs, "rootdir", None)
-        return rootdir is not None and _resolve_within(rootdir, content_hash) is None
+        if rootdir is None:
+            return content_hash in self.blobs
+        opened = _open_within(rootdir, content_hash)
+        if opened is None:
+            return False
+        os.close(opened[1])
+        return True
 
     def blob_location(self, content_hash: str) -> "str | Path | None":
         """Resolve the cheapest *servable* location for a blob — without
@@ -742,6 +759,69 @@ def _resolve_within(rootdir: "Path | str", key: str) -> Path | None:
     return path if root in path.parents else None
 
 
+def _open_within(rootdir: "Path | str", key: str) -> tuple[Path, int] | None:
+    """Open blob ``key`` under ``rootdir`` read-only: ``(path, fd)`` or ``None``.
+
+    The one containment gate every filesystem blob read goes through
+    (:meth:`ArtifactStore.get_blob`, hence ``iter_blob``; ``has_blob``;
+    ``blob_path``, hence ``blob_location``) — lacing#50. It must guard all
+    of them, not just ``blob_path``: ``blob_path`` returning ``None`` is the
+    documented cue to fall back to ``iter_blob``, and ``dol.Files`` itself
+    follows ``..`` segments and symlinks.
+
+    :func:`_resolve_within` alone is a *check*; re-opening the path by name
+    afterwards leaves a window in which an entry inside ``rootdir`` can be
+    swapped for a symlink to a file outside it (check-then-use race). So the
+    resolved, symlink-free path is opened component by component from a
+    descriptor on the root, with ``O_NOFOLLOW`` on every step: a component
+    swapped for a symlink after the check fails to open instead of being
+    followed. The descriptor is then required to be a regular file —
+    opened ``O_NONBLOCK`` so a FIFO planted under a blob's name cannot
+    hang the reader. Symlinks that stay inside ``rootdir`` still work,
+    because they were already resolved away by the check.
+
+    Where the OS lacks ``openat``/``O_NOFOLLOW`` (Windows) the resolved path
+    is opened directly: the check still holds, the race window does not
+    close. Not addressed, by design: hard links (indistinguishable from the
+    blob's own name; creating one needs write access to ``rootdir`` and, on
+    Linux with ``fs.protected_hardlinks``, to the target) and bind mounts.
+    """
+    path = _resolve_within(rootdir, key)
+    if path is None:
+        return None
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NONBLOCK", 0)
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+
+    def openat_nofollow(root: Path, parts: tuple[str, ...]) -> int:
+        dir_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            for part in parts[:-1]:
+                next_fd = os.open(
+                    part, os.O_RDONLY | os.O_DIRECTORY | nofollow, dir_fd=dir_fd
+                )
+                os.close(dir_fd)
+                dir_fd = next_fd
+            return os.open(parts[-1], flags | nofollow, dir_fd=dir_fd)
+        finally:
+            os.close(dir_fd)
+
+    try:
+        if nofollow and os.open in os.supports_dir_fd:
+            root = Path(rootdir).resolve()
+            fd = openat_nofollow(root, path.relative_to(root).parts)
+        else:
+            fd = os.open(path, flags)
+    except (OSError, ValueError):
+        return None
+    try:
+        if stat.S_ISREG(os.fstat(fd).st_mode):
+            return path, fd
+    except OSError:
+        pass
+    os.close(fd)
+    return None
+
+
 def _spool_chunks_to_dir(chunks: Iterable[bytes], rootdir: Path) -> str:
     """Hash-while-spooling to a same-directory tempfile, then atomic rename.
 
@@ -750,7 +830,6 @@ def _spool_chunks_to_dir(chunks: Iterable[bytes], rootdir: Path) -> str:
     until the content behind it is complete — a reader that finds the hash
     finds the whole blob, never a prefix of it (lacing#25).
     """
-    import os
     import tempfile
 
     rootdir.mkdir(parents=True, exist_ok=True)
