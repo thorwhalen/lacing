@@ -1,4 +1,0 @@
-lacing.adapters.annot
-=====================
-.. automodule:: lacing.adapters.annot
-   :members:

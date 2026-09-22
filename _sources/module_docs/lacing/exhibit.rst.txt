@@ -1,4 +1,0 @@
-lacing.exhibit
-==============
-.. automodule:: lacing.exhibit
-   :members:

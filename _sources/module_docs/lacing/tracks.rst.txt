@@ -1,4 +1,0 @@
-lacing.tracks
-=============
-.. automodule:: lacing.tracks
-   :members:

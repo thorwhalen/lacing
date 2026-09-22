@@ -1,130 +1,688 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; lacing 0.0.40 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="genindex.html.md">
+<link rel="describedby" href="llms.txt" type="text/markdown">
+    <title>Index &#8212; lacing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/epythet.css?v=37d13f4f" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="_static/documentation_options.js?v=20c5f126"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.41" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=84bd753f"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
-</head>
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            lacing
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing.html">lacing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters.html">lacing.adapters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/character_voice.html">lacing.bodies.character_voice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review_candidate.html">lacing.bodies.review_candidate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/digest.html">lacing.digest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/app.html">lacing.server.app</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store.html">lacing.store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/base.html">lacing.store.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/migrations.html">lacing.store.migrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tier.html">lacing.tier</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/time.html">lacing.time</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks.html">lacing.tracks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">lacing</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Index</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lacing</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
 
 <h1 id="index">Index</h1>
 
@@ -158,103 +716,103 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.actor">actor (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.actor">actor (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.actor">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.actor">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.AdapterSpec">AdapterSpec (class in lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.AdapterSpec">AdapterSpec (class in lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.add">add() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.add">add() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.add">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.add">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.add">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.add">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.add">(lacing.tracks.subtitle.SubtitleBuilder method)</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.add">(lacing.tracks.subtitle.SubtitleBuilder method)</a>
 </li>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder.add">(lacing.tracks.SubtitleBuilder method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleBuilder.add">(lacing.tracks.SubtitleBuilder method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore.add_tier">add_tier() (lacing.store.postgres.PostgresStore method)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.PostgresStore.add_tier">add_tier() (lacing.store.postgres.PostgresStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.PostgresStore.add_tier">(lacing.store.PostgresStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.PostgresStore.add_tier">(lacing.store.PostgresStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.all">all() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.all">all() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.all">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.all">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.all">(lacing.store.IntervalAnnotationStore method)</a>
-</li>
-      </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.AllenRelation">AllenRelation (class in lacing)</a>
-
-      <ul>
-        <li><a href="module_docs/lacing/allen.html#lacing.allen.AllenRelation">(class in lacing.allen)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.all">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Annotation">Annotation (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.AllenRelation">AllenRelation (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.Annotation">(class in lacing.model)</a>
+        <li><a href="_autosummary/lacing.allen.html#lacing.allen.AllenRelation">(class in lacing.allen)</a>
+</li>
+      </ul></li>
+      <li><a href="_autosummary/lacing.html#lacing.Annotation">Annotation (class in lacing)</a>
+
+      <ul>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.Annotation">(class in lacing.model)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.annotation_body_digest">annotation_body_digest() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.annotation_body_digest">annotation_body_digest() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/digest.html#lacing.digest.annotation_body_digest">(in module lacing.digest)</a>
+        <li><a href="_autosummary/lacing.digest.html#lacing.digest.annotation_body_digest">(in module lacing.digest)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.annotation_value_digest">annotation_value_digest() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.annotation_value_digest">annotation_value_digest() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/digest.html#lacing.digest.annotation_value_digest">(in module lacing.digest)</a>
+        <li><a href="_autosummary/lacing.digest.html#lacing.digest.annotation_value_digest">(in module lacing.digest)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.AnnotationRef">AnnotationRef (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.AnnotationRef">AnnotationRef (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.AnnotationRef">(class in lacing.model)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.AnnotationRef">(class in lacing.model)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.OpLog.append">append() (lacing.OpLog method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.OpLog.append">append() (lacing.OpLog method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.append">(lacing.oplog.OpLog method)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLog.append">(lacing.oplog.OpLog method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Artifact">Artifact (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Artifact">Artifact (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact">(class in lacing.artifact)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.Artifact">(class in lacing.artifact)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact.html#lacing.artifact.ArtifactKind">ArtifactKind (in module lacing.artifact)</a>
+      <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.ArtifactKind">ArtifactKind (in module lacing.artifact)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.ArtifactStore">ArtifactStore (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.ArtifactStore">ArtifactStore (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore">(class in lacing.artifact_store)</a>
+        <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore">(class in lacing.artifact_store)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/model.html#lacing.model.AssetId">AssetId (in module lacing.model)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.AssetId">AssetId (in module lacing.model)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.at_tier">at_tier() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.at_tier">at_tier() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.at_tier">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.at_tier">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.at_tier">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.at_tier">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.Author">Author (in module lacing.bodies.review)</a>
+      <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.Author">Author (in module lacing.bodies.review)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -262,42 +820,42 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.blob_location">blob_location() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.blob_location">blob_location() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.blob_location">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.blob_location">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.blob_path">blob_path() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.blob_path">blob_path() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.blob_path">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.blob_path">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/digest.html#lacing.digest.BODY_DIGEST_SCHEME">BODY_DIGEST_SCHEME (in module lacing.digest)</a>
+      <li><a href="_autosummary/lacing.digest.html#lacing.digest.BODY_DIGEST_SCHEME">BODY_DIGEST_SCHEME (in module lacing.digest)</a>
 </li>
-      <li><a href="module_docs/lacing/digest.html#lacing.digest.BODY_FIELDS">BODY_FIELDS (in module lacing.digest)</a>
+      <li><a href="_autosummary/lacing.digest.html#lacing.digest.BODY_FIELDS">BODY_FIELDS (in module lacing.digest)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.BodySchemaError">BodySchemaError</a>, <a href="module_docs/lacing/schema.html#lacing.schema.BodySchemaError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.BodySchemaError">BodySchemaError</a>, <a href="_autosummary/lacing.schema.html#lacing.schema.BodySchemaError">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.boundary_iou">boundary_iou() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.boundary_iou">boundary_iou() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/quality.html#lacing.quality.boundary_iou">(in module lacing.quality)</a>
+        <li><a href="_autosummary/lacing.quality.html#lacing.quality.boundary_iou">(in module lacing.quality)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/worker.html#lacing.worker.build_worker_settings">build_worker_settings() (in module lacing.worker)</a>
+      <li><a href="_autosummary/lacing.worker.html#lacing.worker.build_worker_settings">build_worker_settings() (in module lacing.worker)</a>
 </li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.BUILT_IN_BODY_SCHEMAS">BUILT_IN_BODY_SCHEMAS (in module lacing.tracks.subtitle)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.BUILT_IN_BODY_SCHEMAS">BUILT_IN_BODY_SCHEMAS (in module lacing.tracks.subtitle)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.by_tier">by_tier() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.by_tier">by_tier() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.by_tier">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.by_tier">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.by_tier">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.by_tier">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -306,50 +864,50 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/bodies/character_voice.html#lacing.bodies.character_voice.CharacterVoiceBodyV1">CharacterVoiceBodyV1 (class in lacing.bodies.character_voice)</a>
+      <li><a href="_autosummary/lacing.bodies.character_voice.html#lacing.bodies.character_voice.CharacterVoiceBodyV1">CharacterVoiceBodyV1 (class in lacing.bodies.character_voice)</a>
 </li>
-      <li><a href="module_docs/lacing/processors.html#lacing.processors.clear_processors">clear_processors() (in module lacing.processors)</a>
+      <li><a href="_autosummary/lacing.processors.html#lacing.processors.clear_processors">clear_processors() (in module lacing.processors)</a>
 </li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.clear_registry">clear_registry() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.clear_registry">clear_registry() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.clock">clock (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.clock">clock (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.clock">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.clock">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.close_all_pools">close_all_pools() (in module lacing.store)</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.close_all_pools">close_all_pools() (in module lacing.store)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.close_all_pools">(in module lacing.store.postgres)</a>
+        <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.close_all_pools">(in module lacing.store.postgres)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.cohen_kappa">cohen_kappa() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.cohen_kappa">cohen_kappa() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/quality.html#lacing.quality.cohen_kappa">(in module lacing.quality)</a>
+        <li><a href="_autosummary/lacing.quality.html#lacing.quality.cohen_kappa">(in module lacing.quality)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.compose">compose() (in module lacing.allen)</a>
+      <li><a href="_autosummary/lacing.allen.html#lacing.allen.compose">compose() (in module lacing.allen)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.contains">contains() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.contains">contains() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.contains">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.contains">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.contains">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.contains">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1">ContinuityViolationBodyV1 (class in lacing.bodies.continuity_violation)</a>
+      <li><a href="_autosummary/lacing.bodies.continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1">ContinuityViolationBodyV1 (class in lacing.bodies.continuity_violation)</a>
 </li>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.convert">convert() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.convert">convert() (in module lacing.cli)</a>
 </li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.count_refs">count_refs() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.count_refs">count_refs() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.count_refs">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.count_refs">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -358,48 +916,48 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_OWNER_ID">DEFAULT_OWNER_ID (in module lacing.store.postgres)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.DEFAULT_OWNER_ID">DEFAULT_OWNER_ID (in module lacing.store.postgres)</a>
 </li>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_PROJECT_ID">DEFAULT_PROJECT_ID (in module lacing.store.postgres)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.DEFAULT_PROJECT_ID">DEFAULT_PROJECT_ID (in module lacing.store.postgres)</a>
 </li>
-      <li><a href="module_docs/lacing/time.html#lacing.time.DEFAULT_RATE">DEFAULT_RATE (in module lacing.time)</a>
+      <li><a href="_autosummary/lacing.time.html#lacing.time.DEFAULT_RATE">DEFAULT_RATE (in module lacing.time)</a>
 </li>
-      <li><a href="module_docs/lacing/processors.html#lacing.processors.detect_density_change_points">detect_density_change_points() (in module lacing.processors)</a>
+      <li><a href="_autosummary/lacing.processors.html#lacing.processors.detect_density_change_points">detect_density_change_points() (in module lacing.processors)</a>
 </li>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.dump">dump() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.dump">dump() (in module lacing.adapters)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/annot.html#lacing.adapters.annot.dump">(in module lacing.adapters.annot)</a>
+        <li><a href="_autosummary/lacing.adapters.annot.html#lacing.adapters.annot.dump">(in module lacing.adapters.annot)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.dump">(in module lacing.adapters.eaf)</a>
+        <li><a href="_autosummary/lacing.adapters.eaf.html#lacing.adapters.eaf.dump">(in module lacing.adapters.eaf)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/jams.html#lacing.adapters.jams.dump">(in module lacing.adapters.jams)</a>
+        <li><a href="_autosummary/lacing.adapters.jams.html#lacing.adapters.jams.dump">(in module lacing.adapters.jams)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/label_studio.html#lacing.adapters.label_studio.dump">(in module lacing.adapters.label_studio)</a>
+        <li><a href="_autosummary/lacing.adapters.label_studio.html#lacing.adapters.label_studio.dump">(in module lacing.adapters.label_studio)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/otio.html#lacing.adapters.otio.dump">(in module lacing.adapters.otio)</a>
+        <li><a href="_autosummary/lacing.adapters.otio.html#lacing.adapters.otio.dump">(in module lacing.adapters.otio)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/textgrid.html#lacing.adapters.textgrid.dump">(in module lacing.adapters.textgrid)</a>
+        <li><a href="_autosummary/lacing.adapters.textgrid.html#lacing.adapters.textgrid.dump">(in module lacing.adapters.textgrid)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/web_annotation.html#lacing.adapters.web_annotation.dump">(in module lacing.adapters.web_annotation)</a>
+        <li><a href="_autosummary/lacing.adapters.web_annotation.html#lacing.adapters.web_annotation.dump">(in module lacing.adapters.web_annotation)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/webvtt.html#lacing.adapters.webvtt.dump">(in module lacing.adapters.webvtt)</a>
+        <li><a href="_autosummary/lacing.adapters.webvtt.html#lacing.adapters.webvtt.dump">(in module lacing.adapters.webvtt)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/time.html#lacing.time.TimeInterval.duration">duration (lacing.time.TimeInterval property)</a>
+      <li><a href="_autosummary/lacing.time.html#lacing.time.TimeInterval.duration">duration (lacing.time.TimeInterval property)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TimeInterval.duration">(lacing.TimeInterval property)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TimeInterval.duration">(lacing.TimeInterval property)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.during">during() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.during">during() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.during">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.during">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.during">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.during">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -408,36 +966,36 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.EmptySchemaRegistryError">EmptySchemaRegistryError</a>, <a href="module_docs/lacing/schema.html#lacing.schema.EmptySchemaRegistryError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.EmptySchemaRegistryError">EmptySchemaRegistryError</a>, <a href="_autosummary/lacing.schema.html#lacing.schema.EmptySchemaRegistryError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.OpLog.entries">entries() (lacing.OpLog method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.OpLog.entries">entries() (lacing.OpLog method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.entries">(lacing.oplog.OpLog method)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLog.entries">(lacing.oplog.OpLog method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.equals">equals() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.equals">equals() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.equals">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.equals">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.equals">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.equals">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.export_json_schemas">export_json_schemas() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.export_json_schemas">export_json_schemas() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.export_json_schemas">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.export_json_schemas">(in module lacing.schema)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.extend">extend() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.extend">extend() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.extend">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.extend">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.extend">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.extend">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -446,80 +1004,80 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.find_adapter">find_adapter() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.find_adapter">find_adapter() (in module lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.finishes">finishes() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.finishes">finishes() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.finishes">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.finishes">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.finishes">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.finishes">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.from_aws">from_aws() (lacing.artifact_store.ArtifactStore class method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.from_aws">from_aws() (lacing.artifact_store.ArtifactStore class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.from_aws">(lacing.ArtifactStore class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.from_aws">(lacing.ArtifactStore class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Artifact.from_bytes">from_bytes() (lacing.Artifact class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Artifact.from_bytes">from_bytes() (lacing.Artifact class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.from_bytes">(lacing.artifact.Artifact class method)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.Artifact.from_bytes">(lacing.artifact.Artifact class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.from_directory">from_directory() (lacing.artifact_store.ArtifactStore class method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.from_directory">from_directory() (lacing.artifact_store.ArtifactStore class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.from_directory">(lacing.ArtifactStore class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.from_directory">(lacing.ArtifactStore class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.from_memory">from_memory() (in module lacing.store.postgres)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.from_memory">from_memory() (in module lacing.store.postgres)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.from_memory">(in module lacing.store.sqlite)</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#lacing.store.sqlite.from_memory">(in module lacing.store.sqlite)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Artifact.from_path">from_path() (lacing.Artifact class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Artifact.from_path">from_path() (lacing.Artifact class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.from_path">(lacing.artifact.Artifact class method)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.Artifact.from_path">(lacing.artifact.Artifact class method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.from_s3">from_s3() (lacing.artifact_store.ArtifactStore class method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.from_s3">from_s3() (lacing.artifact_store.ArtifactStore class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.from_s3">(lacing.ArtifactStore class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.from_s3">(lacing.ArtifactStore class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.from_seconds">from_seconds() (lacing.RationalTime class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.from_seconds">from_seconds() (lacing.RationalTime class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.from_seconds">(lacing.time.RationalTime class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.from_seconds">(lacing.time.RationalTime class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.from_seconds_lossy">from_seconds_lossy() (lacing.RationalTime class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.from_seconds_lossy">from_seconds_lossy() (lacing.RationalTime class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.from_seconds_lossy">(lacing.time.RationalTime class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.from_seconds_lossy">(lacing.time.RationalTime class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.from_sql">from_sql() (lacing.artifact_store.ArtifactStore class method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.from_sql">from_sql() (lacing.artifact_store.ArtifactStore class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.from_sql">(lacing.ArtifactStore class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.from_sql">(lacing.ArtifactStore class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.from_wire">from_wire() (lacing.RationalTime class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.from_wire">from_wire() (lacing.RationalTime class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.from_wire">(lacing.time.RationalTime class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.from_wire">(lacing.time.RationalTime class method)</a>
 </li>
-        <li><a href="module_docs/lacing/time.html#lacing.time.TimeInterval.from_wire">(lacing.time.TimeInterval class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.TimeInterval.from_wire">(lacing.time.TimeInterval class method)</a>
 </li>
-        <li><a href="module_docs/lacing.html#lacing.TimeInterval.from_wire">(lacing.TimeInterval class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TimeInterval.from_wire">(lacing.TimeInterval class method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -528,34 +1086,34 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/model.html#lacing.model.Provenance.generated_at_is_known">generated_at_is_known (lacing.model.Provenance property)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.Provenance.generated_at_is_known">generated_at_is_known (lacing.model.Provenance property)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.Provenance.generated_at_is_known">(lacing.Provenance property)</a>
+        <li><a href="_autosummary/lacing.html#lacing.Provenance.generated_at_is_known">(lacing.Provenance property)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.get_adapter">get_adapter() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.get_adapter">get_adapter() (in module lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.get_blob">get_blob() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.get_blob">get_blob() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.get_blob">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.get_blob">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.get_body_schema">get_body_schema() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.get_body_schema">get_body_schema() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.get_pool">get_pool() (in module lacing.store)</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.get_pool">get_pool() (in module lacing.store)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.get_pool">(in module lacing.store.postgres)</a>
+        <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.get_pool">(in module lacing.store.postgres)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.get_tracer">get_tracer() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.get_tracer">get_tracer() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/otel.html#lacing.otel.get_tracer">(in module lacing.otel)</a>
+        <li><a href="_autosummary/lacing.otel.html#lacing.otel.get_tracer">(in module lacing.otel)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -564,24 +1122,24 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.has_blob">has_blob() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.has_blob">has_blob() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.has_blob">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.has_blob">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.hash_bytes">hash_bytes() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.hash_bytes">hash_bytes() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.hash_bytes">(in module lacing.artifact)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.hash_bytes">(in module lacing.artifact)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.hash_file">hash_file() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.hash_file">hash_file() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.hash_file">(in module lacing.artifact)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.hash_file">(in module lacing.artifact)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -590,82 +1148,82 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.in_memory">in_memory() (lacing.artifact_store.ArtifactStore class method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.in_memory">in_memory() (lacing.artifact_store.ArtifactStore class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.in_memory">(lacing.ArtifactStore class method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.in_memory">(lacing.ArtifactStore class method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.INCLUDED_IN">INCLUDED_IN (lacing.tier.TierStereotype attribute)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype.INCLUDED_IN">INCLUDED_IN (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TierStereotype.INCLUDED_IN">(lacing.TierStereotype attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TierStereotype.INCLUDED_IN">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.index">index() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.index">index() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.index">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.index">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.InMemoryOpLog">InMemoryOpLog (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.InMemoryOpLog">InMemoryOpLog (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.InMemoryOpLog">(class in lacing.oplog)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.InMemoryOpLog">(class in lacing.oplog)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/otel.html#lacing.otel.instrument_app">instrument_app() (in module lacing.otel)</a>
+      <li><a href="_autosummary/lacing.otel.html#lacing.otel.instrument_app">instrument_app() (in module lacing.otel)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.instrument_otel">instrument_otel() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.instrument_otel">instrument_otel() (in module lacing)</a>
 </li>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.intersects">intersects() (in module lacing.allen)</a>
+      <li><a href="_autosummary/lacing.allen.html#lacing.allen.intersects">intersects() (in module lacing.allen)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.intersects">(lacing.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.intersects">(lacing.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.intersects">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.intersects">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.intersects">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.intersects">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.Annotation.interval">interval (lacing.Annotation property)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Annotation.interval">interval (lacing.Annotation property)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.Annotation.interval">(lacing.model.Annotation property)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.Annotation.interval">(lacing.model.Annotation property)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.interval_iou">interval_iou() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.interval_iou">interval_iou() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/quality.html#lacing.quality.interval_iou">(in module lacing.quality)</a>
+        <li><a href="_autosummary/lacing.quality.html#lacing.quality.interval_iou">(in module lacing.quality)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore">IntervalAnnotationStore (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore">IntervalAnnotationStore (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore">(class in lacing.store)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore">(class in lacing.store)</a>
 </li>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore">(class in lacing.store.base)</a>
-</li>
-      </ul></li>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.AllenRelation.inverse">inverse() (lacing.allen.AllenRelation method)</a>
-
-      <ul>
-        <li><a href="module_docs/lacing.html#lacing.AllenRelation.inverse">(lacing.AllenRelation method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore">(class in lacing.store.base)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.is_otel_active">is_otel_active() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.allen.html#lacing.allen.AllenRelation.inverse">inverse() (lacing.allen.AllenRelation method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/otel.html#lacing.otel.is_otel_active">(in module lacing.otel)</a>
+        <li><a href="_autosummary/lacing.html#lacing.AllenRelation.inverse">(lacing.AllenRelation method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.iter_blob">iter_blob() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.is_otel_active">is_otel_active() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.iter_blob">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.otel.html#lacing.otel.is_otel_active">(in module lacing.otel)</a>
+</li>
+      </ul></li>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.iter_blob">iter_blob() (lacing.artifact_store.ArtifactStore method)</a>
+
+      <ul>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.iter_blob">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -674,10 +1232,10 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.json_schema">json_schema() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.json_schema">json_schema() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.json_schema">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.json_schema">(in module lacing.schema)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -686,10 +1244,10 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.krippendorff_alpha">krippendorff_alpha() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.krippendorff_alpha">krippendorff_alpha() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/quality.html#lacing.quality.krippendorff_alpha">(in module lacing.quality)</a>
+        <li><a href="_autosummary/lacing.quality.html#lacing.quality.krippendorff_alpha">(in module lacing.quality)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -702,175 +1260,175 @@
     lacing
 
       <ul>
-        <li><a href="module_docs/lacing.html#module-lacing">module</a>
+        <li><a href="_autosummary/lacing.html#module-lacing">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters
 
       <ul>
-        <li><a href="module_docs/lacing/adapters.html#module-lacing.adapters">module</a>
+        <li><a href="_autosummary/lacing.adapters.html#module-lacing.adapters">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.annot
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/annot.html#module-lacing.adapters.annot">module</a>
+        <li><a href="_autosummary/lacing.adapters.annot.html#module-lacing.adapters.annot">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.eaf
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/eaf.html#module-lacing.adapters.eaf">module</a>
+        <li><a href="_autosummary/lacing.adapters.eaf.html#module-lacing.adapters.eaf">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.jams
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/jams.html#module-lacing.adapters.jams">module</a>
+        <li><a href="_autosummary/lacing.adapters.jams.html#module-lacing.adapters.jams">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.label_studio
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/label_studio.html#module-lacing.adapters.label_studio">module</a>
+        <li><a href="_autosummary/lacing.adapters.label_studio.html#module-lacing.adapters.label_studio">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.otio
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/otio.html#module-lacing.adapters.otio">module</a>
+        <li><a href="_autosummary/lacing.adapters.otio.html#module-lacing.adapters.otio">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.textgrid
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/textgrid.html#module-lacing.adapters.textgrid">module</a>
+        <li><a href="_autosummary/lacing.adapters.textgrid.html#module-lacing.adapters.textgrid">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.web_annotation
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/web_annotation.html#module-lacing.adapters.web_annotation">module</a>
+        <li><a href="_autosummary/lacing.adapters.web_annotation.html#module-lacing.adapters.web_annotation">module</a>
 </li>
       </ul></li>
       <li>
     lacing.adapters.webvtt
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/webvtt.html#module-lacing.adapters.webvtt">module</a>
+        <li><a href="_autosummary/lacing.adapters.webvtt.html#module-lacing.adapters.webvtt">module</a>
 </li>
       </ul></li>
       <li>
     lacing.allen
 
       <ul>
-        <li><a href="module_docs/lacing/allen.html#module-lacing.allen">module</a>
+        <li><a href="_autosummary/lacing.allen.html#module-lacing.allen">module</a>
 </li>
       </ul></li>
       <li>
     lacing.artifact
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#module-lacing.artifact">module</a>
+        <li><a href="_autosummary/lacing.artifact.html#module-lacing.artifact">module</a>
 </li>
       </ul></li>
       <li>
     lacing.artifact_store
 
       <ul>
-        <li><a href="module_docs/lacing/artifact_store.html#module-lacing.artifact_store">module</a>
+        <li><a href="_autosummary/lacing.artifact_store.html#module-lacing.artifact_store">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies
 
       <ul>
-        <li><a href="module_docs/lacing/bodies.html#module-lacing.bodies">module</a>
+        <li><a href="_autosummary/lacing.bodies.html#module-lacing.bodies">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.character_voice
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/character_voice.html#module-lacing.bodies.character_voice">module</a>
+        <li><a href="_autosummary/lacing.bodies.character_voice.html#module-lacing.bodies.character_voice">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.continuity_violation
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/continuity_violation.html#module-lacing.bodies.continuity_violation">module</a>
+        <li><a href="_autosummary/lacing.bodies.continuity_violation.html#module-lacing.bodies.continuity_violation">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.named_entity
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/named_entity.html#module-lacing.bodies.named_entity">module</a>
+        <li><a href="_autosummary/lacing.bodies.named_entity.html#module-lacing.bodies.named_entity">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.reference_lock
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/reference_lock.html#module-lacing.bodies.reference_lock">module</a>
+        <li><a href="_autosummary/lacing.bodies.reference_lock.html#module-lacing.bodies.reference_lock">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.review
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/review.html#module-lacing.bodies.review">module</a>
+        <li><a href="_autosummary/lacing.bodies.review.html#module-lacing.bodies.review">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.review_candidate
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/review_candidate.html#module-lacing.bodies.review_candidate">module</a>
+        <li><a href="_autosummary/lacing.bodies.review_candidate.html#module-lacing.bodies.review_candidate">module</a>
 </li>
       </ul></li>
       <li>
     lacing.bodies.word
 
       <ul>
-        <li><a href="module_docs/lacing/bodies/word.html#module-lacing.bodies.word">module</a>
+        <li><a href="_autosummary/lacing.bodies.word.html#module-lacing.bodies.word">module</a>
 </li>
       </ul></li>
       <li>
     lacing.cli
 
       <ul>
-        <li><a href="module_docs/lacing/cli.html#module-lacing.cli">module</a>
+        <li><a href="_autosummary/lacing.cli.html#module-lacing.cli">module</a>
 </li>
       </ul></li>
       <li>
     lacing.digest
 
       <ul>
-        <li><a href="module_docs/lacing/digest.html#module-lacing.digest">module</a>
+        <li><a href="_autosummary/lacing.digest.html#module-lacing.digest">module</a>
 </li>
       </ul></li>
       <li>
     lacing.exhibit
 
       <ul>
-        <li><a href="module_docs/lacing/exhibit.html#module-lacing.exhibit">module</a>
+        <li><a href="_autosummary/lacing.exhibit.html#module-lacing.exhibit">module</a>
 </li>
       </ul></li>
       <li>
     lacing.model
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#module-lacing.model">module</a>
+        <li><a href="_autosummary/lacing.model.html#module-lacing.model">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -879,159 +1437,159 @@
     lacing.oplog
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">module</a>
+        <li><a href="_autosummary/lacing.oplog.html#module-lacing.oplog">module</a>
 </li>
       </ul></li>
       <li>
     lacing.otel
 
       <ul>
-        <li><a href="module_docs/lacing/otel.html#module-lacing.otel">module</a>
+        <li><a href="_autosummary/lacing.otel.html#module-lacing.otel">module</a>
 </li>
       </ul></li>
       <li>
     lacing.processors
 
       <ul>
-        <li><a href="module_docs/lacing/processors.html#module-lacing.processors">module</a>
+        <li><a href="_autosummary/lacing.processors.html#module-lacing.processors">module</a>
 </li>
       </ul></li>
       <li>
     lacing.quality
 
       <ul>
-        <li><a href="module_docs/lacing/quality.html#module-lacing.quality">module</a>
+        <li><a href="_autosummary/lacing.quality.html#module-lacing.quality">module</a>
 </li>
       </ul></li>
       <li>
     lacing.schema
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#module-lacing.schema">module</a>
+        <li><a href="_autosummary/lacing.schema.html#module-lacing.schema">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#module-lacing.store">module</a>
+        <li><a href="_autosummary/lacing.store.html#module-lacing.store">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store.base
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#module-lacing.store.base">module</a>
+        <li><a href="_autosummary/lacing.store.base.html#module-lacing.store.base">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store.memory
 
       <ul>
-        <li><a href="module_docs/lacing/store/memory.html#module-lacing.store.memory">module</a>
+        <li><a href="_autosummary/lacing.store.memory.html#module-lacing.store.memory">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store.migrations
 
       <ul>
-        <li><a href="module_docs/lacing/store/migrations.html#module-lacing.store.migrations">module</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#module-lacing.store.migrations">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store.postgres
 
       <ul>
-        <li><a href="module_docs/lacing/store/postgres.html#module-lacing.store.postgres">module</a>
+        <li><a href="_autosummary/lacing.store.postgres.html#module-lacing.store.postgres">module</a>
 </li>
       </ul></li>
       <li>
     lacing.store.sqlite
 
       <ul>
-        <li><a href="module_docs/lacing/store/sqlite.html#module-lacing.store.sqlite">module</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#module-lacing.store.sqlite">module</a>
 </li>
       </ul></li>
       <li>
     lacing.tier
 
       <ul>
-        <li><a href="module_docs/lacing/tier.html#module-lacing.tier">module</a>
+        <li><a href="_autosummary/lacing.tier.html#module-lacing.tier">module</a>
 </li>
       </ul></li>
       <li>
     lacing.time
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#module-lacing.time">module</a>
+        <li><a href="_autosummary/lacing.time.html#module-lacing.time">module</a>
 </li>
       </ul></li>
       <li>
     lacing.tracks
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#module-lacing.tracks">module</a>
+        <li><a href="_autosummary/lacing.tracks.html#module-lacing.tracks">module</a>
 </li>
       </ul></li>
       <li>
     lacing.tracks.subtitle
 
       <ul>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#module-lacing.tracks.subtitle">module</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#module-lacing.tracks.subtitle">module</a>
 </li>
       </ul></li>
       <li>
     lacing.worker
 
       <ul>
-        <li><a href="module_docs/lacing/worker.html#module-lacing.worker">module</a>
+        <li><a href="_autosummary/lacing.worker.html#module-lacing.worker">module</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.OpLog.latest_clock">latest_clock() (lacing.OpLog method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.OpLog.latest_clock">latest_clock() (lacing.OpLog method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog.latest_clock">(lacing.oplog.OpLog method)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLog.latest_clock">(lacing.oplog.OpLog method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.latest_version">latest_version() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.latest_version">latest_version() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.line">line() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.line">line() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder.line">(lacing.tracks.SubtitleBuilder method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleBuilder.line">(lacing.tracks.SubtitleBuilder method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack.lines_in">lines_in() (lacing.tracks.subtitle.SubtitleTrack method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleTrack.lines_in">lines_in() (lacing.tracks.subtitle.SubtitleTrack method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleTrack.lines_in">(lacing.tracks.SubtitleTrack method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleTrack.lines_in">(lacing.tracks.SubtitleTrack method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.list_formats">list_formats() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.list_formats">list_formats() (in module lacing.cli)</a>
 </li>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.load">load() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.load">load() (in module lacing.adapters)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/adapters/annot.html#lacing.adapters.annot.load">(in module lacing.adapters.annot)</a>
+        <li><a href="_autosummary/lacing.adapters.annot.html#lacing.adapters.annot.load">(in module lacing.adapters.annot)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.load">(in module lacing.adapters.eaf)</a>
+        <li><a href="_autosummary/lacing.adapters.eaf.html#lacing.adapters.eaf.load">(in module lacing.adapters.eaf)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/jams.html#lacing.adapters.jams.load">(in module lacing.adapters.jams)</a>
+        <li><a href="_autosummary/lacing.adapters.jams.html#lacing.adapters.jams.load">(in module lacing.adapters.jams)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/label_studio.html#lacing.adapters.label_studio.load">(in module lacing.adapters.label_studio)</a>
+        <li><a href="_autosummary/lacing.adapters.label_studio.html#lacing.adapters.label_studio.load">(in module lacing.adapters.label_studio)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/otio.html#lacing.adapters.otio.load">(in module lacing.adapters.otio)</a>
+        <li><a href="_autosummary/lacing.adapters.otio.html#lacing.adapters.otio.load">(in module lacing.adapters.otio)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/textgrid.html#lacing.adapters.textgrid.load">(in module lacing.adapters.textgrid)</a>
+        <li><a href="_autosummary/lacing.adapters.textgrid.html#lacing.adapters.textgrid.load">(in module lacing.adapters.textgrid)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/web_annotation.html#lacing.adapters.web_annotation.load">(in module lacing.adapters.web_annotation)</a>
+        <li><a href="_autosummary/lacing.adapters.web_annotation.html#lacing.adapters.web_annotation.load">(in module lacing.adapters.web_annotation)</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/webvtt.html#lacing.adapters.webvtt.load">(in module lacing.adapters.webvtt)</a>
+        <li><a href="_autosummary/lacing.adapters.webvtt.html#lacing.adapters.webvtt.load">(in module lacing.adapters.webvtt)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.LossyTimeConversionError">LossyTimeConversionError</a>, <a href="module_docs/lacing/time.html#lacing.time.LossyTimeConversionError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.LossyTimeConversionError">LossyTimeConversionError</a>, <a href="_autosummary/lacing.time.html#lacing.time.LossyTimeConversionError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing/processors.html#lacing.processors.low_confidence_review">low_confidence_review() (in module lacing.processors)</a>
+      <li><a href="_autosummary/lacing.processors.html#lacing.processors.low_confidence_review">low_confidence_review() (in module lacing.processors)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1039,102 +1597,102 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.main">main() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.main">main() (in module lacing.cli)</a>
 </li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.make_uri">make_uri() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.make_uri">make_uri() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.maybe_span">maybe_span() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.maybe_span">maybe_span() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/otel.html#lacing.otel.maybe_span">(in module lacing.otel)</a>
+        <li><a href="_autosummary/lacing.otel.html#lacing.otel.maybe_span">(in module lacing.otel)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.MediaRef">MediaRef (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.MediaRef">MediaRef (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.MediaRef">(class in lacing.model)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.MediaRef">(class in lacing.model)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.meets">meets() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.meets">meets() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.meets">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.meets">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.meets">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.meets">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.MemoryStore">MemoryStore (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.MemoryStore">MemoryStore (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.MemoryStore">(class in lacing.store)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.MemoryStore">(class in lacing.store)</a>
 </li>
-        <li><a href="module_docs/lacing/store/memory.html#lacing.store.memory.MemoryStore">(class in lacing.store.memory)</a>
+        <li><a href="_autosummary/lacing.store.memory.html#lacing.store.memory.MemoryStore">(class in lacing.store.memory)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.migrate">migrate() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.migrate">migrate() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/cli.html#lacing.cli.migrate">(in module lacing.cli)</a>
+        <li><a href="_autosummary/lacing.cli.html#lacing.cli.migrate">(in module lacing.cli)</a>
 </li>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.migrate">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.migrate">(in module lacing.schema)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.migrate_annot_file">migrate_annot_file() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.migrate_annot_file">migrate_annot_file() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.migrate_annot_file">(in module lacing.store)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.migrate_annot_file">(in module lacing.store)</a>
 </li>
-        <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.migrate_annot_file">(in module lacing.store.migrations)</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.migrate_annot_file">(in module lacing.store.migrations)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.migrate_sqlite_connection">migrate_sqlite_connection() (in module lacing.store.migrations)</a>
+      <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.migrate_sqlite_connection">migrate_sqlite_connection() (in module lacing.store.migrations)</a>
 </li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.migrate_to_latest">migrate_to_latest() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.migrate_to_latest">migrate_to_latest() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.MigrationError">MigrationError</a>, <a href="module_docs/lacing/schema.html#lacing.schema.MigrationError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.MigrationError">MigrationError</a>, <a href="_autosummary/lacing.schema.html#lacing.schema.MigrationError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.mk_parser">mk_parser() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.mk_parser">mk_parser() (in module lacing.cli)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.Annotation.model_config">model_config (lacing.Annotation attribute)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Annotation.model_config">model_config (lacing.Annotation attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.AnnotationRef.model_config">(lacing.AnnotationRef attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.AnnotationRef.model_config">(lacing.AnnotationRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing.html#lacing.Artifact.model_config">(lacing.Artifact attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.Artifact.model_config">(lacing.Artifact attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.model_config">(lacing.artifact.Artifact attribute)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.Artifact.model_config">(lacing.artifact.Artifact attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/character_voice.html#lacing.bodies.character_voice.CharacterVoiceBodyV1.model_config">(lacing.bodies.character_voice.CharacterVoiceBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.character_voice.html#lacing.bodies.character_voice.CharacterVoiceBodyV1.model_config">(lacing.bodies.character_voice.CharacterVoiceBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config">(lacing.bodies.continuity_violation.ContinuityViolationBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1.model_config">(lacing.bodies.continuity_violation.ContinuityViolationBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1.model_config">(lacing.bodies.named_entity.NamedEntityBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1.model_config">(lacing.bodies.named_entity.NamedEntityBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2.model_config">(lacing.bodies.named_entity.NamedEntityBodyV2 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2.model_config">(lacing.bodies.named_entity.NamedEntityBodyV2 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1.model_config">(lacing.bodies.reference_lock.ReferenceLockBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1.model_config">(lacing.bodies.reference_lock.ReferenceLockBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1.model_config">(lacing.bodies.review.ReviewBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.ReviewBodyV1.model_config">(lacing.bodies.review.ReviewBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1.model_config">(lacing.bodies.review_candidate.ReviewCandidateBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1.model_config">(lacing.bodies.review_candidate.ReviewCandidateBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/word.html#lacing.bodies.word.WordBodyV1.model_config">(lacing.bodies.word.WordBodyV1 attribute)</a>
+        <li><a href="_autosummary/lacing.bodies.word.html#lacing.bodies.word.WordBodyV1.model_config">(lacing.bodies.word.WordBodyV1 attribute)</a>
 </li>
-        <li><a href="module_docs/lacing.html#lacing.MediaRef.model_config">(lacing.MediaRef attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.MediaRef.model_config">(lacing.MediaRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#lacing.model.Annotation.model_config">(lacing.model.Annotation attribute)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.Annotation.model_config">(lacing.model.Annotation attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#lacing.model.AnnotationRef.model_config">(lacing.model.AnnotationRef attribute)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.AnnotationRef.model_config">(lacing.model.AnnotationRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#lacing.model.MediaRef.model_config">(lacing.model.MediaRef attribute)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.MediaRef.model_config">(lacing.model.MediaRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#lacing.model.NodeRef.model_config">(lacing.model.NodeRef attribute)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.NodeRef.model_config">(lacing.model.NodeRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#lacing.model.Provenance.model_config">(lacing.model.Provenance attribute)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.Provenance.model_config">(lacing.model.Provenance attribute)</a>
 </li>
-        <li><a href="module_docs/lacing.html#lacing.NodeRef.model_config">(lacing.NodeRef attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.NodeRef.model_config">(lacing.NodeRef attribute)</a>
 </li>
-        <li><a href="module_docs/lacing.html#lacing.Provenance.model_config">(lacing.Provenance attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.Provenance.model_config">(lacing.Provenance attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1143,87 +1701,87 @@
     module
 
       <ul>
-        <li><a href="module_docs/lacing.html#module-lacing">lacing</a>
+        <li><a href="_autosummary/lacing.html#module-lacing">lacing</a>
 </li>
-        <li><a href="module_docs/lacing/adapters.html#module-lacing.adapters">lacing.adapters</a>
+        <li><a href="_autosummary/lacing.adapters.html#module-lacing.adapters">lacing.adapters</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/annot.html#module-lacing.adapters.annot">lacing.adapters.annot</a>
+        <li><a href="_autosummary/lacing.adapters.annot.html#module-lacing.adapters.annot">lacing.adapters.annot</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/eaf.html#module-lacing.adapters.eaf">lacing.adapters.eaf</a>
+        <li><a href="_autosummary/lacing.adapters.eaf.html#module-lacing.adapters.eaf">lacing.adapters.eaf</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/jams.html#module-lacing.adapters.jams">lacing.adapters.jams</a>
+        <li><a href="_autosummary/lacing.adapters.jams.html#module-lacing.adapters.jams">lacing.adapters.jams</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/label_studio.html#module-lacing.adapters.label_studio">lacing.adapters.label_studio</a>
+        <li><a href="_autosummary/lacing.adapters.label_studio.html#module-lacing.adapters.label_studio">lacing.adapters.label_studio</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/otio.html#module-lacing.adapters.otio">lacing.adapters.otio</a>
+        <li><a href="_autosummary/lacing.adapters.otio.html#module-lacing.adapters.otio">lacing.adapters.otio</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/textgrid.html#module-lacing.adapters.textgrid">lacing.adapters.textgrid</a>
+        <li><a href="_autosummary/lacing.adapters.textgrid.html#module-lacing.adapters.textgrid">lacing.adapters.textgrid</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/web_annotation.html#module-lacing.adapters.web_annotation">lacing.adapters.web_annotation</a>
+        <li><a href="_autosummary/lacing.adapters.web_annotation.html#module-lacing.adapters.web_annotation">lacing.adapters.web_annotation</a>
 </li>
-        <li><a href="module_docs/lacing/adapters/webvtt.html#module-lacing.adapters.webvtt">lacing.adapters.webvtt</a>
+        <li><a href="_autosummary/lacing.adapters.webvtt.html#module-lacing.adapters.webvtt">lacing.adapters.webvtt</a>
 </li>
-        <li><a href="module_docs/lacing/allen.html#module-lacing.allen">lacing.allen</a>
+        <li><a href="_autosummary/lacing.allen.html#module-lacing.allen">lacing.allen</a>
 </li>
-        <li><a href="module_docs/lacing/artifact.html#module-lacing.artifact">lacing.artifact</a>
+        <li><a href="_autosummary/lacing.artifact.html#module-lacing.artifact">lacing.artifact</a>
 </li>
-        <li><a href="module_docs/lacing/artifact_store.html#module-lacing.artifact_store">lacing.artifact_store</a>
+        <li><a href="_autosummary/lacing.artifact_store.html#module-lacing.artifact_store">lacing.artifact_store</a>
 </li>
-        <li><a href="module_docs/lacing/bodies.html#module-lacing.bodies">lacing.bodies</a>
+        <li><a href="_autosummary/lacing.bodies.html#module-lacing.bodies">lacing.bodies</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/character_voice.html#module-lacing.bodies.character_voice">lacing.bodies.character_voice</a>
+        <li><a href="_autosummary/lacing.bodies.character_voice.html#module-lacing.bodies.character_voice">lacing.bodies.character_voice</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/continuity_violation.html#module-lacing.bodies.continuity_violation">lacing.bodies.continuity_violation</a>
+        <li><a href="_autosummary/lacing.bodies.continuity_violation.html#module-lacing.bodies.continuity_violation">lacing.bodies.continuity_violation</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/named_entity.html#module-lacing.bodies.named_entity">lacing.bodies.named_entity</a>
+        <li><a href="_autosummary/lacing.bodies.named_entity.html#module-lacing.bodies.named_entity">lacing.bodies.named_entity</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/reference_lock.html#module-lacing.bodies.reference_lock">lacing.bodies.reference_lock</a>
+        <li><a href="_autosummary/lacing.bodies.reference_lock.html#module-lacing.bodies.reference_lock">lacing.bodies.reference_lock</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/review.html#module-lacing.bodies.review">lacing.bodies.review</a>
+        <li><a href="_autosummary/lacing.bodies.review.html#module-lacing.bodies.review">lacing.bodies.review</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/review_candidate.html#module-lacing.bodies.review_candidate">lacing.bodies.review_candidate</a>
+        <li><a href="_autosummary/lacing.bodies.review_candidate.html#module-lacing.bodies.review_candidate">lacing.bodies.review_candidate</a>
 </li>
-        <li><a href="module_docs/lacing/bodies/word.html#module-lacing.bodies.word">lacing.bodies.word</a>
+        <li><a href="_autosummary/lacing.bodies.word.html#module-lacing.bodies.word">lacing.bodies.word</a>
 </li>
-        <li><a href="module_docs/lacing/cli.html#module-lacing.cli">lacing.cli</a>
+        <li><a href="_autosummary/lacing.cli.html#module-lacing.cli">lacing.cli</a>
 </li>
-        <li><a href="module_docs/lacing/digest.html#module-lacing.digest">lacing.digest</a>
+        <li><a href="_autosummary/lacing.digest.html#module-lacing.digest">lacing.digest</a>
 </li>
-        <li><a href="module_docs/lacing/exhibit.html#module-lacing.exhibit">lacing.exhibit</a>
+        <li><a href="_autosummary/lacing.exhibit.html#module-lacing.exhibit">lacing.exhibit</a>
 </li>
-        <li><a href="module_docs/lacing/model.html#module-lacing.model">lacing.model</a>
+        <li><a href="_autosummary/lacing.model.html#module-lacing.model">lacing.model</a>
 </li>
-        <li><a href="module_docs/lacing/oplog.html#module-lacing.oplog">lacing.oplog</a>
+        <li><a href="_autosummary/lacing.oplog.html#module-lacing.oplog">lacing.oplog</a>
 </li>
-        <li><a href="module_docs/lacing/otel.html#module-lacing.otel">lacing.otel</a>
+        <li><a href="_autosummary/lacing.otel.html#module-lacing.otel">lacing.otel</a>
 </li>
-        <li><a href="module_docs/lacing/processors.html#module-lacing.processors">lacing.processors</a>
+        <li><a href="_autosummary/lacing.processors.html#module-lacing.processors">lacing.processors</a>
 </li>
-        <li><a href="module_docs/lacing/quality.html#module-lacing.quality">lacing.quality</a>
+        <li><a href="_autosummary/lacing.quality.html#module-lacing.quality">lacing.quality</a>
 </li>
-        <li><a href="module_docs/lacing/schema.html#module-lacing.schema">lacing.schema</a>
+        <li><a href="_autosummary/lacing.schema.html#module-lacing.schema">lacing.schema</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#module-lacing.store">lacing.store</a>
+        <li><a href="_autosummary/lacing.store.html#module-lacing.store">lacing.store</a>
 </li>
-        <li><a href="module_docs/lacing/store/base.html#module-lacing.store.base">lacing.store.base</a>
+        <li><a href="_autosummary/lacing.store.base.html#module-lacing.store.base">lacing.store.base</a>
 </li>
-        <li><a href="module_docs/lacing/store/memory.html#module-lacing.store.memory">lacing.store.memory</a>
+        <li><a href="_autosummary/lacing.store.memory.html#module-lacing.store.memory">lacing.store.memory</a>
 </li>
-        <li><a href="module_docs/lacing/store/migrations.html#module-lacing.store.migrations">lacing.store.migrations</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#module-lacing.store.migrations">lacing.store.migrations</a>
 </li>
-        <li><a href="module_docs/lacing/store/postgres.html#module-lacing.store.postgres">lacing.store.postgres</a>
+        <li><a href="_autosummary/lacing.store.postgres.html#module-lacing.store.postgres">lacing.store.postgres</a>
 </li>
-        <li><a href="module_docs/lacing/store/sqlite.html#module-lacing.store.sqlite">lacing.store.sqlite</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#module-lacing.store.sqlite">lacing.store.sqlite</a>
 </li>
-        <li><a href="module_docs/lacing/tier.html#module-lacing.tier">lacing.tier</a>
+        <li><a href="_autosummary/lacing.tier.html#module-lacing.tier">lacing.tier</a>
 </li>
-        <li><a href="module_docs/lacing/time.html#module-lacing.time">lacing.time</a>
+        <li><a href="_autosummary/lacing.time.html#module-lacing.time">lacing.time</a>
 </li>
-        <li><a href="module_docs/lacing/tracks.html#module-lacing.tracks">lacing.tracks</a>
+        <li><a href="_autosummary/lacing.tracks.html#module-lacing.tracks">lacing.tracks</a>
 </li>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#module-lacing.tracks.subtitle">lacing.tracks.subtitle</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#module-lacing.tracks.subtitle">lacing.tracks.subtitle</a>
 </li>
-        <li><a href="module_docs/lacing/worker.html#module-lacing.worker">lacing.worker</a>
+        <li><a href="_autosummary/lacing.worker.html#module-lacing.worker">lacing.worker</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1232,30 +1790,30 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1">NamedEntityBodyV1 (class in lacing.bodies.named_entity)</a>
+      <li><a href="_autosummary/lacing.bodies.named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1">NamedEntityBodyV1 (class in lacing.bodies.named_entity)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2">NamedEntityBodyV2 (class in lacing.bodies.named_entity)</a>
+      <li><a href="_autosummary/lacing.bodies.named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2">NamedEntityBodyV2 (class in lacing.bodies.named_entity)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.NodeRef">NodeRef (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.NodeRef">NodeRef (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.NodeRef">(class in lacing.model)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.NodeRef">(class in lacing.model)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.NONE">NONE (lacing.tier.TierStereotype attribute)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype.NONE">NONE (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TierStereotype.NONE">(lacing.TierStereotype attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TierStereotype.NONE">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.NonStringBodyKeyError">NonStringBodyKeyError</a>, <a href="module_docs/lacing/digest.html#lacing.digest.NonStringBodyKeyError">[1]</a>
+      <li><a href="_autosummary/lacing.digest.html#lacing.digest.NonStringBodyKeyError">NonStringBodyKeyError</a>, <a href="_autosummary/lacing.html#lacing.NonStringBodyKeyError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.now">now() (lacing.RationalTime class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.now">now() (lacing.RationalTime class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.now">(lacing.time.RationalTime class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.now">(lacing.time.RationalTime class method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1264,32 +1822,32 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.operation">operation (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.operation">operation (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.operation">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.operation">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.OpLog">OpLog (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.OpLog">OpLog (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLog">(class in lacing.oplog)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLog">(class in lacing.oplog)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.OpLogEntry">OpLogEntry (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.OpLogEntry">OpLogEntry (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry">(class in lacing.oplog)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry">(class in lacing.oplog)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.overlaps">overlaps() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.overlaps">overlaps() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.overlaps">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.overlaps">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.overlaps">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.overlaps">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1298,52 +1856,52 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.parse_uri">parse_uri() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.parse_uri">parse_uri() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing/model.html#lacing.model.partition_provenance_refs">partition_provenance_refs() (in module lacing.model)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.partition_provenance_refs">partition_provenance_refs() (in module lacing.model)</a>
 </li>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.payload">payload (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.payload">payload (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.payload">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.payload">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.PgSchemaMismatchError">PgSchemaMismatchError</a>, <a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PgSchemaMismatchError">[1]</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.PgSchemaMismatchError">PgSchemaMismatchError</a>, <a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.PgSchemaMismatchError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.POSTGRES_KIND">POSTGRES_KIND (in module lacing.store.migrations)</a>
+      <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.POSTGRES_KIND">POSTGRES_KIND (in module lacing.store.migrations)</a>
 </li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.PostgresStore">PostgresStore (class in lacing.store)</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.PostgresStore">PostgresStore (class in lacing.store)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore">(class in lacing.store.postgres)</a>
+        <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.PostgresStore">(class in lacing.store.postgres)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.PREDICATE_BY_RELATION">PREDICATE_BY_RELATION (in module lacing.allen)</a>
+      <li><a href="_autosummary/lacing.allen.html#lacing.allen.PREDICATE_BY_RELATION">PREDICATE_BY_RELATION (in module lacing.allen)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1.primary">primary (lacing.bodies.reference_lock.ReferenceLockBodyV1 property)</a>
+      <li><a href="_autosummary/lacing.bodies.reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1.primary">primary (lacing.bodies.reference_lock.ReferenceLockBodyV1 property)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.ProcessorError">ProcessorError</a>, <a href="module_docs/lacing/processors.html#lacing.processors.ProcessorError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.ProcessorError">ProcessorError</a>, <a href="_autosummary/lacing.processors.html#lacing.processors.ProcessorError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.Provenance">Provenance (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Provenance">Provenance (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/model.html#lacing.model.Provenance">(class in lacing.model)</a>
+        <li><a href="_autosummary/lacing.model.html#lacing.model.Provenance">(class in lacing.model)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/model.html#lacing.model.ProvenanceRef">ProvenanceRef (in module lacing.model)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.ProvenanceRef">ProvenanceRef (in module lacing.model)</a>
 </li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.put_blob">put_blob() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.put_blob">put_blob() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.put_blob">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.put_blob">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.put_blob_stream">put_blob_stream() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.put_blob_stream">put_blob_stream() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.put_blob_stream">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.put_blob_stream">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1352,7 +1910,7 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.query">query() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.query">query() (in module lacing.cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1360,129 +1918,129 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/store.html#lacing.store.RateMismatchError">RateMismatchError</a>, <a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.RateMismatchError">[1]</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.RateMismatchError">RateMismatchError</a>, <a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.RateMismatchError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing/time.html#lacing.time.RATIONAL_TIME_JSON_SCHEMA">RATIONAL_TIME_JSON_SCHEMA (in module lacing.time)</a>
+      <li><a href="_autosummary/lacing.time.html#lacing.time.RATIONAL_TIME_JSON_SCHEMA">RATIONAL_TIME_JSON_SCHEMA (in module lacing.time)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime">RationalTime (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime">RationalTime (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime">(class in lacing.time)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime">(class in lacing.time)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.reachable_versions">reachable_versions() (in module lacing.store)</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.reachable_versions">reachable_versions() (in module lacing.store)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.reachable_versions">(in module lacing.store.migrations)</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.reachable_versions">(in module lacing.store.migrations)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.rebuild_annotations_rtree">rebuild_annotations_rtree() (in module lacing.store)</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.rebuild_annotations_rtree">rebuild_annotations_rtree() (in module lacing.store)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.rebuild_annotations_rtree">(in module lacing.store.migrations)</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.rebuild_annotations_rtree">(in module lacing.store.migrations)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.received_at">received_at (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.received_at">received_at (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.received_at">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.received_at">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/model.html#lacing.model.Reference">Reference (in module lacing.model)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.Reference">Reference (in module lacing.model)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1">ReferenceLockBodyV1 (class in lacing.bodies.reference_lock)</a>
+      <li><a href="_autosummary/lacing.bodies.reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1">ReferenceLockBodyV1 (class in lacing.bodies.reference_lock)</a>
 </li>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.register_adapter">register_adapter() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.register_adapter">register_adapter() (in module lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.register_body_schema">register_body_schema() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.register_body_schema">register_body_schema() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.register_body_schema">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.register_body_schema">(in module lacing.schema)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.register_migration">register_migration() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.register_migration">register_migration() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.register_migration">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.register_migration">(in module lacing.schema)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.register_processor">register_processor() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.register_processor">register_processor() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/processors.html#lacing.processors.register_processor">(in module lacing.processors)</a>
+        <li><a href="_autosummary/lacing.processors.html#lacing.processors.register_processor">(in module lacing.processors)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.register_store_migration">register_store_migration() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.register_store_migration">register_store_migration() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.register_store_migration">(in module lacing.store)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.register_store_migration">(in module lacing.store)</a>
 </li>
-        <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.register_store_migration">(in module lacing.store.migrations)</a>
+        <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.register_store_migration">(in module lacing.store.migrations)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tracks.html#lacing.tracks.register_subtitle_schemas">register_subtitle_schemas() (in module lacing.tracks)</a>
+      <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.register_subtitle_schemas">register_subtitle_schemas() (in module lacing.tracks)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.register_subtitle_schemas">(in module lacing.tracks.subtitle)</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.register_subtitle_schemas">(in module lacing.tracks.subtitle)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/adapters.html#lacing.adapters.registered">registered() (in module lacing.adapters)</a>
+      <li><a href="_autosummary/lacing.adapters.html#lacing.adapters.registered">registered() (in module lacing.adapters)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.registered_processors">registered_processors() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.registered_processors">registered_processors() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/processors.html#lacing.processors.registered_processors">(in module lacing.processors)</a>
+        <li><a href="_autosummary/lacing.processors.html#lacing.processors.registered_processors">(in module lacing.processors)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/schema.html#lacing.schema.registered_uris">registered_uris() (in module lacing.schema)</a>
+      <li><a href="_autosummary/lacing.schema.html#lacing.schema.registered_uris">registered_uris() (in module lacing.schema)</a>
 </li>
-      <li><a href="module_docs/lacing/allen.html#lacing.allen.relate">relate() (in module lacing.allen)</a>
+      <li><a href="_autosummary/lacing.allen.html#lacing.allen.relate">relate() (in module lacing.allen)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.relate">(lacing.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.relate">(lacing.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.relate">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.relate">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.relate">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.relate">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.remove">remove() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.remove">remove() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.remove">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.remove">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.remove">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.remove">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.render_artifact_exhibit">render_artifact_exhibit() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.render_artifact_exhibit">render_artifact_exhibit() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/exhibit.html#lacing.exhibit.render_artifact_exhibit">(in module lacing.exhibit)</a>
+        <li><a href="_autosummary/lacing.exhibit.html#lacing.exhibit.render_artifact_exhibit">(in module lacing.exhibit)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.replay">replay() (in module lacing.oplog)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.replay">replay() (in module lacing.oplog)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.replay_oplog">replay_oplog() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.replay_oplog">replay_oplog() (in module lacing)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1">ReviewBodyV1 (class in lacing.bodies.review)</a>
+      <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.ReviewBodyV1">ReviewBodyV1 (class in lacing.bodies.review)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1">ReviewCandidateBodyV1 (class in lacing.bodies.review_candidate)</a>
+      <li><a href="_autosummary/lacing.bodies.review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1">ReviewCandidateBodyV1 (class in lacing.bodies.review_candidate)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewDecision">ReviewDecision (in module lacing.bodies.review)</a>
+      <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.ReviewDecision">ReviewDecision (in module lacing.bodies.review)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewKind">ReviewKind (in module lacing.bodies.review)</a>
+      <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.ReviewKind">ReviewKind (in module lacing.bodies.review)</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewStatus">ReviewStatus (in module lacing.bodies.review)</a>
+      <li><a href="_autosummary/lacing.bodies.review.html#lacing.bodies.review.ReviewStatus">ReviewStatus (in module lacing.bodies.review)</a>
 </li>
-      <li><a href="module_docs/lacing/processors.html#lacing.processors.run_async">run_async() (in module lacing.processors)</a>
+      <li><a href="_autosummary/lacing.processors.html#lacing.processors.run_async">run_async() (in module lacing.processors)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.run_processor_async">run_processor_async() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.run_processor_async">run_processor_async() (in module lacing)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.run_processor_sync">run_processor_sync() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.run_processor_sync">run_processor_sync() (in module lacing)</a>
 </li>
-      <li><a href="module_docs/lacing/processors.html#lacing.processors.run_sync">run_sync() (in module lacing.processors)</a>
+      <li><a href="_autosummary/lacing.processors.html#lacing.processors.run_sync">run_sync() (in module lacing.processors)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1490,90 +2048,90 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore.save">save() (lacing.artifact_store.ArtifactStore method)</a>
+      <li><a href="_autosummary/lacing.artifact_store.html#lacing.artifact_store.ArtifactStore.save">save() (lacing.artifact_store.ArtifactStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.ArtifactStore.save">(lacing.ArtifactStore method)</a>
+        <li><a href="_autosummary/lacing.html#lacing.ArtifactStore.save">(lacing.ArtifactStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.SCHEMA_VERSION">SCHEMA_VERSION (in module lacing.store.postgres)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.SCHEMA_VERSION">SCHEMA_VERSION (in module lacing.store.postgres)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SCHEMA_VERSION">(in module lacing.store.sqlite)</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#lacing.store.sqlite.SCHEMA_VERSION">(in module lacing.store.sqlite)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.SchemaMismatchError">SchemaMismatchError</a>, <a href="module_docs/lacing/store.html#lacing.store.SchemaMismatchError">[1]</a>, <a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SchemaMismatchError">[2]</a>
+      <li><a href="_autosummary/lacing.html#lacing.SchemaMismatchError">SchemaMismatchError</a>, <a href="_autosummary/lacing.store.html#lacing.store.SchemaMismatchError">[1]</a>, <a href="_autosummary/lacing.store.sqlite.html#lacing.store.sqlite.SchemaMismatchError">[2]</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.Scope">Scope (in module lacing.bodies.reference_lock)</a>
+      <li><a href="_autosummary/lacing.bodies.reference_lock.html#lacing.bodies.reference_lock.Scope">Scope (in module lacing.bodies.reference_lock)</a>
 </li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.section">section() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.section">section() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder.section">(lacing.tracks.SubtitleBuilder method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleBuilder.section">(lacing.tracks.SubtitleBuilder method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack.sections_covering">sections_covering() (lacing.tracks.subtitle.SubtitleTrack method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleTrack.sections_covering">sections_covering() (lacing.tracks.subtitle.SubtitleTrack method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleTrack.sections_covering">(lacing.tracks.SubtitleTrack method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleTrack.sections_covering">(lacing.tracks.SubtitleTrack method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.SQLITE_KIND">SQLITE_KIND (in module lacing.store.migrations)</a>
+      <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.SQLITE_KIND">SQLITE_KIND (in module lacing.store.migrations)</a>
 </li>
-      <li><a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.SQLITE_MIGRATION_BUSY_TIMEOUT_MS">SQLITE_MIGRATION_BUSY_TIMEOUT_MS (in module lacing.store.migrations)</a>
+      <li><a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.SQLITE_MIGRATION_BUSY_TIMEOUT_MS">SQLITE_MIGRATION_BUSY_TIMEOUT_MS (in module lacing.store.migrations)</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.SqliteOpLog">SqliteOpLog (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.SqliteOpLog">SqliteOpLog (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/oplog.html#lacing.oplog.SqliteOpLog">(class in lacing.oplog)</a>
+        <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.SqliteOpLog">(class in lacing.oplog)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.SqliteStore">SqliteStore (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.SqliteStore">SqliteStore (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store.html#lacing.store.SqliteStore">(class in lacing.store)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.SqliteStore">(class in lacing.store)</a>
 </li>
-        <li><a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SqliteStore">(class in lacing.store.sqlite)</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#lacing.store.sqlite.SqliteStore">(class in lacing.store.sqlite)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.starts">starts() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.starts">starts() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.starts">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.starts">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.starts">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.starts">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.StoreMigrationError">StoreMigrationError</a>, <a href="module_docs/lacing/store.html#lacing.store.StoreMigrationError">[1]</a>, <a href="module_docs/lacing/store/migrations.html#lacing.store.migrations.StoreMigrationError">[2]</a>
+      <li><a href="_autosummary/lacing.html#lacing.StoreMigrationError">StoreMigrationError</a>, <a href="_autosummary/lacing.store.html#lacing.store.StoreMigrationError">[1]</a>, <a href="_autosummary/lacing.store.migrations.html#lacing.store.migrations.StoreMigrationError">[2]</a>
 </li>
-      <li><a href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.SubjectKind">SubjectKind (in module lacing.bodies.reference_lock)</a>
+      <li><a href="_autosummary/lacing.bodies.reference_lock.html#lacing.bodies.reference_lock.SubjectKind">SubjectKind (in module lacing.bodies.reference_lock)</a>
 </li>
-      <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder">SubtitleBuilder (class in lacing.tracks)</a>
+      <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleBuilder">SubtitleBuilder (class in lacing.tracks)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder">(class in lacing.tracks.subtitle)</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleBuilder">(class in lacing.tracks.subtitle)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleTrack">SubtitleTrack (class in lacing.tracks)</a>
+      <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleTrack">SubtitleTrack (class in lacing.tracks)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack">(class in lacing.tracks.subtitle)</a>
+        <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleTrack">(class in lacing.tracks.subtitle)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.SuggestedAction">SuggestedAction (in module lacing.bodies.continuity_violation)</a>
+      <li><a href="_autosummary/lacing.bodies.continuity_violation.html#lacing.bodies.continuity_violation.SuggestedAction">SuggestedAction (in module lacing.bodies.continuity_violation)</a>
 </li>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION">SYMBOLIC_ASSOCIATION (lacing.tier.TierStereotype attribute)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype.SYMBOLIC_ASSOCIATION">SYMBOLIC_ASSOCIATION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TierStereotype.SYMBOLIC_ASSOCIATION">(lacing.TierStereotype attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TierStereotype.SYMBOLIC_ASSOCIATION">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION">SYMBOLIC_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype.SYMBOLIC_SUBDIVISION">SYMBOLIC_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TierStereotype.SYMBOLIC_SUBDIVISION">(lacing.TierStereotype attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TierStereotype.SYMBOLIC_SUBDIVISION">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1582,78 +2140,78 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry.target_id">target_id (lacing.oplog.OpLogEntry attribute)</a>
+      <li><a href="_autosummary/lacing.oplog.html#lacing.oplog.OpLogEntry.target_id">target_id (lacing.oplog.OpLogEntry attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.OpLogEntry.target_id">(lacing.OpLogEntry attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.OpLogEntry.target_id">(lacing.OpLogEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Tier">Tier (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Tier">Tier (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tier.html#lacing.tier.Tier">(class in lacing.tier)</a>
+        <li><a href="_autosummary/lacing.tier.html#lacing.tier.Tier">(class in lacing.tier)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store.html#lacing.store.TierOverlapError">TierOverlapError</a>, <a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.TierOverlapError">[1]</a>
+      <li><a href="_autosummary/lacing.store.html#lacing.store.TierOverlapError">TierOverlapError</a>, <a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.TierOverlapError">[1]</a>
 </li>
-      <li><a href="module_docs/lacing.html#lacing.IntervalAnnotationStore.tiers">tiers() (lacing.IntervalAnnotationStore method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.IntervalAnnotationStore.tiers">tiers() (lacing.IntervalAnnotationStore method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore.tiers">(lacing.store.base.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.base.html#lacing.store.base.IntervalAnnotationStore.tiers">(lacing.store.base.IntervalAnnotationStore method)</a>
 </li>
-        <li><a href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore.tiers">(lacing.store.IntervalAnnotationStore method)</a>
+        <li><a href="_autosummary/lacing.store.html#lacing.store.IntervalAnnotationStore.tiers">(lacing.store.IntervalAnnotationStore method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.TierStereotype">TierStereotype (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.TierStereotype">TierStereotype (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype">(class in lacing.tier)</a>
+        <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype">(class in lacing.tier)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/time.html#lacing.time.TIME_INTERVAL_JSON_SCHEMA">TIME_INTERVAL_JSON_SCHEMA (in module lacing.time)</a>
+      <li><a href="_autosummary/lacing.time.html#lacing.time.TIME_INTERVAL_JSON_SCHEMA">TIME_INTERVAL_JSON_SCHEMA (in module lacing.time)</a>
 </li>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.TierStereotype.TIME_SUBDIVISION">TIME_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.TierStereotype.TIME_SUBDIVISION">TIME_SUBDIVISION (lacing.tier.TierStereotype attribute)</a>
 
       <ul>
-        <li><a href="module_docs/lacing.html#lacing.TierStereotype.TIME_SUBDIVISION">(lacing.TierStereotype attribute)</a>
+        <li><a href="_autosummary/lacing.html#lacing.TierStereotype.TIME_SUBDIVISION">(lacing.TierStereotype attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.TimeInterval">TimeInterval (class in lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.TimeInterval">TimeInterval (class in lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.TimeInterval">(class in lacing.time)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.TimeInterval">(class in lacing.time)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.Artifact.to_media_ref">to_media_ref() (lacing.Artifact method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.Artifact.to_media_ref">to_media_ref() (lacing.Artifact method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/artifact.html#lacing.artifact.Artifact.to_media_ref">(lacing.artifact.Artifact method)</a>
+        <li><a href="_autosummary/lacing.artifact.html#lacing.artifact.Artifact.to_media_ref">(lacing.artifact.Artifact method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing/store/postgres.html#lacing.store.postgres.to_memory">to_memory() (in module lacing.store.postgres)</a>
+      <li><a href="_autosummary/lacing.store.postgres.html#lacing.store.postgres.to_memory">to_memory() (in module lacing.store.postgres)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.to_memory">(in module lacing.store.sqlite)</a>
+        <li><a href="_autosummary/lacing.store.sqlite.html#lacing.store.sqlite.to_memory">(in module lacing.store.sqlite)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.to_rate">to_rate() (lacing.RationalTime method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.to_rate">to_rate() (lacing.RationalTime method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.to_rate">(lacing.time.RationalTime method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.to_rate">(lacing.time.RationalTime method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.to_seconds">to_seconds() (lacing.RationalTime method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.to_seconds">to_seconds() (lacing.RationalTime method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.to_seconds">(lacing.time.RationalTime method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.to_seconds">(lacing.time.RationalTime method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.traced">traced() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.traced">traced() (in module lacing)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/otel.html#lacing.otel.traced">(in module lacing.otel)</a>
+        <li><a href="_autosummary/lacing.otel.html#lacing.otel.traced">(in module lacing.otel)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1662,11 +2220,11 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/model.html#lacing.model.UNKNOWN_GENERATED_AT">UNKNOWN_GENERATED_AT (in module lacing.model)</a>
+      <li><a href="_autosummary/lacing.model.html#lacing.model.UNKNOWN_GENERATED_AT">UNKNOWN_GENERATED_AT (in module lacing.model)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.UnknownBodySchemaError">UnknownBodySchemaError</a>, <a href="module_docs/lacing/schema.html#lacing.schema.UnknownBodySchemaError">[1]</a>
+      <li><a href="_autosummary/lacing.html#lacing.UnknownBodySchemaError">UnknownBodySchemaError</a>, <a href="_autosummary/lacing.schema.html#lacing.schema.UnknownBodySchemaError">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1674,21 +2232,21 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/cli.html#lacing.cli.validate">validate() (in module lacing.cli)</a>
+      <li><a href="_autosummary/lacing.cli.html#lacing.cli.validate">validate() (in module lacing.cli)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/schema.html#lacing.schema.validate">(in module lacing.schema)</a>
+        <li><a href="_autosummary/lacing.schema.html#lacing.schema.validate">(in module lacing.schema)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/lacing.html#lacing.validate_body">validate_body() (in module lacing)</a>
+      <li><a href="_autosummary/lacing.html#lacing.validate_body">validate_body() (in module lacing)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/tier.html#lacing.tier.validate_tier_constraint">validate_tier_constraint() (in module lacing.tier)</a>
+      <li><a href="_autosummary/lacing.tier.html#lacing.tier.validate_tier_constraint">validate_tier_constraint() (in module lacing.tier)</a>
 </li>
-      <li><a href="module_docs/lacing/digest.html#lacing.digest.VALUE_DIGEST_SCHEME">VALUE_DIGEST_SCHEME (in module lacing.digest)</a>
+      <li><a href="_autosummary/lacing.digest.html#lacing.digest.VALUE_DIGEST_SCHEME">VALUE_DIGEST_SCHEME (in module lacing.digest)</a>
 </li>
-      <li><a href="module_docs/lacing/digest.html#lacing.digest.VALUE_FIELDS">VALUE_FIELDS (in module lacing.digest)</a>
+      <li><a href="_autosummary/lacing.digest.html#lacing.digest.VALUE_FIELDS">VALUE_FIELDS (in module lacing.digest)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1696,20 +2254,20 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.word">word() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleBuilder.word">word() (lacing.tracks.subtitle.SubtitleBuilder method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder.word">(lacing.tracks.SubtitleBuilder method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleBuilder.word">(lacing.tracks.SubtitleBuilder method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing/bodies/word.html#lacing.bodies.word.WordBodyV1">WordBodyV1 (class in lacing.bodies.word)</a>
+      <li><a href="_autosummary/lacing.bodies.word.html#lacing.bodies.word.WordBodyV1">WordBodyV1 (class in lacing.bodies.word)</a>
 </li>
-      <li><a href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack.words_in">words_in() (lacing.tracks.subtitle.SubtitleTrack method)</a>
+      <li><a href="_autosummary/lacing.tracks.subtitle.html#lacing.tracks.subtitle.SubtitleTrack.words_in">words_in() (lacing.tracks.subtitle.SubtitleTrack method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleTrack.words_in">(lacing.tracks.SubtitleTrack method)</a>
+        <li><a href="_autosummary/lacing.tracks.html#lacing.tracks.SubtitleTrack.words_in">(lacing.tracks.SubtitleTrack method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1718,10 +2276,10 @@
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/lacing.html#lacing.RationalTime.zero">zero() (lacing.RationalTime class method)</a>
+      <li><a href="_autosummary/lacing.html#lacing.RationalTime.zero">zero() (lacing.RationalTime class method)</a>
 
       <ul>
-        <li><a href="module_docs/lacing/time.html#lacing.time.RationalTime.zero">(lacing.time.RationalTime class method)</a>
+        <li><a href="_autosummary/lacing.time.html#lacing.time.RationalTime.zero">(lacing.time.RationalTime class method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1729,31 +2287,53 @@
 
 
 
-           </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
 
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  </footer>
+  </body>
 </html>

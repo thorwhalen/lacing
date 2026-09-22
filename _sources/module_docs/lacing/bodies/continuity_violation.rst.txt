@@ -1,4 +1,0 @@
-lacing.bodies.continuity_violation
-==================================
-.. automodule:: lacing.bodies.continuity_violation
-   :members:

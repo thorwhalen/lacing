@@ -1,0 +1,28 @@
+lacing.digest
+=============
+
+.. automodule:: lacing.digest
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      VALUE_FIELDS
+      BODY_FIELDS
+      VALUE_DIGEST_SCHEME
+      BODY_DIGEST_SCHEME
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      annotation_value_digest
+      annotation_body_digest
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      NonStringBodyKeyError
+   

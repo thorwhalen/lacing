@@ -1,0 +1,102 @@
+﻿lacing
+======
+
+.. automodule:: lacing
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      hash_bytes
+      hash_file
+      annotation_value_digest
+      annotation_body_digest
+      register_store_migration
+      migrate_annot_file
+      replay_oplog
+      register_processor
+      registered_processors
+      run_processor_async
+      run_processor_sync
+      get_tracer
+      maybe_span
+      traced
+      instrument_otel
+      is_otel_active
+      cohen_kappa
+      krippendorff_alpha
+      interval_iou
+      boundary_iou
+      register_body_schema
+      register_migration
+      json_schema
+      export_json_schemas
+      render_artifact_exhibit
+      migrate
+      validate_body
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RationalTime
+      TimeInterval
+      Tier
+      TierStereotype
+      Annotation
+      MediaRef
+      NodeRef
+      AnnotationRef
+      Provenance
+      Artifact
+      ArtifactStore
+      AllenRelation
+      IntervalAnnotationStore
+      MemoryStore
+      SqliteStore
+      OpLog
+      OpLogEntry
+      InMemoryOpLog
+      SqliteOpLog
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      LossyTimeConversionError
+      NonStringBodyKeyError
+      SchemaMismatchError
+      StoreMigrationError
+      ProcessorError
+      BodySchemaError
+      EmptySchemaRegistryError
+      UnknownBodySchemaError
+      MigrationError
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   adapters
+   allen
+   artifact
+   artifact_store
+   bodies
+   cli
+   digest
+   exhibit
+   model
+   oplog
+   otel
+   processors
+   quality
+   schema
+   server
+   store
+   tier
+   time
+   tracks
+   worker

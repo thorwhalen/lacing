@@ -1,4 +1,0 @@
-lacing.adapters.jams
-====================
-.. automodule:: lacing.adapters.jams
-   :members:

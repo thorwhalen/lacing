@@ -1,4 +1,0 @@
-lacing.adapters.otio
-====================
-.. automodule:: lacing.adapters.otio
-   :members:

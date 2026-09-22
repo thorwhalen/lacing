@@ -1,4 +1,0 @@
-lacing.server.etag
-==================
-.. automodule:: lacing.server.etag
-   :members:

@@ -1,0 +1,25 @@
+lacing.processors
+=================
+
+.. automodule:: lacing.processors
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      clear_processors
+      detect_density_change_points
+      get_processor
+      low_confidence_review
+      register_processor
+      registered_processors
+      run_async
+      run_sync
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      ProcessorError
+   

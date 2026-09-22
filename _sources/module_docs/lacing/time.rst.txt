@@ -1,4 +1,0 @@
-lacing.time
-===========
-.. automodule:: lacing.time
-   :members:

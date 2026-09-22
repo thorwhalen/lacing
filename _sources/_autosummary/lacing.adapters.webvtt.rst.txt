@@ -1,0 +1,13 @@
+lacing.adapters.webvtt
+======================
+
+.. automodule:: lacing.adapters.webvtt
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

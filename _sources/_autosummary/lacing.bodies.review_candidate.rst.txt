@@ -1,0 +1,12 @@
+lacing.bodies.review\_candidate
+===============================
+
+.. automodule:: lacing.bodies.review_candidate
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ReviewCandidateBodyV1
+   

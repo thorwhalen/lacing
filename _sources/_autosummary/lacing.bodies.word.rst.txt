@@ -1,0 +1,12 @@
+lacing.bodies.word
+==================
+
+.. automodule:: lacing.bodies.word
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      WordBodyV1
+   

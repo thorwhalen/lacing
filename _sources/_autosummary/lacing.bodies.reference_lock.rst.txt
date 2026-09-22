@@ -1,0 +1,19 @@
+lacing.bodies.reference\_lock
+=============================
+
+.. automodule:: lacing.bodies.reference_lock
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SubjectKind
+      Scope
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ReferenceLockBodyV1
+   

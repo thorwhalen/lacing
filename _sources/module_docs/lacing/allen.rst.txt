@@ -1,4 +1,0 @@
-lacing.allen
-============
-.. automodule:: lacing.allen
-   :members:

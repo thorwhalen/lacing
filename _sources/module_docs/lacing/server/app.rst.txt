@@ -1,4 +1,0 @@
-lacing.server.app
-=================
-.. automodule:: lacing.server.app
-   :members:

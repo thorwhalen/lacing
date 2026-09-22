@@ -1,4 +1,0 @@
-lacing.store.postgres
-=====================
-.. automodule:: lacing.store.postgres
-   :members:

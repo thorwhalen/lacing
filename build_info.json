@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-09-22T13:47:08Z",
+  "package": {
+    "name": "lacing",
+    "version": "0.0.41",
+    "display_name": "lacing",
+    "source": "pyproject.toml"
+  },
+  "git": {
+    "available": true,
+    "commit": "4967c75ed767cf60e49ca8396254f546d6c466ef",
+    "short_commit": "4967c75",
+    "branch": "main",
+    "tags": [],
+    "dirty": false,
+    "remote_url": "https://github.com/thorwhalen/lacing",
+    "commit_url": "https://github.com/thorwhalen/lacing/commit/4967c75ed767cf60e49ca8396254f546d6c466ef",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "thorwhalen/lacing",
+    "sha": "4967c75ed767cf60e49ca8396254f546d6c466ef",
+    "sha_in_history": true,
+    "ref": "refs/heads/main",
+    "ref_name": "main",
+    "run_id": "35735500780",
+    "run_url": "https://github.com/thorwhalen/lacing/actions/runs/35735500780",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.12",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.14"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "pydata_sphinx_theme",
+    "accent": "#006e59",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/",
+      "scrap/",
+      "examples/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 41,
+    "objects_documented": 399
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.0.41",
+    "relation": "same",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/thorwhalen/lacing && cd lacing\ngit checkout 4967c75ed767cf60e49ca8396254f546d6c466ef\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "warnings": [],
+  "alignment": {
+    "aligned": true,
+    "notes": []
+  }
+}

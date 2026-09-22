@@ -1,0 +1,13 @@
+lacing.adapters.label\_studio
+=============================
+
+.. automodule:: lacing.adapters.label_studio
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

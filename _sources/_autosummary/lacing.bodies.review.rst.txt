@@ -1,0 +1,21 @@
+lacing.bodies.review
+====================
+
+.. automodule:: lacing.bodies.review
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      ReviewKind
+      ReviewStatus
+      Author
+      ReviewDecision
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ReviewBodyV1
+   

@@ -1,0 +1,12 @@
+lacing.artifact\_store
+======================
+
+.. automodule:: lacing.artifact_store
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ArtifactStore
+   

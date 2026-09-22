@@ -1,4 +1,0 @@
-lacing.bodies.character_voice
-=============================
-.. automodule:: lacing.bodies.character_voice
-   :members:

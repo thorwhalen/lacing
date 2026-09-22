@@ -1,0 +1,13 @@
+lacing.adapters.jams
+====================
+
+.. automodule:: lacing.adapters.jams
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

@@ -1,0 +1,37 @@
+lacing.adapters
+===============
+
+.. automodule:: lacing.adapters
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      find_adapter
+      get_adapter
+      load
+      register_adapter
+      registered
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AdapterSpec
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   annot
+   eaf
+   jams
+   label_studio
+   otio
+   textgrid
+   web_annotation
+   webvtt

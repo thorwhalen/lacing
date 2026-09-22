@@ -1,0 +1,27 @@
+lacing.time
+===========
+
+.. automodule:: lacing.time
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      DEFAULT_RATE
+      RATIONAL_TIME_JSON_SCHEMA
+      TIME_INTERVAL_JSON_SCHEMA
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RationalTime
+      TimeInterval
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      LossyTimeConversionError
+   

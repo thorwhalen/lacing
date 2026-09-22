@@ -1,0 +1,22 @@
+lacing.oplog
+============
+
+.. automodule:: lacing.oplog
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      has_entries
+      replay
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      InMemoryOpLog
+      OpLog
+      OpLogEntry
+      SqliteOpLog
+   

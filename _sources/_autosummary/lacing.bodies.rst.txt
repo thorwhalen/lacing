@@ -1,0 +1,19 @@
+lacing.bodies
+=============
+
+.. automodule:: lacing.bodies
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   character_voice
+   continuity_violation
+   named_entity
+   reference_lock
+   review
+   review_candidate
+   word

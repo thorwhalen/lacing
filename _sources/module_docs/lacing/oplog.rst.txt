@@ -1,4 +1,0 @@
-lacing.oplog
-============
-.. automodule:: lacing.oplog
-   :members:

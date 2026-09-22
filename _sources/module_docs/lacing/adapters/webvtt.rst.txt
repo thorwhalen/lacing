@@ -1,4 +1,0 @@
-lacing.adapters.webvtt
-======================
-.. automodule:: lacing.adapters.webvtt
-   :members:

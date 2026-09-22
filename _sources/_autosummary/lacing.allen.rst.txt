@@ -1,0 +1,39 @@
+lacing.allen
+============
+
+.. automodule:: lacing.allen
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      PREDICATE_BY_RELATION
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      after
+      before
+      compose
+      contains
+      during
+      equals
+      finished_by
+      finishes
+      intersects
+      meets
+      met_by
+      overlapped_by
+      overlaps
+      relate
+      started_by
+      starts
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AllenRelation
+   

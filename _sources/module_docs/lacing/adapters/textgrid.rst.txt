@@ -1,4 +1,0 @@
-lacing.adapters.textgrid
-========================
-.. automodule:: lacing.adapters.textgrid
-   :members:

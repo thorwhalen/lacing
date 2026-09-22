@@ -1,0 +1,12 @@
+lacing.worker
+=============
+
+.. automodule:: lacing.worker
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      build_worker_settings
+   

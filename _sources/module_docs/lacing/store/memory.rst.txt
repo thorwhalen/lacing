@@ -1,4 +1,0 @@
-lacing.store.memory
-===================
-.. automodule:: lacing.store.memory
-   :members:

@@ -1,0 +1,52 @@
+# lacing
+
+> Interval annotation system
+
+
+## Pages in this subsection
+
+- [lacing](lacing.html.md): lacing — interval annotation system.
+- [lacing.adapters](lacing.adapters.html.md): I/O adapter registry.
+- [lacing.adapters.annot](lacing.adapters.annot.html.md): &#96;.annot&#96; portable file format adapter.
+- [lacing.adapters.eaf](lacing.adapters.eaf.html.md): ELAN EAF adapter (Max Planck Institute’s annotation tool format).
+- [lacing.adapters.jams](lacing.adapters.jams.html.md): JAMS (JSON Annotated Music Specification) adapter.
+- [lacing.adapters.label_studio](lacing.adapters.label_studio.html.md): Label Studio JSON adapter.
+- [lacing.adapters.otio](lacing.adapters.otio.html.md): OpenTimelineIO (OTIO) adapter — NLE / video editing interchange.
+- [lacing.adapters.textgrid](lacing.adapters.textgrid.html.md): Praat TextGrid adapter.
+- [lacing.adapters.web_annotation](lacing.adapters.web_annotation.html.md): W3C Web Annotation Data Model adapter (JSON-LD).
+- [lacing.adapters.webvtt](lacing.adapters.webvtt.html.md): WebVTT (W3C TimedText) adapter.
+- [lacing.allen](lacing.allen.html.md): Allen’s 13 interval relations as pure predicates.
+- [lacing.artifact](lacing.artifact.html.md): Content-addressed artifact references.
+- [lacing.artifact_store](lacing.artifact_store.html.md): Artifact store — a metadata catalog and a blob store behind one facade.
+- [lacing.bodies](lacing.bodies.html.md): Built-in body schemas.
+- [lacing.bodies.character_voice](lacing.bodies.character_voice.html.md): Body schema for per-character voice profiles — the shared voice vocabulary.
+- [lacing.bodies.continuity_violation](lacing.bodies.continuity_violation.html.md): Body schema for continuity violations — generic, cross-media.
+- [lacing.bodies.named_entity](lacing.bodies.named_entity.html.md): Body schemas for named-entity (NER) annotations.
+- [lacing.bodies.reference_lock](lacing.bodies.reference_lock.html.md): Body schema for a &#42;locked reference&#42; — a first-class “this is canonical”.
+- [lacing.bodies.review](lacing.bodies.review.html.md): Body schema for review notes — the edit-loop’s communication channel.
+- [lacing.bodies.review_candidate](lacing.bodies.review_candidate.html.md): Body schema for review &#42;candidates&#42; — “this needs a human’s eyes”.
+- [lacing.bodies.word](lacing.bodies.word.html.md): Body schema for word-level annotations (e.g., transcription, forced alignment).
+- [lacing.cli](lacing.cli.html.md): Command-line interface for lacing.
+- [lacing.digest](lacing.digest.html.md): Content digests over an annotation’s &#42;value&#42; — the freshness primitive.
+- [lacing.exhibit](lacing.exhibit.html.md): Artifact exhibit — render an annotation graph as a readable document.
+- [lacing.model](lacing.model.html.md): Annotation envelope, references, and provenance.
+- [lacing.oplog](lacing.oplog.html.md): Operation log for time-travel debug + audit.
+- [lacing.otel](lacing.otel.html.md): Optional OpenTelemetry instrumentation for the lacing server.
+- [lacing.processors](lacing.processors.html.md): Background processors — pluggable jobs that run against a store + op-log.
+- [lacing.quality](lacing.quality.html.md): Inter-annotator agreement and boundary metrics.
+- [lacing.schema](lacing.schema.html.md): Body schema registry, JSON Schema export, and migrations.
+- [lacing.store](lacing.store.html.md): Interval-keyed annotation stores.
+- [lacing.store.base](lacing.store.base.html.md): &#96;IntervalAnnotationStore&#96; — the headline Pythonic API.
+- [lacing.store.memory](lacing.store.memory.html.md): In-memory annotation store backed by an interval tree.
+- [lacing.store.migrations](lacing.store.migrations.html.md): Store-level schema migrations — the on-disk counterpart of the body ladder.
+- [lacing.store.postgres](lacing.store.postgres.html.md): PostgreSQL-backed annotation store using &#96;int8range&#96; + GiST.
+- [lacing.store.sqlite](lacing.store.sqlite.html.md): SQLite-backed annotation store and the &#96;.annot&#96; portable file format.
+- [lacing.tier](lacing.tier.html.md): Tiers and the five ELAN stereotypes.
+- [lacing.time](lacing.time.html.md): Rational time and half-open intervals — the foundations.
+- [lacing.tracks](lacing.tracks.html.md): High-level “track-shaped” facades on top of &#96;lacing&#96;.
+- [lacing.tracks.subtitle](lacing.tracks.subtitle.html.md): Subtitle / lyric / caption tracks — the (sections, lines, words) trio.
+- [lacing.worker](lacing.worker.html.md): Optional Arq integration — queue processors through Redis.
+
+## Optional
+
+- [Top-level llms.txt](../llms.txt): Complete documentation index.

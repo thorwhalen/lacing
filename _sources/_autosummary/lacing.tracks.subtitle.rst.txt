@@ -1,0 +1,25 @@
+lacing.tracks.subtitle
+======================
+
+.. automodule:: lacing.tracks.subtitle
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      BUILT_IN_BODY_SCHEMAS
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      register_subtitle_schemas
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SubtitleBuilder
+      SubtitleTrack
+   

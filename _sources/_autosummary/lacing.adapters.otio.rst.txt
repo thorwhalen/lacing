@@ -1,0 +1,13 @@
+lacing.adapters.otio
+====================
+
+.. automodule:: lacing.adapters.otio
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

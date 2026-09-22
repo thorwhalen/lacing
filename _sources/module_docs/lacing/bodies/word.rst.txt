@@ -1,4 +1,0 @@
-lacing.bodies.word
-==================
-.. automodule:: lacing.bodies.word
-   :members:

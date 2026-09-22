@@ -1,0 +1,16 @@
+lacing.otel
+===========
+
+.. automodule:: lacing.otel
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_tracer
+      instrument_app
+      is_otel_active
+      maybe_span
+      traced
+   

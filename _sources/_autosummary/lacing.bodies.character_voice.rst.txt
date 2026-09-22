@@ -1,0 +1,12 @@
+lacing.bodies.character\_voice
+==============================
+
+.. automodule:: lacing.bodies.character_voice
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CharacterVoiceBodyV1
+   

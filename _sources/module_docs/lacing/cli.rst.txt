@@ -1,4 +1,0 @@
-lacing.cli
-==========
-.. automodule:: lacing.cli
-   :members:

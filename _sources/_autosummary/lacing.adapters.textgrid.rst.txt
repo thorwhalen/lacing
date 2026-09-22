@@ -1,0 +1,13 @@
+lacing.adapters.textgrid
+========================
+
+.. automodule:: lacing.adapters.textgrid
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

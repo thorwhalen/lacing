@@ -1,0 +1,12 @@
+lacing.exhibit
+==============
+
+.. automodule:: lacing.exhibit
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      render_artifact_exhibit
+   

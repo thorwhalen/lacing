@@ -1,0 +1,60 @@
+# lacing
+
+> Interval annotation system
+
+
+## Pages
+
+- [lacing](index.html.md): A standoff, interval-keyed annotation system. Pythonic core: a
+- [API reference](api.html.md): | &#96;lacing&#96;   | lacing — interval annotation system.   |
+- [lacing](_autosummary/lacing.html.md): lacing — interval annotation system.
+- [lacing.adapters](_autosummary/lacing.adapters.html.md): I/O adapter registry.
+- [lacing.adapters.annot](_autosummary/lacing.adapters.annot.html.md): &#96;.annot&#96; portable file format adapter.
+- [lacing.adapters.eaf](_autosummary/lacing.adapters.eaf.html.md): ELAN EAF adapter (Max Planck Institute’s annotation tool format).
+- [lacing.adapters.jams](_autosummary/lacing.adapters.jams.html.md): JAMS (JSON Annotated Music Specification) adapter.
+- [lacing.adapters.label_studio](_autosummary/lacing.adapters.label_studio.html.md): Label Studio JSON adapter.
+- [lacing.adapters.otio](_autosummary/lacing.adapters.otio.html.md): OpenTimelineIO (OTIO) adapter — NLE / video editing interchange.
+- [lacing.adapters.textgrid](_autosummary/lacing.adapters.textgrid.html.md): Praat TextGrid adapter.
+- [lacing.adapters.web_annotation](_autosummary/lacing.adapters.web_annotation.html.md): W3C Web Annotation Data Model adapter (JSON-LD).
+- [lacing.adapters.webvtt](_autosummary/lacing.adapters.webvtt.html.md): WebVTT (W3C TimedText) adapter.
+- [lacing.allen](_autosummary/lacing.allen.html.md): Allen’s 13 interval relations as pure predicates.
+- [lacing.artifact](_autosummary/lacing.artifact.html.md): Content-addressed artifact references.
+- [lacing.artifact_store](_autosummary/lacing.artifact_store.html.md): Artifact store — a metadata catalog and a blob store behind one facade.
+- [lacing.bodies](_autosummary/lacing.bodies.html.md): Built-in body schemas.
+- [lacing.bodies.character_voice](_autosummary/lacing.bodies.character_voice.html.md): Body schema for per-character voice profiles — the shared voice vocabulary.
+- [lacing.bodies.continuity_violation](_autosummary/lacing.bodies.continuity_violation.html.md): Body schema for continuity violations — generic, cross-media.
+- [lacing.bodies.named_entity](_autosummary/lacing.bodies.named_entity.html.md): Body schemas for named-entity (NER) annotations.
+- [lacing.bodies.reference_lock](_autosummary/lacing.bodies.reference_lock.html.md): Body schema for a &#42;locked reference&#42; — a first-class “this is canonical”.
+- [lacing.bodies.review](_autosummary/lacing.bodies.review.html.md): Body schema for review notes — the edit-loop’s communication channel.
+- [lacing.bodies.review_candidate](_autosummary/lacing.bodies.review_candidate.html.md): Body schema for review &#42;candidates&#42; — “this needs a human’s eyes”.
+- [lacing.bodies.word](_autosummary/lacing.bodies.word.html.md): Body schema for word-level annotations (e.g., transcription, forced alignment).
+- [lacing.cli](_autosummary/lacing.cli.html.md): Command-line interface for lacing.
+- [lacing.digest](_autosummary/lacing.digest.html.md): Content digests over an annotation’s &#42;value&#42; — the freshness primitive.
+- [lacing.exhibit](_autosummary/lacing.exhibit.html.md): Artifact exhibit — render an annotation graph as a readable document.
+- [lacing.model](_autosummary/lacing.model.html.md): Annotation envelope, references, and provenance.
+- [lacing.oplog](_autosummary/lacing.oplog.html.md): Operation log for time-travel debug + audit.
+- [lacing.otel](_autosummary/lacing.otel.html.md): Optional OpenTelemetry instrumentation for the lacing server.
+- [lacing.processors](_autosummary/lacing.processors.html.md): Background processors — pluggable jobs that run against a store + op-log.
+- [lacing.quality](_autosummary/lacing.quality.html.md): Inter-annotator agreement and boundary metrics.
+- [lacing.schema](_autosummary/lacing.schema.html.md): Body schema registry, JSON Schema export, and migrations.
+- [lacing.store](_autosummary/lacing.store.html.md): Interval-keyed annotation stores.
+- [lacing.store.base](_autosummary/lacing.store.base.html.md): &#96;IntervalAnnotationStore&#96; — the headline Pythonic API.
+- [lacing.store.memory](_autosummary/lacing.store.memory.html.md): In-memory annotation store backed by an interval tree.
+- [lacing.store.migrations](_autosummary/lacing.store.migrations.html.md): Store-level schema migrations — the on-disk counterpart of the body ladder.
+- [lacing.store.postgres](_autosummary/lacing.store.postgres.html.md): PostgreSQL-backed annotation store using &#96;int8range&#96; + GiST.
+- [lacing.store.sqlite](_autosummary/lacing.store.sqlite.html.md): SQLite-backed annotation store and the &#96;.annot&#96; portable file format.
+- [lacing.tier](_autosummary/lacing.tier.html.md): Tiers and the five ELAN stereotypes.
+- [lacing.time](_autosummary/lacing.time.html.md): Rational time and half-open intervals — the foundations.
+- [lacing.tracks](_autosummary/lacing.tracks.html.md): High-level “track-shaped” facades on top of &#96;lacing&#96;.
+- [lacing.tracks.subtitle](_autosummary/lacing.tracks.subtitle.html.md): Subtitle / lyric / caption tracks — the (sections, lines, words) trio.
+- [lacing.worker](_autosummary/lacing.worker.html.md): Optional Arq integration — queue processors through Redis.
+- [For AI agents](ai-agents.html.md): &#96;lacing&#96; ships artifacts for coding agents alongside its code. This page lists
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 13:47 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+
+## Optional
+
+- [lacing.md](lacing.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

@@ -1,0 +1,13 @@
+lacing.adapters.web\_annotation
+===============================
+
+.. automodule:: lacing.adapters.web_annotation
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

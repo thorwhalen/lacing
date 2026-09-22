@@ -1,0 +1,12 @@
+lacing.store.base
+=================
+
+.. automodule:: lacing.store.base
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IntervalAnnotationStore
+   

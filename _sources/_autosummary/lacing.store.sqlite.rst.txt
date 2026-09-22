@@ -1,0 +1,31 @@
+lacing.store.sqlite
+===================
+
+.. automodule:: lacing.store.sqlite
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SCHEMA_VERSION
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      from_memory
+      to_memory
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SqliteStore
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      SchemaMismatchError
+   

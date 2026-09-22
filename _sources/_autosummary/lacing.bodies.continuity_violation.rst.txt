@@ -1,0 +1,18 @@
+lacing.bodies.continuity\_violation
+===================================
+
+.. automodule:: lacing.bodies.continuity_violation
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SuggestedAction
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ContinuityViolationBodyV1
+   

@@ -1,0 +1,47 @@
+lacing.store
+============
+
+.. automodule:: lacing.store
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      register_store_migration
+      migrate_annot_file
+      reachable_versions
+      rebuild_annotations_rtree
+      get_pool
+      close_all_pools
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IntervalAnnotationStore
+      MemoryStore
+      SqliteStore
+      PostgresStore
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      SchemaMismatchError
+      StoreMigrationError
+      PgSchemaMismatchError
+      TierOverlapError
+      RateMismatchError
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   base
+   memory
+   migrations
+   postgres
+   sqlite

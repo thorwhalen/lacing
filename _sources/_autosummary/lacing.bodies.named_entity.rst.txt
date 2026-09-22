@@ -1,0 +1,13 @@
+lacing.bodies.named\_entity
+===========================
+
+.. automodule:: lacing.bodies.named_entity
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      NamedEntityBodyV1
+      NamedEntityBodyV2
+   

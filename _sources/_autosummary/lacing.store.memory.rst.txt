@@ -1,0 +1,12 @@
+lacing.store.memory
+===================
+
+.. automodule:: lacing.store.memory
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MemoryStore
+   

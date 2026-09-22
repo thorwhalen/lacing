@@ -1,0 +1,646 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="lacing.adapters.jams.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="lacing.adapters.jams.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>lacing.adapters.jams &#8212; lacing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=37d13f4f" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=20c5f126"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/lacing.adapters.jams';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lacing.adapters.label_studio" href="lacing.adapters.label_studio.html" />
+    <link rel="prev" title="lacing.adapters.eaf" href="lacing.adapters.eaf.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.41" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lacing</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="lacing.html">lacing</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="lacing.adapters.html">lacing.adapters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">lacing.adapters.jams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.webvtt.html">lacing.adapters.webvtt</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.allen.html">lacing.allen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.artifact.html">lacing.artifact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.bodies.html">lacing.bodies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.character_voice.html">lacing.bodies.character_voice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.review.html">lacing.bodies.review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.review_candidate.html">lacing.bodies.review_candidate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.word.html">lacing.bodies.word</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.cli.html">lacing.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.digest.html">lacing.digest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.model.html">lacing.model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.oplog.html">lacing.oplog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.otel.html">lacing.otel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.processors.html">lacing.processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.quality.html">lacing.quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.schema.html">lacing.schema</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.store.html">lacing.store</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.base.html">lacing.store.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.memory.html">lacing.store.memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.migrations.html">lacing.store.migrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.postgres.html">lacing.store.postgres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.sqlite.html">lacing.store.sqlite</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.tier.html">lacing.tier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.time.html">lacing.time</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.tracks.html">lacing.tracks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.tracks.subtitle.html">lacing.tracks.subtitle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.worker.html">lacing.worker</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="lacing.html" class="nav-link">lacing</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="lacing.adapters.html" class="nav-link">lacing.adapters</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lacing.adapters.jams</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-lacing.adapters.jams">
+<span id="lacing-adapters-jams"></span><h1>lacing.adapters.jams<a class="headerlink" href="#module-lacing.adapters.jams" title="Link to this heading">#</a></h1>
+<p>JAMS (JSON Annotated Music Specification) adapter.</p>
+<p>JAMS is the standard MIR (Music Information Retrieval) annotation format.
+Each <code class="docutils literal notranslate"><span class="pre">Annotation</span></code> carries a <em>namespace</em> (<code class="docutils literal notranslate"><span class="pre">chord</span></code>, <code class="docutils literal notranslate"><span class="pre">beat</span></code>, <code class="docutils literal notranslate"><span class="pre">key</span></code>,
+<code class="docutils literal notranslate"><span class="pre">segment_open</span></code>, <code class="docutils literal notranslate"><span class="pre">tag_open</span></code>, …) that defines the type of its
+observations. We map JAMS namespaces to lacing <strong>tiers</strong>, observations to
+<code class="docutils literal notranslate"><span class="pre">Annotation</span></code> rows, and each observation’s typed <code class="docutils literal notranslate"><span class="pre">value</span></code> into the lacing
+body envelope.</p>
+<section id="mapping">
+<h2>Mapping<a class="headerlink" href="#mapping" title="Link to this heading">#</a></h2>
+<p>JAMS                                ↔ lacing
+<code class="docutils literal notranslate"><span class="pre">Annotation.namespace</span></code>            ↔ <code class="docutils literal notranslate"><span class="pre">Tier.name</span></code>
+<code class="docutils literal notranslate"><span class="pre">Observation.time,</span> <span class="pre">.duration</span></code>     ↔ <code class="docutils literal notranslate"><span class="pre">MediaRef.interval</span></code> (half-open)
+<code class="docutils literal notranslate"><span class="pre">Observation.value</span></code>               ↔ <code class="docutils literal notranslate"><span class="pre">body['value']</span></code> (namespace-typed)
+<code class="docutils literal notranslate"><span class="pre">Observation.confidence</span></code>          ↔ <code class="docutils literal notranslate"><span class="pre">Annotation.confidence</span></code>
+<code class="docutils literal notranslate"><span class="pre">annotation_metadata.annotator</span></code>   ↔ <code class="docutils literal notranslate"><span class="pre">Provenance.was_attributed_to</span></code>
+<code class="docutils literal notranslate"><span class="pre">file_metadata.identifiers/title</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code></p>
+</section>
+<section id="body-schema">
+<h2>Body schema<a class="headerlink" href="#body-schema" title="Link to this heading">#</a></h2>
+<p>We use a single generic body schema URI:</p>
+<blockquote>
+<div><p>annot://schema/jams-observation/v1</p>
+</div></blockquote>
+<p>with shape <code class="docutils literal notranslate"><span class="pre">{&quot;value&quot;:</span> <span class="pre">&lt;namespace-typed&gt;,</span> <span class="pre">&quot;namespace&quot;:</span> <span class="pre">&lt;str&gt;}</span></code>. Registering
+namespace-specific Pydantic body schemas (one per JAMS namespace) is left to
+downstream packages — JAMS namespaces are extensible and we don’t want the
+adapter to impose a fixed catalog.</p>
+</section>
+<section id="time">
+<h2>Time<a class="headerlink" href="#time" title="Link to this heading">#</a></h2>
+<p>JAMS times are float seconds. We convert at the parse boundary via
+<code class="docutils literal notranslate"><span class="pre">Fraction(repr(...))</span></code> to recover exact rational values. Default rate is
+<code class="docutils literal notranslate"><span class="pre">DEFAULT_RATE</span></code> (24000); pass <code class="docutils literal notranslate"><span class="pre">rate=</span></code> to use a different project rate.
+<code class="docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code> is raised if any observation can’t be exactly
+represented.</p>
+</section>
+<section id="lossy-on-dump">
+<h2>Lossy on dump<a class="headerlink" href="#lossy-on-dump" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Per-annotation provenance beyond <code class="docutils literal notranslate"><span class="pre">annotator</span></code> (<code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code>,
+<code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code>, <code class="docutils literal notranslate"><span class="pre">activity</span></code>) is dropped — JAMS has no
+corresponding fields.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body['note']</span></code> and other extra body fields are dropped: only
+<code class="docutils literal notranslate"><span class="pre">body['value']</span></code> round-trips.</p></li>
+<li><p>File-level <code class="docutils literal notranslate"><span class="pre">identifiers</span></code> and <code class="docutils literal notranslate"><span class="pre">title</span></code> are populated from the first
+annotation’s <code class="docutils literal notranslate"><span class="pre">MediaRef.asset_id</span></code> if available.</p></li>
+</ul>
+<p>Spec: <a class="reference external" href="https://jams.readthedocs.io/">https://jams.readthedocs.io/</a></p>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.adapters.jams.dump" title="lacing.adapters.jams.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump</span></code></a>(store[, target, title, artist, duration])</p></td>
+<td><p>Serialize <code class="docutils literal notranslate"><span class="pre">store</span></code> as a JAMS file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.adapters.jams.load" title="lacing.adapters.jams.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(source, *[, rate, asset_id, attribution])</p></td>
+<td><p>Load a JAMS file or bytes into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.jams.dump">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.jams.</span></span><span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/adapters/jams.html#dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.jams.dump" title="Link to this definition">#</a></dt>
+<dd><p>Serialize <code class="docutils literal notranslate"><span class="pre">store</span></code> as a JAMS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="lacing.store.base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></span>) – Source store. Only annotations with a <code class="docutils literal notranslate"><span class="pre">MediaRef</span></code> interval
+and a <code class="docutils literal notranslate"><span class="pre">body['value']</span></code> are exported.</p></li>
+<li><p><strong>target</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathLike</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Output path. None = return bytes.</p></li>
+<li><p><strong>title</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – <code class="docutils literal notranslate"><span class="pre">file_metadata.title</span></code> value.</p></li>
+<li><p><strong>artist</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – <code class="docutils literal notranslate"><span class="pre">file_metadata.artist</span></code> value.</p></li>
+<li><p><strong>duration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – <code class="docutils literal notranslate"><span class="pre">file_metadata.duration</span></code> (seconds). If None, computed
+as the maximum end-time across all annotations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.adapters.jams.load">
+<span class="sig-prename descclassname"><span class="pre">lacing.adapters.jams.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asset_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/adapters/jams.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.adapters.jams.load" title="Link to this definition">#</a></dt>
+<dd><p>Load a JAMS file or bytes into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathLike</span></code></a></span>) – Path or bytes containing JAMS JSON.</p></li>
+<li><p><strong>rate</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Quantization rate.</p></li>
+<li><p><strong>asset_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Override media reference. None = derive from
+<code class="docutils literal notranslate"><span class="pre">file_metadata.identifiers</span></code> or <code class="docutils literal notranslate"><span class="pre">title</span></code>.</p></li>
+<li><p><strong>attribution</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Override per-annotation attribution. None = use each
+annotation’s own annotator/curator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="lacing.store.base.html#lacing.store.base.IntervalAnnotationStore" title="lacing.store.base.IntervalAnnotationStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lacing.adapters.eaf.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">lacing.adapters.eaf</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lacing.adapters.label_studio.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">lacing.adapters.label_studio</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping">Mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#body-schema">Body schema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time">Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lossy-on-dump">Lossy on dump</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.adapters.jams.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.adapters.jams.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/lacing.adapters.jams.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,4 +1,0 @@
-lacing.adapters.label_studio
-============================
-.. automodule:: lacing.adapters.label_studio
-   :members:

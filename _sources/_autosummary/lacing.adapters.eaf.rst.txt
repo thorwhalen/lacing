@@ -1,0 +1,13 @@
+lacing.adapters.eaf
+===================
+
+.. automodule:: lacing.adapters.eaf
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

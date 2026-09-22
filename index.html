@@ -1,562 +1,899 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to lacing’s documentation! &mdash; lacing 0.0.40 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="index.html.md">
+<link rel="describedby" href="llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="index.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>lacing &#8212; lacing</title>
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=84bd753f"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/js/theme.js"></script>
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/epythet.css?v=37d13f4f" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="_static/documentation_options.js?v=20c5f126"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="lacing" href="module_docs/lacing.html" /> 
-</head>
+    <link rel="next" title="API reference" href="api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.41" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-          
-          
-          <a href="#" class="icon icon-home">
-            lacing
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing.html">lacing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters.html">lacing.adapters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/character_voice.html">lacing.bodies.character_voice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review_candidate.html">lacing.bodies.review_candidate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/digest.html">lacing.digest</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/exhibit.html">lacing.exhibit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/app.html">lacing.server.app</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store.html">lacing.store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/base.html">lacing.store.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/memory.html">lacing.store.memory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/migrations.html">lacing.store.migrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/postgres.html">lacing.store.postgres</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tier.html">lacing.tier</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/time.html">lacing.time</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks.html">lacing.tracks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">lacing</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to lacing’s documentation!</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-      </li>
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lacing</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
   </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="welcome-to-lacing-s-documentation">
-<h1>Welcome to lacing’s documentation!<a class="headerlink" href="#welcome-to-lacing-s-documentation" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing.html">lacing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.AllenRelation"><code class="docutils literal notranslate"><span class="pre">AllenRelation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Annotation"><code class="docutils literal notranslate"><span class="pre">Annotation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.AnnotationRef"><code class="docutils literal notranslate"><span class="pre">AnnotationRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Artifact"><code class="docutils literal notranslate"><span class="pre">Artifact</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.EmptySchemaRegistryError"><code class="docutils literal notranslate"><span class="pre">EmptySchemaRegistryError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.InMemoryOpLog"><code class="docutils literal notranslate"><span class="pre">InMemoryOpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.LossyTimeConversionError"><code class="docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.MediaRef"><code class="docutils literal notranslate"><span class="pre">MediaRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.MigrationError"><code class="docutils literal notranslate"><span class="pre">MigrationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.NodeRef"><code class="docutils literal notranslate"><span class="pre">NodeRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.NonStringBodyKeyError"><code class="docutils literal notranslate"><span class="pre">NonStringBodyKeyError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.OpLog"><code class="docutils literal notranslate"><span class="pre">OpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.OpLogEntry"><code class="docutils literal notranslate"><span class="pre">OpLogEntry</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.SqliteOpLog"><code class="docutils literal notranslate"><span class="pre">SqliteOpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.StoreMigrationError"><code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.Tier"><code class="docutils literal notranslate"><span class="pre">Tier</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.TierStereotype"><code class="docutils literal notranslate"><span class="pre">TierStereotype</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.TimeInterval"><code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.annotation_body_digest"><code class="docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.annotation_value_digest"><code class="docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.export_json_schemas"><code class="docutils literal notranslate"><span class="pre">export_json_schemas()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.get_tracer"><code class="docutils literal notranslate"><span class="pre">get_tracer()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.hash_bytes"><code class="docutils literal notranslate"><span class="pre">hash_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.instrument_otel"><code class="docutils literal notranslate"><span class="pre">instrument_otel()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.interval_iou"><code class="docutils literal notranslate"><span class="pre">interval_iou()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.is_otel_active"><code class="docutils literal notranslate"><span class="pre">is_otel_active()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.json_schema"><code class="docutils literal notranslate"><span class="pre">json_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.krippendorff_alpha"><code class="docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.maybe_span"><code class="docutils literal notranslate"><span class="pre">maybe_span()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.migrate_annot_file"><code class="docutils literal notranslate"><span class="pre">migrate_annot_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.register_store_migration"><code class="docutils literal notranslate"><span class="pre">register_store_migration()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.render_artifact_exhibit"><code class="docutils literal notranslate"><span class="pre">render_artifact_exhibit()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.replay_oplog"><code class="docutils literal notranslate"><span class="pre">replay_oplog()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_async"><code class="docutils literal notranslate"><span class="pre">run_processor_async()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.run_processor_sync"><code class="docutils literal notranslate"><span class="pre">run_processor_sync()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.traced"><code class="docutils literal notranslate"><span class="pre">traced()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing.html#lacing.validate_body"><code class="docutils literal notranslate"><span class="pre">validate_body()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters.html">lacing.adapters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.AdapterSpec"><code class="docutils literal notranslate"><span class="pre">AdapterSpec</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.find_adapter"><code class="docutils literal notranslate"><span class="pre">find_adapter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.get_adapter"><code class="docutils literal notranslate"><span class="pre">get_adapter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.register_adapter"><code class="docutils literal notranslate"><span class="pre">register_adapter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters.html#lacing.adapters.registered"><code class="docutils literal notranslate"><span class="pre">registered()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/annot.html">lacing.adapters.annot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/annot.html#lacing.adapters.annot.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/annot.html#lacing.adapters.annot.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html">lacing.adapters.eaf</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html#mapping">Mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html#time">Time</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html#lossy-on-dump">Lossy on dump</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/eaf.html#lacing.adapters.eaf.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/jams.html">lacing.adapters.jams</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#mapping">Mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#body-schema">Body schema</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#time">Time</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#lossy-on-dump">Lossy on dump</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#lacing.adapters.jams.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/jams.html#lacing.adapters.jams.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html">lacing.adapters.label_studio</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html#mapping">Mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html#lossy-on-dump">Lossy on dump</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html#lacing.adapters.label_studio.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/label_studio.html#lacing.adapters.label_studio.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/otio.html">lacing.adapters.otio</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/otio.html#mapping">Mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/otio.html#time">Time</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/otio.html#lossy-on-dump">Lossy on dump</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/otio.html#lacing.adapters.otio.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/otio.html#lacing.adapters.otio.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/textgrid.html">lacing.adapters.textgrid</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/textgrid.html#lacing.adapters.textgrid.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/textgrid.html#lacing.adapters.textgrid.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/web_annotation.html">lacing.adapters.web_annotation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/web_annotation.html#lacing.adapters.web_annotation.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/web_annotation.html#lacing.adapters.web_annotation.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html">lacing.adapters.webvtt</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html#lacing.adapters.webvtt.dump"><code class="docutils literal notranslate"><span class="pre">dump()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/adapters/webvtt.html#lacing.adapters.webvtt.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/allen.html">lacing.allen</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/allen.html#lacing.allen.AllenRelation"><code class="docutils literal notranslate"><span class="pre">AllenRelation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/allen.html#lacing.allen.PREDICATE_BY_RELATION"><code class="docutils literal notranslate"><span class="pre">PREDICATE_BY_RELATION</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/allen.html#lacing.allen.compose"><code class="docutils literal notranslate"><span class="pre">compose()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/allen.html#lacing.allen.intersects"><code class="docutils literal notranslate"><span class="pre">intersects()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/allen.html#lacing.allen.relate"><code class="docutils literal notranslate"><span class="pre">relate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact.html">lacing.artifact</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#hashing">Hashing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.Artifact"><code class="docutils literal notranslate"><span class="pre">Artifact</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.ArtifactKind"><code class="docutils literal notranslate"><span class="pre">ArtifactKind</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.hash_bytes"><code class="docutils literal notranslate"><span class="pre">hash_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact.html#lacing.artifact.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/artifact_store.html">lacing.artifact_store</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact_store.html#design">Design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/artifact_store.html#lacing.artifact_store.ArtifactStore"><code class="docutils literal notranslate"><span class="pre">ArtifactStore</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies.html">lacing.bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/character_voice.html">lacing.bodies.character_voice</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/character_voice.html#lacing.bodies.character_voice.CharacterVoiceBodyV1"><code class="docutils literal notranslate"><span class="pre">CharacterVoiceBodyV1</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html">lacing.bodies.continuity_violation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.ContinuityViolationBodyV1"><code class="docutils literal notranslate"><span class="pre">ContinuityViolationBodyV1</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/continuity_violation.html#lacing.bodies.continuity_violation.SuggestedAction"><code class="docutils literal notranslate"><span class="pre">SuggestedAction</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html">lacing.bodies.named_entity</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV1"><code class="docutils literal notranslate"><span class="pre">NamedEntityBodyV1</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/named_entity.html#lacing.bodies.named_entity.NamedEntityBodyV2"><code class="docutils literal notranslate"><span class="pre">NamedEntityBodyV2</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html">lacing.bodies.reference_lock</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.ReferenceLockBodyV1"><code class="docutils literal notranslate"><span class="pre">ReferenceLockBodyV1</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.Scope"><code class="docutils literal notranslate"><span class="pre">Scope</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/reference_lock.html#lacing.bodies.reference_lock.SubjectKind"><code class="docutils literal notranslate"><span class="pre">SubjectKind</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review.html">lacing.bodies.review</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.Author"><code class="docutils literal notranslate"><span class="pre">Author</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewBodyV1"><code class="docutils literal notranslate"><span class="pre">ReviewBodyV1</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewDecision"><code class="docutils literal notranslate"><span class="pre">ReviewDecision</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewKind"><code class="docutils literal notranslate"><span class="pre">ReviewKind</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review.html#lacing.bodies.review.ReviewStatus"><code class="docutils literal notranslate"><span class="pre">ReviewStatus</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/review_candidate.html">lacing.bodies.review_candidate</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/review_candidate.html#lacing.bodies.review_candidate.ReviewCandidateBodyV1"><code class="docutils literal notranslate"><span class="pre">ReviewCandidateBodyV1</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/bodies/word.html">lacing.bodies.word</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/bodies/word.html#lacing.bodies.word.WordBodyV1"><code class="docutils literal notranslate"><span class="pre">WordBodyV1</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/cli.html">lacing.cli</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#type-annotations-are-load-bearing-here">Type annotations are load-bearing here</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.convert"><code class="docutils literal notranslate"><span class="pre">convert()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.list_formats"><code class="docutils literal notranslate"><span class="pre">list_formats()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.mk_parser"><code class="docutils literal notranslate"><span class="pre">mk_parser()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.query"><code class="docutils literal notranslate"><span class="pre">query()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/cli.html#lacing.cli.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/digest.html">lacing.digest</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#why-this-lives-in-core-and-not-under-lacing-server">Why this lives in core and not under <code class="docutils literal notranslate"><span class="pre">lacing/server/</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#the-inclusion-boundary-and-why-each-call-was-made">The inclusion boundary — and why each call was made</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#reference-two-functions-not-a-boolean"><code class="docutils literal notranslate"><span class="pre">reference</span></code>: two functions, not a boolean</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#stability-guarantees-and-their-limits">Stability guarantees, and their limits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#the-safety-claim-stated-precisely">The safety claim, stated precisely</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.BODY_DIGEST_SCHEME"><code class="docutils literal notranslate"><span class="pre">BODY_DIGEST_SCHEME</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.BODY_FIELDS"><code class="docutils literal notranslate"><span class="pre">BODY_FIELDS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.NonStringBodyKeyError"><code class="docutils literal notranslate"><span class="pre">NonStringBodyKeyError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.VALUE_DIGEST_SCHEME"><code class="docutils literal notranslate"><span class="pre">VALUE_DIGEST_SCHEME</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.VALUE_FIELDS"><code class="docutils literal notranslate"><span class="pre">VALUE_FIELDS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.annotation_body_digest"><code class="docutils literal notranslate"><span class="pre">annotation_body_digest()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/digest.html#lacing.digest.annotation_value_digest"><code class="docutils literal notranslate"><span class="pre">annotation_value_digest()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/exhibit.html">lacing.exhibit</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/exhibit.html#lacing.exhibit.render_artifact_exhibit"><code class="docutils literal notranslate"><span class="pre">render_artifact_exhibit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/model.html">lacing.model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.Annotation"><code class="docutils literal notranslate"><span class="pre">Annotation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.AnnotationRef"><code class="docutils literal notranslate"><span class="pre">AnnotationRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.AssetId"><code class="docutils literal notranslate"><span class="pre">AssetId</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.MediaRef"><code class="docutils literal notranslate"><span class="pre">MediaRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.NodeRef"><code class="docutils literal notranslate"><span class="pre">NodeRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.Provenance"><code class="docutils literal notranslate"><span class="pre">Provenance</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.ProvenanceRef"><code class="docutils literal notranslate"><span class="pre">ProvenanceRef</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.Reference"><code class="docutils literal notranslate"><span class="pre">Reference</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.UNKNOWN_GENERATED_AT"><code class="docutils literal notranslate"><span class="pre">UNKNOWN_GENERATED_AT</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/model.html#lacing.model.partition_provenance_refs"><code class="docutils literal notranslate"><span class="pre">partition_provenance_refs()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/oplog.html">lacing.oplog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.InMemoryOpLog"><code class="docutils literal notranslate"><span class="pre">InMemoryOpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.OpLog"><code class="docutils literal notranslate"><span class="pre">OpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.OpLogEntry"><code class="docutils literal notranslate"><span class="pre">OpLogEntry</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.SqliteOpLog"><code class="docutils literal notranslate"><span class="pre">SqliteOpLog</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/oplog.html#lacing.oplog.replay"><code class="docutils literal notranslate"><span class="pre">replay()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/otel.html">lacing.otel</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.get_tracer"><code class="docutils literal notranslate"><span class="pre">get_tracer()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.instrument_app"><code class="docutils literal notranslate"><span class="pre">instrument_app()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.is_otel_active"><code class="docutils literal notranslate"><span class="pre">is_otel_active()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.maybe_span"><code class="docutils literal notranslate"><span class="pre">maybe_span()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/otel.html#lacing.otel.traced"><code class="docutils literal notranslate"><span class="pre">traced()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/processors.html">lacing.processors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.ProcessorError"><code class="docutils literal notranslate"><span class="pre">ProcessorError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.clear_processors"><code class="docutils literal notranslate"><span class="pre">clear_processors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.detect_density_change_points"><code class="docutils literal notranslate"><span class="pre">detect_density_change_points()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.low_confidence_review"><code class="docutils literal notranslate"><span class="pre">low_confidence_review()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.register_processor"><code class="docutils literal notranslate"><span class="pre">register_processor()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.registered_processors"><code class="docutils literal notranslate"><span class="pre">registered_processors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.run_async"><code class="docutils literal notranslate"><span class="pre">run_async()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/processors.html#lacing.processors.run_sync"><code class="docutils literal notranslate"><span class="pre">run_sync()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/quality.html">lacing.quality</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.boundary_iou"><code class="docutils literal notranslate"><span class="pre">boundary_iou()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.cohen_kappa"><code class="docutils literal notranslate"><span class="pre">cohen_kappa()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.interval_iou"><code class="docutils literal notranslate"><span class="pre">interval_iou()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/quality.html#lacing.quality.krippendorff_alpha"><code class="docutils literal notranslate"><span class="pre">krippendorff_alpha()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/schema.html">lacing.schema</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.BodySchemaError"><code class="docutils literal notranslate"><span class="pre">BodySchemaError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.EmptySchemaRegistryError"><code class="docutils literal notranslate"><span class="pre">EmptySchemaRegistryError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.MigrationError"><code class="docutils literal notranslate"><span class="pre">MigrationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.UnknownBodySchemaError"><code class="docutils literal notranslate"><span class="pre">UnknownBodySchemaError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.clear_registry"><code class="docutils literal notranslate"><span class="pre">clear_registry()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.export_json_schemas"><code class="docutils literal notranslate"><span class="pre">export_json_schemas()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.get_body_schema"><code class="docutils literal notranslate"><span class="pre">get_body_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.json_schema"><code class="docutils literal notranslate"><span class="pre">json_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.latest_version"><code class="docutils literal notranslate"><span class="pre">latest_version()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.make_uri"><code class="docutils literal notranslate"><span class="pre">make_uri()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.migrate_to_latest"><code class="docutils literal notranslate"><span class="pre">migrate_to_latest()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.parse_uri"><code class="docutils literal notranslate"><span class="pre">parse_uri()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.register_body_schema"><code class="docutils literal notranslate"><span class="pre">register_body_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.register_migration"><code class="docutils literal notranslate"><span class="pre">register_migration()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.registered_uris"><code class="docutils literal notranslate"><span class="pre">registered_uris()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/schema.html#lacing.schema.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server.html">lacing.server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/app.html">lacing.server.app</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/awareness.html">lacing.server.awareness</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/deps.html">lacing.server.deps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/etag.html">lacing.server.etag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/mcp.html">lacing.server.mcp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/operations.html">lacing.server.operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers.html">lacing.server.routers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/adapters.html">lacing.server.routers.adapters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/annotations.html">lacing.server.routers.annotations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/meta.html">lacing.server.routers.meta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/oplog.html">lacing.server.routers.oplog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/server/routers/tiers.html">lacing.server.routers.tiers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store.html">lacing.store</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.StoreMigrationError"><code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.migrate_annot_file"><code class="docutils literal notranslate"><span class="pre">migrate_annot_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.reachable_versions"><code class="docutils literal notranslate"><span class="pre">reachable_versions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.rebuild_annotations_rtree"><code class="docutils literal notranslate"><span class="pre">rebuild_annotations_rtree()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store.html#lacing.store.register_store_migration"><code class="docutils literal notranslate"><span class="pre">register_store_migration()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/base.html">lacing.store.base</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/base.html#lacing.store.base.IntervalAnnotationStore"><code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/memory.html">lacing.store.memory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/memory.html#lacing.store.memory.MemoryStore"><code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/migrations.html">lacing.store.migrations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.POSTGRES_KIND"><code class="docutils literal notranslate"><span class="pre">POSTGRES_KIND</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.SQLITE_KIND"><code class="docutils literal notranslate"><span class="pre">SQLITE_KIND</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.SQLITE_MIGRATION_BUSY_TIMEOUT_MS"><code class="docutils literal notranslate"><span class="pre">SQLITE_MIGRATION_BUSY_TIMEOUT_MS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.StoreMigrationError"><code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.migrate_annot_file"><code class="docutils literal notranslate"><span class="pre">migrate_annot_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.migrate_sqlite_connection"><code class="docutils literal notranslate"><span class="pre">migrate_sqlite_connection()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.reachable_versions"><code class="docutils literal notranslate"><span class="pre">reachable_versions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.rebuild_annotations_rtree"><code class="docutils literal notranslate"><span class="pre">rebuild_annotations_rtree()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/migrations.html#lacing.store.migrations.register_store_migration"><code class="docutils literal notranslate"><span class="pre">register_store_migration()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/postgres.html">lacing.store.postgres</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#multi-tenancy-phase-4-reelee-177">Multi-tenancy (Phase 4, reelee#177)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#connection-pooling-phase-4">Connection pooling (Phase 4)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_OWNER_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/postgres.html#lacing.store.postgres.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/store/sqlite.html">lacing.store.sqlite</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/store/sqlite.html#lacing.store.sqlite.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tier.html">lacing.tier</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tier.html#lacing.tier.Tier"><code class="docutils literal notranslate"><span class="pre">Tier</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tier.html#lacing.tier.TierStereotype"><code class="docutils literal notranslate"><span class="pre">TierStereotype</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tier.html#lacing.tier.validate_tier_constraint"><code class="docutils literal notranslate"><span class="pre">validate_tier_constraint()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/time.html">lacing.time</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.DEFAULT_RATE"><code class="docutils literal notranslate"><span class="pre">DEFAULT_RATE</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.LossyTimeConversionError"><code class="docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.RATIONAL_TIME_JSON_SCHEMA"><code class="docutils literal notranslate"><span class="pre">RATIONAL_TIME_JSON_SCHEMA</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.RationalTime"><code class="docutils literal notranslate"><span class="pre">RationalTime</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.TIME_INTERVAL_JSON_SCHEMA"><code class="docutils literal notranslate"><span class="pre">TIME_INTERVAL_JSON_SCHEMA</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/time.html#lacing.time.TimeInterval"><code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks.html">lacing.tracks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleBuilder"><code class="docutils literal notranslate"><span class="pre">SubtitleBuilder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks.html#lacing.tracks.SubtitleTrack"><code class="docutils literal notranslate"><span class="pre">SubtitleTrack</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks.html#lacing.tracks.register_subtitle_schemas"><code class="docutils literal notranslate"><span class="pre">register_subtitle_schemas()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html">lacing.tracks.subtitle</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.BUILT_IN_BODY_SCHEMAS"><code class="docutils literal notranslate"><span class="pre">BUILT_IN_BODY_SCHEMAS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleBuilder"><code class="docutils literal notranslate"><span class="pre">SubtitleBuilder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.SubtitleTrack"><code class="docutils literal notranslate"><span class="pre">SubtitleTrack</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/tracks/subtitle.html#lacing.tracks.subtitle.register_subtitle_schemas"><code class="docutils literal notranslate"><span class="pre">register_subtitle_schemas()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/lacing/worker.html">lacing.worker</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/lacing/worker.html#lacing.worker.build_worker_settings"><code class="docutils literal notranslate"><span class="pre">build_worker_settings()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
-<p>Release: 0.0.40</p>
-<p>Last change: Sep 11, 2026</p>
-</section>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="module_docs/lacing.html" class="btn btn-neutral float-right" title="lacing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+</nav></div>
+      
     </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
         </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      
+      
+        <div class="navbar-item">
 
-</body>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- generated by epythet -->
+<section id="lacing">
+<h1>lacing<a class="headerlink" href="#lacing" title="Link to this heading">#</a></h1>
+<p>A standoff, interval-keyed annotation system. Pythonic core: a
+<code class="docutils literal notranslate"><span class="pre">MutableMapping[TimeInterval,</span> <span class="pre">list[Annotation]]</span></code> facade with rational time,
+ELAN-style tier stereotypes, and Allen’s interval algebra. Designed for
+time-based media (audio, video, speech, music) but generalizes to any 1-D
+interval domain.</p>
+<blockquote>
+<div><p><strong>Status:</strong> Phase 0–2 complete. Core data model, in-memory + SQLite +
+Postgres stores, <strong>eight round-trip adapters</strong> (Praat TextGrid, WebVTT,
+W3C Web Annotation, <code class="docutils literal notranslate"><span class="pre">.annot</span></code> SQLite, ELAN EAF, JAMS, Label Studio JSON,
+OpenTimelineIO), body-schema registry + JSON Schema export + migrations,
+inter-annotator agreement metrics, a <code class="docutils literal notranslate"><span class="pre">lacing</span></code> CLI, a <strong>FastAPI HTTP
+server</strong> (REST CRUD + ETag + import/export + schemas + op-log +
+<code class="docutils literal notranslate"><span class="pre">/state-at</span></code> time-travel), an <strong>MCP server</strong> (10 tools, agents as
+first-class clients), a <strong>processor registry</strong> (<code class="docutils literal notranslate"><span class="pre">low_confidence_review</span></code>,
+<code class="docutils literal notranslate"><span class="pre">detect_density_change_points</span></code>) with optional <strong>Arq</strong> integration, and
+opt-in <strong>OpenTelemetry</strong> instrumentation. Frontend is on the roadmap
+(see <code class="docutils literal notranslate"><span class="pre">misc/docs/Lacing</span> <span class="pre">Development</span> <span class="pre">Roadmap.md</span></code>).</p>
+</div></blockquote>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lacing<span class="w">                </span><span class="c1"># core only</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[textgrid]'</span><span class="w">    </span><span class="c1"># + Praat TextGrid support (praatio)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[eaf]'</span><span class="w">         </span><span class="c1"># + ELAN EAF support (pympi-ling)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[jams]'</span><span class="w">        </span><span class="c1"># + JAMS (MIR annotation) support</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[postgres]'</span><span class="w">    </span><span class="c1"># + PostgresStore (psycopg + GiST + EXCLUDE)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[server]'</span><span class="w">      </span><span class="c1"># + FastAPI HTTP server</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[mcp]'</span><span class="w">         </span><span class="c1"># + MCP server (agents as first-class clients)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[arq]'</span><span class="w">         </span><span class="c1"># + Arq background workers (Redis-backed)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[otio]'</span><span class="w">        </span><span class="c1"># + OpenTimelineIO adapter</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[otel]'</span><span class="w">        </span><span class="c1"># + OpenTelemetry instrumentation</span>
+</pre></div>
+</div>
+</section>
+<section id="second-tour">
+<h2>30-second tour<a class="headerlink" href="#second-tour" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">textgrid</span><span class="p">,</span> <span class="n">webvtt</span><span class="p">,</span> <span class="n">web_annotation</span>  <span class="c1"># registers each</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">dump</span>
+
+<span class="c1"># Load a Praat TextGrid → an in-memory store keyed by interval</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">"speech.TextGrid"</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Query overlaps using Allen's relations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+<span class="n">window</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ann</span><span class="o">.</span><span class="n">tier</span><span class="p">,</span> <span class="n">ann</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="s2">"text"</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">during</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>  <span class="c1"># strictly inside the window</span>
+    <span class="o">...</span>
+
+<span class="c1"># Save out as WebVTT</span>
+<span class="n">dump</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"speech.vtt"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"webvtt"</span><span class="p">)</span>
+
+<span class="c1"># Or as W3C Web Annotation JSON-LD</span>
+<span class="n">dump</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s2">"speech.jsonld"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"web_annotation"</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="track-facades-opinionated-bundles-of-tiers">
+<h2>Track facades — opinionated bundles of tiers<a class="headerlink" href="#track-facades-opinionated-bundles-of-tiers" title="Link to this heading">#</a></h2>
+<p>Some tier shapes recur often enough to deserve a friendly builder.
+<code class="docutils literal notranslate"><span class="pre">lacing.tracks.subtitle</span></code> is the first: a <code class="docutils literal notranslate"><span class="pre">(sections,</span> <span class="pre">lines,</span> <span class="pre">words)</span></code>
+trio over one audio asset, with float-second times and the
+<code class="docutils literal notranslate"><span class="pre">Annotation</span></code> / <code class="docutils literal notranslate"><span class="pre">MediaRef</span></code> / <code class="docutils literal notranslate"><span class="pre">Provenance</span></code> plumbing hidden:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tracks.subtitle</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubtitleBuilder</span><span class="p">,</span> <span class="n">SubtitleTrack</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">SubtitleBuilder</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">"song/audio.mp3"</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"intro"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"verse_1"</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+        <span class="s2">"I came down to the river"</span><span class="p">,</span>
+        <span class="mf">12.5</span><span class="p">,</span>
+        <span class="mf">16.2</span><span class="p">,</span>
+        <span class="n">section</span><span class="o">=</span><span class="s2">"verse_1"</span><span class="p">,</span>
+        <span class="n">line_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">words</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">"I"</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">12.7</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"came"</span><span class="p">,</span> <span class="mf">12.7</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span>  <span class="c1"># optional confidence</span>
+            <span class="p">(</span><span class="s2">"down"</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">,</span> <span class="mf">13.3</span><span class="p">),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+<span class="n">track</span> <span class="o">=</span> <span class="n">SubtitleTrack</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">asset_id</span><span class="o">=</span><span class="s2">"song/audio.mp3"</span><span class="p">)</span>
+<span class="n">track</span><span class="o">.</span><span class="n">lines_in</span><span class="p">(</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">)</span>  <span class="c1"># lines overlapping the window</span>
+<span class="n">track</span><span class="o">.</span><span class="n">words_in</span><span class="p">(</span><span class="mf">12.5</span><span class="p">,</span> <span class="mf">13.5</span><span class="p">)</span>  <span class="c1"># words overlapping the window</span>
+<span class="n">track</span><span class="o">.</span><span class="n">sections_covering</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>  <span class="c1"># sections containing this instant</span>
+</pre></div>
+</div>
+<p>The facade reuses <code class="docutils literal notranslate"><span class="pre">at_tier</span></code> / <code class="docutils literal notranslate"><span class="pre">by_tier</span></code> under the hood; anything you
+can build with it could also be hand-built with the raw API. Body
+schema URIs are conventional (<code class="docutils literal notranslate"><span class="pre">annot://schema/song-section/v1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lyric-line/v1</span></code>, <code class="docutils literal notranslate"><span class="pre">word/v1</span></code>) — pass <code class="docutils literal notranslate"><span class="pre">register_subtitle_schemas()</span></code> once
+if you want Pydantic body validation.</p>
+</section>
+<section id="what-s-in-the-core">
+<h2>What’s in the core<a class="headerlink" href="#what-s-in-the-core" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>lacing/
+├── time.py          RationalTime + TimeInterval — rational, half-open, never float
+├── model.py         Annotation envelope + Reference union + Provenance (PROV-O subset)
+├── tier.py          Tier + 5 ELAN tier stereotypes + constraint validator
+├── allen.py         13 Allen relations + intersects + relate + composition
+├── digest.py        annotation_value_digest — content digest for freshness / early cutoff
+├── store/
+│   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
+│   ├── memory.py    MemoryStore over `intervaltree`
+│   ├── sqlite.py    SqliteStore — persistent backend + .annot file format
+│   └── postgres.py  PostgresStore — int8range + GiST + per-tier EXCLUDE
+├── adapters/
+│   ├── textgrid.py        Praat .TextGrid (interval + point tiers)
+│   ├── webvtt.py          .vtt subtitles/captions
+│   ├── web_annotation.py  W3C Web Annotation Data Model (JSON-LD)
+│   ├── annot.py           .annot SQLite portable file format (lossless)
+│   ├── eaf.py             ELAN EAF (4 stereotypes verbatim)
+│   └── jams.py            JAMS (Music Information Retrieval) — namespaces → tiers
+├── cli.py           `lacing` CLI: convert, query, validate, list-formats
+├── quality.py       Cohen's κ, Krippendorff's α, interval IoU, boundary IoU
+├── schema.py        Body schema registry + JSON Schema export + migrations
+├── bodies/          Built-in body schemas (word, named-entity, ...)
+└── server/          FastAPI HTTP server (Phase 2)
+    ├── app.py           create_app(); ready-to-run `app` for uvicorn
+    ├── deps.py          dependency-injection (store factory)
+    ├── etag.py          ETag computation + If-Match parsing
+    └── routers/         REST endpoints: annotations, tiers, adapters, meta
+</pre></div>
+</div>
+</section>
+<section id="design-rules-in-one-breath">
+<h2>Design rules in one breath<a class="headerlink" href="#design-rules-in-one-breath" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Time is rational</strong> — <code class="docutils literal notranslate"><span class="pre">RationalTime(value:</span> <span class="pre">int,</span> <span class="pre">rate:</span> <span class="pre">int)</span></code>. Wire format <code class="docutils literal notranslate"><span class="pre">{v,</span> <span class="pre">r}</span></code>. Never floats.</p></li>
+<li><p><strong>Standoff</strong> — annotations reference media by <code class="docutils literal notranslate"><span class="pre">(asset_id,</span> <span class="pre">interval)</span></code>; source is immutable.</p></li>
+<li><p><strong>One envelope, typed body</strong> — <code class="docutils literal notranslate"><span class="pre">Annotation.body:</span> <span class="pre">dict</span></code> validated by <code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code> (semver).</p></li>
+<li><p><strong>Allen’s algebra is the public predicate API</strong> — never write ad-hoc overlap checks.</p></li>
+<li><p><strong>ELAN tier stereotypes verbatim</strong> — <code class="docutils literal notranslate"><span class="pre">NONE</span></code>, <code class="docutils literal notranslate"><span class="pre">TIME_SUBDIVISION</span></code>, <code class="docutils literal notranslate"><span class="pre">INCLUDED_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">SYMBOLIC_SUBDIVISION</span></code>, <code class="docutils literal notranslate"><span class="pre">SYMBOLIC_ASSOCIATION</span></code>.</p></li>
+<li><p><strong>PROV-O provenance inline on every annotation</strong> — <code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code>, <code class="docutils literal notranslate"><span class="pre">was_attributed_to</span></code>, <code class="docutils literal notranslate"><span class="pre">was_derived_from</span></code>, <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code>. <code class="docutils literal notranslate"><span class="pre">generated_at_time</span></code> is wall-clock (<code class="docutils literal notranslate"><span class="pre">RationalTime.now()</span></code>); tick 0 is <code class="docutils literal notranslate"><span class="pre">UNKNOWN_GENERATED_AT</span></code>, never the epoch — consumers read it as unverifiable, not oldest.</p></li>
+<li><p><strong>MIT/BSD/Apache licenses only.</strong></p></li>
+</ol>
+<p>The full reasoning lives in <a class="reference internal" href="#misc/docs/"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">misc/docs/</span></code></span></a> — four design docs
+covering annotation systems generally, backend architecture, frontend UI,
+and an OSS deep-dive of what to build on. The synthesized plan is in
+<a class="reference internal" href="#misc/docs/Lacing%20Development%20Roadmap.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">misc/docs/Lacing</span> <span class="pre">Development</span> <span class="pre">Roadmap.md</span></code></span></a>.</p>
+</section>
+<section id="concrete-recipes">
+<h2>Concrete recipes<a class="headerlink" href="#concrete-recipes" title="Link to this heading">#</a></h2>
+<section id="build-annotations-programmatically">
+<h3>Build annotations programmatically<a class="headerlink" href="#build-annotations-programmatically" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Annotation</span><span class="p">,</span>
+    <span class="n">MediaRef</span><span class="p">,</span>
+    <span class="n">MemoryStore</span><span class="p">,</span>
+    <span class="n">Provenance</span><span class="p">,</span>
+    <span class="n">RationalTime</span><span class="p">,</span>
+    <span class="n">TimeInterval</span><span class="p">,</span>
+    <span class="n">Tier</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">MemoryStore</span><span class="p">()</span>
+<span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="s2">"words"</span><span class="p">))</span>
+
+<span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">Annotation</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">uuid4</span><span class="p">(),</span>
+        <span class="n">tier</span><span class="o">=</span><span class="s2">"words"</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="n">MediaRef</span><span class="p">(</span>
+            <span class="n">asset_id</span><span class="o">=</span><span class="s2">"blake3:abc123"</span><span class="p">,</span>
+            <span class="n">interval</span><span class="o">=</span><span class="n">TimeInterval</span><span class="o">.</span><span class="n">from_seconds</span><span class="p">(</span><span class="s2">"0.0"</span><span class="p">,</span> <span class="s2">"0.5"</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">1000</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">},</span>
+        <span class="n">body_schema_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span>
+        <span class="n">provenance</span><span class="o">=</span><span class="n">Provenance</span><span class="p">(</span>
+            <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"user:thor"</span><span class="p">,</span>
+            <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"thor"</span><span class="p">,</span>
+            <span class="n">generated_at_time</span><span class="o">=</span><span class="n">RationalTime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="query-with-allen-s-relations">
+<h3>Query with Allen’s relations<a class="headerlink" href="#query-with-allen-s-relations" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.allen</span><span class="w"> </span><span class="kn">import</span> <span class="n">AllenRelation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span><span class="p">,</span> <span class="n">TimeInterval</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">TimeInterval</span><span class="p">(</span><span class="n">RationalTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">RationalTime</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+
+<span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>  <span class="c1"># any overlap</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">during</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>  <span class="c1"># strictly inside w</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>  <span class="c1"># strictly contains w</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">relate</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">[</span><span class="n">AllenRelation</span><span class="o">.</span><span class="n">MEETS</span><span class="p">]))</span>  <span class="c1"># ends at w.start</span>
+</pre></div>
+</div>
+</section>
+<section id="persist-annotations">
+<h3>Persist annotations<a class="headerlink" href="#persist-annotations" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteStore</span>
+
+<span class="c1"># Open or create a .annot file (SQLite under the hood)</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">"project.annot"</span><span class="p">)</span>
+<span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># writes go straight to disk</span>
+<span class="n">store</span><span class="o">.</span><span class="n">set_meta</span><span class="p">(</span><span class="s2">"project"</span><span class="p">,</span> <span class="s2">"demo"</span><span class="p">)</span>
+
+<span class="c1"># Same MutableMapping + Allen-relation interface as MemoryStore</span>
+<span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+    <span class="o">...</span>
+<span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file is the recommended portable handoff format — single-file
+SQLite, Git-trackable, lossless round-trip with <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
+<p>For multi-user / production scale, the same facade is available over
+PostgreSQL:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostgresStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.tier</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tier</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">PostgresStore</span><span class="p">(</span><span class="s2">"postgresql://localhost/myproject"</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Per-tier non-overlap is enforced declaratively by the database — try to</span>
+<span class="c1"># add an overlapping annotation in this tier and Postgres rejects the insert.</span>
+<span class="n">store</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">Tier</span><span class="p">(</span><span class="s2">"speakers"</span><span class="p">),</span> <span class="n">enforce_no_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Postgres backend uses <code class="docutils literal notranslate"><span class="pre">int8range</span></code> + GiST (sub-millisecond overlap
+queries at million-row scale) and exposes the same Allen-relation
+methods. Times are normalized to a project-wide rate stored in <code class="docutils literal notranslate"><span class="pre">meta</span></code>.</p>
+</section>
+<section id="cli">
+<h3>CLI<a class="headerlink" href="#cli" title="Link to this heading">#</a></h3>
+<p>After <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> the <code class="docutils literal notranslate"><span class="pre">lacing</span></code> command is on your PATH:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lacing<span class="w"> </span>list-formats<span class="w">                                          </span><span class="c1"># show registered adapters</span>
+lacing<span class="w"> </span>convert<span class="w"> </span>speech.TextGrid<span class="w"> </span>speech.annot<span class="w">                  </span><span class="c1"># convert between formats</span>
+lacing<span class="w"> </span>query<span class="w"> </span>speech.annot<span class="w"> </span>--start<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span>--end<span class="w"> </span><span class="m">5</span>.0<span class="w"> </span>--rate<span class="w"> </span><span class="m">1000</span><span class="w">  </span><span class="c1"># JSON-lines</span>
+lacing<span class="w"> </span>validate<span class="w"> </span>speech.annot<span class="w">                                 </span><span class="c1"># parse + summary</span>
+</pre></div>
+</div>
+</section>
+<section id="body-schemas-validation-migrations">
+<h3>Body schemas, validation, migrations<a class="headerlink" href="#body-schemas-validation-migrations" title="Link to this heading">#</a></h3>
+<p>Every annotation has a <code class="docutils literal notranslate"><span class="pre">body:</span> <span class="pre">dict</span></code> validated against the schema named by
+its <code class="docutils literal notranslate"><span class="pre">body_schema_uri</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">annot://schema/named-entity/v2</span></code>). Register
+your own with a Pydantic v2 model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_body_schema</span><span class="p">,</span> <span class="n">register_migration</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">migrate</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WordBodyV1</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">speaker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="n">register_body_schema</span><span class="p">(</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span> <span class="n">WordBodyV1</span><span class="p">)</span>
+
+<span class="c1"># Validate at runtime:</span>
+<span class="n">validate</span><span class="p">({</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"hello"</span><span class="p">},</span> <span class="s2">"annot://schema/word/v1"</span><span class="p">)</span>
+
+
+<span class="c1"># Register a forward migration v1 -&gt; v2:</span>
+<span class="nd">@register_migration</span><span class="p">(</span><span class="n">schema_name</span><span class="o">=</span><span class="s2">"word"</span><span class="p">,</span> <span class="n">from_version</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">to_version</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_v1_to_v2</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">body</span><span class="p">,</span> <span class="s2">"lemma"</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+
+<span class="c1"># Migrate stored data:</span>
+<span class="n">migrated</span> <span class="o">=</span> <span class="n">migrate</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="s2">"ran"</span><span class="p">},</span> <span class="n">from_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v1"</span><span class="p">,</span> <span class="n">to_uri</span><span class="o">=</span><span class="s2">"annot://schema/word/v2"</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Export every registered schema to JSON Schema (the upstream for downstream
+Zod codegen):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_json_schemas</span>
+
+<span class="n">export_json_schemas</span><span class="p">(</span><span class="s2">"./schema/"</span><span class="p">)</span>  <span class="c1"># writes &lt;name&gt;/v&lt;N&gt;.json + index.json</span>
+</pre></div>
+</div>
+<p>Built-in body schemas live under <code class="docutils literal notranslate"><span class="pre">lacing/bodies/</span></code> (<code class="docutils literal notranslate"><span class="pre">word</span></code>, <code class="docutils literal notranslate"><span class="pre">named-entity</span></code>).
+They register themselves on import.</p>
+</section>
+<section id="run-the-http-server">
+<h3>Run the HTTP server<a class="headerlink" href="#run-the-http-server" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'lacing[server]'</span>
+uvicorn<span class="w"> </span>lacing.server:app<span class="w"> </span>--reload
+</pre></div>
+</div>
+<p>By default the server starts with an in-memory <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code>. Wire your
+own backend (e.g., a <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code> or an <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file) via FastAPI’s
+dependency-override:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.server.deps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_store</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteStore</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">"project.annot"</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">dependency_overrides</span><span class="p">[</span><span class="n">get_store</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">store</span>
+</pre></div>
+</div>
+<p>The REST surface (Phase 2.0):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GET    /health
+GET    /tiers                              list
+POST   /tiers                              create or update
+GET    /tiers/{name}                       get one
+POST   /annotations                        create (returns ETag)
+GET    /annotations                        list with optional ?tier&amp;start&amp;end&amp;relation&amp;rate
+GET    /annotations/{id}                   get one (returns ETag)
+PATCH  /annotations/{id}                   partial update; If-Match required
+DELETE /annotations/{id}
+POST   /import?format=webvtt               upload a file in any registered format
+GET    /export?format=eaf                  dump store as a file
+GET    /formats                            list registered adapters
+GET    /schemas                            list registered body_schema_uris
+GET    /schemas/{uri}                      JSON Schema for a URI
+GET    /meta, PUT /meta/{key}              key/value metadata
+GET    /oplog                              list mutations (filterable by clock)
+GET    /oplog/latest-clock                 current Lamport clock value
+GET    /state-at?clock=N                   replay log to clock N → snapshot
+</pre></div>
+</div>
+<p>Every mutation gets a Lamport clock returned in the <code class="docutils literal notranslate"><span class="pre">X-Lacing-Clock</span></code>
+response header. The op-log + <code class="docutils literal notranslate"><span class="pre">/state-at</span></code> endpoint give you full
+time-travel debug — pick any past clock value and reconstruct exactly
+what the system saw.</p>
+</section>
+<section id="mcp-server-agents-as-first-class-clients">
+<h3>MCP server — agents as first-class clients<a class="headerlink" href="#mcp-server-agents-as-first-class-clients" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.oplog</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryOpLog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.server.mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_mcp_server</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteStore</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">SqliteStore</span><span class="p">(</span><span class="s2">"project.annot"</span><span class="p">,</span> <span class="n">check_same_thread</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">oplog</span> <span class="o">=</span> <span class="n">InMemoryOpLog</span><span class="p">()</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">build_mcp_server</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">oplog</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># stdio transport by default</span>
+</pre></div>
+</div>
+<p>Tools registered (all take seconds — no need to construct rational-time
+wire dicts): <code class="docutils literal notranslate"><span class="pre">add_annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">query_annotations</span></code>, <code class="docutils literal notranslate"><span class="pre">get_annotation</span></code>,
+<code class="docutils literal notranslate"><span class="pre">delete_annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">accept_ai_suggestion</span></code>, <code class="docutils literal notranslate"><span class="pre">add_tier</span></code>, <code class="docutils literal notranslate"><span class="pre">list_tiers</span></code>,
+<code class="docutils literal notranslate"><span class="pre">list_formats</span></code>, <code class="docutils literal notranslate"><span class="pre">latest_clock</span></code>, <code class="docutils literal notranslate"><span class="pre">state_at</span></code>. The MCP server shares the
+same <code class="docutils literal notranslate"><span class="pre">store</span></code> + <code class="docutils literal notranslate"><span class="pre">oplog</span></code> as the FastAPI app, so a human edit via REST and
+an agent edit via MCP land in the same op-log with the same Lamport
+clock.</p>
+<p><code class="docutils literal notranslate"><span class="pre">accept_ai_suggestion</span></code> returns <strong>two</strong> records — <code class="docutils literal notranslate"><span class="pre">{&quot;annotation&quot;:</span> <span class="pre">…,</span> <span class="pre">&quot;review&quot;:</span> <span class="pre">…}</span></code> — because a review is two facts, not one. The reviewed
+annotation keeps its <code class="docutils literal notranslate"><span class="pre">id</span></code> <em>and its provenance</em>: it was still generated
+by the agent, so <code class="docutils literal notranslate"><span class="pre">was_generated_by</span></code> / <code class="docutils literal notranslate"><span class="pre">was_attributed_to</span></code> are left
+alone and only <code class="docutils literal notranslate"><span class="pre">confidence</span></code> moves to 1.0 / 0.0. The human’s decision
+becomes its own standoff <code class="docutils literal notranslate"><span class="pre">approval</span></code> review annotation on the <code class="docutils literal notranslate"><span class="pre">review</span></code>
+tier, pointing at what it judged (<code class="docutils literal notranslate"><span class="pre">AnnotationRef</span></code>, <strong>no interval</strong>),
+attributed to the reviewer and stamped with the review time. Rewriting
+the agent’s provenance in place — which is what this used to do — erased
+the one record proving the annotation was ever AI-generated (lacing#18).</p>
+<p>The review carries no interval on purpose: a verdict about a whole
+annotation has no position of its own on the media timeline, so it stays
+out of untiered interval queries and out of every timeline export.
+Giving it the reviewed annotation’s interval would put a blank cue at
+that annotation’s exact timestamps in WebVTT, an empty interval in a
+TextGrid tier, and an asset-less item in a Web Annotation collection —
+one per accept.</p>
+</section>
+<section id="freshness-did-the-answer-actually-change">
+<h3>Freshness — “did the answer actually change?”<a class="headerlink" href="#freshness-did-the-answer-actually-change" title="Link to this heading">#</a></h3>
+<p>lacing has <strong>three</strong> digests answering three different questions. Picking the
+wrong one is a silent correctness bug, so they are named apart:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Digest</p></th>
+<th class="head"><p>Over</p></th>
+<th class="head"><p>Question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hash_bytes</span></code> / <code class="docutils literal notranslate"><span class="pre">hash_file</span></code></p></td>
+<td><p>an artifact’s <strong>bytes</strong></p></td>
+<td><p><em>are these two files the same file?</em> (<code class="docutils literal notranslate"><span class="pre">Artifact.asset_id</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lacing.server.etag.annotation_etag</span></code></p></td>
+<td><p>the <strong>whole</strong> annotation</p></td>
+<td><p><em>has this record been touched since I read it?</em> (<code class="docutils literal notranslate"><span class="pre">If-Match</span></code> / 412)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">annotation_value_digest</span></code></p></td>
+<td><p>an annotation’s <strong>value</strong></p></td>
+<td><p><em>did the answer actually change?</em> (freshness / early cutoff)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A regeneration mints a fresh <code class="docutils literal notranslate"><span class="pre">id</span></code> and a fresh <code class="docutils literal notranslate"><span class="pre">provenance.generated_at_time</span></code>,
+so <code class="docutils literal notranslate"><span class="pre">annotation_etag</span></code> changes even when the content is byte-identical. The value
+digest excludes both — which is what lets a downstream freshness check key on
+<em>upstream output values</em> rather than <em>upstream keys</em>, and stop propagating
+invalidation when nothing actually changed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotation_value_digest</span><span class="p">,</span> <span class="n">annotation_body_digest</span>
+
+<span class="c1"># Same content, regenerated: same value digest, different id + timestamp.</span>
+<span class="k">assert</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">original</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_value_digest</span><span class="p">(</span><span class="n">regenerated</span><span class="p">)</span>
+
+<span class="c1"># Included in the value: body, body_schema_uri, tier, reference, confidence.</span>
+<span class="c1"># Excluded: id, provenance.</span>
+
+<span class="c1"># The narrow sibling — {body, body_schema_uri} only. It drops the ENTIRE</span>
+<span class="c1"># reference (which asset, not just when) plus tier and confidence, so the same</span>
+<span class="c1"># body over two DIFFERENT assets digests alike. Use it only when the consumer</span>
+<span class="c1"># depends on nothing but what the annotation says.</span>
+<span class="k">assert</span> <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over_interview</span><span class="p">)</span> <span class="o">==</span> <span class="n">annotation_body_digest</span><span class="p">(</span><span class="n">over_broadcast</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">body</span></code> must contain only JSON types. A non-<code class="docutils literal notranslate"><span class="pre">str</span></code> mapping key raises
+<code class="docutils literal notranslate"><span class="pre">NonStringBodyKeyError</span></code> rather than digesting: JSON object keys are strings, so
+<code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> would collapse to <code class="docutils literal notranslate"><span class="pre">{&quot;1&quot;:</span> <span class="pre">&quot;b&quot;}</span></code> and silently lose an entry
+— two different annotations digesting alike. Within that contract the digest
+never returns a wrong cache <em>hit</em>; it can return a spurious miss, which only
+costs a recompute.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lacing/digest.py</span></code> justifies each inclusion/exclusion in its docstring; read it
+before changing the boundary, because changing it invalidates every consumer’s
+cache at once.</p>
+</section>
+<section id="inter-annotator-agreement">
+<h3>Inter-annotator agreement<a class="headerlink" href="#inter-annotator-agreement" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.quality</span><span class="w"> </span><span class="kn">import</span> <span class="n">cohen_kappa</span><span class="p">,</span> <span class="n">krippendorff_alpha</span><span class="p">,</span> <span class="n">boundary_iou</span>
+
+<span class="c1"># Two annotators on a categorical task</span>
+<span class="n">kappa</span> <span class="o">=</span> <span class="n">cohen_kappa</span><span class="p">([</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">])</span>
+
+<span class="c1"># Three annotators with missing data</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">krippendorff_alpha</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">],</span>
+        <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">],</span>
+        <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Compare two segmentations</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">boundary_iou</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">store_a</span><span class="o">.</span><span class="n">by_tier</span><span class="p">(</span><span class="s2">"speakers"</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">interval</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">store_b</span><span class="o">.</span><span class="n">by_tier</span><span class="p">(</span><span class="s2">"speakers"</span><span class="p">)],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">#</a></h2>
+<p>MIT.</p>
+<p class="epythet-aggregates">This documentation as a single file: <a href="lacing.md">lacing.md</a> (Markdown, for agents).</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-09-22 13:47 UTC from <a href="https://github.com/thorwhalen/lacing/commit/4967c75ed767cf60e49ca8396254f546d6c466ef">4967c75</a> (main) · lacing 0.0.41 · <a href="about-this-build.html">about this build</a></p>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="api.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#second-tour">30-second tour</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#track-facades-opinionated-bundles-of-tiers">Track facades — opinionated bundles of tiers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-in-the-core">What’s in the core</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-rules-in-one-breath">Design rules in one breath</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concrete-recipes">Concrete recipes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-annotations-programmatically">Build annotations programmatically</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-with-allen-s-relations">Query with Allen’s relations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persist-annotations">Persist annotations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli">CLI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#body-schemas-validation-migrations">Body schemas, validation, migrations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-http-server">Run the HTTP server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mcp-server-agents-as-first-class-clients">MCP server — agents as first-class clients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#freshness-did-the-answer-actually-change">Freshness — “did the answer actually change?”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inter-annotator-agreement">Inter-annotator agreement</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/index.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
 </html>

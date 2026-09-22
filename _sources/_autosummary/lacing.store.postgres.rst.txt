@@ -1,0 +1,37 @@
+lacing.store.postgres
+=====================
+
+.. automodule:: lacing.store.postgres
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SCHEMA_VERSION
+      DEFAULT_OWNER_ID
+      DEFAULT_PROJECT_ID
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      close_all_pools
+      from_memory
+      get_pool
+      to_memory
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PostgresStore
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      PgSchemaMismatchError
+      RateMismatchError
+      TierOverlapError
+   

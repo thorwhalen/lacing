@@ -1,0 +1,19 @@
+lacing.tier
+===========
+
+.. automodule:: lacing.tier
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      validate_tier_constraint
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Tier
+      TierStereotype
+   

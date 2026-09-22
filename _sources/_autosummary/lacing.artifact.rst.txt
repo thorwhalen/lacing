@@ -1,0 +1,25 @@
+lacing.artifact
+===============
+
+.. automodule:: lacing.artifact
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      ArtifactKind
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      hash_bytes
+      hash_file
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Artifact
+   

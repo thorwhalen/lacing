@@ -1,0 +1,13 @@
+lacing.adapters.annot
+=====================
+
+.. automodule:: lacing.adapters.annot
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      dump
+      load
+   

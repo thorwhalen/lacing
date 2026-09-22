@@ -1,0 +1,30 @@
+lacing.store.migrations
+=======================
+
+.. automodule:: lacing.store.migrations
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      SQLITE_KIND
+      POSTGRES_KIND
+      SQLITE_MIGRATION_BUSY_TIMEOUT_MS
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      migrate_annot_file
+      migrate_sqlite_connection
+      reachable_versions
+      rebuild_annotations_rtree
+      register_store_migration
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      StoreMigrationError
+   

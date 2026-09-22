@@ -1,0 +1,34 @@
+lacing.schema
+=============
+
+.. automodule:: lacing.schema
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      clear_registry
+      export_json_schemas
+      get_body_schema
+      is_registered
+      json_schema
+      latest_version
+      make_uri
+      migrate
+      migrate_to_latest
+      parse_uri
+      register_body_schema
+      register_migration
+      registered_uris
+      validate
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      BodySchemaError
+      EmptySchemaRegistryError
+      MigrationError
+      UnknownBodySchemaError
+   

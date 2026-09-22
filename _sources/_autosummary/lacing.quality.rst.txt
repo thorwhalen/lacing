@@ -1,0 +1,15 @@
+lacing.quality
+==============
+
+.. automodule:: lacing.quality
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      boundary_iou
+      cohen_kappa
+      interval_iou
+      krippendorff_alpha
+   

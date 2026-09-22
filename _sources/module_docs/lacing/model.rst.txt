@@ -1,4 +1,0 @@
-lacing.model
-============
-.. automodule:: lacing.model
-   :members:

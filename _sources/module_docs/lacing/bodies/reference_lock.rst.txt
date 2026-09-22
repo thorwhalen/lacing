@@ -1,4 +1,0 @@
-lacing.bodies.reference_lock
-============================
-.. automodule:: lacing.bodies.reference_lock
-   :members:

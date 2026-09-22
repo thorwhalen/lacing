@@ -1,0 +1,26 @@
+lacing.tracks
+=============
+
+.. automodule:: lacing.tracks
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      register_subtitle_schemas
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SubtitleBuilder
+      SubtitleTrack
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   subtitle

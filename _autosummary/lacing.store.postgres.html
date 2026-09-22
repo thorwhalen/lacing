@@ -1,0 +1,843 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="lacing.store.postgres.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="lacing.store.postgres.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>lacing.store.postgres &#8212; lacing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=37d13f4f" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=20c5f126"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/lacing.store.postgres';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lacing.store.sqlite" href="lacing.store.sqlite.html" />
+    <link rel="prev" title="lacing.store.migrations" href="lacing.store.migrations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.41" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lacing</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/lacing" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="lacing.html">lacing</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.adapters.html">lacing.adapters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.annot.html">lacing.adapters.annot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.eaf.html">lacing.adapters.eaf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.jams.html">lacing.adapters.jams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.label_studio.html">lacing.adapters.label_studio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.otio.html">lacing.adapters.otio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.textgrid.html">lacing.adapters.textgrid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.web_annotation.html">lacing.adapters.web_annotation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.adapters.webvtt.html">lacing.adapters.webvtt</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.allen.html">lacing.allen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.artifact.html">lacing.artifact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.artifact_store.html">lacing.artifact_store</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.bodies.html">lacing.bodies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.character_voice.html">lacing.bodies.character_voice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.continuity_violation.html">lacing.bodies.continuity_violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.named_entity.html">lacing.bodies.named_entity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.reference_lock.html">lacing.bodies.reference_lock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.review.html">lacing.bodies.review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.review_candidate.html">lacing.bodies.review_candidate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.bodies.word.html">lacing.bodies.word</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.cli.html">lacing.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.digest.html">lacing.digest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.exhibit.html">lacing.exhibit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.model.html">lacing.model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.oplog.html">lacing.oplog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.otel.html">lacing.otel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.processors.html">lacing.processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.quality.html">lacing.quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.schema.html">lacing.schema</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="lacing.store.html">lacing.store</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.base.html">lacing.store.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.memory.html">lacing.store.memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.migrations.html">lacing.store.migrations</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">lacing.store.postgres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.sqlite.html">lacing.store.sqlite</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.tier.html">lacing.tier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.time.html">lacing.time</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="lacing.tracks.html">lacing.tracks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="lacing.tracks.subtitle.html">lacing.tracks.subtitle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="lacing.worker.html">lacing.worker</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="lacing.html" class="nav-link">lacing</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="lacing.store.html" class="nav-link">lacing.store</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lacing.store.postgres</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-lacing.store.postgres">
+<span id="lacing-store-postgres"></span><h1>lacing.store.postgres<a class="headerlink" href="#module-lacing.store.postgres" title="Link to this heading">#</a></h1>
+<p>PostgreSQL-backed annotation store using <code class="docutils literal notranslate"><span class="pre">int8range</span></code> + GiST.</p>
+<p>Maps lacing’s interval model to Postgres native range types (BACK-DOC §4.2):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Allen relation</p></th>
+<th class="head"><p>Postgres operator (int8range / tstzrange)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>overlaps (any)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&amp;&amp;</span> <span class="pre">b</span></code>      — any kind of intersection</p></td>
+</tr>
+<tr class="row-odd"><td><p>during</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;&#64;</span> <span class="pre">b</span></code>      — a contained in b (strict variant: see code)</p></td>
+</tr>
+<tr class="row-even"><td><p>contains</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&#64;&gt;</span> <span class="pre">b</span></code>      — a contains b (strict variant: see code)</p></td>
+</tr>
+<tr class="row-odd"><td><p>meets / met_by</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">-|-</span> <span class="pre">b</span></code>     — adjacent (touching but not overlapping)</p></td>
+</tr>
+<tr class="row-even"><td><p>equals</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>before</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;&lt;</span> <span class="pre">b</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>after</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;&gt;</span> <span class="pre">b</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>strict overlap</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&amp;&amp;</span> <span class="pre">b</span> <span class="pre">AND</span> <span class="pre">lower(a)</span> <span class="pre">&lt;</span> <span class="pre">lower(b)</span> <span class="pre">AND</span> <span class="pre">upper(a)</span> <span class="pre">&lt;</span> <span class="pre">upper(b)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We store intervals as <code class="docutils literal notranslate"><span class="pre">int8range(start_value,</span> <span class="pre">end_value,</span> <span class="pre">'[)')</span></code> — half-open,
+matching lacing’s <code class="docutils literal notranslate"><span class="pre">TimeInterval</span></code> semantics — at a **per-(owner, project)
+rate** recorded in the <code class="docutils literal notranslate"><span class="pre">projects</span></code> table. All inserts must be at that rate;
+re-quantizing happens on insert if necessary.</p>
+<p>GiST index on the range column gives sub-millisecond overlap queries at
+million-row scale. Optional <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span> <span class="pre">GIST</span></code> constraints are added
+<strong>per tier</strong> for stereotypes like <code class="docutils literal notranslate"><span class="pre">TIME_SUBDIVISION</span></code> that forbid overlap.</p>
+<section id="multi-tenancy-phase-4-reelee-177">
+<h2>Multi-tenancy (Phase 4, reelee#177)<a class="headerlink" href="#multi-tenancy-phase-4-reelee-177" title="Link to this heading">#</a></h2>
+<p>Multiple logical stores (one per nw/reelee project) coexist in a single
+Postgres database via <strong>tenant columns on shared tables</strong> (the decision in
+<code class="docutils literal notranslate"><span class="pre">reelee/docs/storage_migration_plan.md</span></code> §”Postgres tenancy”): every
+<code class="docutils literal notranslate"><span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">tiers</span></code> row carries an <code class="docutils literal notranslate"><span class="pre">owner_id</span></code> and a <code class="docutils literal notranslate"><span class="pre">project_id</span></code>,
+and every query is scoped by <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code>. A <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code>
+instance is bound to one <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code> at construction and behaves
+exactly like a single-tenant store; two stores with different project ids over
+the same database never see each other’s rows.</p>
+<p><code class="docutils literal notranslate"><span class="pre">owner_id</span></code> is a forward seam for the multi-tenant access layer (reelee#174):
+the column is carried and scoped now, but its <em>enforcement</em> (the policy
+decision point) is deferred — today every store defaults <code class="docutils literal notranslate"><span class="pre">owner_id=&quot;default&quot;</span></code>.</p>
+<p>The per-tier <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span> <span class="pre">GIST</span></code> no-overlap constraint is likewise scoped by
+<code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id,</span> <span class="pre">tier)</span></code> so one project’s non-overlap rule cannot block
+another project’s annotations.</p>
+</section>
+<section id="connection-pooling-phase-4">
+<h2>Connection pooling (Phase 4)<a class="headerlink" href="#connection-pooling-phase-4" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">nw</span></code>’s <code class="xref py py-class docutils literal notranslate"><span class="pre">ProjectGraph</span></code> opens and closes the store per
+operation. That is fine for a SQLite file but pathological for a network DB, so
+this module keeps a process-wide <code class="xref py py-class docutils literal notranslate"><span class="pre">psycopg_pool.ConnectionPool</span></code> per
+connection string (see <a class="reference internal" href="#lacing.store.postgres.get_pool" title="lacing.store.postgres.get_pool"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pool()</span></code></a>); a <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code> borrows a
+connection from the pool for its lifetime and returns it on <code class="docutils literal notranslate"><span class="pre">close()</span></code> instead
+of opening a fresh TCP/auth round-trip each time. When <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is not
+installed (or a caller passes <code class="docutils literal notranslate"><span class="pre">use_pool=False</span></code>) we fall back to a dedicated
+long-lived connection.</p>
+<p>Schema versioning lives in <code class="docutils literal notranslate"><span class="pre">meta</span></code>; mismatched versions raise on open.</p>
+<p>Status: Phase 4. Tested via <code class="docutils literal notranslate"><span class="pre">pytest-postgresql</span></code> sandbox (no live server
+needed for development).</p>
+<p class="rubric">Module Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.SCHEMA_VERSION" title="lacing.store.postgres.SCHEMA_VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></p></td>
+<td><p>Current schema version stored in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.postgres.DEFAULT_OWNER_ID" title="lacing.store.postgres.DEFAULT_OWNER_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a></p></td>
+<td><p>Owner placeholder until the multi-tenant access layer (reelee#174) lands.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.DEFAULT_PROJECT_ID" title="lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a></p></td>
+<td><p>Project placeholder for single-project / legacy use.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.close_all_pools" title="lacing.store.postgres.close_all_pools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_all_pools</span></code></a>()</p></td>
+<td><p>Close every registered connection pool (test teardown / shutdown).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.postgres.from_memory" title="lacing.store.postgres.from_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_memory</span></code></a>(memory_store, connection_string, *)</p></td>
+<td><p>Replicate an in-memory store into a Postgres database (one tenant).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.get_pool" title="lacing.store.postgres.get_pool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pool</span></code></a>(connection_string, **pool_kwargs)</p></td>
+<td><p>Return a process-wide <code class="xref py py-class docutils literal notranslate"><span class="pre">psycopg_pool.ConnectionPool</span></code> for a conninfo.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.postgres.to_memory" title="lacing.store.postgres.to_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_memory</span></code></a>(pg_store)</p></td>
+<td><p>Snapshot a <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code> into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PostgresStore</span></code></a>(connection_string, *[, rate, ...])</p></td>
+<td><p>PostgreSQL-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>, scoped to one tenant.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Exceptions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.PgSchemaMismatchError" title="lacing.store.postgres.PgSchemaMismatchError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></p></td>
+<td><p>Raised on opening a database whose schema_version differs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.postgres.RateMismatchError" title="lacing.store.postgres.RateMismatchError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></p></td>
+<td><p>Raised when an annotation's interval cannot be represented at the project rate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.postgres.TierOverlapError" title="lacing.store.postgres.TierOverlapError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></p></td>
+<td><p>Raised when an insert would violate a per-tier no-overlap constraint.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.postgres.DEFAULT_OWNER_ID">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_OWNER_ID</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></span><a class="headerlink" href="#lacing.store.postgres.DEFAULT_OWNER_ID" title="Link to this definition">#</a></dt>
+<dd><p>Owner placeholder until the multi-tenant access layer (reelee#174) lands.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">owner_id</span></code> column is carried and scoped now; its enforcement is deferred.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.postgres.DEFAULT_PROJECT_ID">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_PROJECT_ID</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default'</span></span><a class="headerlink" href="#lacing.store.postgres.DEFAULT_PROJECT_ID" title="Link to this definition">#</a></dt>
+<dd><p>Project placeholder for single-project / legacy use.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.postgres.PgSchemaMismatchError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">PgSchemaMismatchError</span></span><a class="reference internal" href="../_modules/lacing/store/postgres.html#PgSchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PgSchemaMismatchError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></p>
+<p>Raised on opening a database whose schema_version differs.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.postgres.PostgresStore">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">PostgresStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autocommit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#PostgresStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PostgresStore" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>PostgreSQL-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>, scoped to one tenant.</p>
+<p>A store instance is bound to one <code class="docutils literal notranslate"><span class="pre">(owner_id,</span> <span class="pre">project_id)</span></code> pair; multiple
+instances over the same database (different project ids) coexist without
+seeing each other’s annotations or tiers (see the module docstring on
+multi-tenancy). The mapping/Allen/tier surface is unchanged — the tenant
+scoping is transparent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_string</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – A psycopg-compatible conninfo URL, or a kwargs dict
+(<code class="docutils literal notranslate"><span class="pre">host</span></code>/<code class="docutils literal notranslate"><span class="pre">port</span></code>/<code class="docutils literal notranslate"><span class="pre">user</span></code>/<code class="docutils literal notranslate"><span class="pre">password</span></code>/<code class="docutils literal notranslate"><span class="pre">dbname</span></code>).</p></li>
+<li><p><strong>rate</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Project-wide rate for <em>this</em> <code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code>. Set on first
+init for the pair; re-opening the same pair with a different rate
+raises <a class="reference internal" href="#lacing.store.postgres.PgSchemaMismatchError" title="lacing.store.postgres.PgSchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a>. Different projects in the
+same DB may have different rates.</p></li>
+<li><p><strong>owner_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Tenant owner. Defaults to <a class="reference internal" href="#lacing.store.postgres.DEFAULT_OWNER_ID" title="lacing.store.postgres.DEFAULT_OWNER_ID"><code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a> — the
+forward seam for the access layer (reelee#174); enforcement deferred.</p></li>
+<li><p><strong>project_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Logical project key. Defaults to <a class="reference internal" href="#lacing.store.postgres.DEFAULT_PROJECT_ID" title="lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="xref py py-data docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a>.
+<code class="docutils literal notranslate"><span class="pre">nw</span></code> passes the project’s <code class="docutils literal notranslate"><span class="pre">project_asset_id</span></code> here.</p></li>
+<li><p><strong>autocommit</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True (default), statements run in their own transaction.</p></li>
+<li><p><strong>use_pool</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – When True (default) and the connection is given as a string,
+borrow a connection from a process-wide pool keyed by the conninfo
+(amortizes per-op connect cost; see <a class="reference internal" href="#lacing.store.postgres.get_pool" title="lacing.store.postgres.get_pool"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_pool()</span></code></a>). Falls back to
+a dedicated connection when <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is unavailable, when the
+connection is given as a dict, or when <code class="docutils literal notranslate"><span class="pre">use_pool=False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.postgres.PostgresStore.add_tier">
+<span class="sig-name descname"><span class="pre">add_tier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tier</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_no_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#PostgresStore.add_tier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.PostgresStore.add_tier" title="Link to this definition">#</a></dt>
+<dd><p>Add or update a tier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tier</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="lacing.tier.html#lacing.tier.Tier" title="lacing.tier.Tier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tier</span></code></a></span>) – Tier definition.</p></li>
+<li><p><strong>enforce_no_overlap</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, install a per-tier <code class="docutils literal notranslate"><span class="pre">EXCLUDE</span> <span class="pre">USING</span>
+<span class="pre">GIST</span></code> constraint forbidding overlapping annotations within
+this tier. Required for proper TIME_SUBDIVISION enforcement.
+Cannot be toggled after the tier has annotations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.postgres.RateMismatchError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">RateMismatchError</span></span><a class="reference internal" href="../_modules/lacing/store/postgres.html#RateMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.RateMismatchError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="lacing.time.html#lacing.time.LossyTimeConversionError" title="lacing.time.LossyTimeConversionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">LossyTimeConversionError</span></code></a></p>
+<p>Raised when an annotation’s interval cannot be represented at the project rate.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.postgres.SCHEMA_VERSION">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#lacing.store.postgres.SCHEMA_VERSION" title="Link to this definition">#</a></dt>
+<dd><p>Current schema version stored in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table.</p>
+<p>v2 (Phase 4, reelee#177) added tenant columns (<code class="docutils literal notranslate"><span class="pre">owner_id</span></code> / <code class="docutils literal notranslate"><span class="pre">project_id</span></code>)
+to <code class="docutils literal notranslate"><span class="pre">tiers</span></code> and <code class="docutils literal notranslate"><span class="pre">annotations</span></code>, and a per-<code class="docutils literal notranslate"><span class="pre">(owner,</span> <span class="pre">project)</span></code> <code class="docutils literal notranslate"><span class="pre">projects</span></code>
+table holding the rate (was a single <code class="docutils literal notranslate"><span class="pre">meta</span></code> row in v1).</p>
+<p>v3 (lacing#14, defect D5): <code class="docutils literal notranslate"><span class="pre">prov_was_derived_from</span></code> may contain 64-hex
+artifact <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> strings alongside annotation UUIDs. Layout and rows
+unchanged — the bump makes pre-v3 builds (whose read path eagerly
+<code class="docutils literal notranslate"><span class="pre">UUID()</span></code>-parses the column) refuse rather than crash mid-read.</p>
+<p>The migration ladder (<a class="reference internal" href="lacing.store.migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;postgres&quot;</span></code>) is deliberately <strong>empty</strong>: no Postgres database
+at any version ever held real data — the backend is config-selectable and
+was never enabled in any environment; production has always been the
+per-caller sqlite <code class="docutils literal notranslate"><span class="pre">.annot</span></code> layout (verified 2026-08-15, lacing#15).
+Dev databases at v1/v2 are recreated, not migrated. Register steps from
+v3 forward once a deployed Postgres exists.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="lacing.store.postgres.TierOverlapError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">TierOverlapError</span></span><a class="reference internal" href="../_modules/lacing/store/postgres.html#TierOverlapError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.TierOverlapError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></p>
+<p>Raised when an insert would violate a per-tier no-overlap constraint.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.close_all_pools">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">close_all_pools</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#close_all_pools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.close_all_pools" title="Link to this definition">#</a></dt>
+<dd><p>Close every registered connection pool (test teardown / shutdown).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.from_memory">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">from_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_string</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#from_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.from_memory" title="Link to this definition">#</a></dt>
+<dd><p>Replicate an in-memory store into a Postgres database (one tenant).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostgresStore</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.get_pool">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">get_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_string</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">pool_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#get_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.get_pool" title="Link to this definition">#</a></dt>
+<dd><p>Return a process-wide <code class="xref py py-class docutils literal notranslate"><span class="pre">psycopg_pool.ConnectionPool</span></code> for a conninfo.</p>
+<p>One pool per distinct <code class="docutils literal notranslate"><span class="pre">connection_string</span></code> (the keying happens here, not at
+the call-site), created lazily on first request. Raises <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ImportError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImportError</span></code></a>
+if <code class="docutils literal notranslate"><span class="pre">psycopg_pool</span></code> is not installed — callers that want a graceful fallback
+catch it (see <a class="reference internal" href="#lacing.store.postgres.PostgresStore" title="lacing.store.postgres.PostgresStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostgresStore</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_string</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – psycopg conninfo URL (the registry key).</p></li>
+<li><p><strong>**pool_kwargs</strong> – forwarded to <code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionPool</span></code> on
+first creation (e.g. <code class="docutils literal notranslate"><span class="pre">min_size</span></code>, <code class="docutils literal notranslate"><span class="pre">max_size</span></code>); ignored on reuse.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The shared pool for this conninfo.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lacing.store.postgres.to_memory">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.postgres.</span></span><span class="sig-name descname"><span class="pre">to_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pg_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/postgres.html#to_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.postgres.to_memory" title="Link to this definition">#</a></dt>
+<dd><p>Snapshot a <code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code> into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="lacing.store.migrations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">lacing.store.migrations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lacing.store.sqlite.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">lacing.store.sqlite</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-tenancy-phase-4-reelee-177">Multi-tenancy (Phase 4, reelee#177)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-pooling-phase-4">Connection pooling (Phase 4)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.DEFAULT_OWNER_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_OWNER_ID</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.DEFAULT_PROJECT_ID"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PROJECT_ID</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.PgSchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">PgSchemaMismatchError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.PostgresStore"><code class="docutils literal notranslate"><span class="pre">PostgresStore</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.PostgresStore.add_tier"><code class="docutils literal notranslate"><span class="pre">PostgresStore.add_tier()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.RateMismatchError"><code class="docutils literal notranslate"><span class="pre">RateMismatchError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.TierOverlapError"><code class="docutils literal notranslate"><span class="pre">TierOverlapError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.close_all_pools"><code class="docutils literal notranslate"><span class="pre">close_all_pools()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.get_pool"><code class="docutils literal notranslate"><span class="pre">get_pool()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.postgres.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/lacing.store.postgres.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

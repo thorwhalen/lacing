@@ -1,0 +1,18 @@
+lacing.cli
+==========
+
+.. automodule:: lacing.cli
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      convert
+      list_formats
+      main
+      migrate
+      mk_parser
+      query
+      validate
+   

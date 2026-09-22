@@ -1,4 +1,0 @@
-lacing.artifact
-===============
-.. automodule:: lacing.artifact
-   :members:
