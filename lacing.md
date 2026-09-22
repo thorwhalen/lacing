@@ -1,4 +1,4 @@
-> built 2026-09-22 13:47 UTC from 4967c75 (main) · lacing 0.0.41. Details: build_info.json
+> built 2026-09-22 14:03 UTC from 5cfca7f (main) · lacing 0.0.41. Details: build_info.json
 
 # index.html.md
 
@@ -6886,7 +6886,7 @@ Build an Arq `WorkerSettings` class with lacing processors registered.
 
 # About this build
 
-This documentation was built on **2026-09-22 13:47 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/4967c75ed767cf60e49ca8396254f546d6c466ef"><code>4967c75</code></a> on branch <code>main</code>, for **lacing 0.0.41** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-09-22 14:03 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/5cfca7f892d105bbfb9fbb49d031444bd88338f0"><code>5cfca7f</code></a> on branch <code>main</code>, for **lacing 0.0.41** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6895,7 +6895,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/4967c75ed767cf60e49ca8396254f546d6c466ef"><code>4967c75ed767cf60e49ca8396254f546d6c466ef</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/5cfca7f892d105bbfb9fbb49d031444bd88338f0"><code>5cfca7f892d105bbfb9fbb49d031444bd88338f0</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -6906,9 +6906,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35735500780">35735500780</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35737457127">35737457127</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>4967c75ed767cf60e49ca8396254f546d6c466ef</code> (in the history of the built commit) |
+| Event commit | <code>5cfca7f892d105bbfb9fbb49d031444bd88338f0</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6939,7 +6939,7 @@ Latest release: <a href="https://pypi.org/project/lacing/0.0.41/">0.0.41</a>, th
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout 4967c75ed767cf60e49ca8396254f546d6c466ef
+git checkout 5cfca7f892d105bbfb9fbb49d031444bd88338f0
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

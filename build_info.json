@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "built_at": "2026-09-22T13:47:08Z",
+  "built_at": "2026-09-22T14:03:56Z",
   "package": {
     "name": "lacing",
     "version": "0.0.41",
@@ -9,24 +9,24 @@
   },
   "git": {
     "available": true,
-    "commit": "4967c75ed767cf60e49ca8396254f546d6c466ef",
-    "short_commit": "4967c75",
+    "commit": "5cfca7f892d105bbfb9fbb49d031444bd88338f0",
+    "short_commit": "5cfca7f",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/lacing",
-    "commit_url": "https://github.com/thorwhalen/lacing/commit/4967c75ed767cf60e49ca8396254f546d6c466ef",
+    "commit_url": "https://github.com/thorwhalen/lacing/commit/5cfca7f892d105bbfb9fbb49d031444bd88338f0",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/lacing",
-    "sha": "4967c75ed767cf60e49ca8396254f546d6c466ef",
+    "sha": "5cfca7f892d105bbfb9fbb49d031444bd88338f0",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "35735500780",
-    "run_url": "https://github.com/thorwhalen/lacing/actions/runs/35735500780",
+    "run_id": "35737457127",
+    "run_url": "https://github.com/thorwhalen/lacing/actions/runs/35737457127",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -64,7 +64,7 @@
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/lacing && cd lacing\ngit checkout 4967c75ed767cf60e49ca8396254f546d6c466ef\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/lacing && cd lacing\ngit checkout 5cfca7f892d105bbfb9fbb49d031444bd88338f0\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,
