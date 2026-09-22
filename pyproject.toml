@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lacing"
-version = "0.0.42"
+version = "0.0.43"
 description = "Interval annotation system"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -171,7 +171,7 @@ doctest_optionflags = [
 ]
 
 [tool.wads.ci]
-project_name = "lacing"
+project_name = ""
 
 # Install the `dev` extra in CI. Without this, read-ci-config emits empty
 # install-extras and the reusable workflow runs `uv pip install -e .` (core
