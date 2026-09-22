@@ -193,57 +193,104 @@ def test_blob_path_returns_none_for_missing_blob(tmp_path: Path):
     assert store.blob_path("0" * 64) is None
 
 
-# -- blob_path: containment (lacing#50) ---------------------------------------
+# -- blob reads: containment (lacing#50) --------------------------------------
+#
+# ``from_directory(root)`` keeps blobs in ``root / "blobs"``, so an escaping
+# key must climb out of *that* directory. Each test first asserts the secret
+# is genuinely reachable by the raw join (``_reachable``), so a test cannot
+# pass vacuously by pointing at a file that does not exist.
 
 
-def test_blob_path_refuses_relative_traversal(tmp_path: Path):
-    root = tmp_path / "artifacts"
-    root.mkdir()
+def _store_and_secret(tmp_path: Path):
+    store = ArtifactStore.from_directory(tmp_path / "artifacts")
+    blob_dir = Path(store.blobs.rootdir)
     secret = tmp_path / "secret.txt"
-    secret.write_text("do not serve me")
-    store = ArtifactStore.from_directory(root)
-    escaping_hash = "../secret.txt"
-    assert store.blob_path(escaping_hash) is None
+    secret.write_bytes(b"do not serve me")
+    return store, blob_dir, secret
 
 
-def test_blob_path_refuses_absolute_path(tmp_path: Path):
-    root = tmp_path / "artifacts"
-    root.mkdir()
-    secret = tmp_path / "secret.txt"
-    secret.write_text("do not serve me")
-    store = ArtifactStore.from_directory(root)
-    assert store.blob_path(str(secret)) is None
+def _reachable(blob_dir: Path, key: str) -> bool:
+    return (blob_dir / key).is_file()
 
 
-def test_blob_path_refuses_symlink_escaping_root(tmp_path: Path):
-    root = tmp_path / "artifacts"
-    root.mkdir()
-    secret = tmp_path / "secret.txt"
-    secret.write_text("do not serve me")
-    link_name = "0" * 64
-    (root / link_name).symlink_to(secret)
-    store = ArtifactStore.from_directory(root)
-    assert store.blob_path(link_name) is None
+def _assert_refused_everywhere(store: ArtifactStore, key: str):
+    assert store.blob_path(key) is None
+    assert store.has_blob(key) is False
+    assert store.get_blob(key) is None
+    assert store.blob_location(key) is None
+    with pytest.raises(KeyError):
+        b"".join(store.iter_blob(key))
 
 
-def test_blob_path_still_returns_legitimate_blob(tmp_path: Path):
-    root = tmp_path / "artifacts"
-    store = ArtifactStore.from_directory(root)
+def test_blob_reads_refuse_relative_traversal(tmp_path: Path):
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    key = "../../secret.txt"
+    assert _reachable(blob_dir, key)
+    _assert_refused_everywhere(store, key)
+
+
+def test_blob_reads_refuse_absolute_path(tmp_path: Path):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    key = str(secret)
+    assert _reachable(blob_dir, key)
+    _assert_refused_everywhere(store, key)
+
+
+def test_blob_reads_refuse_symlink_escaping_root(tmp_path: Path):
+    store, blob_dir, secret = _store_and_secret(tmp_path)
+    key = "0" * 64
+    (blob_dir / key).symlink_to(secret)
+    assert _reachable(blob_dir, key)
+    _assert_refused_everywhere(store, key)
+
+
+def test_blob_reads_refuse_sibling_dir_sharing_the_root_prefix(tmp_path: Path):
+    # ``<root>-evil`` string-prefix-matches ``<root>`` but is not inside it.
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    evil = blob_dir.parent / (blob_dir.name + "-evil")
+    evil.mkdir()
+    (evil / "x").write_bytes(b"evil")
+    key = f"../{evil.name}/x"
+    assert _reachable(blob_dir, key)
+    _assert_refused_everywhere(store, key)
+
+
+@pytest.mark.parametrize("key", ["", ".", "..", "a\x00b"])
+def test_blob_reads_refuse_degenerate_keys_without_raising(tmp_path: Path, key):
+    store, _, _ = _store_and_secret(tmp_path)
+    _assert_refused_everywhere(store, key)
+
+
+def test_blob_reads_still_serve_legitimate_blob(tmp_path: Path):
+    store, _, _ = _store_and_secret(tmp_path)
     data = b"legit-bytes"
     content_hash = store.put_blob(data)
     path = store.blob_path(content_hash)
-    assert path is not None
-    assert path.is_file()
-    assert path.read_bytes() == data
+    assert path is not None and path.read_bytes() == data
+    assert store.has_blob(content_hash)
+    assert store.get_blob(content_hash) == data
+    assert b"".join(store.iter_blob(content_hash)) == data
+    assert store.blob_location(content_hash) == path
 
 
-def test_blob_location_refuses_traversal(tmp_path: Path):
-    root = tmp_path / "artifacts"
-    root.mkdir()
-    secret = tmp_path / "secret.txt"
-    secret.write_text("do not serve me")
-    store = ArtifactStore.from_directory(root)
-    assert store.blob_location("../secret.txt") is None
+def test_blob_reads_serve_nested_and_in_root_symlinked_keys(tmp_path: Path):
+    # Containment must not break keys that stay inside the root: a nested key
+    # (an injected backend that shards by prefix) and an in-root symlink.
+    store, blob_dir, _ = _store_and_secret(tmp_path)
+    (blob_dir / "ab").mkdir()
+    (blob_dir / "ab" / "cdef").write_bytes(b"nested")
+    (blob_dir / "alias").symlink_to(blob_dir / "ab" / "cdef")
+    for key in ("ab/cdef", "ab/../ab/cdef", "alias"):
+        assert store.has_blob(key), key
+        assert store.get_blob(key) == b"nested", key
+        assert store.blob_path(key) == (blob_dir / "ab" / "cdef").resolve(), key
+
+
+def test_blob_reads_on_dict_backend_are_not_filtered(tmp_path: Path):
+    # No rootdir, no filesystem to escape: keys are opaque and pass through.
+    store = ArtifactStore(catalog={}, blobs={"../odd": b"x"})
+    assert store.has_blob("../odd")
+    assert store.get_blob("../odd") == b"x"
 
 
 # -- blob_location: the generalized servable-location probe -------------------

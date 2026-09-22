@@ -306,7 +306,7 @@ class ArtifactStore(MutableMapping):
 
     def get_blob(self, content_hash: str) -> bytes | None:
         """Return the bytes for ``content_hash``, or ``None`` if absent."""
-        if self.blobs is None:
+        if self.blobs is None or self._escapes_blob_root(content_hash):
             return None
         try:
             return self.blobs[content_hash]
@@ -364,15 +364,38 @@ class ArtifactStore(MutableMapping):
         rootdir = getattr(self.blobs, "rootdir", None)
         if rootdir is None:
             return None
-        root = Path(rootdir).resolve()
-        path = (root / content_hash).resolve()
-        if root != path and root not in path.parents:
-            return None
-        return path if path.is_file() else None
+        path = _resolve_within(rootdir, content_hash)
+        return path if path is not None and path.is_file() else None
 
     def has_blob(self, content_hash: str) -> bool:
-        """Whether the blob store holds ``content_hash``."""
-        return self.blobs is not None and content_hash in self.blobs
+        """Whether the blob store holds ``content_hash``.
+
+        ``False`` for a key that a filesystem-backed store would resolve
+        outside its ``rootdir`` — see :meth:`_escapes_blob_root`.
+        """
+        return (
+            self.blobs is not None
+            and not self._escapes_blob_root(content_hash)
+            and content_hash in self.blobs
+        )
+
+    def _escapes_blob_root(self, content_hash: str) -> bool:
+        """Whether a filesystem-backed blob store would resolve
+        ``content_hash`` to a file *outside* its ``rootdir`` (lacing#50).
+
+        The one containment gate every blob *read* goes through
+        (:meth:`get_blob`, hence :meth:`iter_blob`; :meth:`has_blob`;
+        :meth:`blob_location`; :meth:`blob_path`). It must guard all of them,
+        not just :meth:`blob_path`: ``blob_path`` returning ``None`` is the
+        documented cue to fall back to :meth:`iter_blob`, and ``dol.Files``
+        itself follows ``..`` segments and symlinks — so a guard on
+        ``blob_path`` alone just reroutes the traversal to the streaming path.
+
+        Backends without a ``rootdir`` (``dict``, object stores) have no
+        filesystem to escape, so nothing is refused there.
+        """
+        rootdir = getattr(self.blobs, "rootdir", None)
+        return rootdir is not None and _resolve_within(rootdir, content_hash) is None
 
     def blob_location(self, content_hash: str) -> "str | Path | None":
         """Resolve the cheapest *servable* location for a blob — without
@@ -391,7 +414,7 @@ class ArtifactStore(MutableMapping):
 
         Callers treat ``None`` as "stream it", not as an error.
         """
-        if self.blobs is None or content_hash not in self.blobs:
+        if not self.has_blob(content_hash):
             return None
         url_for = getattr(self.blobs, "url_for", None)
         if callable(url_for):
@@ -685,6 +708,38 @@ class ArtifactStore(MutableMapping):
             collection_name=collection_name,
             **(sql_kwargs or {}),
         )
+
+
+def _resolve_within(rootdir: "Path | str", key: str) -> Path | None:
+    """Resolve ``rootdir / key``; return it only if it stays inside ``rootdir``.
+
+    Both sides are fully resolved (``..`` segments collapsed, symlinks
+    followed), then compared by path *components* via ``Path.parents`` — never
+    by string prefix, so a sibling ``<root>-evil`` is not mistaken for being
+    inside ``<root>``. An absolute ``key`` (or, on Windows, one with another
+    drive) replaces ``rootdir`` in the join and so resolves outside it. The
+    root itself is not a blob, so ``key`` resolving *to* ``rootdir`` is
+    refused too.
+
+    Returns ``None`` — never raises — for a key the OS cannot even represent
+    (an embedded NUL byte) or cannot resolve (a symlink loop): such a key is
+    simply not a blob in this store.
+
+    >>> import tempfile
+    >>> root = tempfile.mkdtemp()
+    >>> _resolve_within(root, "ab" * 32) == Path(root).resolve() / ("ab" * 32)
+    True
+    >>> _resolve_within(root, "../outside") is None
+    True
+    >>> _resolve_within(root, "a\\x00b") is None
+    True
+    """
+    try:
+        root = Path(rootdir).resolve()
+        path = (root / key).resolve()
+    except (OSError, ValueError, RuntimeError):
+        return None
+    return path if root in path.parents else None
 
 
 def _spool_chunks_to_dir(chunks: Iterable[bytes], rootdir: Path) -> str:
