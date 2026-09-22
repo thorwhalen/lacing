@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=b345ff55"></script>
+    <script src="../../_static/documentation_options.js?v=78cc6f98"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.43" />
+  <meta name="docsearch:version" content="0.0.44" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -768,6 +768,8 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">MutableMapping</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -1034,9 +1036,23 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ArtifactStore.get_blob">
 <a class="viewcode-back" href="../../_autosummary/lacing.artifact_store.html#lacing.ArtifactStore.get_blob">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Return the bytes for ``content_hash``, or ``None`` if absent."""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escapes_blob_root</span><span class="p">(</span><span class="n">content_hash</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the bytes for ``content_hash``, or ``None`` if absent.</span>
+
+<span class="sd">        On a filesystem-backed store (one exposing ``rootdir``) the bytes are</span>
+<span class="sd">        read through :func:`_open_within`, never by re-opening the path by</span>
+<span class="sd">        name, so a key that would land outside ``rootdir`` — by ``..``, an</span>
+<span class="sd">        absolute path, or a symlink, including one swapped in *after* the</span>
+<span class="sd">        containment check (lacing#50) — reads as absent.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">opened</span> <span class="o">=</span> <span class="n">_open_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">blob_file</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">blob_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">[</span><span class="n">content_hash</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -1093,14 +1109,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        this store's own path join; a consumer's record model is still</span>
 <span class="sd">        responsible for validating any key (e.g. an artifact ``id``) it</span>
 <span class="sd">        hands to a separate write path such as ``dol.Files``.</span>
+
+<span class="sd">        The containment check is *point-in-time*: the returned path is the</span>
+<span class="sd">        fully resolved, symlink-free location of a regular file that was</span>
+<span class="sd">        inside ``rootdir`` when checked. The caller opens it later, by name,</span>
+<span class="sd">        so if untrusted parties can write into ``rootdir`` itself, open it</span>
+<span class="sd">        with ``O_NOFOLLOW`` — or serve via :meth:`iter_blob`, which reads</span>
+<span class="sd">        through a descriptor and has no such window.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span></div>
+        <span class="n">opened</span> <span class="o">=</span> <span class="n">_open_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">opened</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span></div>
 
 
 <div class="viewcode-block" id="ArtifactStore.has_blob">
@@ -1108,33 +1135,23 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Whether the blob store holds ``content_hash``.</span>
 
-<span class="sd">        ``False`` for a key that a filesystem-backed store would resolve</span>
-<span class="sd">        outside its ``rootdir`` — see :meth:`_escapes_blob_root`.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escapes_blob_root</span><span class="p">(</span><span class="n">content_hash</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="n">content_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span>
-        <span class="p">)</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_escapes_blob_root</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Whether a filesystem-backed blob store would resolve</span>
-<span class="sd">        ``content_hash`` to a file *outside* its ``rootdir`` (lacing#50).</span>
-
-<span class="sd">        The one containment gate every blob *read* goes through</span>
-<span class="sd">        (:meth:`get_blob`, hence :meth:`iter_blob`; :meth:`has_blob`;</span>
-<span class="sd">        :meth:`blob_location`; :meth:`blob_path`). It must guard all of them,</span>
-<span class="sd">        not just :meth:`blob_path`: ``blob_path`` returning ``None`` is the</span>
-<span class="sd">        documented cue to fall back to :meth:`iter_blob`, and ``dol.Files``</span>
-<span class="sd">        itself follows ``..`` segments and symlinks — so a guard on</span>
-<span class="sd">        ``blob_path`` alone just reroutes the traversal to the streaming path.</span>
-
+<span class="sd">        On a filesystem-backed store this is exactly "would :meth:`get_blob`</span>
+<span class="sd">        return bytes": ``False`` for a key that resolves outside ``rootdir``</span>
+<span class="sd">        or names anything but a regular file — see :func:`_open_within`.</span>
 <span class="sd">        Backends without a ``rootdir`` (``dict``, object stores) have no</span>
-<span class="sd">        filesystem to escape, so nothing is refused there.</span>
+<span class="sd">        filesystem to escape, so their keys pass through unfiltered.</span>
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="n">rootdir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blobs</span><span class="p">,</span> <span class="s2">"rootdir"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">rootdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">content_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blobs</span>
+        <span class="n">opened</span> <span class="o">=</span> <span class="n">_open_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">content_hash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opened</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">opened</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="ArtifactStore.blob_location">
 <a class="viewcode-back" href="../../_autosummary/lacing.artifact_store.html#lacing.ArtifactStore.blob_location">[docs]</a>
@@ -1503,6 +1520,69 @@ window.runMermaid = runMermaid;</script>
     <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">parents</span> <span class="k">else</span> <span class="kc">None</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_open_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">:</span> <span class="s2">"Path | str"</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Open blob ``key`` under ``rootdir`` read-only: ``(path, fd)`` or ``None``.</span>
+
+<span class="sd">    The one containment gate every filesystem blob read goes through</span>
+<span class="sd">    (:meth:`ArtifactStore.get_blob`, hence ``iter_blob``; ``has_blob``;</span>
+<span class="sd">    ``blob_path``, hence ``blob_location``) — lacing#50. It must guard all</span>
+<span class="sd">    of them, not just ``blob_path``: ``blob_path`` returning ``None`` is the</span>
+<span class="sd">    documented cue to fall back to ``iter_blob``, and ``dol.Files`` itself</span>
+<span class="sd">    follows ``..`` segments and symlinks.</span>
+
+<span class="sd">    :func:`_resolve_within` alone is a *check*; re-opening the path by name</span>
+<span class="sd">    afterwards leaves a window in which an entry inside ``rootdir`` can be</span>
+<span class="sd">    swapped for a symlink to a file outside it (check-then-use race). So the</span>
+<span class="sd">    resolved, symlink-free path is opened component by component from a</span>
+<span class="sd">    descriptor on the root, with ``O_NOFOLLOW`` on every step: a component</span>
+<span class="sd">    swapped for a symlink after the check fails to open instead of being</span>
+<span class="sd">    followed. The descriptor is then required to be a regular file —</span>
+<span class="sd">    opened ``O_NONBLOCK`` so a FIFO planted under a blob's name cannot</span>
+<span class="sd">    hang the reader. Symlinks that stay inside ``rootdir`` still work,</span>
+<span class="sd">    because they were already resolved away by the check.</span>
+
+<span class="sd">    Where the OS lacks ``openat``/``O_NOFOLLOW`` (Windows) the resolved path</span>
+<span class="sd">    is opened directly: the check still holds, the race window does not</span>
+<span class="sd">    close. Not addressed, by design: hard links (indistinguishable from the</span>
+<span class="sd">    blob's own name; creating one needs write access to ``rootdir`` and, on</span>
+<span class="sd">    Linux with ``fs.protected_hardlinks``, to the target) and bind mounts.</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_resolve_within</span><span class="p">(</span><span class="n">rootdir</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span> <span class="o">|</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">"O_BINARY"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">"O_NONBLOCK"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">nofollow</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">"O_NOFOLLOW"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">openat_nofollow</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">dir_fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_DIRECTORY</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">next_fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+                    <span class="n">part</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_DIRECTORY</span> <span class="o">|</span> <span class="n">nofollow</span><span class="p">,</span> <span class="n">dir_fd</span><span class="o">=</span><span class="n">dir_fd</span>
+                <span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">dir_fd</span><span class="p">)</span>
+                <span class="n">dir_fd</span> <span class="o">=</span> <span class="n">next_fd</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">flags</span> <span class="o">|</span> <span class="n">nofollow</span><span class="p">,</span> <span class="n">dir_fd</span><span class="o">=</span><span class="n">dir_fd</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">dir_fd</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nofollow</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">supports_dir_fd</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">rootdir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">openat_nofollow</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fstat</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">fd</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_spool_chunks_to_dir</span><span class="p">(</span><span class="n">chunks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Hash-while-spooling to a same-directory tempfile, then atomic rename.</span>
 
@@ -1511,7 +1591,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    until the content behind it is complete — a reader that finds the hash</span>
 <span class="sd">    finds the whole blob, never a prefix of it (lacing#25).</span>
 <span class="sd">    """</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
     <span class="n">rootdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

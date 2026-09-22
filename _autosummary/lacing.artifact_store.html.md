@@ -131,6 +131,13 @@ this store’s own path join; a consumer’s record model is still
 responsible for validating any key (e.g. an artifact `id`) it
 hands to a separate write path such as `dol.Files`.
 
+The containment check is *point-in-time*: the returned path is the
+fully resolved, symlink-free location of a regular file that was
+inside `rootdir` when checked. The caller opens it later, by name,
+so if untrusted parties can write into `rootdir` itself, open it
+with `O_NOFOLLOW` — or serve via [`iter_blob()`](#lacing.artifact_store.ArtifactStore.iter_blob), which reads
+through a descriptor and has no such window.
+
 * **Return type:**
   [`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -287,6 +294,12 @@ dependency is only needed when this constructor is used.
 
 Return the bytes for `content_hash`, or `None` if absent.
 
+On a filesystem-backed store (one exposing `rootdir`) the bytes are
+read through `_open_within()`, never by re-opening the path by
+name, so a key that would land outside `rootdir` — by `..`, an
+absolute path, or a symlink, including one swapped in *after* the
+containment check (lacing#50) — reads as absent.
+
 * **Return type:**
   [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -294,8 +307,11 @@ Return the bytes for `content_hash`, or `None` if absent.
 
 Whether the blob store holds `content_hash`.
 
-`False` for a key that a filesystem-backed store would resolve
-outside its `rootdir` — see `_escapes_blob_root()`.
+On a filesystem-backed store this is exactly “would [`get_blob()`](#lacing.artifact_store.ArtifactStore.get_blob)
+return bytes”: `False` for a key that resolves outside `rootdir`
+or names anything but a regular file — see `_open_within()`.
+Backends without a `rootdir` (`dict`, object stores) have no
+filesystem to escape, so their keys pass through unfiltered.
 
 * **Return type:**
   [`bool`](https://docs.python.org/3/builtins/functions.html#bool)

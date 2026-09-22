@@ -1,4 +1,4 @@
-> built 2026-09-22 14:41 UTC from 54eb356 (main) · lacing 0.0.43. Details: build_info.json
+> built 2026-09-22 14:57 UTC from 0fafa75 (main) · lacing 0.0.44. Details: build_info.json
 
 # index.html.md
 
@@ -1546,6 +1546,13 @@ this store’s own path join; a consumer’s record model is still
 responsible for validating any key (e.g. an artifact `id`) it
 hands to a separate write path such as `dol.Files`.
 
+The containment check is *point-in-time*: the returned path is the
+fully resolved, symlink-free location of a regular file that was
+inside `rootdir` when checked. The caller opens it later, by name,
+so if untrusted parties can write into `rootdir` itself, open it
+with `O_NOFOLLOW` — or serve via [`iter_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.iter_blob), which reads
+through a descriptor and has no such window.
+
 * **Return type:**
   [`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -1702,6 +1709,12 @@ dependency is only needed when this constructor is used.
 
 Return the bytes for `content_hash`, or `None` if absent.
 
+On a filesystem-backed store (one exposing `rootdir`) the bytes are
+read through `_open_within()`, never by re-opening the path by
+name, so a key that would land outside `rootdir` — by `..`, an
+absolute path, or a symlink, including one swapped in *after* the
+containment check (lacing#50) — reads as absent.
+
 * **Return type:**
   [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -1709,8 +1722,11 @@ Return the bytes for `content_hash`, or `None` if absent.
 
 Whether the blob store holds `content_hash`.
 
-`False` for a key that a filesystem-backed store would resolve
-outside its `rootdir` — see `_escapes_blob_root()`.
+On a filesystem-backed store this is exactly “would [`get_blob()`](_autosummary/lacing.artifact_store.html.md#lacing.artifact_store.ArtifactStore.get_blob)
+return bytes”: `False` for a key that resolves outside `rootdir`
+or names anything but a regular file — see `_open_within()`.
+Backends without a `rootdir` (`dict`, object stores) have no
+filesystem to escape, so their keys pass through unfiltered.
 
 * **Return type:**
   [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
@@ -3056,6 +3072,13 @@ this store’s own path join; a consumer’s record model is still
 responsible for validating any key (e.g. an artifact `id`) it
 hands to a separate write path such as `dol.Files`.
 
+The containment check is *point-in-time*: the returned path is the
+fully resolved, symlink-free location of a regular file that was
+inside `rootdir` when checked. The caller opens it later, by name,
+so if untrusted parties can write into `rootdir` itself, open it
+with `O_NOFOLLOW` — or serve via [`iter_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.iter_blob), which reads
+through a descriptor and has no such window.
+
 * **Return type:**
   [`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -3212,6 +3235,12 @@ dependency is only needed when this constructor is used.
 
 Return the bytes for `content_hash`, or `None` if absent.
 
+On a filesystem-backed store (one exposing `rootdir`) the bytes are
+read through `_open_within()`, never by re-opening the path by
+name, so a key that would land outside `rootdir` — by `..`, an
+absolute path, or a symlink, including one swapped in *after* the
+containment check (lacing#50) — reads as absent.
+
 * **Return type:**
   [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
@@ -3219,8 +3248,11 @@ Return the bytes for `content_hash`, or `None` if absent.
 
 Whether the blob store holds `content_hash`.
 
-`False` for a key that a filesystem-backed store would resolve
-outside its `rootdir` — see `_escapes_blob_root()`.
+On a filesystem-backed store this is exactly “would [`get_blob()`](_autosummary/lacing.html.md#lacing.ArtifactStore.get_blob)
+return bytes”: `False` for a key that resolves outside `rootdir`
+or names anything but a regular file — see `_open_within()`.
+Backends without a `rootdir` (`dict`, object stores) have no
+filesystem to escape, so their keys pass through unfiltered.
 
 * **Return type:**
   [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
@@ -6892,18 +6924,18 @@ Build an Arq `WorkerSettings` class with lacing processors registered.
 
 # About this build
 
-This documentation was built on **2026-09-22 14:41 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/54eb3562b900204a10f45d5226a1fa4be49083f1"><code>54eb356</code></a> on branch <code>main</code>, for **lacing 0.0.43** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-09-22 14:57 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75</code></a> on branch <code>main</code>, for **lacing 0.0.44** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.43) is behind the latest release on PyPI (0.0.44): `pip install lacing` gives newer code than these docs describe.
+- The documented version (0.0.44) is behind the latest release on PyPI (0.0.45): `pip install lacing` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/54eb3562b900204a10f45d5226a1fa4be49083f1"><code>54eb3562b900204a10f45d5226a1fa4be49083f1</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -6914,9 +6946,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35741756712">35741756712</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35743689704">35743689704</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>54eb3562b900204a10f45d5226a1fa4be49083f1</code> (in the history of the built commit) |
+| Event commit | <code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6941,13 +6973,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.44/">0.0.44</a>, newer than the documented version (0.0.43).
+Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, newer than the documented version (0.0.44).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout 54eb3562b900204a10f45d5226a1fa4be49083f1
+git checkout 0fafa75fc13e6669670678f1b19ba7a73a9e7e04
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

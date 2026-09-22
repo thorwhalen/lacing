@@ -2,18 +2,18 @@
 
 # About this build
 
-This documentation was built on **2026-09-22 14:41 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/54eb3562b900204a10f45d5226a1fa4be49083f1"><code>54eb356</code></a> on branch <code>main</code>, for **lacing 0.0.43** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-09-22 14:57 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75</code></a> on branch <code>main</code>, for **lacing 0.0.44** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.43) is behind the latest release on PyPI (0.0.44): `pip install lacing` gives newer code than these docs describe.
+- The documented version (0.0.44) is behind the latest release on PyPI (0.0.45): `pip install lacing` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/54eb3562b900204a10f45d5226a1fa4be49083f1"><code>54eb3562b900204a10f45d5226a1fa4be49083f1</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/0fafa75fc13e6669670678f1b19ba7a73a9e7e04"><code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -24,9 +24,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35741756712">35741756712</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35743689704">35743689704</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>54eb3562b900204a10f45d5226a1fa4be49083f1</code> (in the history of the built commit) |
+| Event commit | <code>0fafa75fc13e6669670678f1b19ba7a73a9e7e04</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -51,13 +51,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.44/">0.0.44</a>, newer than the documented version (0.0.43).
+Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, newer than the documented version (0.0.44).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout 54eb3562b900204a10f45d5226a1fa4be49083f1
+git checkout 0fafa75fc13e6669670678f1b19ba7a73a9e7e04
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

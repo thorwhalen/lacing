@@ -49,7 +49,7 @@
 - [lacing.tracks.subtitle](_autosummary/lacing.tracks.subtitle.html.md): Subtitle / lyric / caption tracks — the (sections, lines, words) trio.
 - [lacing.worker](_autosummary/lacing.worker.html.md): Optional Arq integration — queue processors through Redis.
 - [For AI agents](ai-agents.html.md): &#96;lacing&#96; ships artifacts for coding agents alongside its code. This page lists
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 14:41 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 14:57 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

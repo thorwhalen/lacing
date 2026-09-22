@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b345ff55"></script>
+    <script src="../_static/documentation_options.js?v=78cc6f98"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <link rel="prev" title="API reference" href="../api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.43" />
+  <meta name="docsearch:version" content="0.0.44" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -819,6 +819,12 @@ path, not as an error. This check covers only the <em>read</em> side of
 this store’s own path join; a consumer’s record model is still
 responsible for validating any key (e.g. an artifact <code class="docutils literal notranslate"><span class="pre">id</span></code>) it
 hands to a separate write path such as <code class="docutils literal notranslate"><span class="pre">dol.Files</span></code>.</p>
+<p>The containment check is <em>point-in-time</em>: the returned path is the
+fully resolved, symlink-free location of a regular file that was
+inside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> when checked. The caller opens it later, by name,
+so if untrusted parties can write into <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> itself, open it
+with <code class="docutils literal notranslate"><span class="pre">O_NOFOLLOW</span></code> — or serve via <a class="reference internal" href="#lacing.ArtifactStore.iter_blob" title="lacing.ArtifactStore.iter_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">iter_blob()</span></code></a>, which reads
+through a descriptor and has no such window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
@@ -1001,6 +1007,11 @@ dependency is only needed when this constructor is used.</p>
 <dt class="sig sig-object py" id="lacing.ArtifactStore.get_blob">
 <span class="sig-name descname"><span class="pre">get_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.get_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.ArtifactStore.get_blob" title="Link to this definition">#</a></dt>
 <dd><p>Return the bytes for <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if absent.</p>
+<p>On a filesystem-backed store (one exposing <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>) the bytes are
+read through <code class="xref py py-func docutils literal notranslate"><span class="pre">_open_within()</span></code>, never by re-opening the path by
+name, so a key that would land outside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> — by <code class="docutils literal notranslate"><span class="pre">..</span></code>, an
+absolute path, or a symlink, including one swapped in <em>after</em> the
+containment check (lacing#50) — reads as absent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
@@ -1012,8 +1023,11 @@ dependency is only needed when this constructor is used.</p>
 <dt class="sig sig-object py" id="lacing.ArtifactStore.has_blob">
 <span class="sig-name descname"><span class="pre">has_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact_store.html#ArtifactStore.has_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.ArtifactStore.has_blob" title="Link to this definition">#</a></dt>
 <dd><p>Whether the blob store holds <code class="docutils literal notranslate"><span class="pre">content_hash</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">False</span></code> for a key that a filesystem-backed store would resolve
-outside its <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> — see <code class="xref py py-meth docutils literal notranslate"><span class="pre">_escapes_blob_root()</span></code>.</p>
+<p>On a filesystem-backed store this is exactly “would <a class="reference internal" href="#lacing.ArtifactStore.get_blob" title="lacing.ArtifactStore.get_blob"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_blob()</span></code></a>
+return bytes”: <code class="docutils literal notranslate"><span class="pre">False</span></code> for a key that resolves outside <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>
+or names anything but a regular file — see <code class="xref py py-func docutils literal notranslate"><span class="pre">_open_within()</span></code>.
+Backends without a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> (<code class="docutils literal notranslate"><span class="pre">dict</span></code>, object stores) have no
+filesystem to escape, so their keys pass through unfiltered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
