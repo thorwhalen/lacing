@@ -179,7 +179,11 @@ class ArtifactStore(MutableMapping):
             store does not inspect the record's shape).
         blobs: Injected ``content_hash -> bytes`` store, or ``None`` for a
             catalog-only store (Stage-1 metadata persistence). Blob methods
-            raise / no-op when it is ``None``.
+            raise / no-op when it is ``None``. This is the *raw* backend:
+            on a filesystem backend its own ``del`` and iteration do no
+            containment check, so go through :meth:`delete_blob` and
+            :meth:`iter_blobs` (and the read methods) rather than touching
+            ``store.blobs`` directly (lacing#55).
 
     Construct one with :meth:`in_memory` or :meth:`from_directory` rather than
     wiring the backing stores by hand, unless you are injecting a custom
@@ -370,10 +374,10 @@ class ArtifactStore(MutableMapping):
           store) — refused rather than served (lacing#50).
 
         Callers must treat ``None`` as the cue to use the streaming read
-        path, not as an error. This check covers only the *read* side of
-        this store's own path join; a consumer's record model is still
-        responsible for validating any key (e.g. an artifact ``id``) it
-        hands to a separate write path such as ``dol.Files``.
+        path, not as an error. Deleting and listing blobs have contained
+        counterparts too (:meth:`delete_blob`, :meth:`iter_blobs`), and the
+        :meth:`from_directory` catalog confines artifact ids the same way
+        (lacing#55).
 
         The containment check is *point-in-time*: the returned path is the
         fully resolved, symlink-free location of a regular file that was
@@ -413,6 +417,65 @@ class ArtifactStore(MutableMapping):
             return False
         os.close(opened[1])
         return True
+
+    def delete_blob(self, content_hash: str) -> None:
+        """Delete the blob ``content_hash``; ``KeyError`` if there is none.
+
+        The contained counterpart of ``del store.blobs[content_hash]``
+        (lacing#55). On a filesystem-backed store (one exposing ``rootdir``)
+        a key is deleted only if :meth:`has_blob` would say it exists — a
+        regular file that resolves inside ``rootdir`` (see
+        :class:`_ContainedDirStore`, the same gate the catalog of
+        :meth:`from_directory` uses). A key that escapes (``..``, an absolute path, a
+        NUL, a symlink pointing outside) raises ``KeyError`` exactly like a
+        missing blob, as does any key with a ``..`` segment, and nothing
+        outside the root is touched. The deletion itself is delegated to the
+        backend's own ``__delitem__`` on the key as given (normalised), so the
+        backend's delete policy (e.g. ``dol.Files`` moving files to the
+        trash) is unchanged, and deleting an in-root symlink removes the
+        link, never the blob it points at.
+
+        The check is point-in-time, like :meth:`blob_path`: a party that can
+        write into ``rootdir`` and swap a *directory* component of a nested
+        key for a symlink between the check and the delete can still redirect
+        it. Flat content-hash keys, which is all this store writes, have no
+        such component.
+
+        Backends without a ``rootdir`` (``dict``, object stores) have no
+        filesystem to escape; the key passes through to their ``del``.
+
+        Raises:
+            KeyError: no such blob, the key escapes the root, or no blob store
+                is configured.
+        """
+        if self.blobs is None:
+            raise KeyError(content_hash)
+        if getattr(self.blobs, "rootdir", None) is None:
+            del self.blobs[content_hash]
+            return
+        del _ContainedDirStore(self.blobs)[content_hash]
+
+    def iter_blobs(self) -> Iterator[str]:
+        """Yield the content hash (key) of every blob in the blob store.
+
+        The contained counterpart of ``iter(store.blobs)`` (lacing#55). On a
+        filesystem-backed store it yields exactly the keys :meth:`has_blob`
+        accepts — regular files inside ``rootdir`` — and never descends into
+        a symlinked directory (``dol.Files`` does, so its listing can yield
+        files that live outside the root, or loop on a symlink cycle).
+        Hidden entries are skipped, as ``dol.Files`` skips them, which also
+        keeps the in-flight ``.blob-*.part`` spool files of
+        :meth:`put_blob_stream` out of the listing.
+
+        Yields nothing when no blob store is configured; other backends are
+        iterated as they are.
+        """
+        if self.blobs is None:
+            return
+        if getattr(self.blobs, "rootdir", None) is None:
+            yield from self.blobs
+            return
+        yield from _ContainedDirStore(self.blobs)
 
     def blob_location(self, content_hash: str) -> "str | Path | None":
         """Resolve the cheapest *servable* location for a blob — without
@@ -480,6 +543,14 @@ class ArtifactStore(MutableMapping):
         filesystem stores, so the same facade works unchanged over any other
         ``dol`` backend (object storage, etc.) when injected directly.
 
+        Artifact ids are confined to ``catalog/`` (lacing#55): an id whose
+        ``<id>.json`` would resolve outside it — ``..`` segments, an absolute
+        path, a NUL, or a symlink pointing out — is refused with ``KeyError``
+        on get, save and delete, and is simply not ``in`` the store. Nested
+        ids (``"a/b"``) that stay inside keep working, and listing never
+        follows a symlinked directory out of ``catalog/``. See
+        :class:`_ContainedDirStore`.
+
         Args:
             root: Directory to hold the store. Created if missing.
             record_type: The pydantic model the catalog deserializes JSON into.
@@ -493,7 +564,10 @@ class ArtifactStore(MutableMapping):
         blob_dir.mkdir(parents=True, exist_ok=True)
 
         catalog = wrap_kvs(
-            filt_iter(Files(str(catalog_dir)), filt=lambda k: k.endswith(".json")),
+            filt_iter(
+                _ContainedDirStore(Files(str(catalog_dir))),
+                filt=lambda k: k.endswith(".json"),
+            ),
             id_of_key=lambda artifact_id: f"{artifact_id}.json",
             key_of_id=lambda filename: (
                 filename[:-5] if filename.endswith(".json") else filename
@@ -820,6 +894,160 @@ def _open_within(rootdir: "Path | str", key: str) -> tuple[Path, int] | None:
         pass
     os.close(fd)
     return None
+
+
+def _iter_within(rootdir: "Path | str") -> Iterator[str]:
+    """Yield the relative key of every file :func:`_open_within` would open.
+
+    Walks ``rootdir`` without following symlinked directories and skips
+    hidden entries (as ``dol.Files`` does). A plain regular file met on that
+    walk is physically inside the root and is yielded as is; a symlink is
+    yielded only if it passes the same gate every read goes through, so a
+    listing never names a file the store would then refuse to read, and a
+    symlink cycle cannot loop it. Keys use the OS separator, like
+    ``dol.Files``' relative keys, and come out sorted per directory.
+    """
+    root = Path(rootdir)
+
+    def walk(relative_dir: str) -> Iterator[str]:
+        try:
+            with os.scandir(root / relative_dir) as scan:
+                entries = sorted(scan, key=lambda entry: entry.name)
+        except OSError:
+            return
+        for entry in entries:
+            if entry.name.startswith("."):
+                continue
+            key = os.path.join(relative_dir, entry.name) if relative_dir else entry.name
+            try:
+                if entry.is_dir(follow_symlinks=False):
+                    yield from walk(key)
+                elif entry.is_file(follow_symlinks=False):
+                    yield key
+                elif entry.is_symlink():
+                    opened = _open_within(root, key)
+                    if opened is not None:
+                        os.close(opened[1])
+                        yield key
+            except OSError:
+                continue
+
+    return walk("")
+
+
+class _ContainedDirStore(MutableMapping):
+    """A ``dol.Files``-like store whose keys cannot leave its ``rootdir``.
+
+    ``dol.Files`` joins keys onto its root by string and follows ``..`` and
+    symlinks, so a key is a path anywhere on disk. This wrapper routes every
+    key through the containment seam of the blob reads (lacing#50/#55).
+    A key is accepted only if (see :meth:`_contained_key`):
+
+    - it has no ``..`` segment — refused outright rather than normalised, so
+      ``"x/../b"`` can never alias record ``b``;
+    - it is relative (no absolute path, no drive) and :func:`_resolve_within`
+      keeps it inside ``rootdir`` — which refuses NUL bytes and symlinks
+      pointing out; and
+    - its parent directory resolves inside ``rootdir`` too, so acting on the
+      final *name* (a delete never follows it) cannot land outside.
+
+    Reads go through :func:`_open_within`, the same descriptor-based,
+    ``O_NOFOLLOW`` read as :meth:`ArtifactStore.get_blob`. Writes and
+    deletes are delegated to the wrapped store on the (normalised) key the
+    caller gave, so its write and delete policy (e.g. trash on delete) is
+    unchanged, and deleting an in-root symlink removes the link, not its
+    target. Writing over something that is not a regular file (a FIFO would
+    hang the writer) is refused. Listing is :func:`_iter_within`: no
+    symlinked directories followed.
+
+    A refused key raises ``KeyError`` on get/set/del and is not ``in`` the
+    store. Writes are checked by name, then opened by name by the wrapped
+    store: a party that can already write inside ``rootdir`` could race a
+    symlink in between. That is the same point-in-time caveat as
+    :meth:`ArtifactStore.blob_path`; keys from outside the store cannot open
+    it.
+
+    >>> import tempfile
+    >>> store = _ContainedDirStore(Files(tempfile.mkdtemp()))
+    >>> store["a.json"] = b"{}"
+    >>> list(store), "a.json" in store, "../a.json" in store
+    (['a.json'], True, False)
+    >>> store["../../escaped.json"] = b"{}"
+    Traceback (most recent call last):
+    ...
+    KeyError: "'../../escaped.json' does not resolve inside the store root"
+    """
+
+    def __init__(self, store: MutableMapping) -> None:
+        self.store = store
+        self.rootdir = store.rootdir
+
+    def _contained_key(self, key: object) -> str | None:
+        """``key`` normalised, if it names an entry inside ``rootdir``; else None."""
+        if not isinstance(key, str) or os.path.isabs(key) or os.path.splitdrive(key)[0]:
+            return None
+        separators = {"/", os.sep, os.altsep} - {None}
+        segments = [key]
+        for separator in separators:
+            segments = [part for seg in segments for part in seg.split(separator)]
+        if ".." in segments or _resolve_within(self.rootdir, key) is None:
+            return None
+        normalised = os.path.normpath(key)
+        parent = os.path.dirname(normalised)
+        if parent and _resolve_within(self.rootdir, parent) is None:
+            return None
+        return normalised
+
+    def _refuse(
+        self, key: object, reason: str = "does not resolve inside the store root"
+    ) -> KeyError:
+        return KeyError(f"{key!r} {reason}")
+
+    def __getitem__(self, key: str) -> bytes:
+        contained = self._contained_key(key)
+        opened = None if contained is None else _open_within(self.rootdir, contained)
+        if opened is None:
+            raise KeyError(key)
+        with os.fdopen(opened[1], "rb") as file:
+            return file.read()
+
+    def __setitem__(self, key: str, value: bytes) -> None:
+        contained = self._contained_key(key)
+        if contained is None:
+            raise self._refuse(key)
+        target = _resolve_within(self.rootdir, contained)
+        if target is None:
+            raise self._refuse(key)
+        try:
+            is_regular = stat.S_ISREG(os.stat(target).st_mode)
+        except FileNotFoundError:
+            is_regular = True  # nothing there yet: a plain create
+        except OSError as error:  # e.g. a name too long for the filesystem
+            raise self._refuse(key, f"cannot be written ({error})") from error
+        if not is_regular:
+            raise self._refuse(key, "names something that is not a regular file")
+        self.store[contained] = value
+
+    def __delitem__(self, key: str) -> None:
+        if key not in self:
+            raise KeyError(key)
+        del self.store[self._contained_key(key)]
+
+    def __contains__(self, key: object) -> bool:
+        contained = self._contained_key(key)
+        if contained is None:
+            return False
+        opened = _open_within(self.rootdir, contained)
+        if opened is None:
+            return False
+        os.close(opened[1])
+        return True
+
+    def __iter__(self) -> Iterator[str]:
+        return _iter_within(self.rootdir)
+
+    def __len__(self) -> int:
+        return sum(1 for _ in self)
 
 
 def _spool_chunks_to_dir(chunks: Iterable[bytes], rootdir: Path) -> str:
