@@ -171,7 +171,7 @@ doctest_optionflags = [
 ]
 
 [tool.wads.ci]
-project_name = ""
+project_name = "lacing"
 
 # Install the `dev` extra in CI. Without this, read-ci-config emits empty
 # install-extras and the reusable workflow runs `uv pip install -e .` (core
