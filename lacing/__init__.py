@@ -75,6 +75,7 @@ from lacing.digest import (
 )
 from lacing.store import (
     IntervalAnnotationStore,
+    MappingStore,
     MemoryStore,
     SchemaMismatchError,
     SqliteStore,
@@ -126,6 +127,7 @@ __all__ = [
     # store
     "IntervalAnnotationStore",
     "MemoryStore",
+    "MappingStore",
     "SqliteStore",
     "SchemaMismatchError",
     # store migrations (the on-disk ladder; body ladder is under "schema")

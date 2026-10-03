@@ -229,8 +229,13 @@ class TestServerInstrumentation:
         assert r.headers.get("X-Lacing-Clock") == "1"
 
         spans = otel_collector.get_finished_spans()
-        # Find the POST span
-        post_spans = [s for s in spans if s.name == "POST /annotations"]
+        # Find lacing's POST span. Recent FastAPI emits its own server span with
+        # the same name; ours is the one carrying the ``http.target`` attribute.
+        post_spans = [
+            s
+            for s in spans
+            if s.name == "POST /annotations" and "http.target" in s.attributes
+        ]
         assert len(post_spans) == 1
         span = post_spans[0]
         assert span.attributes.get("lacing.clock") == 1
