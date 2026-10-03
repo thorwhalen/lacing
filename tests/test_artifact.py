@@ -229,6 +229,19 @@ class TestRights:
         with pytest.raises(Exception):
             Rights(provider="")
 
+    @pytest.mark.parametrize(
+        "bad",
+        [
+            {"provider": " "},
+            {"provider": "p", "license": ""},
+            {"provider": "p", "author": "  "},
+            {"provider": "p", "cacheable": "yes"},
+        ],
+    )
+    def test_blank_text_and_loose_cacheable_are_refused(self, bad):
+        with pytest.raises(Exception):
+            Rights(**bad)
+
     def test_unknown_field_is_refused_and_record_is_frozen(self):
         with pytest.raises(Exception):
             Rights(provider="p", licence="cc0")

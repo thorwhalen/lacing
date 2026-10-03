@@ -73,7 +73,13 @@ import hashlib
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_serializer
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictBool,
+    field_validator,
+    model_serializer,
+)
 
 from lacing.model import Provenance, ProvenanceRef
 from lacing.time import RationalTime
@@ -141,6 +147,13 @@ class Rights(BaseModel):
 
     ``provider`` is required, so an empty ``Rights()`` cannot exist: an
     artifact either has no record (we made it) or says where it came from.
+    Text fields are ``None`` or non-blank; a blank string is refused.
+
+    Caveat: an artifact catalog is keyed by ``asset_id`` (the content hash), so
+    two records for the *same bytes* are one row and the last write wins. A
+    rights-less record written after an acquired one with identical bytes
+    replaces it, rights included. Writers that re-record bytes they already
+    hold must carry the existing ``rights`` forward.
     """
 
     model_config = {"frozen": True, "extra": "forbid"}
@@ -166,13 +179,32 @@ class Rights(BaseModel):
     )
     author: str | None = Field(None, description="Creator or rights holder.")
     author_url: str | None = Field(None, description="Creator's profile or page.")
-    cacheable: bool | None = Field(
+    cacheable: StrictBool | None = Field(
         None,
         description=(
             "May the bytes be kept/redistributed from our storage? None means "
-            "not stated."
+            "not stated. Strict: a string like 'yes' is refused, not coerced."
         ),
     )
+
+    @field_validator(
+        "provider",
+        "id",
+        "title",
+        "license",
+        "license_url",
+        "attribution",
+        "source_page_url",
+        "author",
+        "author_url",
+    )
+    @classmethod
+    def _no_blank_text(cls, value: str | None) -> str | None:
+        # "" is neither "unknown" (None) nor a licence; refuse it rather than
+        # let a blank string stand in for a statement nobody made.
+        if value is not None and not value.strip():
+            raise ValueError("must be None or non-blank text, not an empty string")
+        return value
 
 
 class Artifact(BaseModel):
