@@ -162,7 +162,9 @@ class Rights(BaseModel):
         ..., min_length=1, description="Where it came from, e.g. 'openverse'."
     )
     id: str | None = Field(None, description="Provider-native identifier.")
-    title: str | None = Field(None, description="Work title, for attribution (the T of TASL).")
+    title: str | None = Field(
+        None, description="Work title, for attribution (the T of TASL)."
+    )
     license: str | None = Field(
         None,
         description=(
