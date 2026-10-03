@@ -2,7 +2,7 @@
 
 # About this build
 
-This documentation was built on **2026-09-22 15:22 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a</code></a> on branch <code>main</code>, for **lacing 0.0.45** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-03 07:56 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883</code></a> on branch <code>main</code>, for **lacing 0.0.46** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -11,7 +11,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -22,9 +22,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35746610444">35746610444</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/37107920175">37107920175</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code> (in the history of the built commit) |
+| Event commit | <code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -49,13 +49,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/lacing/0.0.46/">0.0.46</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout b9c273a7a28bb40ecce549a3457eeab1735ec373
+git checkout a2d1883794d02976f4a84b270dcdd2705a3a1cbf
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

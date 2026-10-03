@@ -1,0 +1,21 @@
+lacing.store.mapping
+====================
+
+.. automodule:: lacing.store.mapping
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      DICT_CODEC
+      JSON_BYTES_CODEC
+      JSON_STR_CODEC
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MappingCodec
+      MappingStore
+   

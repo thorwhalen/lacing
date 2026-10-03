@@ -37,6 +37,7 @@
 - [lacing.schema](lacing.schema.html.md): Body schema registry, JSON Schema export, and migrations.
 - [lacing.store](lacing.store.html.md): Interval-keyed annotation stores.
 - [lacing.store.base](lacing.store.base.html.md): &#96;IntervalAnnotationStore&#96; — the headline Pythonic API.
+- [lacing.store.mapping](lacing.store.mapping.html.md): &#96;MappingStore&#96; — an &#96;IntervalAnnotationStore&#96; persisted to any &#96;MutableMapping&#96;.
 - [lacing.store.memory](lacing.store.memory.html.md): In-memory annotation store backed by an interval tree.
 - [lacing.store.migrations](lacing.store.migrations.html.md): Store-level schema migrations — the on-disk counterpart of the body ladder.
 - [lacing.store.postgres](lacing.store.postgres.html.md): PostgreSQL-backed annotation store using &#96;int8range&#96; + GiST.

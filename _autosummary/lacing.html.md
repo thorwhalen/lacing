@@ -63,6 +63,7 @@ full story. `.claude/skills/` contains the rules.
 | [`AllenRelation`](#lacing.AllenRelation)(\*values)                          | The thirteen Allen relations.                                                  |
 | [`IntervalAnnotationStore`](#lacing.IntervalAnnotationStore)(\*args, \*\*kwargs)      | Protocol for any interval-keyed annotation store.                              |
 | [`MemoryStore`](#lacing.MemoryStore)()                                    | `IntervalAnnotationStore` implementation over `intervaltree`.                  |
+| [`MappingStore`](#lacing.MappingStore)(mapping, \*[, codec, tiers_key])    | An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.        |
 | [`SqliteStore`](#lacing.SqliteStore)(path, \*[, check_same_thread, ...])  | SQLite-backed `IntervalAnnotationStore`.                                       |
 | [`OpLog`](#lacing.OpLog)(\*args, \*\*kwargs)                        | Append-only log of mutations.                                                  |
 | [`OpLogEntry`](#lacing.OpLogEntry)(clock, operation, target_id, payload) | One row of the op-log.                                                         |
@@ -749,6 +750,36 @@ callers decide whether that’s an error.
 Bases: [`ValueError`](https://docs.python.org/3/builtins/exceptions.html#ValueError)
 
 Raised when a rate or seconds conversion would lose precision.
+
+### *class* lacing.MappingStore(mapping, \*, codec=(<function <lambda>>, <function <lambda>>), tiers_key='_\_lacing_tiers_\_')
+
+Bases: [`MemoryStore`](lacing.store.memory.html.md#lacing.store.memory.MemoryStore)
+
+An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.
+
+```pycon
+>>> from lacing.store import MappingStore
+>>> backing = {}
+>>> store = MappingStore(backing)
+>>> len(backing)  # nothing written until something is added
+0
+```
+
+Reopening over the same mapping sees the same annotations and tiers.
+
+Raises `ValueError` on a duplicate annotation id (as `SqliteStore`
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.
+
+#### close()
+
+No-op. Writes go through immediately and the mapping is the caller’s.
+
+Present so code that calls `store.close()` after each use (as it does
+for `SqliteStore`) can treat both alike; the store stays usable.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 ### *class* lacing.MediaRef(\*\*data)
 

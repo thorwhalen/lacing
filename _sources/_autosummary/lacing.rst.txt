@@ -54,6 +54,7 @@
       AllenRelation
       IntervalAnnotationStore
       MemoryStore
+      MappingStore
       SqliteStore
       OpLog
       OpLogEntry

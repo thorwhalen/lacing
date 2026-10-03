@@ -1,4 +1,4 @@
-> built 2026-09-22 15:22 UTC from b9c273a (main) · lacing 0.0.45. Details: build_info.json
+> built 2026-10-03 07:56 UTC from a2d1883 (main) · lacing 0.0.46. Details: build_info.json
 
 # index.html.md
 
@@ -118,6 +118,7 @@ lacing/
 ├── store/
 │   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
 │   ├── memory.py    MemoryStore over `intervaltree`
+│   ├── mapping.py   MappingStore — persisted to any injected MutableMapping (dict, dol JsonFiles, an app's store)
 │   ├── sqlite.py    SqliteStore — persistent backend + .annot file format
 │   └── postgres.py  PostgresStore — int8range + GiST + per-tier EXCLUDE
 ├── adapters/
@@ -224,6 +225,20 @@ store.close()
 
 The `.annot` file is the recommended portable handoff format — single-file
 SQLite, Git-trackable, lossless round-trip with `MemoryStore`.
+
+Already keep your data in a mapping (a `dict`, a `dol` `JsonFiles`, an app’s
+store)? Hand it over and there is no second persistence path:
+
+```python
+from lacing.store import MappingStore
+
+store = MappingStore(my_mapping)  # one key per annotation id -> its JSON; tiers under one reserved key
+store.add(...)                    # writes through to my_mapping
+store = MappingStore(my_mapping)  # reopening sees the same annotations and tiers
+```
+
+Single writer, no cross-process locking (unlike `SqliteStore`). Pass
+`codec=JSON_BYTES_CODEC` for a mapping that stores bytes.
 
 For multi-user / production scale, the same facade is available over
 PostgreSQL:
@@ -2958,6 +2973,7 @@ full story. `.claude/skills/` contains the rules.
 | [`AllenRelation`](_autosummary/lacing.html.md#lacing.AllenRelation)(\*values)                          | The thirteen Allen relations.                                                  |
 | [`IntervalAnnotationStore`](_autosummary/lacing.html.md#lacing.IntervalAnnotationStore)(\*args, \*\*kwargs)      | Protocol for any interval-keyed annotation store.                              |
 | [`MemoryStore`](_autosummary/lacing.html.md#lacing.MemoryStore)()                                    | `IntervalAnnotationStore` implementation over `intervaltree`.                  |
+| [`MappingStore`](_autosummary/lacing.html.md#lacing.MappingStore)(mapping, \*[, codec, tiers_key])    | An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.        |
 | [`SqliteStore`](_autosummary/lacing.html.md#lacing.SqliteStore)(path, \*[, check_same_thread, ...])  | SQLite-backed `IntervalAnnotationStore`.                                       |
 | [`OpLog`](_autosummary/lacing.html.md#lacing.OpLog)(\*args, \*\*kwargs)                        | Append-only log of mutations.                                                  |
 | [`OpLogEntry`](_autosummary/lacing.html.md#lacing.OpLogEntry)(clock, operation, target_id, payload) | One row of the op-log.                                                         |
@@ -3644,6 +3660,36 @@ callers decide whether that’s an error.
 Bases: [`ValueError`](https://docs.python.org/3/builtins/exceptions.html#ValueError)
 
 Raised when a rate or seconds conversion would lose precision.
+
+### *class* lacing.MappingStore(mapping, \*, codec=(<function <lambda>>, <function <lambda>>), tiers_key='_\_lacing_tiers_\_')
+
+Bases: [`MemoryStore`](_autosummary/lacing.store.memory.html.md#lacing.store.memory.MemoryStore)
+
+An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.
+
+```pycon
+>>> from lacing.store import MappingStore
+>>> backing = {}
+>>> store = MappingStore(backing)
+>>> len(backing)  # nothing written until something is added
+0
+```
+
+Reopening over the same mapping sees the same annotations and tiers.
+
+Raises `ValueError` on a duplicate annotation id (as `SqliteStore`
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.
+
+#### close()
+
+No-op. Writes go through immediately and the mapping is the caller’s.
+
+Present so code that calls `store.close()` after each use (as it does
+for `SqliteStore`) can treat both alike; the store stays usable.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 ### *class* lacing.MediaRef(\*\*data)
 
@@ -5538,6 +5584,7 @@ callers decide whether that’s an error.
 Interval-keyed annotation stores.
 
 Public surface: `IntervalAnnotationStore` (the facade), `MemoryStore`,
+`MappingStore` (persisted to any injected `MutableMapping`),
 `SqliteStore` (the `.annot` on-disk format), the optional
 `PostgresStore`, and the store-schema migration ladder
 ([`lacing.store.migrations`](_autosummary/lacing.store.migrations.html.md#module-lacing.store.migrations)).
@@ -5554,11 +5601,13 @@ Public surface: `IntervalAnnotationStore` (the facade), `MemoryStore`,
 
 ### Classes
 
-| [`IntervalAnnotationStore`](_autosummary/lacing.store.html.md#lacing.store.IntervalAnnotationStore)(\*args, \*\*kwargs)       | Protocol for any interval-keyed annotation store.                  |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [`MemoryStore`](_autosummary/lacing.store.html.md#lacing.store.MemoryStore)()                                     | `IntervalAnnotationStore` implementation over `intervaltree`.      |
-| [`SqliteStore`](_autosummary/lacing.store.html.md#lacing.store.SqliteStore)(path, \*[, check_same_thread, ...])   | SQLite-backed `IntervalAnnotationStore`.                           |
-| [`PostgresStore`](_autosummary/lacing.store.html.md#lacing.store.PostgresStore)(connection_string, \*[, rate, ...]) | PostgreSQL-backed `IntervalAnnotationStore`, scoped to one tenant. |
+| [`IntervalAnnotationStore`](_autosummary/lacing.store.html.md#lacing.store.IntervalAnnotationStore)(\*args, \*\*kwargs)       | Protocol for any interval-keyed annotation store.                         |
+|----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [`MemoryStore`](_autosummary/lacing.store.html.md#lacing.store.MemoryStore)()                                     | `IntervalAnnotationStore` implementation over `intervaltree`.             |
+| [`MappingStore`](_autosummary/lacing.store.html.md#lacing.store.MappingStore)(mapping, \*[, codec, tiers_key])     | An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.   |
+| [`MappingCodec`](_autosummary/lacing.store.html.md#lacing.store.MappingCodec)(encode, decode)                      | How a JSON-ready `dict` is turned into what the mapping stores, and back. |
+| [`SqliteStore`](_autosummary/lacing.store.html.md#lacing.store.SqliteStore)(path, \*[, check_same_thread, ...])   | SQLite-backed `IntervalAnnotationStore`.                                  |
+| [`PostgresStore`](_autosummary/lacing.store.html.md#lacing.store.PostgresStore)(connection_string, \*[, rate, ...]) | PostgreSQL-backed `IntervalAnnotationStore`, scoped to one tenant.        |
 
 ### Exceptions
 
@@ -5699,6 +5748,50 @@ callers decide whether that’s an error.
 
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`Tier`](_autosummary/lacing.tier.html.md#lacing.tier.Tier)]
+
+### *class* lacing.store.MappingCodec(encode, decode)
+
+Bases: [`NamedTuple`](https://docs.python.org/3/library/typing.html#typing.NamedTuple)
+
+How a JSON-ready `dict` is turned into what the mapping stores, and back.
+
+#### decode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[Any](https://docs.python.org/3/library/typing.html#typing.Any)], [dict](https://docs.python.org/3/builtins/stdtypes.html#dict)]*
+
+Alias for field number 1
+
+#### encode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[dict](https://docs.python.org/3/builtins/stdtypes.html#dict)], [Any](https://docs.python.org/3/library/typing.html#typing.Any)]*
+
+Alias for field number 0
+
+### *class* lacing.store.MappingStore(mapping, \*, codec=(<function <lambda>>, <function <lambda>>), tiers_key='_\_lacing_tiers_\_')
+
+Bases: [`MemoryStore`](_autosummary/lacing.store.memory.html.md#lacing.store.memory.MemoryStore)
+
+An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.
+
+```pycon
+>>> from lacing.store import MappingStore
+>>> backing = {}
+>>> store = MappingStore(backing)
+>>> len(backing)  # nothing written until something is added
+0
+```
+
+Reopening over the same mapping sees the same annotations and tiers.
+
+Raises `ValueError` on a duplicate annotation id (as `SqliteStore`
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.
+
+#### close()
+
+No-op. Writes go through immediately and the mapping is the caller’s.
+
+Present so code that calls `store.close()` after each use (as it does
+for `SqliteStore`) can treat both alike; the store stays usable.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 ### *class* lacing.store.MemoryStore
 
@@ -5887,12 +5980,134 @@ previous entry.
 
 ### Modules
 
-| [`base`](_autosummary/lacing.store.base.html.md#module-lacing.store.base)             | `IntervalAnnotationStore` — the headline Pythonic API.                      |
-|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [`memory`](_autosummary/lacing.store.memory.html.md#module-lacing.store.memory)         | In-memory annotation store backed by an interval tree.                      |
-| [`migrations`](_autosummary/lacing.store.migrations.html.md#module-lacing.store.migrations) | Store-level schema migrations — the on-disk counterpart of the body ladder. |
-| [`postgres`](_autosummary/lacing.store.postgres.html.md#module-lacing.store.postgres)     | PostgreSQL-backed annotation store using `int8range` + GiST.                |
-| [`sqlite`](_autosummary/lacing.store.sqlite.html.md#module-lacing.store.sqlite)         | SQLite-backed annotation store and the `.annot` portable file format.       |
+| [`base`](_autosummary/lacing.store.base.html.md#module-lacing.store.base)             | `IntervalAnnotationStore` — the headline Pythonic API.                           |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [`mapping`](_autosummary/lacing.store.mapping.html.md#module-lacing.store.mapping)       | `MappingStore` — an `IntervalAnnotationStore` persisted to any `MutableMapping`. |
+| [`memory`](_autosummary/lacing.store.memory.html.md#module-lacing.store.memory)         | In-memory annotation store backed by an interval tree.                           |
+| [`migrations`](_autosummary/lacing.store.migrations.html.md#module-lacing.store.migrations) | Store-level schema migrations — the on-disk counterpart of the body ladder.      |
+| [`postgres`](_autosummary/lacing.store.postgres.html.md#module-lacing.store.postgres)     | PostgreSQL-backed annotation store using `int8range` + GiST.                     |
+| [`sqlite`](_autosummary/lacing.store.sqlite.html.md#module-lacing.store.sqlite)         | SQLite-backed annotation store and the `.annot` portable file format.            |
+
+
+# _autosummary/lacing.store.mapping.html.md
+
+# lacing.store.mapping
+
+`MappingStore` — an `IntervalAnnotationStore` persisted to any `MutableMapping`.
+
+Where [`SqliteStore`](_autosummary/lacing.store.sqlite.html.md#lacing.store.sqlite.SqliteStore) owns a file, `MappingStore`
+owns nothing: the caller injects the persistence as a `MutableMapping` (a
+plain `dict`, a `dol` `JsonFiles` / `Files` store, an application’s
+“mall” entry, an S3-backed mapping, …). An app that already keeps its data
+in mappings can hand one to lacing as its annotation graph, so there is no
+second persistence path beside the one it already has.
+
+## Layout inside the mapping
+
+* **One key per annotation**: `str(annotation.id)` (a UUID string) ->
+  `annotation.model_dump(mode="json")`, the same JSON shape every other
+  lacing surface (server, MCP, op-log) uses for an `Annotation`.
+* **Tiers under one reserved key** (`tiers_key`, default
+  `"__lacing_tiers__"`): `{"tiers": [<Tier.to_wire()>, ...]}`. The key
+  can never collide with an annotation key because a UUID string is exactly
+  36 characters of hex and hyphens.
+
+The mapping holds **JSON-ready dicts** by default. That is what a plain
+`dict` and `dol`’s `JsonFiles` both want (`JsonFiles` does the
+`json.dumps` itself). For a mapping that stores `bytes` or `str` (a raw
+`Files` store, a blob bucket), pass `codec=JSON_BYTES_CODEC` or
+`JSON_STR_CODEC`, or your own [`MappingCodec`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.MappingCodec).
+
+The interval index is [`MemoryStore`](_autosummary/lacing.store.memory.html.md#lacing.store.memory.MemoryStore)’s: the whole
+mapping is loaded into it on construction and every mutation is written
+through to the mapping *first* and applied to the index only if that write
+succeeded. All Allen-relation queries are the in-memory ones; there is no
+re-implementation here.
+
+## Lifecycle
+
+`close()` is a harmless no-op that leaves the store usable (write-through
+means there is nothing to flush, and the mapping is not ours to close).
+
+## Concurrency
+
+**Single writer, no locking.** Unlike `SqliteStore` there is no cross-process
+lock: the index is a snapshot taken at construction, so a second
+`MappingStore` over the same mapping (in this or another process) does not
+see the first one’s later writes, and two writers can overwrite each other’s
+tier registry. Serialise writers yourself, or open one store per process
+lifetime. Keys foreign to the layout (anything that is neither a UUID string
+nor `tiers_key`) make construction raise rather than be silently skipped, so
+point the store at a mapping (or a sub-mapping) dedicated to it.
+
+### Module Attributes
+
+| [`DICT_CODEC`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.DICT_CODEC)       | Store the JSON-ready dict itself (`dict`, dol `JsonFiles`).        |
+|-------------------------------------------------------------------|--------------------------------------------------------------------|
+| [`JSON_BYTES_CODEC`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.JSON_BYTES_CODEC) | Store UTF-8 JSON `bytes` (a raw dol `Files` store, a blob bucket). |
+| [`JSON_STR_CODEC`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.JSON_STR_CODEC)   | Store JSON `str`.                                                  |
+
+### Classes
+
+| [`MappingCodec`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.MappingCodec)(encode, decode)                  | How a JSON-ready `dict` is turned into what the mapping stores, and back.   |
+|------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| [`MappingStore`](_autosummary/lacing.store.mapping.html.md#lacing.store.mapping.MappingStore)(mapping, \*[, codec, tiers_key]) | An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.     |
+
+### lacing.store.mapping.DICT_CODEC *= (<function <lambda>>, <function <lambda>>)*
+
+Store the JSON-ready dict itself (`dict`, dol `JsonFiles`). The default.
+
+### lacing.store.mapping.JSON_BYTES_CODEC *= (<function <lambda>>, <function <lambda>>)*
+
+Store UTF-8 JSON `bytes` (a raw dol `Files` store, a blob bucket).
+
+### lacing.store.mapping.JSON_STR_CODEC *= (<function dumps>, <function <lambda>>)*
+
+Store JSON `str`.
+
+### *class* lacing.store.mapping.MappingCodec(encode, decode)
+
+Bases: [`NamedTuple`](https://docs.python.org/3/library/typing.html#typing.NamedTuple)
+
+How a JSON-ready `dict` is turned into what the mapping stores, and back.
+
+#### decode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[Any](https://docs.python.org/3/library/typing.html#typing.Any)], [dict](https://docs.python.org/3/builtins/stdtypes.html#dict)]*
+
+Alias for field number 1
+
+#### encode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[dict](https://docs.python.org/3/builtins/stdtypes.html#dict)], [Any](https://docs.python.org/3/library/typing.html#typing.Any)]*
+
+Alias for field number 0
+
+### *class* lacing.store.mapping.MappingStore(mapping, \*, codec=(<function <lambda>>, <function <lambda>>), tiers_key='_\_lacing_tiers_\_')
+
+Bases: [`MemoryStore`](_autosummary/lacing.store.memory.html.md#lacing.store.memory.MemoryStore)
+
+An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.
+
+```pycon
+>>> from lacing.store import MappingStore
+>>> backing = {}
+>>> store = MappingStore(backing)
+>>> len(backing)  # nothing written until something is added
+0
+```
+
+Reopening over the same mapping sees the same annotations and tiers.
+
+Raises `ValueError` on a duplicate annotation id (as `SqliteStore`
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.
+
+#### close()
+
+No-op. Writes go through immediately and the mapping is the caller’s.
+
+Present so code that calls `store.close()` after each use (as it does
+for `SqliteStore`) can treat both alike; the store stays usable.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 
 # _autosummary/lacing.store.memory.html.md
@@ -7052,7 +7267,7 @@ Build an Arq `WorkerSettings` class with lacing processors registered.
 
 # About this build
 
-This documentation was built on **2026-09-22 15:22 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a</code></a> on branch <code>main</code>, for **lacing 0.0.45** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-03 07:56 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883</code></a> on branch <code>main</code>, for **lacing 0.0.46** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -7061,7 +7276,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/b9c273a7a28bb40ecce549a3457eeab1735ec373"><code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -7072,9 +7287,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/35746610444">35746610444</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/37107920175">37107920175</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>b9c273a7a28bb40ecce549a3457eeab1735ec373</code> (in the history of the built commit) |
+| Event commit | <code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -7099,13 +7314,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.45/">0.0.45</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/lacing/0.0.46/">0.0.46</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout b9c273a7a28bb40ecce549a3457eeab1735ec373
+git checkout a2d1883794d02976f4a84b270dcdd2705a3a1cbf
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

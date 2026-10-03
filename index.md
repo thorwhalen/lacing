@@ -114,6 +114,7 @@ lacing/
 ├── store/
 │   ├── base.py      IntervalAnnotationStore (MutableMapping facade)
 │   ├── memory.py    MemoryStore over `intervaltree`
+│   ├── mapping.py   MappingStore — persisted to any injected MutableMapping (dict, dol JsonFiles, an app's store)
 │   ├── sqlite.py    SqliteStore — persistent backend + .annot file format
 │   └── postgres.py  PostgresStore — int8range + GiST + per-tier EXCLUDE
 ├── adapters/
@@ -220,6 +221,20 @@ store.close()
 
 The `.annot` file is the recommended portable handoff format — single-file
 SQLite, Git-trackable, lossless round-trip with `MemoryStore`.
+
+Already keep your data in a mapping (a `dict`, a `dol` `JsonFiles`, an app’s
+store)? Hand it over and there is no second persistence path:
+
+```python
+from lacing.store import MappingStore
+
+store = MappingStore(my_mapping)  # one key per annotation id -> its JSON; tiers under one reserved key
+store.add(...)                    # writes through to my_mapping
+store = MappingStore(my_mapping)  # reopening sees the same annotations and tiers
+```
+
+Single writer, no cross-process locking (unlike `SqliteStore`). Pass
+`codec=JSON_BYTES_CODEC` for a mapping that stores bytes.
 
 For multi-user / production scale, the same facade is available over
 PostgreSQL:

@@ -7,11 +7,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="alternate" type="text/markdown" href="lacing.store.sqlite.html.md">
+<link rel="alternate" type="text/markdown" href="lacing.store.mapping.html.md">
 <link rel="describedby" href="../llms.txt" type="text/markdown">
-<link rel="alternate" type="text/markdown" href="lacing.store.sqlite.html.md">
+<link rel="alternate" type="text/markdown" href="lacing.store.mapping.html.md">
 <link rel="describedby" href="llms.txt">
-    <title>lacing.store.sqlite &#8212; lacing</title>
+    <title>lacing.store.mapping &#8212; lacing</title>
   
   
   
@@ -48,12 +48,12 @@
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=fd10adb8"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/lacing.store.sqlite';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/lacing.store.mapping';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lacing.tier" href="lacing.tier.html" />
-    <link rel="prev" title="lacing.store.postgres" href="lacing.store.postgres.html" />
+    <link rel="next" title="lacing.store.memory" href="lacing.store.memory.html" />
+    <link rel="prev" title="lacing.store.base" href="lacing.store.base.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.0.46" />
@@ -353,11 +353,11 @@
 <li class="toctree-l2"><a class="reference internal" href="lacing.schema.html">lacing.schema</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="lacing.store.html">lacing.store</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="lacing.store.base.html">lacing.store.base</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lacing.store.mapping.html">lacing.store.mapping</a></li>
+<li class="toctree-l3 current active"><a aria-current="page" class="current reference internal" href="#">lacing.store.mapping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lacing.store.memory.html">lacing.store.memory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lacing.store.migrations.html">lacing.store.migrations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lacing.store.postgres.html">lacing.store.postgres</a></li>
-<li class="toctree-l3 current active"><a aria-current="page" class="current reference internal" href="#">lacing.store.sqlite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lacing.store.sqlite.html">lacing.store.sqlite</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="lacing.tier.html">lacing.tier</a></li>
@@ -418,7 +418,7 @@
     
     <li class="breadcrumb-item"><a href="lacing.store.html" class="nav-link">lacing.store</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lacing.store.sqlite</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lacing.store.mapping</span></li>
   </ul>
 </nav>
 </div>
@@ -435,56 +435,63 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-lacing.store.sqlite">
-<span id="lacing-store-sqlite"></span><h1>lacing.store.sqlite<a class="headerlink" href="#module-lacing.store.sqlite" title="Link to this heading">#</a></h1>
-<p>SQLite-backed annotation store and the <code class="docutils literal notranslate"><span class="pre">.annot</span></code> portable file format.</p>
-<p>A <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> is both:</p>
-<ol class="arabic simple">
-<li><p>A persistent backend implementing the <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>
-protocol over a single SQLite file.</p></li>
-<li><p>The on-disk shape of the <code class="docutils literal notranslate"><span class="pre">.annot</span></code> portable handoff format
-(BACK-DOC §3.1: “SQLite-as-app-format” — Git-trackable,
-email-attachable, single-file).</p></li>
-</ol>
-<p>Design notes:</p>
-<ul>
-<li><p>The integer pair <code class="docutils literal notranslate"><span class="pre">(start_value,</span> <span class="pre">start_rate)</span></code> and <code class="docutils literal notranslate"><span class="pre">(end_value,</span> <span class="pre">end_rate)</span></code>
-are the <strong>source of truth</strong> for time. Rational arithmetic stays exact.</p></li>
-<li><p>The R*Tree index uses <code class="docutils literal notranslate"><span class="pre">REAL</span></code> (float seconds) because SQLite’s R*Tree
-requires it. We treat R*Tree results as a <strong>pre-filter</strong> and re-check
-boundary cases against the integer-pair columns. Any annotation whose
-rational seconds matches the query’s bounds exactly will still be
-filtered correctly because we widen the R*Tree query by one ULP.</p></li>
-<li><p>Tier hierarchy is enforced via FK; stereotype validation is the
-application’s job (see <code class="docutils literal notranslate"><span class="pre">lacing.tier.validate_tier_constraint</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">schema_version</span></code> lives in the <code class="docutils literal notranslate"><span class="pre">meta</span></code> table; migrations register
-upgrade functions keyed on the from-version in
-<a class="reference internal" href="lacing.store.migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a> (the store-level counterpart of the</p>
-<blockquote>
-<div><p>body ladder in <a class="reference internal" href="lacing.schema.html#module-lacing.schema" title="lacing.schema"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.schema</span></code></a>). Opening a stale file refuses
-unless asked to migrate (<code class="docutils literal notranslate"><span class="pre">SqliteStore(path,</span> <span class="pre">migrate=True)</span></code> or
-<code class="docutils literal notranslate"><span class="pre">lacing</span> <span class="pre">migrate</span> <span class="pre">&lt;path&gt;</span></code>), and refuses <em>before</em> touching the file.</p>
-</div></blockquote>
-</li>
+  <section id="module-lacing.store.mapping">
+<span id="lacing-store-mapping"></span><h1>lacing.store.mapping<a class="headerlink" href="#module-lacing.store.mapping" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">MappingStore</span></code> — an <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> persisted to any <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>.</p>
+<p>Where <a class="reference internal" href="lacing.store.sqlite.html#lacing.store.sqlite.SqliteStore" title="lacing.store.sqlite.SqliteStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">SqliteStore</span></code></a> owns a file, <code class="docutils literal notranslate"><span class="pre">MappingStore</span></code>
+owns nothing: the caller injects the persistence as a <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code> (a
+plain <code class="docutils literal notranslate"><span class="pre">dict</span></code>, a <code class="docutils literal notranslate"><span class="pre">dol</span></code> <code class="docutils literal notranslate"><span class="pre">JsonFiles</span></code> / <code class="docutils literal notranslate"><span class="pre">Files</span></code> store, an application’s
+“mall” entry, an S3-backed mapping, …). An app that already keeps its data
+in mappings can hand one to lacing as its annotation graph, so there is no
+second persistence path beside the one it already has.</p>
+<section id="layout-inside-the-mapping">
+<h2>Layout inside the mapping<a class="headerlink" href="#layout-inside-the-mapping" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>One key per annotation</strong>: <code class="docutils literal notranslate"><span class="pre">str(annotation.id)</span></code> (a UUID string) -&gt;
+<code class="docutils literal notranslate"><span class="pre">annotation.model_dump(mode=&quot;json&quot;)</span></code>, the same JSON shape every other
+lacing surface (server, MCP, op-log) uses for an <code class="docutils literal notranslate"><span class="pre">Annotation</span></code>.</p></li>
+<li><p><strong>Tiers under one reserved key</strong> (<code class="docutils literal notranslate"><span class="pre">tiers_key</span></code>, default
+<code class="docutils literal notranslate"><span class="pre">&quot;__lacing_tiers__&quot;</span></code>): <code class="docutils literal notranslate"><span class="pre">{&quot;tiers&quot;:</span> <span class="pre">[&lt;Tier.to_wire()&gt;,</span> <span class="pre">...]}</span></code>. The key
+can never collide with an annotation key because a UUID string is exactly
+36 characters of hex and hyphens.</p></li>
 </ul>
-<p>See <code class="docutils literal notranslate"><span class="pre">lacing-architecture</span></code> (Phase 1) and BACK-DOC §3.1 for the why.</p>
+<p>The mapping holds <strong>JSON-ready dicts</strong> by default. That is what a plain
+<code class="docutils literal notranslate"><span class="pre">dict</span></code> and <code class="docutils literal notranslate"><span class="pre">dol</span></code>’s <code class="docutils literal notranslate"><span class="pre">JsonFiles</span></code> both want (<code class="docutils literal notranslate"><span class="pre">JsonFiles</span></code> does the
+<code class="docutils literal notranslate"><span class="pre">json.dumps</span></code> itself). For a mapping that stores <code class="docutils literal notranslate"><span class="pre">bytes</span></code> or <code class="docutils literal notranslate"><span class="pre">str</span></code> (a raw
+<code class="docutils literal notranslate"><span class="pre">Files</span></code> store, a blob bucket), pass <code class="docutils literal notranslate"><span class="pre">codec=JSON_BYTES_CODEC</span></code> or
+<code class="docutils literal notranslate"><span class="pre">JSON_STR_CODEC</span></code>, or your own <a class="reference internal" href="#lacing.store.mapping.MappingCodec" title="lacing.store.mapping.MappingCodec"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingCodec</span></code></a>.</p>
+<p>The interval index is <a class="reference internal" href="lacing.store.memory.html#lacing.store.memory.MemoryStore" title="lacing.store.memory.MemoryStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryStore</span></code></a>’s: the whole
+mapping is loaded into it on construction and every mutation is written
+through to the mapping <em>first</em> and applied to the index only if that write
+succeeded. All Allen-relation queries are the in-memory ones; there is no
+re-implementation here.</p>
+</section>
+<section id="lifecycle">
+<h2>Lifecycle<a class="headerlink" href="#lifecycle" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">close()</span></code> is a harmless no-op that leaves the store usable (write-through
+means there is nothing to flush, and the mapping is not ours to close).</p>
+</section>
+<section id="concurrency">
+<h2>Concurrency<a class="headerlink" href="#concurrency" title="Link to this heading">#</a></h2>
+<p><strong>Single writer, no locking.</strong> Unlike <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code> there is no cross-process
+lock: the index is a snapshot taken at construction, so a second
+<code class="docutils literal notranslate"><span class="pre">MappingStore</span></code> over the same mapping (in this or another process) does not
+see the first one’s later writes, and two writers can overwrite each other’s
+tier registry. Serialise writers yourself, or open one store per process
+lifetime. Keys foreign to the layout (anything that is neither a UUID string
+nor <code class="docutils literal notranslate"><span class="pre">tiers_key</span></code>) make construction raise rather than be silently skipped, so
+point the store at a mapping (or a sub-mapping) dedicated to it.</p>
 <p class="rubric">Module Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.sqlite.SCHEMA_VERSION" title="lacing.store.sqlite.SCHEMA_VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></p></td>
-<td><p>Current <code class="docutils literal notranslate"><span class="pre">.annot</span></code> schema version.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.mapping.DICT_CODEC" title="lacing.store.mapping.DICT_CODEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DICT_CODEC</span></code></a></p></td>
+<td><p>Store the JSON-ready dict itself (<code class="docutils literal notranslate"><span class="pre">dict</span></code>, dol <code class="docutils literal notranslate"><span class="pre">JsonFiles</span></code>).</p></td>
 </tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Functions</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.sqlite.from_memory" title="lacing.store.sqlite.from_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_memory</span></code></a>(memory_store, target)</p></td>
-<td><p>Persist an in-memory store to a new <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.mapping.JSON_BYTES_CODEC" title="lacing.store.mapping.JSON_BYTES_CODEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JSON_BYTES_CODEC</span></code></a></p></td>
+<td><p>Store UTF-8 JSON <code class="docutils literal notranslate"><span class="pre">bytes</span></code> (a raw dol <code class="docutils literal notranslate"><span class="pre">Files</span></code> store, a blob bucket).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.sqlite.to_memory" title="lacing.store.sqlite.to_memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_memory</span></code></a>(sqlite_store)</p></td>
-<td><p>Load a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file fully into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.mapping.JSON_STR_CODEC" title="lacing.store.mapping.JSON_STR_CODEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JSON_STR_CODEC</span></code></a></p></td>
+<td><p>Store JSON <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -492,91 +499,86 @@ unless asked to migrate (<code class="docutils literal notranslate"><span class=
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.sqlite.SqliteStore" title="lacing.store.sqlite.SqliteStore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqliteStore</span></code></a>(path, *[, check_same_thread, ...])</p></td>
-<td><p>SQLite-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.mapping.MappingCodec" title="lacing.store.mapping.MappingCodec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MappingCodec</span></code></a>(encode, decode)</p></td>
+<td><p>How a JSON-ready <code class="docutils literal notranslate"><span class="pre">dict</span></code> is turned into what the mapping stores, and back.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.store.mapping.MappingStore" title="lacing.store.mapping.MappingStore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MappingStore</span></code></a>(mapping, *[, codec, tiers_key])</p></td>
+<td><p>An <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> persisted to an injected <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p class="rubric">Exceptions</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lacing.store.sqlite.SchemaMismatchError" title="lacing.store.sqlite.SchemaMismatchError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></p></td>
-<td><p>Raised when opening a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file with an incompatible schema.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+</section>
 <dl class="py data">
-<dt class="sig sig-object py" id="lacing.store.sqlite.SCHEMA_VERSION">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#lacing.store.sqlite.SCHEMA_VERSION" title="Link to this definition">#</a></dt>
-<dd><p>Current <code class="docutils literal notranslate"><span class="pre">.annot</span></code> schema version. Increment + register a migration
-(<a class="reference internal" href="lacing.store.migrations.html#lacing.store.migrations.register_store_migration" title="lacing.store.migrations.register_store_migration"><code class="xref py py-func docutils literal notranslate"><span class="pre">lacing.store.migrations.register_store_migration()</span></code></a>, with
-<code class="docutils literal notranslate"><span class="pre">store_kind=&quot;sqlite&quot;</span></code>) when making a breaking change to the table
-layout.</p>
-<p>v2 (lacing#14, defect D5): <code class="docutils literal notranslate"><span class="pre">prov_was_derived_from</span></code> may contain 64-hex
-artifact <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> strings alongside annotation UUIDs. The table layout
-and every existing row are unchanged — the bump exists because **pre-v2
-builds eagerly <code class="docutils literal notranslate"><span class="pre">UUID()</span></code>-parse the column on read** and crash on the
-first asset id, so they must refuse v2 files instead of opening them and
-failing row-by-row. The v1→v2 migration step is accordingly stamp-only
-(see <a class="reference internal" href="lacing.store.migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>).</p>
-<p>Operational caveat: the version gate runs at <strong>open</strong>. A pre-v2 build’s
-already-open connection survives the stamp and keeps reading — safe until
-some v2 writer mints an asset-id ref, at which point it fails as a raw
-<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> mid-read rather than a refusal. Restart long-lived
-pre-v2 services after migrating a file they serve.</p>
+<dt class="sig sig-object py" id="lacing.store.mapping.DICT_CODEC">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.mapping.</span></span><span class="sig-name descname"><span class="pre">DICT_CODEC</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;)</span></span><a class="headerlink" href="#lacing.store.mapping.DICT_CODEC" title="Link to this definition">#</a></dt>
+<dd><p>Store the JSON-ready dict itself (<code class="docutils literal notranslate"><span class="pre">dict</span></code>, dol <code class="docutils literal notranslate"><span class="pre">JsonFiles</span></code>). The default.</p>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="lacing.store.sqlite.SchemaMismatchError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SchemaMismatchError</span></span><a class="reference internal" href="../_modules/lacing/store/sqlite.html#SchemaMismatchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.SchemaMismatchError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></p>
-<p>Raised when opening a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file with an incompatible schema.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.mapping.JSON_BYTES_CODEC">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.mapping.</span></span><span class="sig-name descname"><span class="pre">JSON_BYTES_CODEC</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;)</span></span><a class="headerlink" href="#lacing.store.mapping.JSON_BYTES_CODEC" title="Link to this definition">#</a></dt>
+<dd><p>Store UTF-8 JSON <code class="docutils literal notranslate"><span class="pre">bytes</span></code> (a raw dol <code class="docutils literal notranslate"><span class="pre">Files</span></code> store, a blob bucket).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lacing.store.mapping.JSON_STR_CODEC">
+<span class="sig-prename descclassname"><span class="pre">lacing.store.mapping.</span></span><span class="sig-name descname"><span class="pre">JSON_STR_CODEC</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;function</span> <span class="pre">dumps&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;)</span></span><a class="headerlink" href="#lacing.store.mapping.JSON_STR_CODEC" title="Link to this definition">#</a></dt>
+<dd><p>Store JSON <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="lacing.store.sqlite.SqliteStore">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">SqliteStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_same_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/sqlite.html#SqliteStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.SqliteStore" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>SQLite-backed <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code>.</p>
+<dt class="sig sig-object py" id="lacing.store.mapping.MappingCodec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.mapping.</span></span><span class="sig-name descname"><span class="pre">MappingCodec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/mapping.html#MappingCodec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.mapping.MappingCodec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
+<p>How a JSON-ready <code class="docutils literal notranslate"><span class="pre">dict</span></code> is turned into what the mapping stores, and back.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathLike</span></code></a></span>) – Path to the <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file. Use <code class="docutils literal notranslate"><span class="pre">&quot;:memory:&quot;</span></code> for an
-ephemeral in-memory database.</p></li>
-<li><p><strong>check_same_thread</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Forwarded to <code class="docutils literal notranslate"><span class="pre">sqlite3.connect</span></code>. We hold a
-single connection guarded by a lock; pass <code class="docutils literal notranslate"><span class="pre">False</span></code> when
-sharing across threads.</p></li>
-<li><p><strong>migrate</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Opt-in to upgrading a file written at an older
-<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> on open, via the ladder in
-<a class="reference internal" href="lacing.store.migrations.html#module-lacing.store.migrations" title="lacing.store.migrations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lacing.store.migrations</span></code></a>. Off by default — silently
-rewriting someone’s file on open is worse than refusing.
-Every open-time schema failure — refusal <em>or</em> failed migration
-— raises <a class="reference internal" href="#lacing.store.sqlite.SchemaMismatchError" title="lacing.store.sqlite.SchemaMismatchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a>; a failed migration
-chains the ladder’s <code class="docutils literal notranslate"><span class="pre">StoreMigrationError</span></code> as its cause.</p></li>
-</ul>
-</dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.store.mapping.MappingCodec.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#lacing.store.mapping.MappingCodec.decode" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 1</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="lacing.store.sqlite.from_memory">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">from_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/sqlite.html#from_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.from_memory" title="Link to this definition">#</a></dt>
-<dd><p>Persist an in-memory store to a new <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.store.mapping.MappingCodec.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#lacing.store.mapping.MappingCodec.encode" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.store.mapping.MappingStore">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.store.mapping.</span></span><span class="sig-name descname"><span class="pre">MappingStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">codec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiers_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'__lacing_tiers__'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/mapping.html#MappingStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.mapping.MappingStore" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="lacing.store.memory.html#lacing.store.memory.MemoryStore" title="lacing.store.memory.MemoryStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryStore</span></code></a></p>
+<p>An <code class="docutils literal notranslate"><span class="pre">IntervalAnnotationStore</span></code> persisted to an injected <code class="docutils literal notranslate"><span class="pre">MutableMapping</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingStore</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backing</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">store</span> <span class="o">=</span> <span class="n">MappingStore</span><span class="p">(</span><span class="n">backing</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">backing</span><span class="p">)</span>  <span class="c1"># nothing written until something is added</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+<p>Reopening over the same mapping sees the same annotations and tiers.</p>
+<p>Raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> on a duplicate annotation id (as <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code>
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lacing.store.mapping.MappingStore.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/mapping.html#MappingStore.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.mapping.MappingStore.close" title="Link to this definition">#</a></dt>
+<dd><p>No-op. Writes go through immediately and the mapping is the caller’s.</p>
+<p>Present so code that calls <code class="docutils literal notranslate"><span class="pre">store.close()</span></code> after each use (as it does
+for <code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code>) can treat both alike; the store stays usable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#lacing.store.sqlite.SqliteStore" title="lacing.store.sqlite.SqliteStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="lacing.store.sqlite.to_memory">
-<span class="sig-prename descclassname"><span class="pre">lacing.store.sqlite.</span></span><span class="sig-name descname"><span class="pre">to_memory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sqlite_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/store/sqlite.html#to_memory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.store.sqlite.to_memory" title="Link to this definition">#</a></dt>
-<dd><p>Load a <code class="docutils literal notranslate"><span class="pre">.annot</span></code> file fully into a <code class="docutils literal notranslate"><span class="pre">MemoryStore</span></code>.</p>
-<dl class="field-list simple">
-</dl>
 </dd></dl>
 
 </section>
@@ -592,20 +594,20 @@ chains the ladder’s <code class="docutils literal notranslate"><span class="pr
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="lacing.store.postgres.html"
+       href="lacing.store.base.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">lacing.store.postgres</p>
+        <p class="prev-next-title">lacing.store.base</p>
       </div>
     </a>
     <a class="right-next"
-       href="lacing.tier.html"
+       href="lacing.store.memory.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">lacing.tier</p>
+        <p class="prev-next-title">lacing.store.memory</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -628,18 +630,28 @@ chains the ladder’s <code class="docutils literal notranslate"><span class="pr
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.sqlite.SCHEMA_VERSION"><code class="docutils literal notranslate"><span class="pre">SCHEMA_VERSION</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.sqlite.SchemaMismatchError"><code class="docutils literal notranslate"><span class="pre">SchemaMismatchError</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.sqlite.SqliteStore"><code class="docutils literal notranslate"><span class="pre">SqliteStore</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.sqlite.from_memory"><code class="docutils literal notranslate"><span class="pre">from_memory()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.sqlite.to_memory"><code class="docutils literal notranslate"><span class="pre">to_memory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layout-inside-the-mapping">Layout inside the mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle">Lifecycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concurrency">Concurrency</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.DICT_CODEC"><code class="docutils literal notranslate"><span class="pre">DICT_CODEC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.JSON_BYTES_CODEC"><code class="docutils literal notranslate"><span class="pre">JSON_BYTES_CODEC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.JSON_STR_CODEC"><code class="docutils literal notranslate"><span class="pre">JSON_STR_CODEC</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.MappingCodec"><code class="docutils literal notranslate"><span class="pre">MappingCodec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.MappingCodec.decode"><code class="docutils literal notranslate"><span class="pre">MappingCodec.decode</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.MappingCodec.encode"><code class="docutils literal notranslate"><span class="pre">MappingCodec.encode</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.MappingStore"><code class="docutils literal notranslate"><span class="pre">MappingStore</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.store.mapping.MappingStore.close"><code class="docutils literal notranslate"><span class="pre">MappingStore.close()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../_sources/_autosummary/lacing.store.sqlite.rst.txt">
+    <a href="../_sources/_autosummary/lacing.store.mapping.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

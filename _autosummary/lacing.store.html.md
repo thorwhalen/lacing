@@ -3,6 +3,7 @@
 Interval-keyed annotation stores.
 
 Public surface: `IntervalAnnotationStore` (the facade), `MemoryStore`,
+`MappingStore` (persisted to any injected `MutableMapping`),
 `SqliteStore` (the `.annot` on-disk format), the optional
 `PostgresStore`, and the store-schema migration ladder
 ([`lacing.store.migrations`](lacing.store.migrations.html.md#module-lacing.store.migrations)).
@@ -19,11 +20,13 @@ Public surface: `IntervalAnnotationStore` (the facade), `MemoryStore`,
 
 ### Classes
 
-| [`IntervalAnnotationStore`](#lacing.store.IntervalAnnotationStore)(\*args, \*\*kwargs)       | Protocol for any interval-keyed annotation store.                  |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [`MemoryStore`](#lacing.store.MemoryStore)()                                     | `IntervalAnnotationStore` implementation over `intervaltree`.      |
-| [`SqliteStore`](#lacing.store.SqliteStore)(path, \*[, check_same_thread, ...])   | SQLite-backed `IntervalAnnotationStore`.                           |
-| [`PostgresStore`](#lacing.store.PostgresStore)(connection_string, \*[, rate, ...]) | PostgreSQL-backed `IntervalAnnotationStore`, scoped to one tenant. |
+| [`IntervalAnnotationStore`](#lacing.store.IntervalAnnotationStore)(\*args, \*\*kwargs)       | Protocol for any interval-keyed annotation store.                         |
+|----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [`MemoryStore`](#lacing.store.MemoryStore)()                                     | `IntervalAnnotationStore` implementation over `intervaltree`.             |
+| [`MappingStore`](#lacing.store.MappingStore)(mapping, \*[, codec, tiers_key])     | An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.   |
+| [`MappingCodec`](#lacing.store.MappingCodec)(encode, decode)                      | How a JSON-ready `dict` is turned into what the mapping stores, and back. |
+| [`SqliteStore`](#lacing.store.SqliteStore)(path, \*[, check_same_thread, ...])   | SQLite-backed `IntervalAnnotationStore`.                                  |
+| [`PostgresStore`](#lacing.store.PostgresStore)(connection_string, \*[, rate, ...]) | PostgreSQL-backed `IntervalAnnotationStore`, scoped to one tenant.        |
 
 ### Exceptions
 
@@ -164,6 +167,50 @@ callers decide whether that’s an error.
 
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`Tier`](lacing.tier.html.md#lacing.tier.Tier)]
+
+### *class* lacing.store.MappingCodec(encode, decode)
+
+Bases: [`NamedTuple`](https://docs.python.org/3/library/typing.html#typing.NamedTuple)
+
+How a JSON-ready `dict` is turned into what the mapping stores, and back.
+
+#### decode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[Any](https://docs.python.org/3/library/typing.html#typing.Any)], [dict](https://docs.python.org/3/builtins/stdtypes.html#dict)]*
+
+Alias for field number 1
+
+#### encode *: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[dict](https://docs.python.org/3/builtins/stdtypes.html#dict)], [Any](https://docs.python.org/3/library/typing.html#typing.Any)]*
+
+Alias for field number 0
+
+### *class* lacing.store.MappingStore(mapping, \*, codec=(<function <lambda>>, <function <lambda>>), tiers_key='_\_lacing_tiers_\_')
+
+Bases: [`MemoryStore`](lacing.store.memory.html.md#lacing.store.memory.MemoryStore)
+
+An `IntervalAnnotationStore` persisted to an injected `MutableMapping`.
+
+```pycon
+>>> from lacing.store import MappingStore
+>>> backing = {}
+>>> store = MappingStore(backing)
+>>> len(backing)  # nothing written until something is added
+0
+```
+
+Reopening over the same mapping sees the same annotations and tiers.
+
+Raises `ValueError` on a duplicate annotation id (as `SqliteStore`
+does) and when an annotation is assigned under a key that is not its own
+interval; both would otherwise not survive a reload.
+
+#### close()
+
+No-op. Writes go through immediately and the mapping is the caller’s.
+
+Present so code that calls `store.close()` after each use (as it does
+for `SqliteStore`) can treat both alike; the store stays usable.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
 ### *class* lacing.store.MemoryStore
 
@@ -352,9 +399,10 @@ previous entry.
 
 ### Modules
 
-| [`base`](lacing.store.base.html.md#module-lacing.store.base)             | `IntervalAnnotationStore` — the headline Pythonic API.                      |
-|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [`memory`](lacing.store.memory.html.md#module-lacing.store.memory)         | In-memory annotation store backed by an interval tree.                      |
-| [`migrations`](lacing.store.migrations.html.md#module-lacing.store.migrations) | Store-level schema migrations — the on-disk counterpart of the body ladder. |
-| [`postgres`](lacing.store.postgres.html.md#module-lacing.store.postgres)     | PostgreSQL-backed annotation store using `int8range` + GiST.                |
-| [`sqlite`](lacing.store.sqlite.html.md#module-lacing.store.sqlite)         | SQLite-backed annotation store and the `.annot` portable file format.       |
+| [`base`](lacing.store.base.html.md#module-lacing.store.base)             | `IntervalAnnotationStore` — the headline Pythonic API.                           |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [`mapping`](lacing.store.mapping.html.md#module-lacing.store.mapping)       | `MappingStore` — an `IntervalAnnotationStore` persisted to any `MutableMapping`. |
+| [`memory`](lacing.store.memory.html.md#module-lacing.store.memory)         | In-memory annotation store backed by an interval tree.                           |
+| [`migrations`](lacing.store.migrations.html.md#module-lacing.store.migrations) | Store-level schema migrations — the on-disk counterpart of the body ladder.      |
+| [`postgres`](lacing.store.postgres.html.md#module-lacing.store.postgres)     | PostgreSQL-backed annotation store using `int8range` + GiST.                     |
+| [`sqlite`](lacing.store.sqlite.html.md#module-lacing.store.sqlite)         | SQLite-backed annotation store and the `.annot` portable file format.            |

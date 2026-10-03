@@ -21,6 +21,8 @@ lacing.store
    
       IntervalAnnotationStore
       MemoryStore
+      MappingStore
+      MappingCodec
       SqliteStore
       PostgresStore
    
@@ -41,6 +43,7 @@ lacing.store
    :recursive:
 
    base
+   mapping
    memory
    migrations
    postgres
