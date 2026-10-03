@@ -1,12 +1,20 @@
 """Interval-keyed annotation stores.
 
 Public surface: ``IntervalAnnotationStore`` (the facade), ``MemoryStore``,
+``MappingStore`` (persisted to any injected ``MutableMapping``),
 ``SqliteStore`` (the ``.annot`` on-disk format), the optional
 ``PostgresStore``, and the store-schema migration ladder
 (:mod:`lacing.store.migrations`).
 """
 
 from lacing.store.base import IntervalAnnotationStore
+from lacing.store.mapping import (
+    DICT_CODEC,
+    JSON_BYTES_CODEC,
+    JSON_STR_CODEC,
+    MappingCodec,
+    MappingStore,
+)
 from lacing.store.memory import MemoryStore
 from lacing.store.migrations import (
     POSTGRES_KIND,
@@ -39,6 +47,11 @@ except ImportError:  # pragma: no cover  — covered indirectly
 __all__ = [
     "IntervalAnnotationStore",
     "MemoryStore",
+    "MappingStore",
+    "MappingCodec",
+    "DICT_CODEC",
+    "JSON_BYTES_CODEC",
+    "JSON_STR_CODEC",
     "SqliteStore",
     "SchemaMismatchError",
     "register_store_migration",
