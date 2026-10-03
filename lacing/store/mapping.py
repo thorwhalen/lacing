@@ -175,7 +175,9 @@ class MappingStore(MemoryStore):
         old_ids = {a.id for a in old}
         clash = (new_ids & self._ids) - old_ids
         if clash:
-            raise ValueError(f"annotation id(s) already in the store: {sorted(map(str, clash))}")
+            raise ValueError(
+                f"annotation id(s) already in the store: {sorted(map(str, clash))}"
+            )
         for ann in value:
             self._put(ann)
         for gone in old_ids - new_ids:
@@ -234,4 +236,3 @@ class MappingStore(MemoryStore):
             f"MappingStore(<{len(self)} keys, {len(self._ids)} annotations, "
             f"over {type(self._mapping).__name__}>)"
         )
-

@@ -226,8 +226,10 @@ store)? Hand it over and there is no second persistence path:
 ```python
 from lacing.store import MappingStore
 
-store = MappingStore(my_mapping)  # one key per annotation id -> its JSON; tiers under one reserved key
-store.add(...)                    # writes through to my_mapping
+store = MappingStore(
+    my_mapping
+)  # one key per annotation id -> its JSON; tiers under one reserved key
+store.add(...)  # writes through to my_mapping
 store = MappingStore(my_mapping)  # reopening sees the same annotations and tiers
 ```
 
