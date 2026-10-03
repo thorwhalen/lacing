@@ -64,6 +64,7 @@ from lacing.model import (
 from lacing.artifact import (
     Artifact,
     ArtifactKind,
+    Rights,
     hash_bytes,
     hash_file,
 )
@@ -112,6 +113,7 @@ __all__ = [
     # artifact
     "Artifact",
     "ArtifactKind",
+    "Rights",
     "ArtifactStore",
     "hash_bytes",
     "hash_file",
