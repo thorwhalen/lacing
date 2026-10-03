@@ -29,6 +29,11 @@ through to the mapping *first* and applied to the index only if that write
 succeeded. All Allen-relation queries are the in-memory ones; there is no
 re-implementation here.
 
+Lifecycle
+---------
+``close()`` is a harmless no-op that leaves the store usable (write-through
+means there is nothing to flush, and the mapping is not ours to close).
+
 Concurrency
 -----------
 **Single writer, no locking.** Unlike ``SqliteStore`` there is no cross-process
@@ -212,6 +217,15 @@ class MappingStore(MemoryStore):
         merged[tier.name] = tier
         self._put_tiers(merged.values())
         super().add_tier(tier)
+
+    # --- lifecycle --------------------------------------------------------------
+
+    def close(self) -> None:
+        """No-op. Writes go through immediately and the mapping is the caller's.
+
+        Present so code that calls ``store.close()`` after each use (as it does
+        for ``SqliteStore``) can treat both alike; the store stays usable.
+        """
 
     # --- misc -------------------------------------------------------------------
 

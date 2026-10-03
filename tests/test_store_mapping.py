@@ -138,6 +138,21 @@ class TestQueriesAfterReopen:
         assert len(list(r.at_tier("b", _ti(5, 6)))) == 1
 
 
+class TestLifecycle:
+    def test_close_is_a_harmless_noop(self):
+        backing: dict = {}
+        s = MappingStore(backing)
+        s.add_tier(Tier("words"))
+        s.add(_ann(_ti(0, 10)))
+        s.close()
+        s.close()
+        b = _ann(_ti(1, 2))
+        s.add(b)  # still usable after close
+        again = MappingStore(backing)
+        assert len(list(again.all())) == 2
+        assert [t.name for t in again.tiers()] == ["words"]
+
+
 class TestGuards:
     def test_duplicate_id_raises_and_does_not_persist_twice(self):
         backing: dict = {}
