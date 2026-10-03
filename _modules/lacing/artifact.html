@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=eb4c61eb"></script>
+    <script src="../../_static/documentation_options.js?v=4f34e5f2"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -409,7 +409,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.46" />
+  <meta name="docsearch:version" content="0.0.47" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -757,6 +757,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">&gt;&gt;&gt; a.path == p</span>
 <span class="sd">True</span>
 
+<span class="sd">An artifact that was *acquired* rather than made carries a :class:`Rights`</span>
+<span class="sd">record (``None`` means "we made this", not "unknown"):</span>
+
+<span class="sd">&gt;&gt;&gt; from lacing.artifact import Rights</span>
+<span class="sd">&gt;&gt;&gt; a = Artifact.from_bytes(b"png", kind="image", was_generated_by="fetch:openverse",</span>
+<span class="sd">...     was_attributed_to="user:thor",</span>
+<span class="sd">...     rights=Rights(provider="openverse", license="by-sa", author="Ada"))</span>
+<span class="sd">&gt;&gt;&gt; a.rights.license</span>
+<span class="sd">'by-sa'</span>
+<span class="sd">&gt;&gt;&gt; Artifact.from_bytes(b"x", kind="text", was_generated_by="t",</span>
+<span class="sd">...     was_attributed_to="u").rights is None</span>
+<span class="sd">True</span>
+
 <span class="sd">Round-trip through JSON:</span>
 
 <span class="sd">&gt;&gt;&gt; import json</span>
@@ -772,7 +785,13 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseModel</span><span class="p">,</span>
+    <span class="n">Field</span><span class="p">,</span>
+    <span class="n">StrictBool</span><span class="p">,</span>
+    <span class="n">field_validator</span><span class="p">,</span>
+    <span class="n">model_serializer</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Provenance</span><span class="p">,</span> <span class="n">ProvenanceRef</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lacing.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">RationalTime</span>
@@ -813,6 +832,99 @@ window.runMermaid = runMermaid;</script>
         <span class="k">while</span> <span class="n">chunk</span> <span class="o">:=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">):</span>
             <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Rights">
+<a class="viewcode-back" href="../../_autosummary/lacing.artifact.html#lacing.Rights">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rights</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Who owns the bytes of an *acquired* artifact, and on what terms.</span>
+
+<span class="sd">    The fields a Creative-Commons-family licence needs to discharge its</span>
+<span class="sd">    attribution duty (title, author, source, licence: "TASL"), named</span>
+<span class="sd">    literal-for-literal after the two records the federation already keeps —</span>
+<span class="sd">    ``illustration.ImageResult`` and ``an.ir.assets.AssetSource`` — so both map</span>
+<span class="sd">    onto this one without a rename table (``provider``, ``id``, ``license``,</span>
+<span class="sd">    ``license_url``, ``attribution``, ``source_page_url``, ``author``,</span>
+<span class="sd">    ``author_url``, ``cacheable``).</span>
+
+<span class="sd">    Semantics worth the trap they avoid:</span>
+
+<span class="sd">    - **``Artifact.rights is None`` means "we made this"**, not "unknown". An</span>
+<span class="sd">      acquired artifact whose terms nobody recorded is a ``Rights`` with only</span>
+<span class="sd">      ``provider`` set.</span>
+<span class="sd">    - **``license is None`` means UNKNOWN, never unencumbered.** Free of</span>
+<span class="sd">      obligations is stated, e.g. ``license="cc0-1.0"``.</span>
+<span class="sd">    - **``cacheable is None`` means not stated**; ``False`` forbids keeping the</span>
+<span class="sd">      bytes, ``True`` permits it.</span>
+<span class="sd">    - ``license`` is an SPDX id (``"CC-BY-4.0"``) or a provider's own code</span>
+<span class="sd">      (``"by-sa"``); lacing records it verbatim and never classifies it</span>
+<span class="sd">      (classification lives with the consumer, e.g. ``an``'s licence classes).</span>
+<span class="sd">    - The record describes **this artifact's own bytes**. A render that embeds</span>
+<span class="sd">      a third-party image carries no ``Rights`` of its own; its obligations</span>
+<span class="sd">      travel through ``provenance.was_derived_from`` and are rolled up by the</span>
+<span class="sd">      consumer. ``rights is None`` on a derivative is *not* a clearance.</span>
+
+<span class="sd">    ``provider`` is required, so an empty ``Rights()`` cannot exist: an</span>
+<span class="sd">    artifact either has no record (we made it) or says where it came from.</span>
+<span class="sd">    Text fields are ``None`` or non-blank; a blank string is refused.</span>
+
+<span class="sd">    Caveat: an artifact catalog is keyed by ``asset_id`` (the content hash), so</span>
+<span class="sd">    two records for the *same bytes* are one row and the last write wins. A</span>
+<span class="sd">    rights-less record written after an acquired one with identical bytes</span>
+<span class="sd">    replaces it, rights included. Writers that re-record bytes they already</span>
+<span class="sd">    hold must carry the existing ``rights`` forward.</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"frozen"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="s2">"forbid"</span><span class="p">}</span>
+
+    <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Where it came from, e.g. 'openverse'."</span>
+    <span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Provider-native identifier."</span><span class="p">)</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Work title, for attribution (the T of TASL)."</span><span class="p">)</span>
+    <span class="n">license</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"SPDX id or provider licence code, verbatim. None means UNKNOWN, "</span>
+            <span class="s2">"not unencumbered."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">license_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Canonical licence text URL."</span><span class="p">)</span>
+    <span class="n">attribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Ready-to-render attribution sentence."</span>
+    <span class="p">)</span>
+    <span class="n">source_page_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"The page the work was found on (the S of TASL)."</span>
+    <span class="p">)</span>
+    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Creator or rights holder."</span><span class="p">)</span>
+    <span class="n">author_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Creator's profile or page."</span><span class="p">)</span>
+    <span class="n">cacheable</span><span class="p">:</span> <span class="n">StrictBool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"May the bytes be kept/redistributed from our storage? None means "</span>
+            <span class="s2">"not stated. Strict: a string like 'yes' is refused, not coerced."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span>
+        <span class="s2">"provider"</span><span class="p">,</span>
+        <span class="s2">"id"</span><span class="p">,</span>
+        <span class="s2">"title"</span><span class="p">,</span>
+        <span class="s2">"license"</span><span class="p">,</span>
+        <span class="s2">"license_url"</span><span class="p">,</span>
+        <span class="s2">"attribution"</span><span class="p">,</span>
+        <span class="s2">"source_page_url"</span><span class="p">,</span>
+        <span class="s2">"author"</span><span class="p">,</span>
+        <span class="s2">"author_url"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_no_blank_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># "" is neither "unknown" (None) nor a licence; refuse it rather than</span>
+        <span class="c1"># let a blank string stand in for a statement nobody made.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"must be None or non-blank text, not an empty string"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
 
 
 
@@ -882,6 +994,32 @@ window.runMermaid = runMermaid;</script>
             <span class="s2">"``mixing_op_id`` — for tracing back to the producer's event log."</span>
         <span class="p">),</span>
     <span class="p">)</span>
+    <span class="n">rights</span><span class="p">:</span> <span class="n">Rights</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Ownership and licence of an ACQUIRED artifact. None means we made "</span>
+            <span class="s2">"it (not 'unknown'); an acquired artifact with unrecorded terms is "</span>
+            <span class="s2">"a Rights with only ``provider``. Describes this artifact's own "</span>
+            <span class="s2">"bytes; a derivative's obligations travel via provenance."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@model_serializer</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"wrap"</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_omit_absent_rights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Leave ``rights`` out of the dump when it is ``None``.</span>
+
+<span class="sd">        ``Artifact`` is ``extra="forbid"`` and lives in deployed catalogs, so a</span>
+<span class="sd">        reader built before ``rights`` existed refuses ``"rights": null`` just</span>
+<span class="sd">        as it refuses a real record. Omitting the absent field keeps every</span>
+<span class="sd">        artifact that has no rights byte-compatible with the pre-``rights``</span>
+<span class="sd">        format: only an artifact that *has* a record needs a new reader.</span>
+<span class="sd">        Validation is unaffected: a missing key and an explicit ``null`` both</span>
+<span class="sd">        load as ``None``.</span>
+<span class="sd">        """</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"rights"</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"rights"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
 
     <span class="c1"># -- constructors --------------------------------------------------------</span>
 
@@ -902,6 +1040,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">mime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cost_usd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">producer_call_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rights</span><span class="p">:</span> <span class="n">Rights</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Artifact</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create an Artifact from a local file. Hashes the file's bytes."""</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -925,6 +1064,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">provenance</span><span class="o">=</span><span class="n">prov</span><span class="p">,</span>
             <span class="n">cost_usd</span><span class="o">=</span><span class="n">cost_usd</span><span class="p">,</span>
             <span class="n">producer_call_id</span><span class="o">=</span><span class="n">producer_call_id</span><span class="p">,</span>
+            <span class="n">rights</span><span class="o">=</span><span class="n">rights</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -947,6 +1087,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">mime</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cost_usd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">producer_call_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rights</span><span class="p">:</span> <span class="n">Rights</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Artifact</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create an Artifact from in-memory bytes."""</span>
         <span class="k">if</span> <span class="n">generated_at_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -969,6 +1110,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">provenance</span><span class="o">=</span><span class="n">prov</span><span class="p">,</span>
             <span class="n">cost_usd</span><span class="o">=</span><span class="n">cost_usd</span><span class="p">,</span>
             <span class="n">producer_call_id</span><span class="o">=</span><span class="n">producer_call_id</span><span class="p">,</span>
+            <span class="n">rights</span><span class="o">=</span><span class="n">rights</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 

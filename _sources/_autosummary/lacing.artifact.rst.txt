@@ -22,4 +22,5 @@ lacing.artifact
    .. autosummary::
    
       Artifact
+      Rights
    

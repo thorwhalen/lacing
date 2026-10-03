@@ -1,4 +1,4 @@
-> built 2026-10-03 07:56 UTC from a2d1883 (main) · lacing 0.0.46. Details: build_info.json
+> built 2026-10-03 08:07 UTC from 38a8929 (main) · lacing 0.0.47. Details: build_info.json
 
 # index.html.md
 
@@ -232,8 +232,10 @@ store)? Hand it over and there is no second persistence path:
 ```python
 from lacing.store import MappingStore
 
-store = MappingStore(my_mapping)  # one key per annotation id -> its JSON; tiers under one reserved key
-store.add(...)                    # writes through to my_mapping
+store = MappingStore(
+    my_mapping
+)  # one key per annotation id -> its JSON; tiers under one reserved key
+store.add(...)  # writes through to my_mapping
 store = MappingStore(my_mapping)  # reopening sees the same annotations and tiers
 ```
 
@@ -1329,6 +1331,21 @@ True
 True
 ```
 
+An artifact that was *acquired* rather than made carries a [`Rights`](_autosummary/lacing.artifact.html.md#lacing.artifact.Rights)
+record (`None` means “we made this”, not “unknown”):
+
+```pycon
+>>> from lacing.artifact import Rights
+>>> a = Artifact.from_bytes(b"png", kind="image", was_generated_by="fetch:openverse",
+...     was_attributed_to="user:thor",
+...     rights=Rights(provider="openverse", license="by-sa", author="Ada"))
+>>> a.rights.license
+'by-sa'
+>>> Artifact.from_bytes(b"x", kind="text", was_generated_by="t",
+...     was_attributed_to="u").rights is None
+True
+```
+
 Round-trip through JSON:
 
 ```pycon
@@ -1352,8 +1369,9 @@ True
 
 ### Classes
 
-| [`Artifact`](_autosummary/lacing.artifact.html.md#lacing.artifact.Artifact)(\*\*data)   | A content-addressed generated file with provenance.   |
-|-----------------------------------------------------------------------|-------------------------------------------------------|
+| [`Artifact`](_autosummary/lacing.artifact.html.md#lacing.artifact.Artifact)(\*\*data)   | A content-addressed generated file with provenance.              |
+|-----------------------------------------------------------------------|------------------------------------------------------------------|
+| [`Rights`](_autosummary/lacing.artifact.html.md#lacing.artifact.Rights)(\*\*data)     | Who owns the bytes of an *acquired* artifact, and on what terms. |
 
 ### *class* lacing.artifact.Artifact(\*\*data)
 
@@ -1371,14 +1389,14 @@ machines and re-runs.
 and annotations. An annotation referencing an artifact does so via
 `MediaRef(asset_id=artifact.asset_id, …)`.
 
-#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from in-memory bytes.
 
 * **Return type:**
   [`Artifact`](_autosummary/lacing.artifact.html.md#lacing.artifact.Artifact)
 
-#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from a local file. Hashes the file’s bytes.
 
@@ -1405,6 +1423,51 @@ Coarse mime-class. Producers should pick the closest match; consumers
 should switch on this *before* falling back to `mime`/`path.suffix`.
 
 alias of [`Literal`](https://docs.python.org/3/library/typing.html#typing.Literal)[‘image’, ‘video’, ‘audio’, ‘json’, ‘text’, ‘binary’]
+
+### *class* lacing.artifact.Rights(\*\*data)
+
+Bases: `BaseModel`
+
+Who owns the bytes of an *acquired* artifact, and on what terms.
+
+The fields a Creative-Commons-family licence needs to discharge its
+attribution duty (title, author, source, licence: “TASL”), named
+literal-for-literal after the two records the federation already keeps —
+`illustration.ImageResult` and `an.ir.assets.AssetSource` — so both map
+onto this one without a rename table (`provider`, `id`, `license`,
+`license_url`, `attribution`, `source_page_url`, `author`,
+`author_url`, `cacheable`).
+
+Semantics worth the trap they avoid:
+
+- **\`\`Artifact.rights is None\`\` means “we made this”**, not “unknown”. An
+  acquired artifact whose terms nobody recorded is a `Rights` with only
+  `provider` set.
+- **\`\`license is None\`\` means UNKNOWN, never unencumbered.** Free of
+  obligations is stated, e.g. `license="cc0-1.0"`.
+- **\`\`cacheable is None\`\` means not stated**; `False` forbids keeping the
+  bytes, `True` permits it.
+- `license` is an SPDX id (`"CC-BY-4.0"`) or a provider’s own code
+  (`"by-sa"`); lacing records it verbatim and never classifies it
+  (classification lives with the consumer, e.g. `an`’s licence classes).
+- The record describes **this artifact’s own bytes**. A render that embeds
+  a third-party image carries no `Rights` of its own; its obligations
+  travel through `provenance.was_derived_from` and are rolled up by the
+  consumer. `rights is None` on a derivative is *not* a clearance.
+
+`provider` is required, so an empty `Rights()` cannot exist: an
+artifact either has no record (we made it) or says where it came from.
+Text fields are `None` or non-blank; a blank string is refused.
+
+Caveat: an artifact catalog is keyed by `asset_id` (the content hash), so
+two records for the *same bytes* are one row and the last write wins. A
+rights-less record written after an acquired one with identical bytes
+replaces it, rights included. Writers that re-record bytes they already
+hold must carry the existing `rights` forward.
+
+#### model_config *: [ClassVar](https://docs.python.org/3/library/typing.html#typing.ClassVar)[ConfigDict]* *= {'extra': 'forbid', 'frozen': True}*
+
+Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
 
 ### lacing.artifact.hash_bytes(data)
 
@@ -2969,6 +3032,7 @@ full story. `.claude/skills/` contains the rules.
 | [`AnnotationRef`](_autosummary/lacing.html.md#lacing.AnnotationRef)(\*\*data)                          | Reference to another annotation (for discussion threads, review, derivations). |
 | [`Provenance`](_autosummary/lacing.html.md#lacing.Provenance)(\*\*data)                             | W3C PROV-O subset, embedded inline on every annotation.                        |
 | [`Artifact`](_autosummary/lacing.html.md#lacing.Artifact)(\*\*data)                               | A content-addressed generated file with provenance.                            |
+| [`Rights`](_autosummary/lacing.html.md#lacing.Rights)(\*\*data)                                 | Who owns the bytes of an *acquired* artifact, and on what terms.               |
 | [`ArtifactStore`](_autosummary/lacing.html.md#lacing.ArtifactStore)(catalog[, blobs])                  | Facade over an artifact `catalog` and an optional `blobs` store.               |
 | [`AllenRelation`](_autosummary/lacing.html.md#lacing.AllenRelation)(\*values)                          | The thirteen Allen relations.                                                  |
 | [`IntervalAnnotationStore`](_autosummary/lacing.html.md#lacing.IntervalAnnotationStore)(\*args, \*\*kwargs)      | Protocol for any interval-keyed annotation store.                              |
@@ -3051,14 +3115,14 @@ machines and re-runs.
 and annotations. An annotation referencing an artifact does so via
 `MediaRef(asset_id=artifact.asset_id, …)`.
 
-#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from in-memory bytes.
 
 * **Return type:**
   [`Artifact`](_autosummary/lacing.artifact.html.md#lacing.artifact.Artifact)
 
-#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from a local file. Hashes the file’s bytes.
 
@@ -3950,6 +4014,51 @@ the epoch. Producers stamp [`now()`](_autosummary/lacing.html.md#lacing.Rational
 
 * **Return type:**
   [`RationalTime`](_autosummary/lacing.time.html.md#lacing.time.RationalTime)
+
+### *class* lacing.Rights(\*\*data)
+
+Bases: `BaseModel`
+
+Who owns the bytes of an *acquired* artifact, and on what terms.
+
+The fields a Creative-Commons-family licence needs to discharge its
+attribution duty (title, author, source, licence: “TASL”), named
+literal-for-literal after the two records the federation already keeps —
+`illustration.ImageResult` and `an.ir.assets.AssetSource` — so both map
+onto this one without a rename table (`provider`, `id`, `license`,
+`license_url`, `attribution`, `source_page_url`, `author`,
+`author_url`, `cacheable`).
+
+Semantics worth the trap they avoid:
+
+- **\`\`Artifact.rights is None\`\` means “we made this”**, not “unknown”. An
+  acquired artifact whose terms nobody recorded is a `Rights` with only
+  `provider` set.
+- **\`\`license is None\`\` means UNKNOWN, never unencumbered.** Free of
+  obligations is stated, e.g. `license="cc0-1.0"`.
+- **\`\`cacheable is None\`\` means not stated**; `False` forbids keeping the
+  bytes, `True` permits it.
+- `license` is an SPDX id (`"CC-BY-4.0"`) or a provider’s own code
+  (`"by-sa"`); lacing records it verbatim and never classifies it
+  (classification lives with the consumer, e.g. `an`’s licence classes).
+- The record describes **this artifact’s own bytes**. A render that embeds
+  a third-party image carries no `Rights` of its own; its obligations
+  travel through `provenance.was_derived_from` and are rolled up by the
+  consumer. `rights is None` on a derivative is *not* a clearance.
+
+`provider` is required, so an empty `Rights()` cannot exist: an
+artifact either has no record (we made it) or says where it came from.
+Text fields are `None` or non-blank; a blank string is refused.
+
+Caveat: an artifact catalog is keyed by `asset_id` (the content hash), so
+two records for the *same bytes* are one row and the last write wins. A
+rights-less record written after an acquired one with identical bytes
+replaces it, rights included. Writers that re-record bytes they already
+hold must carry the existing `rights` forward.
+
+#### model_config *: [ClassVar](https://docs.python.org/3/library/typing.html#typing.ClassVar)[ConfigDict]* *= {'extra': 'forbid', 'frozen': True}*
+
+Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
 
 ### *exception* lacing.SchemaMismatchError
 
@@ -7267,16 +7376,18 @@ Build an Arq `WorkerSettings` class with lacing processors registered.
 
 # About this build
 
-This documentation was built on **2026-10-03 07:56 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883</code></a> on branch <code>main</code>, for **lacing 0.0.46** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-03 08:07 UTC** from commit <a href="https://github.com/thorwhalen/lacing/commit/38a8929571100ee3d78c6c1dac662e054e44bfb3"><code>38a8929</code></a> on branch <code>main</code>, for **lacing 0.0.47** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.47) is behind the latest release on PyPI (0.0.48): `pip install lacing` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                          |
 |---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/a2d1883794d02976f4a84b270dcdd2705a3a1cbf"><code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/lacing/commit/38a8929571100ee3d78c6c1dac662e054e44bfb3"><code>38a8929571100ee3d78c6c1dac662e054e44bfb3</code></a> |
 | Branch              | <code>main</code>                                                                                                                                        |
 | Tags at this commit | none                                                                                                                                                     |
 | Working tree        | clean                                                                                                                                                    |
@@ -7287,9 +7398,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/lacing</code>                                                             |
-| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/37107920175">37107920175</a>    |
+| Run          | <a href="https://github.com/thorwhalen/lacing/actions/runs/37108506620">37108506620</a>    |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>a2d1883794d02976f4a84b270dcdd2705a3a1cbf</code> (in the history of the built commit) |
+| Event commit | <code>38a8929571100ee3d78c6c1dac662e054e44bfb3</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -7314,13 +7425,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/lacing/0.0.46/">0.0.46</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/lacing/0.0.48/">0.0.48</a>, newer than the documented version (0.0.47).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/lacing && cd lacing
-git checkout a2d1883794d02976f4a84b270dcdd2705a3a1cbf
+git checkout 38a8929571100ee3d78c6c1dac662e054e44bfb3
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

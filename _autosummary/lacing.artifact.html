@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=eb4c61eb"></script>
+    <script src="../_static/documentation_options.js?v=4f34e5f2"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -56,7 +56,7 @@
     <link rel="prev" title="lacing.allen" href="lacing.allen.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.46" />
+  <meta name="docsearch:version" content="0.0.47" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -476,6 +476,19 @@ BLAKE3 if they prefer; the consumer treats <code class="docutils literal notrans
 <span class="go">True</span>
 </pre></div>
 </div>
+<p>An artifact that was <em>acquired</em> rather than made carries a <a class="reference internal" href="#lacing.artifact.Rights" title="lacing.artifact.Rights"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rights</span></code></a>
+record (<code class="docutils literal notranslate"><span class="pre">None</span></code> means “we made this”, not “unknown”):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lacing.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rights</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">"png"</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"image"</span><span class="p">,</span> <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"fetch:openverse"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"user:thor"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">rights</span><span class="o">=</span><span class="n">Rights</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">"openverse"</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s2">"by-sa"</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">"Ada"</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">rights</span><span class="o">.</span><span class="n">license</span>
+<span class="go">'by-sa'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Artifact</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span> <span class="n">was_generated_by</span><span class="o">=</span><span class="s2">"t"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">was_attributed_to</span><span class="o">=</span><span class="s2">"u"</span><span class="p">)</span><span class="o">.</span><span class="n">rights</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 <p>Round-trip through JSON:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
@@ -511,6 +524,9 @@ BLAKE3 if they prefer; the consumer treats <code class="docutils literal notrans
 <tr class="row-odd"><td><p><a class="reference internal" href="#lacing.artifact.Artifact" title="lacing.artifact.Artifact"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Artifact</span></code></a>(**data)</p></td>
 <td><p>A content-addressed generated file with provenance.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lacing.artifact.Rights" title="lacing.artifact.Rights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rights</span></code></a>(**data)</p></td>
+<td><p>Who owns the bytes of an <em>acquired</em> artifact, and on what terms.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -532,7 +548,7 @@ and annotations. An annotation referencing an artifact does so via
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact.Artifact.from_bytes">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact.html#Artifact.from_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_bytes" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact.html#Artifact.from_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_bytes" title="Link to this definition">#</a></dt>
 <dd><p>Create an Artifact from in-memory bytes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -543,7 +559,7 @@ and annotations. An annotation referencing an artifact does so via
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lacing.artifact.Artifact.from_path">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact.html#Artifact.from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_path" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_generated_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_attributed_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">was_derived_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_at_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_usd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">producer_call_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact.html#Artifact.from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Artifact.from_path" title="Link to this definition">#</a></dt>
 <dd><p>Create an Artifact from a local file. Hashes the file’s bytes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -579,6 +595,53 @@ and annotations. An annotation referencing an artifact does so via
 <dd><p>Coarse mime-class. Producers should pick the closest match; consumers
 should switch on this <em>before</em> falling back to <code class="docutils literal notranslate"><span class="pre">mime</span></code>/<code class="docutils literal notranslate"><span class="pre">path.suffix</span></code>.</p>
 <p>alias of <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Literal</span></code></a>[‘image’, ‘video’, ‘audio’, ‘json’, ‘text’, ‘binary’]</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lacing.artifact.Rights">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">lacing.artifact.</span></span><span class="sig-name descname"><span class="pre">Rights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lacing/artifact.html#Rights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lacing.artifact.Rights" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Who owns the bytes of an <em>acquired</em> artifact, and on what terms.</p>
+<p>The fields a Creative-Commons-family licence needs to discharge its
+attribution duty (title, author, source, licence: “TASL”), named
+literal-for-literal after the two records the federation already keeps —
+<code class="docutils literal notranslate"><span class="pre">illustration.ImageResult</span></code> and <code class="docutils literal notranslate"><span class="pre">an.ir.assets.AssetSource</span></code> — so both map
+onto this one without a rename table (<code class="docutils literal notranslate"><span class="pre">provider</span></code>, <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">license</span></code>,
+<code class="docutils literal notranslate"><span class="pre">license_url</span></code>, <code class="docutils literal notranslate"><span class="pre">attribution</span></code>, <code class="docutils literal notranslate"><span class="pre">source_page_url</span></code>, <code class="docutils literal notranslate"><span class="pre">author</span></code>,
+<code class="docutils literal notranslate"><span class="pre">author_url</span></code>, <code class="docutils literal notranslate"><span class="pre">cacheable</span></code>).</p>
+<p>Semantics worth the trap they avoid:</p>
+<ul class="simple">
+<li><p><strong>``Artifact.rights is None`` means “we made this”</strong>, not “unknown”. An
+acquired artifact whose terms nobody recorded is a <code class="docutils literal notranslate"><span class="pre">Rights</span></code> with only
+<code class="docutils literal notranslate"><span class="pre">provider</span></code> set.</p></li>
+<li><p><strong>``license is None`` means UNKNOWN, never unencumbered.</strong> Free of
+obligations is stated, e.g. <code class="docutils literal notranslate"><span class="pre">license=&quot;cc0-1.0&quot;</span></code>.</p></li>
+<li><p><strong>``cacheable is None`` means not stated</strong>; <code class="docutils literal notranslate"><span class="pre">False</span></code> forbids keeping the
+bytes, <code class="docutils literal notranslate"><span class="pre">True</span></code> permits it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">license</span></code> is an SPDX id (<code class="docutils literal notranslate"><span class="pre">&quot;CC-BY-4.0&quot;</span></code>) or a provider’s own code
+(<code class="docutils literal notranslate"><span class="pre">&quot;by-sa&quot;</span></code>); lacing records it verbatim and never classifies it
+(classification lives with the consumer, e.g. <code class="docutils literal notranslate"><span class="pre">an</span></code>’s licence classes).</p></li>
+<li><p>The record describes <strong>this artifact’s own bytes</strong>. A render that embeds
+a third-party image carries no <code class="docutils literal notranslate"><span class="pre">Rights</span></code> of its own; its obligations
+travel through <code class="docutils literal notranslate"><span class="pre">provenance.was_derived_from</span></code> and are rolled up by the
+consumer. <code class="docutils literal notranslate"><span class="pre">rights</span> <span class="pre">is</span> <span class="pre">None</span></code> on a derivative is <em>not</em> a clearance.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">provider</span></code> is required, so an empty <code class="docutils literal notranslate"><span class="pre">Rights()</span></code> cannot exist: an
+artifact either has no record (we made it) or says where it came from.
+Text fields are <code class="docutils literal notranslate"><span class="pre">None</span></code> or non-blank; a blank string is refused.</p>
+<p>Caveat: an artifact catalog is keyed by <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> (the content hash), so
+two records for the <em>same bytes</em> are one row and the last write wins. A
+rights-less record written after an acquired one with identical bytes
+replaces it, rights included. Writers that re-record bytes they already
+hold must carry the existing <code class="docutils literal notranslate"><span class="pre">rights</span></code> forward.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lacing.artifact.Rights.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.14)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid',</span> <span class="pre">'frozen':</span> <span class="pre">True}</span></span><a class="headerlink" href="#lacing.artifact.Rights.model_config" title="Link to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<code class="code docutils literal notranslate"><span class="pre">ConfigDict</span></code>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -665,6 +728,10 @@ should switch on this <em>before</em> falling back to <code class="docutils lite
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact.ArtifactKind"><code class="docutils literal notranslate"><span class="pre">ArtifactKind</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact.Rights"><code class="docutils literal notranslate"><span class="pre">Rights</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact.Rights.model_config"><code class="docutils literal notranslate"><span class="pre">Rights.model_config</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact.hash_bytes"><code class="docutils literal notranslate"><span class="pre">hash_bytes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lacing.artifact.hash_file"><code class="docutils literal notranslate"><span class="pre">hash_file()</span></code></a></li>
 </ul>

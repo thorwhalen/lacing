@@ -50,6 +50,7 @@
       AnnotationRef
       Provenance
       Artifact
+      Rights
       ArtifactStore
       AllenRelation
       IntervalAnnotationStore

@@ -59,6 +59,7 @@ full story. `.claude/skills/` contains the rules.
 | [`AnnotationRef`](#lacing.AnnotationRef)(\*\*data)                          | Reference to another annotation (for discussion threads, review, derivations). |
 | [`Provenance`](#lacing.Provenance)(\*\*data)                             | W3C PROV-O subset, embedded inline on every annotation.                        |
 | [`Artifact`](#lacing.Artifact)(\*\*data)                               | A content-addressed generated file with provenance.                            |
+| [`Rights`](#lacing.Rights)(\*\*data)                                 | Who owns the bytes of an *acquired* artifact, and on what terms.               |
 | [`ArtifactStore`](#lacing.ArtifactStore)(catalog[, blobs])                  | Facade over an artifact `catalog` and an optional `blobs` store.               |
 | [`AllenRelation`](#lacing.AllenRelation)(\*values)                          | The thirteen Allen relations.                                                  |
 | [`IntervalAnnotationStore`](#lacing.IntervalAnnotationStore)(\*args, \*\*kwargs)      | Protocol for any interval-keyed annotation store.                              |
@@ -141,14 +142,14 @@ machines and re-runs.
 and annotations. An annotation referencing an artifact does so via
 `MediaRef(asset_id=artifact.asset_id, …)`.
 
-#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_bytes(data, , kind, was_generated_by, was_attributed_to, path=None, url=None, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from in-memory bytes.
 
 * **Return type:**
   [`Artifact`](lacing.artifact.md#lacing.artifact.Artifact)
 
-#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None)
+#### *classmethod* from_path(path, , kind, was_generated_by, was_attributed_to, was_derived_from=(), activity='create', generated_at_time=None, duration_s=None, mime=None, cost_usd=None, producer_call_id=None, rights=None)
 
 Create an Artifact from a local file. Hashes the file’s bytes.
 
@@ -1040,6 +1041,51 @@ the epoch. Producers stamp [`now()`](#lacing.RationalTime.now) there.
 
 * **Return type:**
   [`RationalTime`](lacing.time.md#lacing.time.RationalTime)
+
+### *class* lacing.Rights(\*\*data)
+
+Bases: `BaseModel`
+
+Who owns the bytes of an *acquired* artifact, and on what terms.
+
+The fields a Creative-Commons-family licence needs to discharge its
+attribution duty (title, author, source, licence: “TASL”), named
+literal-for-literal after the two records the federation already keeps —
+`illustration.ImageResult` and `an.ir.assets.AssetSource` — so both map
+onto this one without a rename table (`provider`, `id`, `license`,
+`license_url`, `attribution`, `source_page_url`, `author`,
+`author_url`, `cacheable`).
+
+Semantics worth the trap they avoid:
+
+- **\`\`Artifact.rights is None\`\` means “we made this”**, not “unknown”. An
+  acquired artifact whose terms nobody recorded is a `Rights` with only
+  `provider` set.
+- **\`\`license is None\`\` means UNKNOWN, never unencumbered.** Free of
+  obligations is stated, e.g. `license="cc0-1.0"`.
+- **\`\`cacheable is None\`\` means not stated**; `False` forbids keeping the
+  bytes, `True` permits it.
+- `license` is an SPDX id (`"CC-BY-4.0"`) or a provider’s own code
+  (`"by-sa"`); lacing records it verbatim and never classifies it
+  (classification lives with the consumer, e.g. `an`’s licence classes).
+- The record describes **this artifact’s own bytes**. A render that embeds
+  a third-party image carries no `Rights` of its own; its obligations
+  travel through `provenance.was_derived_from` and are rolled up by the
+  consumer. `rights is None` on a derivative is *not* a clearance.
+
+`provider` is required, so an empty `Rights()` cannot exist: an
+artifact either has no record (we made it) or says where it came from.
+Text fields are `None` or non-blank; a blank string is refused.
+
+Caveat: an artifact catalog is keyed by `asset_id` (the content hash), so
+two records for the *same bytes* are one row and the last write wins. A
+rights-less record written after an acquired one with identical bytes
+replaces it, rights included. Writers that re-record bytes they already
+hold must carry the existing `rights` forward.
+
+#### model_config *: [ClassVar](https://docs.python.org/3/library/typing.html#typing.ClassVar)[ConfigDict]* *= {'extra': 'forbid', 'frozen': True}*
+
+Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
 
 ### *exception* lacing.SchemaMismatchError
 

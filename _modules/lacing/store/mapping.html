@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=eb4c61eb"></script>
+    <script src="../../../_static/documentation_options.js?v=4f34e5f2"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -409,7 +409,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.46" />
+  <meta name="docsearch:version" content="0.0.47" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -892,7 +892,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">old_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">old</span><span class="p">}</span>
         <span class="n">clash</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_ids</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ids</span><span class="p">)</span> <span class="o">-</span> <span class="n">old_ids</span>
         <span class="k">if</span> <span class="n">clash</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"annotation id(s) already in the store: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">clash</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"annotation id(s) already in the store: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">clash</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
         <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_put</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">gone</span> <span class="ow">in</span> <span class="n">old_ids</span> <span class="o">-</span> <span class="n">new_ids</span><span class="p">:</span>
@@ -954,7 +956,6 @@ window.runMermaid = runMermaid;</script>
             <span class="sa">f</span><span class="s2">"MappingStore(&lt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> keys, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> annotations, "</span>
             <span class="sa">f</span><span class="s2">"over </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&gt;)"</span>
         <span class="p">)</span></div>
-
 
 </pre></div>
 
