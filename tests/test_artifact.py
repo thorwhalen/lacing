@@ -138,3 +138,137 @@ def test_top_level_imports_work():
     from lacing import Artifact as A1
     from lacing.artifact import Artifact as A2
     assert A1 is A2
+
+
+# --- Rights (lacing#34) -------------------------------------------------------
+
+from lacing import Rights  # noqa: E402
+
+# An Artifact serialised by lacing 0.0.47, before ``rights`` existed. Frozen
+# here so a future change cannot silently break loading of deployed rows.
+_PRE_RIGHTS_ROW = {
+    "asset_id": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+    "kind": "image",
+    "path": None,
+    "url": "https://example.test/a.png",
+    "bytes_size": 11,
+    "duration_s": None,
+    "mime": "image/png",
+    "provenance": {
+        "was_generated_by": "user:test",
+        "was_attributed_to": "user:test",
+        "generated_at_time": {"v": 1000, "r": 1000},
+    },
+    "cost_usd": 0.0,
+    "producer_call_id": "call-1",
+}
+
+_FULL_RIGHTS = dict(
+    provider="openverse",
+    id="abc123",
+    title="Sunrise",
+    license="CC-BY-SA-4.0",
+    license_url="https://creativecommons.org/licenses/by-sa/4.0/",
+    attribution='"Sunrise" by Ada, CC BY-SA 4.0',
+    source_page_url="https://example.test/sunrise",
+    author="Ada",
+    author_url="https://example.test/ada",
+    cacheable=True,
+)
+
+
+class TestRights:
+    def test_pre_rights_row_loads_unchanged(self):
+        a = Artifact.model_validate(_PRE_RIGHTS_ROW)
+        assert a.rights is None
+        assert Artifact.model_validate_json(json.dumps(_PRE_RIGHTS_ROW)).rights is None
+
+    def test_artifact_without_rights_dumps_exactly_the_old_shape(self):
+        # A pre-rights reader (extra="forbid") must still accept it.
+        a = Artifact.model_validate(_PRE_RIGHTS_ROW)
+        assert "rights" not in a.model_dump()
+        assert "rights" not in a.model_dump(mode="json")
+        assert "rights" not in json.loads(a.model_dump_json())
+        assert set(json.loads(a.model_dump_json())) == set(_PRE_RIGHTS_ROW)
+
+    def test_explicit_null_rights_loads_as_none(self):
+        assert Artifact.model_validate({**_PRE_RIGHTS_ROW, "rights": None}).rights is None
+
+    def test_full_record_round_trips_losslessly(self):
+        a = Artifact.model_validate({**_PRE_RIGHTS_ROW, "rights": _FULL_RIGHTS})
+        assert a.rights == Rights(**_FULL_RIGHTS)
+        assert json.loads(a.model_dump_json())["rights"] == _FULL_RIGHTS
+        assert Artifact.model_validate_json(a.model_dump_json()) == a
+
+    def test_unrecorded_terms_are_distinct_from_no_record(self):
+        # "acquired, terms unknown" is a Rights with only a provider;
+        # "we made it" is None. They must not collapse into each other.
+        unknown = Artifact.model_validate(
+            {**_PRE_RIGHTS_ROW, "rights": {"provider": "openverse"}}
+        )
+        assert unknown.rights is not None
+        assert unknown.rights.license is None
+        restored = Artifact.model_validate_json(unknown.model_dump_json())
+        assert restored.rights is not None and restored.rights.license is None
+        assert json.loads(unknown.model_dump_json())["rights"] == {
+            "provider": "openverse",
+            "id": None,
+            "title": None,
+            "license": None,
+            "license_url": None,
+            "attribution": None,
+            "source_page_url": None,
+            "author": None,
+            "author_url": None,
+            "cacheable": None,
+        }
+
+    def test_empty_rights_cannot_exist(self):
+        with pytest.raises(Exception):
+            Rights()
+        with pytest.raises(Exception):
+            Rights(provider="")
+
+    @pytest.mark.parametrize(
+        "bad",
+        [
+            {"provider": " "},
+            {"provider": "p", "license": ""},
+            {"provider": "p", "author": "  "},
+            {"provider": "p", "cacheable": "yes"},
+        ],
+    )
+    def test_blank_text_and_loose_cacheable_are_refused(self, bad):
+        with pytest.raises(Exception):
+            Rights(**bad)
+
+    def test_unknown_field_is_refused_and_record_is_frozen(self):
+        with pytest.raises(Exception):
+            Rights(provider="p", licence="cc0")
+        r = Rights(provider="p")
+        with pytest.raises(Exception):
+            r.license = "cc0"  # type: ignore[misc]
+
+    def test_constructors_accept_rights(self, tmp_path: Path):
+        r = Rights(**_FULL_RIGHTS)
+        b = Artifact.from_bytes(
+            b"x", kind="image", was_generated_by="t", was_attributed_to="u", rights=r
+        )
+        p = tmp_path / "f.png"
+        p.write_bytes(b"x")
+        f = Artifact.from_path(
+            p, kind="image", was_generated_by="t", was_attributed_to="u", rights=r
+        )
+        assert b.rights == f.rights == r
+
+    def test_rights_survive_the_artifact_store_catalog(self, tmp_path: Path):
+        from lacing import ArtifactStore
+
+        store = ArtifactStore.from_directory(tmp_path, record_type=Artifact)
+        a = Artifact.from_bytes(
+            b"x", kind="image", was_generated_by="t", was_attributed_to="u",
+            rights=Rights(**_FULL_RIGHTS),
+        )
+        store[a.asset_id] = a
+        reopened = ArtifactStore.from_directory(tmp_path, record_type=Artifact)
+        assert reopened[a.asset_id].rights == Rights(**_FULL_RIGHTS)
